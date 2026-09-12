@@ -26,6 +26,16 @@ Start with the [project overview](../README.md) for capabilities, a screenshot a
 
 Evaluation methods explain what a check means. The [release-readiness record](RELEASE_READINESS.md) holds dated results, their scope and unresolved issues. An automated or agent review is not a substitute for independent human review.
 
+### Published alpha.4 claim results
+
+| Metric | Result |
+| --- | ---: |
+| Factual accuracy | **12 / 12 passed** |
+| Citation correctness | **12 / 12 passed** |
+| Citation completeness | **12 / 12 passed** |
+
+These are exact-claim results from 12 hand-authored Tampa Bay cases against the retained development corpus. They are not a general accuracy percentage or a substitute for independent human review. See [definitions, totals and limitations](EVALUATION.md#published-alpha4-results).
+
 ## Development and deployment
 
 | Task | Main guide |

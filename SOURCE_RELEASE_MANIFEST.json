@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "da22ab09b68376aff8534449bf3ccfc0a59b7ffb3ea7c3dd4cacb3f028775b2a",
+  "content_sha256": "61ffb600a960f317a874a6bbaf98c18a1b77f3196e6ceb31f07d31d378bad82b",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -122,8 +122,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 6326,
-      "sha256": "bfcf3b4aeafbfa65219a98fad640c3ae996a6045b291a185b2bc8d9c6374e546"
+      "bytes": 6543,
+      "sha256": "5f2c849f08654dec631519732b351c033dfe959ec51e82a4763d39678c8b517d"
     },
     {
       "path": "components/property-lookup.tsx",
@@ -222,8 +222,8 @@
     },
     {
       "path": "docs/EVALUATION.md",
-      "bytes": 9606,
-      "sha256": "2181f62a4affcfdb93f993cb037617e00420680940394ade3715a784665884e5"
+      "bytes": 10751,
+      "sha256": "8d1db818543edbaf3ae39c75ea2d19720e7a2ec95d38b4b308e09620f0732553"
     },
     {
       "path": "docs/GEOSPATIAL.md",
@@ -257,8 +257,8 @@
     },
     {
       "path": "docs/README.md",
-      "bytes": 3269,
-      "sha256": "0dbfe94f2ea6a1260b31a27b4c5dbe3574e09d9438bf9b2467da69254db2ddf7"
+      "bytes": 3759,
+      "sha256": "3e51ac40fb28b9c9acda58ed5034f83b062e75e18979eb192d224a96c862c3eb"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -637,8 +637,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 9077,
-      "sha256": "fe3d0644bf8cfde0e31fb874bba810441180ceb2c7bd8cc3523d7b17c1a9899e"
+      "bytes": 10049,
+      "sha256": "99c38231b4591fe5d45a75b30f5bc85cebb27c564c97079c66226904c0a8a558"
     },
     {
       "path": "scripts/build-standalone.mjs",

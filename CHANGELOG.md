@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Added the published alpha.4 factual-accuracy, citation-correctness and citation-completeness results to the project README and evaluation documentation, together with their benchmark scope and interpretation limits.
+
 ## v0.1.0-alpha.4 — 2026-09-12
 
 Added a deterministic claim-quality suite for factual accuracy, citation correctness and citation completeness. Twelve checked-in cases cover Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco. The oracle stores exact-claim hashes and allowed source/chunk support pairs without bundling copied excerpts; runtime answers cannot access it. Mutation tests verify that fabricated claims, misattributed evidence, missing markers, partial coverage and extra unsupported claims fail the appropriate metric.

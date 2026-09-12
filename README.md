@@ -61,6 +61,16 @@ Missing evidence, stale or unavailable sources, ambiguous locations and question
 
 Recorded automated code and offline evaluation checks passed for the development corpus. The suite includes bounded factual-accuracy, citation-correctness and citation-completeness cases for 12 exact authored claims; these are dated development fixtures, not a general accuracy score. Synthetic provider tests check transport, validation and fallback behavior; separate real Ollama/Meta Llama 3 tests exercised actual inference. None measures resident usefulness.
 
+### Published alpha.4 claim results
+
+| Metric | Result | Tested requirement |
+| --- | ---: | --- |
+| Factual accuracy | **12 / 12 passed** | Each answer returned the expected status and exact authored claim set, without an additional unsupported claim |
+| Citation correctness | **12 / 12 passed** | Every supplied claim citation matched an allowed source and evidence chunk for that exact claim |
+| Citation completeness | **12 / 12 passed** | Every claim-bearing paragraph included a valid citation marker |
+
+The complete offline suite passed **236 / 236 cases and 4,370 / 4,370 applicable checks**; 582 checks were not applicable. These scores apply only to the 12 dated, hand-authored Tampa Bay claim cases and retained development corpus. They do not estimate accuracy on arbitrary questions, prove that publisher information is current, or replace independent human review. See the [metric definitions and limitations](docs/EVALUATION.md#published-alpha4-results).
+
 An agent review examined sample responses. **Independent human review remains pending.** The complete browser suite also retains a documented local-runtime transport failure on Windows and Linux.
 
 See [evaluation and human-review methods](docs/EVALUATION.md), [running evaluations](docs/EVAL_SUITE.md) and the [current results and known issues](docs/RELEASE_READINESS.md).
