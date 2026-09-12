@@ -23,7 +23,7 @@ The review establishes a conservative packaging policy and records the limits of
 From a maintainer checkout:
 
 ```sh
-node scripts/package-release.mjs --output work/releases/v0.1.0-alpha.2-source
+node scripts/package-release.mjs --output work/releases/v0.1.0-alpha.3-source
 ```
 
 The output path must be a new directory under `work/releases/`; existing output is never deleted or replaced. The script uses an explicit source-file policy, rejects symlinked inputs and redirected output ancestors, and never copies `.git`, installed dependencies, secrets, owner `.openai` metadata, ignored work or deployment artifacts. It does not change the working corpus or rewrite repository history.

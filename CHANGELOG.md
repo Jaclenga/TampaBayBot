@@ -1,12 +1,16 @@
 # Changelog
 
+## v0.1.0-alpha.3 — 2026-09-12
+
+Derived the health endpoint version from `package.json` so independently built artifacts always report the version recorded in their manifest. This corrects the final standalone CI failure discovered after alpha.2 was published; all earlier source, history-scan, install, audit, typecheck, lint, packaging and build checks in that run passed.
+
 ## v0.1.0-alpha.2 — 2026-09-12
 
 Expanded resource navigation to Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco. A city/county selector and explicit source scopes keep programs, citations and official next steps in the appropriate jurisdiction; missing or conflicting locality prompts clarification. Added 20 source groups, bringing the retained collection to 33 groups and 1,044 evidence chunks.
 
 Added live address, municipal-boundary, parcel, zoning and future-land-use adapters for St. Petersburg and Clearwater. Direct property layers cover the three named cities; Pasco and other municipalities retain explicit coverage gaps. Nearby development remains a Tampa-only snapshot and now requires verified Tampa boundary coverage before searching.
 
-Regional validation: 227 code tests, all 77 narrative scenarios, and 224 offline evaluation cases with 4,322 applicable checks passed. Typecheck, lint, production build and all 15 production browser cases passed. The harness runs stalled-upload checks against the exact compiled Worker without Wrangler's defective local static-assets proxy; UI, asset and response-policy checks retain the production static-assets route. The upstream proxy defect and hosted relevance remain separate open questions. These results do not establish hosted operation or add regional real-model/human findings. See [current regional verification](docs/RELEASE_READINESS.md#v010-alpha2-tampa-bay-expansion).
+Regional validation: 227 code tests, all 77 narrative scenarios, and 224 offline evaluation cases with 4,322 applicable checks passed. Typecheck, lint, production build and all 15 production browser cases passed. The harness runs stalled-upload checks against the exact compiled Worker without Wrangler's defective local static-assets proxy; UI, asset and response-policy checks retain the production static-assets route. The upstream proxy defect and hosted relevance remain separate open questions. These results do not establish hosted operation or add regional real-model/human findings. See [current regional verification](docs/RELEASE_READINESS.md#v010-alpha3-tampa-bay-expansion).
 
 ### Earlier simplification
 

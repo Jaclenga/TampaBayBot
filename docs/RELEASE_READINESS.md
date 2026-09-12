@@ -1,18 +1,18 @@
 # Release readiness
 
-**As of September 12, 2026: v0.1.0-alpha.2 is a published source-only alpha. Readiness for an unrestricted resident-facing service is not established.**
+**As of September 12, 2026: v0.1.0-alpha.3 is a published source-only alpha. Readiness for an unrestricted resident-facing service is not established.**
 
 This is the canonical record of release status, completed verification and remaining review. [Release notes](../CHANGELOG.md) summarize changes; dated bug scans and model reports preserve earlier observations. Documentation changes do not rerun those checks or change the frozen release tag.
 
 ## Release scope
 
-The [public alpha](https://github.com/Jaclenga/ParcelPrivateer/releases/tag/v0.1.0-alpha.2) contains the software, test definitions, publisher links and ingestion configuration. It starts with an empty evidence corpus and evaluation reports marked `not_run`. Downloaded third-party snapshots, derived answer packets and private development history are excluded. Operators must acquire and review sources before expecting cited answers; historical results do not certify a fresh corpus. See [distribution and regeneration](DISTRIBUTION.md).
+The [public alpha](https://github.com/Jaclenga/ParcelPrivateer/releases/tag/v0.1.0-alpha.3) contains the software, test definitions, publisher links and ingestion configuration. It starts with an empty evidence corpus and evaluation reports marked `not_run`. Downloaded third-party snapshots, derived answer packets and private development history are excluded. Operators must acquire and review sources before expecting cited answers; historical results do not certify a fresh corpus. See [distribution and regeneration](DISTRIBUTION.md).
 
 The implementation supports housing-resource navigation, zoning/land-use lookup, permitting guidance, nearby development records and agency navigation. A program match is not an eligibility decision, a zoning designation is not permission to build, and proximity does not establish a legal relationship. Coverage and methods are documented in [data sources](../DATA_SOURCES.md), [geospatial behavior](GEOSPATIAL.md), [methodology](../METHODOLOGY.md) and [limitations](../LIMITATIONS.md).
 
 The default answer path is deterministic and extractive. Optional providers select complete supplied excerpts under application validation; six prompt inserts and five runtime stages support that boundary. [Model configuration](LLM.md) and [guardrail extensions](GUARDRAIL_INSERTS.md) describe the implementation and its limits.
 
-## v0.1.0-alpha.2 Tampa Bay expansion
+## v0.1.0-alpha.3 Tampa Bay expansion
 
 The current development checkout adds resource navigation for Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco. Selected areas and explicit source scopes constrain citations and official next steps; city names in street addresses, mailing-city ambiguity and conflicting jurisdictions do not establish coverage. Direct property layers cover Tampa, St. Petersburg and Clearwater. Pasco has narrative resources but no connected GIS adapter, other municipalities retain coverage gaps, and the development snapshot remains Tampa-only.
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-09-12",
-  "scope": "Tampa Bay expansion released as v0.1.0-alpha.2 and verified in the populated development checkout. The source distribution starts empty and the hosted preview is separate. No resident data, raw source excerpts, machine paths or private hosting identifiers are included in this aggregate record.",
+  "scope": "Tampa Bay expansion released in the alpha.2 line and republished with the artifact-version correction as v0.1.0-alpha.3. It was verified in the populated development checkout. The source distribution starts empty and the hosted preview is separate. No resident data, raw source excerpts, machine paths or private hosting identifiers are included in this aggregate record.",
   "environment": {
     "node": "v24.13.1",
     "platform": "Windows",
