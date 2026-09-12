@@ -6,6 +6,19 @@ import suiteReport from "@/evaluation/suite/results/latest.json";
 import agentReview from "@/evaluation/agent-audit/responses.json";
 import { evaluationEn as copy } from "@/lib/i18n/evaluation-en";
 import { dateLabel } from "@/lib/i18n/format";
+
+type QualityMetric = {
+  passed: number;
+  failed: number;
+  notApplicable: number;
+};
+
+type AutomatedQuality = {
+  factualAccuracy: QualityMetric;
+  citationCorrectness: QualityMetric;
+  citationCompleteness: QualityMetric;
+};
+
 export const metadata: Metadata = { title: "Evaluation results | ParcelPrivateer" };
 export default function Evaluation() {
   if (result.benchmark_count === 0) return (
@@ -17,6 +30,7 @@ export default function Evaluation() {
     </main>
   );
   const offlineReport = suiteReport.mode === "offline" ? suiteReport : null;
+  const automatedQuality = offlineReport?.automatedQuality as AutomatedQuality | null;
   return (
     <main id="main" className="document-page content-width">
       <Link href="/" className="back-link">
@@ -112,7 +126,7 @@ export default function Evaluation() {
               ? copy.suiteFailures
               : copy.suiteNoFailures}
           </p>
-          {offlineReport.automatedQuality && (
+          {automatedQuality && (
             <>
               <h3>{copy.qualityTitle}</h3>
               <p className="evaluation-intro">
@@ -131,9 +145,9 @@ export default function Evaluation() {
                   </thead>
                   <tbody>
                     {[
-                      { label: copy.qualityAccuracy, metric: offlineReport.automatedQuality.factualAccuracy },
-                      { label: copy.qualityCitationCorrectness, metric: offlineReport.automatedQuality.citationCorrectness },
-                      { label: copy.qualityCitationCompleteness, metric: offlineReport.automatedQuality.citationCompleteness },
+                      { label: copy.qualityAccuracy, metric: automatedQuality.factualAccuracy },
+                      { label: copy.qualityCitationCorrectness, metric: automatedQuality.citationCorrectness },
+                      { label: copy.qualityCitationCompleteness, metric: automatedQuality.citationCompleteness },
                     ].map(({ label, metric }) => (
                       <tr key={label}>
                         <th scope="row">{label}</th>
