@@ -2,6 +2,8 @@
 
 Contributions should make a resident's next step clearer and the evidence easier to inspect. Start with the [development guide](docs/DEVELOPMENT.md) for setup, code layout, commands and browser testing, then read the [methodology](docs/METHODOLOGY.md), [source notes](docs/DATA_SOURCES.md) and [limitations](docs/LIMITATIONS.md).
 
+The canonical contribution repository is [`Jaclenga/ParcelPrivateer`](https://github.com/Jaclenga/ParcelPrivateer). Clone and open pull requests against that exact no-hyphen repository name.
+
 ## Before opening a pull request
 
 Use the committed lockfile and run checks appropriate to the change. Cited-answer tests need acquired evidence; an empty source-only checkout is not a populated benchmark. The [development guide](docs/DEVELOPMENT.md#commands-and-evidence-prerequisites) explains these prerequisites.

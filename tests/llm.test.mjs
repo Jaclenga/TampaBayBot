@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseLlmConfig, publicLlmInfo, synthesizeAnswer, createHttpProvider } from '../lib/llm/index.mjs';
+import { parseLlmConfig, publicLlmInfo, synthesizeAnswer, createHttpProvider } from '../src/lib/llm/index.mjs';
 
 const BASELINE = {
   category: 'housing', status: 'answered', query: 'Can I apply for housing help?',

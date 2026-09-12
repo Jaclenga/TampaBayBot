@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
-import { answerWithGuardrails } from "../../lib/guardrails/navigator.mjs";
-import { parseLlmConfig } from "../../lib/llm/index.mjs";
+import { answerWithGuardrails } from "../../src/lib/guardrails/navigator.mjs";
+import { parseLlmConfig } from "../../src/lib/llm/index.mjs";
 
 export const METAMORPHIC_SEED = 0x50504d31;
 const REFERENCE_DATE = "2026-09-12T12:00:00Z";

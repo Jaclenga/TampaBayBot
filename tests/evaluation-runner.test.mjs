@@ -18,7 +18,7 @@ import {
   summarizeLiveGeneration,
 } from "../evaluation/suite/live.mjs";
 import { parseArguments, main } from "../scripts/eval-suite.mjs";
-import { parseLlmConfig } from "../lib/llm/index.mjs";
+import { parseLlmConfig } from "../src/lib/llm/index.mjs";
 import { EVALUATION_DATE } from "../evaluation/scenarios.mjs";
 
 const sources = JSON.parse(

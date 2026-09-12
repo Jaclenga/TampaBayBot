@@ -1,6 +1,6 @@
 import { performance } from "node:perf_hooks";
-import { answerWithGuardrails } from "../../lib/guardrails/navigator.mjs";
-import { parseLlmConfig } from "../../lib/llm/index.mjs";
+import { answerWithGuardrails } from "../../src/lib/guardrails/navigator.mjs";
+import { parseLlmConfig } from "../../src/lib/llm/index.mjs";
 import { benchmarks } from "../benchmarks.mjs";
 import { EVALUATION_DATE, prepareScenario } from "../scenarios.mjs";
 import { scoreNavigationAnswer } from "./scoring.mjs";

@@ -1,6 +1,6 @@
 # Guardrail inserts
 
-ParcelPrivateer provides six reusable, versioned instruction blocks in [`lib/guardrails/prompts.mjs`](../lib/guardrails/prompts.mjs). They can be used with a local model, an API provider, or a trusted custom provider adapter. They express the same resident-service requirements regardless of transport or model.
+ParcelPrivateer provides six reusable, versioned instruction blocks in [`src/lib/guardrails/prompts.mjs`](../src/lib/guardrails/prompts.mjs). They can be used with a local model, an API provider, or a trusted custom provider adapter. They express the same resident-service requirements regardless of transport or model.
 
 **Prompt text supports the guardrails implemented in code. It does not establish enforcement, factual correctness, local processing, or resistance to every prompt injection.** The server still decides whether a model may run, validates the output schema and complete quotations, preserves conservative states and provenance, restricts provider configuration, and falls back to the deterministic answer. Changing a prompt must not bypass those checks.
 
@@ -12,12 +12,12 @@ The module exports:
 import {
   GUARDRAIL_PROMPT_INSERTS, // frozen array of frozen { id, version, text }
   buildGuardrailPrompt,   // returns stable combined text
-} from './lib/guardrails/prompts.mjs'; // from a repository-root server module
+} from './src/lib/guardrails/prompts.mjs'; // from a repository-root server module
 ```
 
 Compose the blocks into the system/developer instruction owned by the application, before the existing selector-specific instructions and dynamically supplied JSON schema. Keep the resident question and evidence in a separate data message. Do not concatenate retrieved document text into the trusted instruction message.
 
-For an integration located at `lib/llm/selection.mjs`:
+For an integration located at `src/lib/llm/selection.mjs`:
 
 ```js
 import { buildGuardrailPrompt } from '../guardrails/prompts.mjs';
@@ -38,10 +38,10 @@ This is a composition example: `selectorInstructions`, `schema`, `question`, and
 
 ## Add trusted runtime checks
 
-The question API uses [`answerWithGuardrails`](../lib/guardrails/navigator.mjs), backed by [`createGuardrailRunner`](../lib/guardrails/index.mjs). Add deployment policy checks to [`lib/guardrails/site.mjs`](../lib/guardrails/site.mjs); the API already imports its `siteGuards` array. Built-in checks remain enabled and a custom `allow` cannot undo an earlier veto. For example, this operator policy honors a request for source-only navigation without calling a model:
+The question API uses [`answerWithGuardrails`](../src/lib/guardrails/navigator.mjs), backed by [`createGuardrailRunner`](../src/lib/guardrails/index.mjs). Add deployment policy checks to [`src/lib/guardrails/site.mjs`](../src/lib/guardrails/site.mjs); the API already imports its `siteGuards` array. Built-in checks remain enabled and a custom `allow` cannot undo an earlier veto. For example, this operator policy honors a request for source-only navigation without calling a model:
 
 ```js
-// lib/guardrails/site.mjs
+// src/lib/guardrails/site.mjs
 export const siteGuards = Object.freeze([
   {
     id: 'source-only-preference',

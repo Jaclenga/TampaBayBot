@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { answerQuestion } from '../lib/core/answer.mjs';
-import { isAuthoritative, sourceIsStale } from '../lib/retrieval/search.mjs';
+import { answerQuestion } from '../src/lib/core/answer.mjs';
+import { isAuthoritative, sourceIsStale } from '../src/lib/retrieval/search.mjs';
 import { benchmarks } from '../evaluation/benchmarks.mjs';
 import { prepareScenario, EVALUATION_DATE } from '../evaluation/scenarios.mjs';
 import { scoreNavigationAnswer } from '../evaluation/suite/scoring.mjs';

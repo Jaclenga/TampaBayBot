@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { answerQuestion } from '../lib/core/answer.mjs';
-import { routeQuestion } from '../lib/core/router.mjs';
-import { sourceIsStale, retrieve } from '../lib/retrieval/search.mjs';
-import { findApplicationConflicts, safeSourceUrl, selectQuote } from '../lib/citations/evidence.mjs';
+import { answerQuestion } from '../src/lib/core/answer.mjs';
+import { routeQuestion } from '../src/lib/core/router.mjs';
+import { sourceIsStale, retrieve } from '../src/lib/retrieval/search.mjs';
+import { findApplicationConflicts, safeSourceUrl, selectQuote } from '../src/lib/citations/evidence.mjs';
 import { prepareScenario, EVALUATION_DATE } from '../evaluation/scenarios.mjs';
 import { benchmarks } from '../evaluation/benchmarks.mjs';
 

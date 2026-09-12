@@ -2,7 +2,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import config from '../../data/development-config.json' with { type: 'json' };
+import config from '../../../data/development-config.json' with { type: 'json' };
 import { fetchBoundedText } from '../geospatial/remote.mjs';
 import { normalizeDevelopmentCsv } from './index.mjs';
 

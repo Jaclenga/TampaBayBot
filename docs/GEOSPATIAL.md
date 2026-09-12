@@ -77,7 +77,7 @@ GIS reads have a 12-second timeout, one-megabyte response cap, five-minute proce
 The optional archival command preserves the pinned raw body, provenance manifest, and normalized searchable rows locally:
 
 ```sh
-node lib/development/ingest.mjs
+node src/lib/development/ingest.mjs
 ```
 
 It writes under `data/raw/development/<commit>/`; the main app still fetches the pinned source on demand. This archive and narrative ingestion's downloaded HTML/PDF/GIS metadata are excluded from public source packages. [Distribution policy](DISTRIBUTION.md) explains packaging and terms; the upstream [DATA_LICENSE.md](https://github.com/Jaclenga/Tampa-Development-Records/blob/b1ac7fc705fe667ff046be11f76dcb8aa3b3d872/DATA_LICENSE.md) applies separately from the software license.

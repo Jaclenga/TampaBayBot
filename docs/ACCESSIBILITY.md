@@ -9,7 +9,7 @@ ParcelPrivateer targets WCAG 2.1 AA; conformance has not been established. This 
 - Associated form errors, live status messages and busy/disabled states. Errors distinguish unavailable data from an empty successful result. Important uncertainty appears in words, not color alone.
 - Responsive layouts with wrapping controls, system fonts, browser zoom, reduced-motion styles and print support.
 - Property identifiers, land-use labels, jurisdiction, record distances, dates, caveats and source links are available as text. The optional OpenStreetMap frame requires an explicit button press and has a title. It provides location context; it is never the only place to obtain essential information.
-- English UI messages live in `lib/i18n/`. Source excerpts stay in their source language. English legal/regulatory text is not silently machine-translated.
+- English UI messages live in `src/lib/i18n/`. Source excerpts stay in their source language. English legal/regulatory text is not silently machine-translated.
 
 ## Automated checks
 

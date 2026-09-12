@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { performance } from "node:perf_hooks";
-import { answerWithGuardrails } from "../../lib/guardrails/navigator.mjs";
-import { parseLlmConfig } from "../../lib/llm/index.mjs";
+import { answerWithGuardrails } from "../../src/lib/guardrails/navigator.mjs";
+import { parseLlmConfig } from "../../src/lib/llm/index.mjs";
 
 export const qualityGroundTruth = JSON.parse(
   readFileSync(new URL("../quality-benchmark.json", import.meta.url), "utf8"),

@@ -11,7 +11,7 @@ import { access, cp, mkdir, mkdtemp, readFile, readdir, realpath, symlink, write
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
-import { parseLlmConfig } from '../lib/llm/config.mjs';
+import { parseLlmConfig } from '../src/lib/llm/config.mjs';
 import { prepareOutputDirectory, resolveOutput, writeJsonArtifact } from '../evaluation/suite/runner.mjs';
 
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -144,12 +144,12 @@ async function localJson(path, body) {
 }
 
 async function createFixture() {
-  await access(join(project, 'lib/runtime-env.mjs'));
+  await access(join(project, 'src/lib/runtime-env.mjs'));
   const actualWork = await realpath(workRoot);
   assert.equal(relative(join(await realpath(project), 'work'), actualWork), '', 'The fixture work root must not be redirected through a link.');
   const actual = await realpath(await mkdtemp(join(actualWork, 'ollama-runtime-')));
   assert.ok(actual.startsWith(`${actualWork}${sep}`), 'Generated fixture must remain inside workspace work/.');
-  for (const name of ['app', 'components', 'lib', 'worker', 'build', 'public', 'evaluation', '.openai', 'vendor']) {
+  for (const name of ['src', 'scripts', 'public', 'evaluation', '.openai', 'vendor']) {
     await cp(join(project, name), join(actual, name), { recursive: true });
   }
   await mkdir(join(actual, 'data'));

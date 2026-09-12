@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readInput, inputText, inputPoint, inputJurisdiction, json, inputErrorJson, RequestInputError, REQUEST_BODY_TIMEOUT_MS, REJECTED_BODY_DRAIN_LIMIT_BYTES } from '../lib/http.ts';
+import { readInput, inputText, inputPoint, inputJurisdiction, json, inputErrorJson, RequestInputError, REQUEST_BODY_TIMEOUT_MS, REJECTED_BODY_DRAIN_LIMIT_BYTES } from '../src/lib/http.ts';
 
 const site = 'https://parcelprivateer.example';
 

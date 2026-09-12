@@ -2,6 +2,14 @@
   "name": "parcelprivateer",
   "version": "0.1.0-alpha.4",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jaclenga/ParcelPrivateer.git"
+  },
+  "homepage": "https://github.com/Jaclenga/ParcelPrivateer#readme",
+  "bugs": {
+    "url": "https://github.com/Jaclenga/ParcelPrivateer/issues"
+  },
   "engines": {
     "node": ">=22.19.0"
   },
@@ -9,7 +17,7 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "node --test --test-isolation=none tests/*.test.mjs lib/ingestion/*.test.mjs",
+    "test": "node --test --test-isolation=none tests/*.test.mjs src/lib/ingestion/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "ingest": "node --use-system-ca scripts/ingest.mjs",
@@ -19,7 +27,7 @@
     "eval:compare": "node scripts/eval-suite.mjs --mode compare",
     "test:a11y": "playwright test",
     "check": "npm run typecheck && npm run lint && npm test && npm run evaluate && npm run eval:suite && npm run build",
-    "ingest:development": "node --use-system-ca lib/development/ingest.mjs",
+    "ingest:development": "node --use-system-ca src/lib/development/ingest.mjs",
     "test:e2e": "playwright test",
     "test:llm-runtime": "node scripts/test-llm-runtime.mjs",
     "test:ollama-runtime": "node scripts/test-ollama-runtime.mjs",

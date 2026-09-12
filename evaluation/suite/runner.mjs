@@ -87,9 +87,9 @@ export async function loadEvaluationContext(root = PROJECT_ROOT) {
       sourcesHash: sha(sourceText),
       chunksHash: sha(chunkText),
       suiteDefinitionHash: await hashTree(path.join(root, "evaluation/suite")),
-      implementationHash: await hashTree(path.join(root, "lib")),
+      implementationHash: await hashTree(path.join(root, "src", "lib")),
       promptHash: sha(
-        await fs.readFile(path.join(root, "lib/guardrails/prompts.mjs")),
+        await fs.readFile(path.join(root, "src/lib/guardrails/prompts.mjs")),
       ),
       benchmarkHash: sha(
         await fs.readFile(path.join(root, "evaluation/benchmarks.mjs")),

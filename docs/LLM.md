@@ -99,9 +99,9 @@ The default deployed configuration stays `none` unless the deployment operator e
 `answerWithGuardrails` accepts a server-side `provider.complete({ messages, model, signal, schema })` hook and passes it to the model adapter after the application checks. The hook returns **JSON text** in the same selection format as the built-in providers. This example belongs in a repository-root server module; `completeWithYourBackend` is a function you implement for your backend, not a bundled SDK:
 
 ```js
-import { parseLlmConfig } from './lib/llm/index.mjs';
-import { answerWithGuardrails } from './lib/guardrails/navigator.mjs';
-import { siteGuards } from './lib/guardrails/site.mjs';
+import { parseLlmConfig } from './src/lib/llm/index.mjs';
+import { answerWithGuardrails } from './src/lib/guardrails/navigator.mjs';
+import { siteGuards } from './src/lib/guardrails/site.mjs';
 
 export async function answerWithBackend(question, corpus, env, completeWithYourBackend, signal) {
   return answerWithGuardrails(question, {

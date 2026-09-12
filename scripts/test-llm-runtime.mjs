@@ -99,14 +99,14 @@ async function freePort() {
 }
 
 async function createFixture() {
-  await access(join(project, 'lib/llm/index.mjs'));
-  await access(join(project, 'lib/runtime-env.mjs'));
+  await access(join(project, 'src/lib/llm/index.mjs'));
+  await access(join(project, 'src/lib/runtime-env.mjs'));
   await mkdir(workRoot, { recursive: true });
   const generated = await mkdtemp(join(workRoot, 'llm-runtime-'));
   const actual = await realpath(generated);
   const actualWork = await realpath(workRoot);
   assert.ok(actual.startsWith(`${actualWork}${sep}`), 'Generated fixture must be inside workspace work/.');
-  for (const name of ['app', 'components', 'lib', 'worker', 'build', 'public', 'evaluation', '.openai', 'vendor']) {
+  for (const name of ['src', 'scripts', 'public', 'evaluation', '.openai', 'vendor']) {
     await cp(join(project, name), join(actual, name), { recursive: true });
   }
   await mkdir(join(actual, 'data'));
@@ -193,7 +193,7 @@ async function inspectPublicResponses(base) {
   const html = await response.text();
   assertNoSecrets(html, 'server-rendered home HTML');
   assert.ok(html.includes(expectedProvider === 'none' ? 'Model assistance is off.' : 'Model assistance is on.'), 'The server-rendered model disclosure must reflect the Worker environment.');
-  const paths = new Set(['/components/resident-app.tsx', '/components/property-lookup.tsx']);
+  const paths = new Set(['/src/components/resident-app.tsx', '/src/components/property-lookup.tsx']);
   for (const match of html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)) {
     const url = new URL(match[1].replaceAll('&amp;', '&'), base);
     if (url.origin === base) paths.add(url.pathname + url.search);

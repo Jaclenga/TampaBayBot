@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createGeospatialClient, haversineMeters, validPoint, withinServiceRegion } from '../lib/geospatial/index.mjs';
-import { createDevelopmentClient, normalizeDevelopmentCsv, parseCsv } from '../lib/development/index.mjs';
-import { fetchBoundedText } from '../lib/geospatial/remote.mjs';
+import { createGeospatialClient, haversineMeters, validPoint, withinServiceRegion } from '../src/lib/geospatial/index.mjs';
+import { createDevelopmentClient, normalizeDevelopmentCsv, parseCsv } from '../src/lib/development/index.mjs';
+import { fetchBoundedText } from '../src/lib/geospatial/remote.mjs';
 import gisConfig from '../data/gis-config.json' with { type: 'json' };
 import developmentConfig from '../data/development-config.json' with { type: 'json' };
 

@@ -5,12 +5,12 @@ import {
   createGuardrailRunner,
   GuardrailError,
   GUARDRAIL_STAGES,
-} from "../lib/guardrails/index.mjs";
-import { answerWithGuardrails } from "../lib/guardrails/navigator.mjs";
-import { containsSensitiveIdentifier } from "../lib/guardrails/privacy.mjs";
-import { GUARDRAIL_PROMPT_INSERTS } from "../lib/guardrails/prompts.mjs";
-import { answerQuestion } from "../lib/core/answer.mjs";
-import { parseLlmConfig } from "../lib/llm/index.mjs";
+} from "../src/lib/guardrails/index.mjs";
+import { answerWithGuardrails } from "../src/lib/guardrails/navigator.mjs";
+import { containsSensitiveIdentifier } from "../src/lib/guardrails/privacy.mjs";
+import { GUARDRAIL_PROMPT_INSERTS } from "../src/lib/guardrails/prompts.mjs";
+import { answerQuestion } from "../src/lib/core/answer.mjs";
+import { parseLlmConfig } from "../src/lib/llm/index.mjs";
 
 const sources = JSON.parse(
   readFileSync(new URL("../data/sources.json", import.meta.url)),

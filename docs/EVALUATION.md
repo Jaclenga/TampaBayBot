@@ -28,7 +28,7 @@ The September 12, 2026 development evaluation produced these results before the 
 | Citation correctness | **12** | 0 | 0 |
 | Citation completeness | **12** | 0 | 0 |
 
-All **236 offline cases** passed, with **4,370 applicable checks passed**, zero failed and 582 marked not applicable. The code suite also passed all 235 tests. The three claim metrics run over the same 12 exact, hand-authored cases; they are separate checks of claim identity, supporting-source attribution and citation coverage rather than 36 independent answers.
+All **236 offline cases** passed, with **4,370 applicable checks passed**, zero failed and 582 marked not applicable. The code suite also passed all 236 tests. The three claim metrics run over the same 12 exact, hand-authored cases; they are separate checks of claim identity, supporting-source attribution and citation coverage rather than 36 independent answers.
 
 The result is reproducible against the retained dated development corpus. It is not an open-ended semantic accuracy rate, a blind holdout, a current-source audit or a completed human review. The downloadable source release intentionally starts without the retained evidence, so its generated reports are marked `not_run` until an operator fetches, reviews and evaluates a corpus.
 

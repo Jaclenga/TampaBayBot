@@ -24,8 +24,17 @@
       }
     ],
     "paths": {
+      "@/package.json": [
+        "./package.json"
+      ],
+      "@/data/*": [
+        "./data/*"
+      ],
+      "@/evaluation/*": [
+        "./evaluation/*"
+      ],
       "@/*": [
-        "./*"
+        "./src/*"
       ]
     }
   },

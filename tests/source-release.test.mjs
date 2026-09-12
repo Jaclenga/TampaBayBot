@@ -38,12 +38,20 @@ test("packaged Markdown keeps working and external links while labeling omitted 
   assert.doesNotMatch(result, /screenshots\/old.png|responses-old.json/);
 });
 
+test("package metadata uses the canonical no-hyphen public repository", async () => {
+  const packageJson = JSON.parse(await readFile("package.json", "utf8"));
+  assert.equal(packageJson.repository.url, "https://github.com/Jaclenga/ParcelPrivateer.git");
+  assert.equal(packageJson.homepage, "https://github.com/Jaclenga/ParcelPrivateer#readme");
+  assert.equal(packageJson.bugs.url, "https://github.com/Jaclenga/ParcelPrivateer/issues");
+  assert.doesNotMatch(JSON.stringify(packageJson), /Jaclenga\/Parcel-Privateer/);
+});
+
 test("source packaging excludes snapshots, history and secrets, and refuses replacement or escaped output", async () => {
   const work = path.resolve("work");
   await mkdir(work, { recursive: true });
   const root = await mkdtemp(path.join(work, "release-fixture-"));
   try {
-    for (const directory of ["app", "components", "lib", "scripts", "tests", "vendor", "build", "evaluation/suite/results", "evaluation/results", "data/raw", ".openai", ".git"]) await mkdir(path.join(root, directory), { recursive: true });
+    for (const directory of ["src/app", "src/lib", "scripts/build", "tests", "vendor", "evaluation/suite/results", "evaluation/results", "data/raw", ".openai", ".git"]) await mkdir(path.join(root, directory), { recursive: true });
     await writeFile(path.join(root, "data/sources.json"), JSON.stringify([{ source_id: "fixture", status: "available", raw_path: "data/raw/example.html" }]));
     await writeFile(path.join(root, "data/raw/example.html"), "external snapshot sentinel");
     await writeFile(path.join(root, "data/chunks.json"), JSON.stringify([{ text: "external excerpt sentinel" }]));
@@ -53,19 +61,25 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     await writeFile(path.join(root, ".env"), "private fixture sentinel");
     await writeFile(path.join(root, ".openai/hosting.json"), "owner fixture sentinel");
     await writeFile(path.join(root, "scripts/example.mjs"), "export const originalSoftware = true;\r\n");
+    await writeFile(path.join(root, "src/app/example.ts"), "export const organizedApp = true;\r\n");
+    await writeFile(path.join(root, "src/lib/example.mjs"), "export const organizedLibrary = true;\r\n");
+    await writeFile(path.join(root, "scripts/build/example.ts"), "export const organizedBuildTool = true;\r\n");
     const result = await createSourceRelease({ root, output: "work/releases/alpha" });
     const output = path.join(root, result.output);
     const manifest = JSON.parse(await readFile(path.join(output, "SOURCE_RELEASE_MANIFEST.json"), "utf8"));
     assert.equal(manifest.external_snapshots_included, false);
     assert.equal(manifest.git_history_included, false);
     assert.equal(await readFile(path.join(output, "scripts/example.mjs"), "utf8"), "export const originalSoftware = true;\n");
+    assert.equal(await readFile(path.join(output, "src/app/example.ts"), "utf8"), "export const organizedApp = true;\n");
+    assert.equal(await readFile(path.join(output, "src/lib/example.mjs"), "utf8"), "export const organizedLibrary = true;\n");
+    assert.equal(await readFile(path.join(output, "scripts/build/example.ts"), "utf8"), "export const organizedBuildTool = true;\n");
     assert.equal(await readFile(path.join(output, ".gitattributes"), "utf8"), "* text=auto eol=lf\n");
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "data/chunks.json"), "utf8")), []);
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/results/responses.json"), "utf8")), []);
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/quality-benchmark.json"), "utf8")), { schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] });
     assert.match(await readFile(path.join(output, "docs/DATA_SOURCES.md"), "utf8"), /\.\.\/data\/sources\.json/);
     await assert.rejects(readFile(path.join(output, "DATA_SOURCES.md")), { code: "ENOENT" });
-    for (const excluded of [".env", ".openai/hosting.json", ".git/config", "data/raw/example.html"]) await assert.rejects(readFile(path.join(output, excluded)), { code: "ENOENT" });
+    for (const excluded of [".env", ".openai/hosting.json", ".git/config", "data/raw/example.html", "app/example.ts", "lib/example.mjs", "build/example.ts"]) await assert.rejects(readFile(path.join(output, excluded)), { code: "ENOENT" });
     for (const file of manifest.files) assert.doesNotMatch(await readFile(path.join(output, file.path), "utf8"), /external (?:snapshot|excerpt|response) sentinel|private fixture sentinel|owner fixture sentinel/);
     assert.equal((await verifySourceRelease(output)).status, "passed");
     await writeFile(path.join(output, "scripts/example.mjs"), "export const originalSoftware = null;\n");

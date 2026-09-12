@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { parseEnv } from "node:util";
 import { pathToFileURL } from "node:url";
-import { parseLlmConfig } from "../lib/llm/index.mjs";
+import { parseLlmConfig } from "../src/lib/llm/index.mjs";
 import {
   runOfflineSuite,
   loadEvaluationContext,

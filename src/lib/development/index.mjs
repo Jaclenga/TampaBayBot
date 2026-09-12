@@ -1,4 +1,4 @@
-import config from '../../data/development-config.json' with { type: 'json' };
+import config from '../../../data/development-config.json' with { type: 'json' };
 import { createGeospatialClient, haversineMeters, validPoint, withinServiceRegion } from '../geospatial/index.mjs';
 import { fetchBoundedText } from '../geospatial/remote.mjs';
 

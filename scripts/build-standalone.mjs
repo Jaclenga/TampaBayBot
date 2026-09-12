@@ -34,7 +34,7 @@ for (const [index, segment] of segments.entries()) {
 }
 
 const fixture = await mkdtemp(join(workRoot, 'standalone-build-'));
-for (const name of ['app', 'components', 'lib', 'worker', 'build', 'public', 'evaluation', 'vendor']) {
+for (const name of ['src', 'scripts', 'public', 'evaluation', 'vendor']) {
   await cp(join(project, name), join(fixture, name), { recursive: true, filter: source => !relative(project, source).split(sep).some(part => part.startsWith('.')) });
 }
 await mkdir(join(fixture, 'data'));

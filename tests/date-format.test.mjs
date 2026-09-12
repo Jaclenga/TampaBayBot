@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { dateLabel } from '../lib/i18n/format.ts';
+import { dateLabel } from '../src/lib/i18n/format.ts';
 
 test('ISO calendar dates and timestamp offsets format consistently in UTC', () => {
   assert.equal(dateLabel('2026-09-12'), 'Sep 12, 2026');

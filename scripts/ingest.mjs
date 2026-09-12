@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { normalize, chunkUnits, sha256 } from '../lib/ingestion/normalize.mjs';
+import { normalize, chunkUnits, sha256 } from '../src/lib/ingestion/normalize.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const registryPath = resolve(root, 'data/sources.json');

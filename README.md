@@ -10,6 +10,8 @@ Choose Tampa, St. Petersburg, Clearwater, or county resources for Hillsborough, 
 
 > **Alpha: for contributors and supervised testing.** The downloadable source release starts without loaded evidence. Fetch and review sources before expecting cited answers. Independent human review and production-readiness work remain open. See [quick start](#quick-start) and [release status](docs/RELEASE_READINESS.md).
 
+**Project links:** [Code](https://github.com/Jaclenga/ParcelPrivateer) · [Releases](https://github.com/Jaclenga/ParcelPrivateer/releases) · [Issues](https://github.com/Jaclenga/ParcelPrivateer/issues) · [Private security reporting](https://github.com/Jaclenga/ParcelPrivateer/security/advisories/new)
+
 ## What it does
 
 - Find housing resources for renters and homeowners.
@@ -119,6 +121,21 @@ Read [limitations](docs/LIMITATIONS.md) for the full scope and [security](SECURI
 **Development and deployment:** [Contributing](CONTRIBUTING.md) · [Developer guide](docs/DEVELOPMENT.md) · [Deployment](docs/DEPLOYMENT.md) · [Distribution](docs/DISTRIBUTION.md) · [Release readiness](docs/RELEASE_READINESS.md)
 
 The [documentation index](docs/README.md) identifies the main guide for each topic and separates current instructions from historical records.
+
+## Repository layout
+
+| Directory | Contents |
+| --- | --- |
+| `src/` | Resident application, shared components, answer engine, adapters, guardrails and Worker entry point |
+| `data/` | Source registry and locally generated evidence placeholders |
+| `evaluation/` | Benchmarks, scoring, reports and human-review materials |
+| `tests/` | Code, integration and browser regressions |
+| `scripts/` | Ingestion, evaluation, build, security and release tools |
+| `docs/` | Setup, methods, limitations and release evidence |
+| `public/` | Static browser assets |
+| `vendor/` | Reviewed local dependency replacements and their licenses |
+
+The root keeps only project entry points, open-source governance files, package manifests and configuration that the build tools discover there.
 
 ## License and independence
 

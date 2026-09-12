@@ -31,29 +31,28 @@ This does not require changing execution policy. The other npm commands in this 
 React and TypeScript provide the resident interface. Vinext/Vite compiles the application and its server routes for a Cloudflare-compatible Worker. The default answer flow routes the question, retrieves evidence from the local corpus, constructs a cited extractive answer and provides an official next step. Optional models operate after retrieval; [LLM.md](LLM.md) owns their selection contract and configuration.
 
 ```text
-app/                 Resident pages and app/api/ HTTP routes
-components/          Shared interface components
-worker/              Worker entry point and request context
-lib/core/            Question routing and answer states
-lib/retrieval/       Lexical retrieval
-lib/citations/       Excerpts, provenance and narrow conflict checks
-lib/llm/             Provider adapters and evidence-selection validation
-lib/guardrails/      Input, evidence, model and response checks
-lib/housing/         Situation routing and verification questions
-lib/geospatial/      Official address and feature queries
-lib/development/     Independent records, integrity checks and distances
-lib/ingestion/       HTML/PDF/CSV/JSON/ArcGIS/GeoJSON adapters
-lib/i18n/            English-first interface strings
-data/                Source registry, corpus and adapter configuration
-evaluation/          Benchmarks, suite runner and review artifacts
-tests/               Code regressions and browser checks
-scripts/             Ingestion, evaluation, deployment and release tools
-docs/                Topic guides and dated verification records
+src/
+  app/                 Resident pages and app/api HTTP routes
+  components/          Shared interface components
+  worker/              Worker entry point and request context
+  lib/                 Answer engine, retrieval, citations, models, guardrails,
+                       housing, geospatial, ingestion and interface strings
+data/                   Source registry, corpus and adapter configuration
+evaluation/             Benchmarks, suite runner and review artifacts
+tests/                  Code regressions and browser checks
+scripts/                Ingestion, evaluation, build, deployment and release tools
+docs/                   Topic guides and dated verification records
+public/                 Static browser assets
+vendor/                 Reviewed local dependency replacements and licenses
 ```
 
 The JSON registry and corpus are the initial index store; retrieval builds an in-memory lexical index. There is no database migration or external vector-index setup, and independent builds configure no D1 or R2 binding. The optional `.openai/hosting.json` belongs to the maintainer's Sites workflow. Local development and ordinary builds work without it.
 
 Source URLs, selectors and refresh policies live in `data/sources.json`. GIS configuration is in `data/gis-config.json`; independent development-record version, digest and bounds are in `data/development-config.json`. Downloaded snapshots and completed reports are operator-generated material, not part of the source-only alpha.
+
+## Canonical repository
+
+The public project, issue tracker, security workflow and releases use [`https://github.com/Jaclenga/ParcelPrivateer`](https://github.com/Jaclenga/ParcelPrivateer). The package metadata uses the same no-hyphen URL. Maintainer development checkouts may contain downloaded evidence and private run artifacts, so publishing always goes through the sanitized source-release builder rather than pushing a development branch directly.
 
 ## Commands and evidence prerequisites
 

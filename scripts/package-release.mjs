@@ -6,7 +6,7 @@ import { sanitizeReportValue } from "./sanitize-report.mjs";
 import { SUITE_VERSION } from "../evaluation/suite/report.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
-const SOURCE_DIRS = ["app", "components", "lib", "scripts", "tests", "vendor", "build"];
+const SOURCE_DIRS = ["src", "scripts", "tests", "vendor"];
 const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "next.config.ts", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"];
 const GUIDE_FILES = ["README.md", "ACCESSIBILITY.md", "DATA_SOURCES.md", "DEVELOPMENT.md", "EVALUATION.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LIMITATIONS.md", "LLM.md", "METHODOLOGY.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "ASSETS.md", "RELEASE_READINESS.md", "OLLAMA_TESTING.md", "BUG_FIX_FOLLOWUP_2026-09-12.md", "SECRET_SCANNING.md", "ALPHA_VERIFICATION.json", "TAMPA_BAY_VERIFICATION.json"];
 const GENERATED_FIELDS = ["retrieval_date", "source_updated_date", "content_hash", "normalized_content_hash", "raw_path", "last_attempt", "last_error", "response_url", "content_type", "etag", "last_modified", "content_changed_at", "record_count", "searchable_point_count", "excluded_point_count"];
@@ -95,7 +95,7 @@ export async function createSourceRelease({ root = ROOT, output }) {
   for (const directory of SOURCE_DIRS) for (const name of await sourceFiles(root, directory)) inputs.add(name);
   for (const guide of GUIDE_FILES) inputs.add(`docs/${guide}`);
   for (const name of await sourceFiles(root, "evaluation/suite")) inputs.add(name);
-  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/benchmark.json", "evaluation/quality-benchmark.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
+  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/benchmark.json", "evaluation/quality-benchmark.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
   // The release gets its own source-only CI workflow, if supplied by the maintainer.
   inputs.add(".github/workflows/source-release.yml");
 

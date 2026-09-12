@@ -1,10 +1,10 @@
 import { createHash } from "node:crypto";
 import { benchmarks } from "../benchmarks.mjs";
 import { EVALUATION_DATE } from "../scenarios.mjs";
-import { answerQuestion } from "../../lib/core/answer.mjs";
-import { answerWithGuardrails } from "../../lib/guardrails/navigator.mjs";
-import { siteGuards } from "../../lib/guardrails/site.mjs";
-import { publicLlmInfo } from "../../lib/llm/index.mjs";
+import { answerQuestion } from "../../src/lib/core/answer.mjs";
+import { answerWithGuardrails } from "../../src/lib/guardrails/navigator.mjs";
+import { siteGuards } from "../../src/lib/guardrails/site.mjs";
+import { publicLlmInfo } from "../../src/lib/llm/index.mjs";
 import { scoreNavigationAnswer } from "./scoring.mjs";
 
 export const LIVE_CASE_IDS = Object.freeze([

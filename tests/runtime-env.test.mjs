@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getRuntimeEnv, withRuntimeEnv } from "../lib/runtime-env.mjs";
+import { getRuntimeEnv, withRuntimeEnv } from "../src/lib/runtime-env.mjs";
 
 test("overlapping requests retain their own runtime credentials across awaits", async () => {
   let release;

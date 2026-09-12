@@ -1,4 +1,4 @@
-import config from '../../data/gis-config.json' with { type: 'json' };
+import config from '../../../data/gis-config.json' with { type: 'json' };
 import { createJsonReader } from './remote.mjs';
 
 export function validPoint(point) {

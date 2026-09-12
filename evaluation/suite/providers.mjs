@@ -1,7 +1,7 @@
-import { answerWithGuardrails } from "../../lib/guardrails/navigator.mjs";
-import { GuardrailError } from "../../lib/guardrails/index.mjs";
-import { answerQuestion } from "../../lib/core/answer.mjs";
-import { parseLlmConfig } from "../../lib/llm/index.mjs";
+import { answerWithGuardrails } from "../../src/lib/guardrails/navigator.mjs";
+import { GuardrailError } from "../../src/lib/guardrails/index.mjs";
+import { answerQuestion } from "../../src/lib/core/answer.mjs";
+import { parseLlmConfig } from "../../src/lib/llm/index.mjs";
 
 const QUESTION = "Where can I find housing assistance application information?";
 const CREDENTIAL = "provider-suite-credential-fixture-only";

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Consolidated the application, components, runtime libraries and Worker under `src/`, and moved the Sites build adapter under `scripts/build/`. Added a documented root layout plus canonical package, contribution and maintainer references to the public no-hyphen repository, `Jaclenga/ParcelPrivateer`.
+
 Added the published alpha.4 factual-accuracy, citation-correctness and citation-completeness results to the project README and evaluation documentation, together with their benchmark scope and interpretation limits.
 
 ## v0.1.0-alpha.4 — 2026-09-12
@@ -10,7 +12,7 @@ Added a deterministic claim-quality suite for factual accuracy, citation correct
 
 Moved the accessibility, data-source, limitations and methodology guides into `docs/`. The repository root now contains the project entry point, standard open-source governance and legal files, package manifests, and configuration required by the build tools.
 
-The offline suite is version 1.2.0 and now contains 236 cases. All 235 code tests, 77 narrative cases, 236 offline cases and 4,370 applicable checks pass against the retained development corpus; 582 checks are N/A. The three claim metrics each pass 12/12 cases. Typecheck, lint, production build and the focused production evaluation-page browser case pass. These bounded fixtures do not establish open-ended semantic accuracy, current source truth or resident usefulness.
+The offline suite is version 1.2.0 and now contains 236 cases. All 236 code tests, 77 narrative cases, 236 offline cases and 4,370 applicable checks pass against the retained development corpus; 582 checks are N/A. The three claim metrics each pass 12/12 cases. Typecheck, lint, production build and the focused production evaluation-page browser case pass. These bounded fixtures do not establish open-ended semantic accuracy, current source truth or resident usefulness.
 
 ## v0.1.0-alpha.3 — 2026-09-12
 

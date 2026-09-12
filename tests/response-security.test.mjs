@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { withResponseSecurity } from '../lib/response-security.ts';
+import { withResponseSecurity } from '../src/lib/response-security.ts';
 
 const site = 'https://parcelprivateer.example';
 test('server-issued CSP replaces hostile request policy, varies per response and preserves the body', async () => {

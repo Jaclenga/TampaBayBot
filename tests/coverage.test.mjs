@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
-import { JURISDICTIONS, isJurisdictionId, sourceCoversJurisdiction } from '../lib/coverage.mjs';
-import { routeQuestion } from '../lib/core/router.mjs';
-import { answerQuestion } from '../lib/core/answer.mjs';
-import { retrieve } from '../lib/retrieval/search.mjs';
+import { JURISDICTIONS, isJurisdictionId, sourceCoversJurisdiction } from '../src/lib/coverage.mjs';
+import { routeQuestion } from '../src/lib/core/router.mjs';
+import { answerQuestion } from '../src/lib/core/answer.mjs';
+import { retrieve } from '../src/lib/retrieval/search.mjs';
 import { EVALUATION_DATE } from '../evaluation/scenarios.mjs';
 
 const sources = JSON.parse(fs.readFileSync(new URL('../data/sources.json', import.meta.url), 'utf8'));
