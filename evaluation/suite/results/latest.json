@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "suiteVersion": "1.1.0",
+  "suiteVersion": "1.2.0",
   "mode": "not_run",
   "status": "not_run",
   "startedAt": null,
@@ -77,10 +77,23 @@
           "notApplicable": 0,
           "rate": null
         }
+      },
+      "quality": {
+        "cases": 0,
+        "passed": 0,
+        "failed": 0,
+        "checks": {
+          "passed": 0,
+          "failed": 0,
+          "applicable": 0,
+          "notApplicable": 0,
+          "rate": null
+        }
       }
     }
   },
   "metrics": {},
+  "automatedQuality": null,
   "humanEvaluation": {
     "status": "not_run"
   },

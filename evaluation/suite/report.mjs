@@ -1,10 +1,12 @@
-export const SUITE_VERSION = "1.1.0";
+export const SUITE_VERSION = "1.2.0";
 const kinds = new Set([
   "behavior",
   "integrity",
   "privacy",
   "robustness",
   "proxy",
+  "accuracy",
+  "citation",
 ]);
 const suites = new Set([
   "navigation",
@@ -12,6 +14,7 @@ const suites = new Set([
   "providers",
   "metamorphic",
   "jurisdiction",
+  "quality",
   "live",
 ]);
 const fixtures = new Set([
@@ -153,6 +156,11 @@ export function makeReport(
     }),
   );
   const allChecks = rows.flatMap((row) => row.checks);
+  const qualityChecks = rows
+    .filter((row) => row.suite === "quality")
+    .flatMap((row) => row.checks);
+  const qualityMetric = (id) =>
+    counts(qualityChecks.filter((check) => check.id === id));
   const metrics = {};
   for (const row of rows)
     for (const check of row.checks) {
@@ -180,6 +188,14 @@ export function makeReport(
         { kind: value.kind, ...counts(value.values) },
       ]),
     ),
+    automatedQuality: qualityChecks.length
+      ? {
+          scope: "Exact authored claims in the fixed extractive answer format against the retained dated snapshots.",
+          factualAccuracy: qualityMetric("factual_accuracy"),
+          citationCorrectness: qualityMetric("citation_correctness"),
+          citationCompleteness: qualityMetric("citation_completeness"),
+        }
+      : null,
     humanEvaluation: {
       factualCorrectness: null,
       residentUsefulness: null,
@@ -188,7 +204,7 @@ export function makeReport(
     },
     limitations: [
       "Hand-authored development cases and seeded variants are not an independent holdout.",
-      "Exact quotations, status checks and evidence selection are engineering checks, not semantic correctness scores.",
+      "Automated accuracy and citation scores cover exact authored claims in fixed extractive answers; they do not measure open-ended semantic correctness or whether a source remains true today.",
       "Offline provider responses are synthetic. Live results apply only to the tested model and configuration.",
       "These reports do not score geographic accuracy or replace the separate GIS, browser, accessibility or human audits.",
       "Prompt and identifier-pattern checks do not establish universal attack resistance or complete personal-data detection.",
@@ -229,6 +245,27 @@ export function reportMarkdown(report) {
     lines.push(
       `| ${markdown(name)} | ${value.passed} | ${value.failed} | ${value.checks.applicable} |`,
     );
+  if (report.automatedQuality) {
+    lines.push(
+      "",
+      "## Scoped answer-quality metrics",
+      "",
+      "| Metric | Passed | Failed | Not applicable |",
+      "| --- | ---: | ---: | ---: |",
+    );
+    const qualityLabels = {
+      factualAccuracy: "Factual accuracy",
+      citationCorrectness: "Citation correctness",
+      citationCompleteness: "Citation completeness",
+    };
+    for (const [name, value] of Object.entries(report.automatedQuality)) {
+      if (name === "scope") continue;
+      lines.push(
+        `| ${qualityLabels[name] ?? markdown(name)} | ${value.passed} | ${value.failed} | ${value.notApplicable} |`,
+      );
+    }
+    lines.push("", report.automatedQuality.scope);
+  }
   lines.push("", "## Failed checks", "");
   const failures = report.cases.flatMap((row) =>
     row.checks
@@ -245,7 +282,7 @@ export function reportMarkdown(report) {
     "",
     ...report.limitations.map((value) => `- ${value}`),
     "",
-    "Human correctness, completeness and usefulness scores remain unscored.",
+    "Independent human correctness, completeness and usefulness scores remain unscored.",
     "",
     "Machine-readable provenance and individual checks are in `latest.json`.",
     "",
@@ -299,6 +336,7 @@ export function compareReports(
     "suiteDefinitionHash",
     "benchmarkHash",
     "scenarioHash",
+    "qualityBenchmarkHash",
   ];
   if (
     [baseline, candidate].some((report) =>
@@ -367,6 +405,6 @@ export function compareReports(
           ),
       )
       .map((row) => `${row.suite}/${row.id}`),
-    note: "A passing comparison means no checked engineering regression. It does not score model correctness or usefulness.",
+    note: "A passing comparison means no checked regression in the selected suites. Scoped quality cases do not establish general model correctness or usefulness.",
   };
 }

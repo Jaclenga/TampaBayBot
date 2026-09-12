@@ -2,7 +2,7 @@
 
 This document explains how ParcelPrivateer constructs answers and preserves their evidence. The default path combines deterministic routing, lexical retrieval, literal excerpts and official next-step links. A language model is optional. Geographic queries and independent development records provide additional context when a question needs location.
 
-The public source-only alpha starts without evidence. An operator loads and reviews sources using the [distribution guide](docs/DISTRIBUTION.md); until then, the app reports that source information is unavailable. The methodology below describes a populated installation. Source coverage belongs in [DATA_SOURCES.md](DATA_SOURCES.md), and dated results belong in [release readiness](docs/RELEASE_READINESS.md).
+The public source-only alpha starts without evidence. An operator loads and reviews sources using the [distribution guide](DISTRIBUTION.md); until then, the app reports that source information is unavailable. The methodology below describes a populated installation. Source coverage belongs in [DATA_SOURCES.md](DATA_SOURCES.md), and dated results belong in [release readiness](RELEASE_READINESS.md).
 
 ## Resident question to next step
 
@@ -13,17 +13,17 @@ The public source-only alpha starts without evidence. An operator loads and revi
 5. Describe what can be verified, show uncertainty and route to an official next step. Housing resources are potential matches; eligibility remains an agency decision.
 6. When location matters, require a selected address candidate and query the jurisdiction and property layers. Show observed development separately from regulatory designations.
 
-Optional model assistance selects evidence for an otherwise `answered` result. Its IDs and full literal excerpts must validate, the primary evidence stays first, and conservative states and official next steps remain application-controlled. Invalid output returns the deterministic baseline. The [provider contract](docs/LLM.md) defines the exact selection format, configuration and transfer of eligible questions/public excerpts to a provider.
+Optional model assistance selects evidence for an otherwise `answered` result. Its IDs and full literal excerpts must validate, the primary evidence stays first, and conservative states and official next steps remain application-controlled. Invalid output returns the deterministic baseline. The [provider contract](LLM.md) defines the exact selection format, configuration and transfer of eligible questions/public excerpts to a provider.
 
-The question API applies built-in checks and additive operator [guardrails](docs/GUARDRAIL_INSERTS.md) around the flow. They can reject input or suppress model use but cannot authorize unsupported evidence or rewrite the answer contract. The limits of identifier detection, trusted extensions and provider disclosure are documented in [SECURITY.md](SECURITY.md).
+The question API applies built-in checks and additive operator [guardrails](GUARDRAIL_INSERTS.md) around the flow. They can reject input or suppress model use but cannot authorize unsupported evidence or rewrite the answer contract. The limits of identifier detection, trusted extensions and provider disclosure are documented in [SECURITY.md](../SECURITY.md).
 
-This implementation supports selected Tampa Bay jurisdictions. Resource scope is configured separately from the official polygons used for live property context, so adding a source or selecting a city does not establish GIS coverage. The [architecture and code layout](docs/DEVELOPMENT.md#architecture-and-code-layout) identifies the core modules, JSON/in-memory index and separation between ingestion and the resident interface.
+This implementation supports selected Tampa Bay jurisdictions. Resource scope is configured separately from the official polygons used for live property context, so adding a source or selecting a city does not establish GIS coverage. The [architecture and code layout](DEVELOPMENT.md#architecture-and-code-layout) identifies the core modules, JSON/in-memory index and separation between ingestion and the resident interface.
 
 ## Ingestion and evidence reconstruction
 
 `scripts/ingest.mjs` reads only reviewed registry sources. It fetches HTTPS responses with a timeout and response-size guard, checks HTTP status, archives original response bytes by SHA-256, normalizes structure, creates chunks and updates registry/report files. Credentials are unnecessary for the included public sources.
 
-The [command reference](docs/DEVELOPMENT.md#commands-and-evidence-prerequisites) lists full-source and single-source fetches, offline rebuilding and regeneration checks. Offline/check modes require preserved local responses and cannot populate an empty source-only package. A new fetch may change content and invalidate historical benchmark expectations. The npm ingestion command enables Node's system certificate store; this handled the Florida Housing certificate chain observed during development without disabling TLS verification.
+The [command reference](DEVELOPMENT.md#commands-and-evidence-prerequisites) lists full-source and single-source fetches, offline rebuilding and regeneration checks. Offline/check modes require preserved local responses and cannot populate an empty source-only package. A new fetch may change content and invalidate historical benchmark expectations. The npm ingestion command enables Node's system certificate store; this handled the Florida Housing certificate chain observed during development without disabling TLS verification.
 
 Supported adapters:
 
@@ -58,10 +58,10 @@ Retrieved text is untrusted data. Ingestion does not execute scripts or document
 
 The resident selects an address candidate before property lookup. Official municipal boundaries establish coverage for the connected Tampa, St. Petersburg and Clearwater layers; a postal address or selected resource area does not. Point intersections return parcel and mapped-designation evidence while retaining ambiguity and outages. They cannot determine every condition on a whole parcel or authorize a project.
 
-Independent development records retain their source snapshot and original agency links. Distance is measured between representative points, and proximity establishes no legal relationship. Source-reported status does not prove that physical work started or finished; no matching record does not prove inactivity. [Geospatial behavior](docs/GEOSPATIAL.md) is the canonical reference for endpoints, geometry, distance, date meanings and retrieval bounds.
+Independent development records retain their source snapshot and original agency links. Distance is measured between representative points, and proximity establishes no legal relationship. Source-reported status does not prove that physical work started or finished; no matching record does not prove inactivity. [Geospatial behavior](GEOSPATIAL.md) is the canonical reference for endpoints, geometry, distance, date meanings and retrieval bounds.
 
 ## Evaluation and release interpretation
 
-Source regeneration, code tests, synthetic provider tests, real-model runs, agent review and independent human review answer different questions. [Evaluation and review](docs/EVALUATION.md) defines those distinctions and metric limits; [suite commands](docs/EVAL_SUITE.md) explain how to reproduce and compare engineering reports. None establishes general factual accuracy by itself.
+Source regeneration, code tests, scoped exact-claim quality cases, synthetic provider tests, real-model runs, agent review and independent human review answer different questions. [Evaluation and review](EVALUATION.md) defines those distinctions and metric limits; [suite commands](EVAL_SUITE.md) explain how to reproduce and compare reports. The claim suite measures accuracy and citation behavior for its dated authored cases; it does not establish general factual accuracy by itself.
 
-Independent human review remains pending. Accessibility support and manual checks are in [ACCESSIBILITY.md](ACCESSIBILITY.md); current release evidence is in [release readiness](docs/RELEASE_READINESS.md). [Limitations](LIMITATIONS.md) summarizes the resulting user-facing boundaries, and [notices](NOTICE.md) explain licensing and independence.
+Independent human review remains pending. Accessibility support and manual checks are in [ACCESSIBILITY.md](ACCESSIBILITY.md); current release evidence is in [release readiness](RELEASE_READINESS.md). [Limitations](LIMITATIONS.md) summarizes the resulting user-facing boundaries, and [notices](../NOTICE.md) explain licensing and independence.

@@ -6,7 +6,7 @@ export const evaluationEn = {
   inspected: "responses inspected by an agent",
   human: "human reviews completed",
   explanation:
-    "These hand-authored development cases check routing, source selection, exact quotations, and uncertainty. They are not an independent test set and do not establish factual accuracy or usefulness for residents.",
+    "These hand-authored development cases check routing, source selection, exact quotations, uncertainty, and a bounded set of authored claims. They are not an independent test set and do not establish general accuracy or usefulness for residents.",
   tableCaption: "Selected automated checks on the published benchmark",
   check: "Check",
   result: "Passing / checked",
@@ -20,7 +20,7 @@ export const evaluationEn = {
   } as Record<string, string>,
   suiteTitle: "Offline engineering checks",
   suiteExplanation:
-    "This run checks navigation, jurisdiction boundaries, guardrails, provider behavior, and variations in questions and sources. Provider responses are synthetic; they do not evaluate a real model or establish answer accuracy. Independent human review remains pending.",
+    "This run checks navigation, jurisdiction boundaries, guardrails, provider behavior, question and source variations, and exact authored answer claims. Provider responses are synthetic and do not evaluate a real model. The scoped quality cases do not establish open-ended model accuracy. Independent human review remains pending.",
   suitePublished: "Run completed",
   suiteCaption: "Published offline engineering cases",
   suiteName: "Suite",
@@ -30,19 +30,28 @@ export const evaluationEn = {
   suiteTotal: "All offline suites",
   suiteFailures: "Some cases failed. Inspect the report before relying on these checks.",
   suiteNoFailures: "No failing cases were recorded in this run.",
+  qualityTitle: "Scoped answer-quality metrics",
+  qualityExplanation:
+    "These scores compare fixed extractive answers with 12 authored claim hashes and source/chunk support pairs. They measure the dated fixtures only; independent human review is still required.",
+  qualityCaption: "Claim-level checks against retained public snapshots",
+  qualityAccuracy: "Factual accuracy",
+  qualityCitationCorrectness: "Citation correctness",
+  qualityCitationCompleteness: "Citation completeness",
+  qualityNotApplicable: "Not applicable",
   suiteLabels: {
     navigation: "Navigation",
     guardrails: "Guardrails",
     providers: "Provider adapters (synthetic)",
     metamorphic: "Question and source variations",
     jurisdiction: "Regional coverage and jurisdiction",
+    quality: "Answer and citation quality",
   } as Record<string, string>,
   humanTitle: "Human review",
   humanText:
     "Independent human review is still required. Thirty response packets are ready for review, with human scores left empty. An earlier agent review records individual notes; it does not replace review by housing experts, residents, or accessibility testers.",
   unknownTitle: "What has not been measured",
   unknownText:
-    "Semantic factual support, unsupported-claim rate, resident usefulness, screen-reader usability, and property-level geographic correctness are not given aggregate scores. Review the method and individual cases before drawing conclusions.",
+    "Open-ended semantic correctness, source truth after the reference date, resident usefulness, screen-reader usability, and property-level geographic correctness are not given aggregate scores. Review the method and individual cases before drawing conclusions.",
   downloads: "Download reports",
   summary: "Evaluation summary (JSON)",
   suiteDownload: "Offline engineering suite report (JSON)",

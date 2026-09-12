@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "reference_date": "2026-09-12T12:00:00.000Z",
+  "method": "Hand-authored exact-claim hashes and supporting source/chunk pairs for fixed extractive answers.",
+  "cases": [
+    {
+      "id": "tampa-rmap-move-in",
+      "title": "Tampa move-in assistance scope",
+      "question": "I need help with a security deposit and moving costs.",
+      "jurisdiction_id": "tampa",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "move-in-costs",
+        "text_sha256": "eaf49cee53e62d44cdd1350a967b9c3f8a4088c82998e0932b14debfaf2b14ab",
+        "support": [{ "source_id": "tampa-rmap", "chunk_id": "tampa-rmap-07ad46aa1da57b" }]
+      }]
+    },
+    {
+      "id": "tampa-rmap-online",
+      "title": "Tampa RMAP application channel",
+      "question": "How do I apply for RMAP online?",
+      "jurisdiction_id": "tampa",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "online-portal-only",
+        "text_sha256": "44247f6184ea9645cbf169219757fa7201c40e87b8d480a757a8cd646e4c6614",
+        "support": [{ "source_id": "tampa-rmap", "chunk_id": "tampa-rmap-6bd32690d30636" }]
+      }]
+    },
+    {
+      "id": "tampa-hrrp-status",
+      "title": "Tampa rehabilitation application status",
+      "question": "Is HRRP accepting applications?",
+      "jurisdiction_id": "tampa",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "applications-paused",
+        "text_sha256": "95f782ee975be0c21d2a5544c4578d2e6ceec4b5658d50c9c7d2fd34c5cd4f19",
+        "support": [{ "source_id": "tampa-hrrp", "chunk_id": "tampa-hrrp-525346d0f445cb" }]
+      }]
+    },
+    {
+      "id": "tampa-condo-permit",
+      "title": "Tampa condominium remodel permit type",
+      "question": "How do I get a permit for a condo remodel?",
+      "jurisdiction_id": "tampa",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "commercial-permit-required",
+        "text_sha256": "c22c16d7e98ffd057e829598d3ed4cd61ca2116a39b5020cbc6780c2dc9037a9",
+        "support": [{ "source_id": "tampa-permits", "chunk_id": "tampa-permits-b2e78a5f12f731" }]
+      }]
+    },
+    {
+      "id": "st-petersburg-permit",
+      "title": "St. Petersburg building permit submission",
+      "question": "How do I apply for a building permit in St. Petersburg?",
+      "jurisdiction_id": "st-petersburg",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "permit-form-and-plans",
+        "text_sha256": "381bf4ac502a1d99a25a1138c5ff3cb54ad31da5ccfff69065a5abe9e73d2e2d",
+        "support": [{ "source_id": "st-petersburg-permits", "chunk_id": "st-petersburg-permits-e5d6c67519787a" }]
+      }]
+    },
+    {
+      "id": "st-petersburg-zoning",
+      "title": "St. Petersburg parcel zoning lookup",
+      "question": "Where can I check zoning in St. Petersburg?",
+      "jurisdiction_id": "st-petersburg",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "gis-zoning-lookup",
+        "text_sha256": "e212b638b5ba7d911b63c987143c39856f0a495a8dd3c8b7333b015c5980eefd",
+        "support": [{ "source_id": "st-petersburg-zoning", "chunk_id": "st-petersburg-zoning-51d6d295ec49c8" }]
+      }]
+    },
+    {
+      "id": "clearwater-housing",
+      "title": "Clearwater affordable housing options",
+      "question": "Where can I find affordable housing options in Clearwater?",
+      "jurisdiction_id": "clearwater",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "income-eligible-apartments",
+        "text_sha256": "66deb788535a7c1cfb6b7f8a255f5d090c7173c0c45950ad0bff395bf3c300e7",
+        "support": [{ "source_id": "clearwater-housing", "chunk_id": "clearwater-housing-85cf6a25d20cc8" }]
+      }]
+    },
+    {
+      "id": "clearwater-permit",
+      "title": "Clearwater construction permit portal",
+      "question": "How do I apply for a construction permit in Clearwater?",
+      "jurisdiction_id": "clearwater",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "accela-first-step",
+        "text_sha256": "9b2d38be77ea49512726ab9b7ec0afd6408b4d19e3ec3c4209d2868149e5c7ea",
+        "support": [{ "source_id": "clearwater-permits", "chunk_id": "clearwater-permits-5d9aa0d01c8978" }]
+      }]
+    },
+    {
+      "id": "clearwater-zoning",
+      "title": "Clearwater zoning map lookup",
+      "question": "Where can I check zoning in Clearwater?",
+      "jurisdiction_id": "clearwater",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "land-use-and-zoning-maps",
+        "text_sha256": "7669acb73902ec1c12be15eddd2a7a736adf361be8c691bf7c99b0bae322504a",
+        "support": [{ "source_id": "clearwater-zoning", "chunk_id": "clearwater-zoning-cf4169951542f8" }]
+      }]
+    },
+    {
+      "id": "pinellas-housing",
+      "title": "Pinellas County affordable housing directory",
+      "question": "Where can I find Pinellas County affordable housing resources?",
+      "jurisdiction_id": "pinellas-county",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "community-housing-guide",
+        "text_sha256": "c2abbea079133a1f4ffe25037e562ef079bbab4295aab168f8c139b4efa219f5",
+        "support": [{ "source_id": "pinellas-housing-directory", "chunk_id": "pinellas-housing-directory-8842d71b6a7f96" }]
+      }]
+    },
+    {
+      "id": "pasco-housing",
+      "title": "Pasco County community development housing help",
+      "question": "Where can I find Pasco County housing assistance?",
+      "jurisdiction_id": "pasco-county",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "community-development-mission",
+        "text_sha256": "c35ee084188694d190d2ce96f7057a1bd7ab4d2a719ae1238318d99e00dbb2c4",
+        "support": [{ "source_id": "pasco-housing", "chunk_id": "pasco-housing-1b78c1d6ecac96" }]
+      }]
+    },
+    {
+      "id": "hillsborough-housing",
+      "title": "Hillsborough County housing resource navigation",
+      "question": "Where can I find housing help in Hillsborough County?",
+      "jurisdiction_id": "hillsborough-county",
+      "expected_status": "answered",
+      "claims": [{
+        "id": "housing-resource-topics",
+        "text_sha256": "6a242748e08a9607a62258c1e3a412955732adda502a8b9a60454656a6b5284d",
+        "support": [{ "source_id": "hillsborough-help", "chunk_id": "hillsborough-help-876ac9bc74e340" }]
+      }]
+    }
+  ]
+}

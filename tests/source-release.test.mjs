@@ -49,6 +49,7 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     await writeFile(path.join(root, "data/chunks.json"), JSON.stringify([{ text: "external excerpt sentinel" }]));
     await writeFile(path.join(root, "evaluation/results/latest.json"), JSON.stringify({ metrics: { proxy: { passed: 1, total: 1 }, human: { score: null } } }));
     await writeFile(path.join(root, "evaluation/results/responses.json"), "external response sentinel");
+    await writeFile(path.join(root, "evaluation/quality-benchmark.json"), JSON.stringify({ schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] }));
     await writeFile(path.join(root, ".env"), "private fixture sentinel");
     await writeFile(path.join(root, ".openai/hosting.json"), "owner fixture sentinel");
     await writeFile(path.join(root, "scripts/example.mjs"), "export const originalSoftware = true;\r\n");
@@ -61,6 +62,9 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     assert.equal(await readFile(path.join(output, ".gitattributes"), "utf8"), "* text=auto eol=lf\n");
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "data/chunks.json"), "utf8")), []);
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/results/responses.json"), "utf8")), []);
+    assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/quality-benchmark.json"), "utf8")), { schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] });
+    assert.match(await readFile(path.join(output, "docs/DATA_SOURCES.md"), "utf8"), /\.\.\/data\/sources\.json/);
+    await assert.rejects(readFile(path.join(output, "DATA_SOURCES.md")), { code: "ENOENT" });
     for (const excluded of [".env", ".openai/hosting.json", ".git/config", "data/raw/example.html"]) await assert.rejects(readFile(path.join(output, excluded)), { code: "ENOENT" });
     for (const file of manifest.files) assert.doesNotMatch(await readFile(path.join(output, file.path), "utf8"), /external (?:snapshot|excerpt|response) sentinel|private fixture sentinel|owner fixture sentinel/);
     assert.equal((await verifySourceRelease(output)).status, "passed");

@@ -10,7 +10,7 @@ Original ParcelPrivateer software is licensed under [MIT](LICENSE), copyright 20
 
 ## Public sources and external data
 
-The [register](data/sources.json) and [source documentation](DATA_SOURCES.md) identify publishers, URLs, dates, hashes, coverage and known terms. Source text, documents, GIS data, agency names/trademarks, photographs and external records are not relicensed under MIT by their inclusion or use here.
+The [register](data/sources.json) and [source documentation](docs/DATA_SOURCES.md) identify publishers, URLs, dates, hashes, coverage and known terms. Source text, documents, GIS data, agency names/trademarks, photographs and external records are not relicensed under MIT by their inclusion or use here.
 
 Public alpha packages distribute the software and fetch configuration without the development archive's downloaded evidence or response packets. They do not sanitize or republish that private history. The [source-only distribution policy](docs/DISTRIBUTION.md) is the canonical reference for exclusions, bootstrap commands and the dated publisher-terms review, including City copy permissions and Plan Hillsborough restrictions. No blanket redistribution permission is claimed for the combined corpus.
 

@@ -72,7 +72,7 @@ npx wrangler rollback <previous-version-id> --config work/standalone/independent
 
 [SECURITY.md](../SECURITY.md) owns access, rate/concurrency limits, monitoring and retention boundaries. [Release readiness](RELEASE_READINESS.md) owns source-refresh responsibilities, manual reviews and remaining launch checks.
 
-The rejected-upload transport failure remains reproducible in Windows and Linux local production runs; hosted impact is unverified. The standalone smoke uses complete bounded inputs and does not replace the full browser suite. See the [investigation](BUG_FIX_FOLLOWUP_2026-09-12.md) for evidence and the [accessibility guide](../ACCESSIBILITY.md) for browser-test commands.
+The rejected-upload transport failure remains reproducible in Windows and Linux local production runs; hosted impact is unverified. The standalone smoke uses complete bounded inputs and does not replace the full browser suite. See the [investigation](BUG_FIX_FOLLOWUP_2026-09-12.md) for evidence and the [accessibility guide](ACCESSIBILITY.md) for browser-test commands.
 
 ## Maintainer's Sites workflow
 

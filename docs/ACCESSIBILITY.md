@@ -1,6 +1,6 @@
 # Accessibility
 
-ParcelPrivateer targets WCAG 2.1 AA; conformance has not been established. This guide documents implemented support, browser-test commands and the manual review checklist. Automated rules can find common issues, but assistive-technology and resident review remain necessary. Dated results and environments are maintained in [release readiness](docs/RELEASE_READINESS.md).
+ParcelPrivateer targets WCAG 2.1 AA; conformance has not been established. This guide documents implemented support, browser-test commands and the manual review checklist. Automated rules can find common issues, but assistive-technology and resident review remain necessary. Dated results and environments are maintained in [release readiness](RELEASE_READINESS.md).
 
 ## Implemented
 
@@ -13,7 +13,7 @@ ParcelPrivateer targets WCAG 2.1 AA; conformance has not been established. This 
 
 ## Automated checks
 
-Historical complete production-browser runs on Windows and later Ubuntu Linux failed after an abandoned upload poisoned Miniflare's local static-assets transport. The current Windows run passes all 15 application cases. It uses the built static-assets route for resident, accessibility, asset and response-policy checks and the exact same compiled Worker through a direct route for stalled-upload deadlines. These are local runtime checks, not hosted Cloudflare tests. [Release readiness](docs/RELEASE_READINESS.md) records the current scope, and [the transport follow-up](docs/BUG_FIX_FOLLOWUP_2026-09-12.md) preserves the earlier failure.
+Historical complete production-browser runs on Windows and later Ubuntu Linux failed after an abandoned upload poisoned Miniflare's local static-assets transport. The current Windows run passes all 15 application cases. It uses the built static-assets route for resident, accessibility, asset and response-policy checks and the exact same compiled Worker through a direct route for stalled-upload deadlines. These are local runtime checks, not hosted Cloudflare tests. [Release readiness](RELEASE_READINESS.md) records the current scope, and [the transport follow-up](BUG_FIX_FOLLOWUP_2026-09-12.md) preserves the earlier failure.
 
 The current and archived axe scans reported no violations or incomplete nodes in the scanned flows. Reflow, the CSS zoom approximation and the production security checks passed. Automation does not replace human accessibility review.
 
@@ -21,7 +21,7 @@ The desktop, mobile, housing-answer and evaluation images in `docs/screenshots/`
 
 ## Run the browser checks
 
-These complete browser scenarios expect a populated, reviewed corpus and generated evaluation reports. The empty source-only distribution has an explicit setup screen instead; its separate release workflow checks that state without claiming the resident scenarios passed. See [source loading](docs/DISTRIBUTION.md) and [evaluation commands](docs/EVAL_SUITE.md).
+These complete browser scenarios expect a populated, reviewed corpus and generated evaluation reports. The empty source-only distribution has an explicit setup screen instead; its separate release workflow checks that state without claiming the resident scenarios passed. See [source loading](DISTRIBUTION.md) and [evaluation commands](EVAL_SUITE.md).
 
 ```sh
 npx playwright install chromium
@@ -47,11 +47,11 @@ npm.cmd run test:a11y
 Remove-Item Env:PLAYWRIGHT_BASE_URL
 ```
 
-The POSIX equivalent is `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001 npm run test:a11y`. If `PLAYWRIGHT_PRODUCTION_SECURITY=true` is also set, that existing server must actually be a production build. By default the upload checks use that same external URL; set `PLAYWRIGHT_INPUT_BASE_URL` only when the deployment exposes a separate direct Worker test route. These variables configure tests, not application secrets. Generic Node/PowerShell setup is documented in the [development guide](docs/DEVELOPMENT.md).
+The POSIX equivalent is `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001 npm run test:a11y`. If `PLAYWRIGHT_PRODUCTION_SECURITY=true` is also set, that existing server must actually be a production build. By default the upload checks use that same external URL; set `PLAYWRIGHT_INPUT_BASE_URL` only when the deployment exposes a separate direct Worker test route. These variables configure tests, not application secrets. Generic Node/PowerShell setup is documented in the [development guide](DEVELOPMENT.md).
 
 The eleven resident/browser tests cover home, source library, project information, evaluation, a cited housing answer, an address-selection flow with unavailable GIS data, address-only entry, labeled model selection/fallback, private-input correction, keyboard submission, accessible errors, mobile reflow, a 200% zoom approximation with reduced motion, and malformed API requests. Four security integration tests run alongside them; the production-only CSP test is skipped in development mode. Synthetic address and provider cases are explicitly fixtures; they do not verify live geography or real-model quality. Live property verification is separately recorded in `docs/geospatial-live-validation.json`.
 
-Playwright writes fresh raw JSON to `evaluation/accessibility/playwright-results.json` and its HTML report under `playwright-report/`. `evaluation/accessibility/latest.json` is the retained Windows summary; a later raw run does not automatically make that dated summary current. The later Linux result is a separate receipt linked from [release readiness](docs/RELEASE_READINESS.md). Keep dates, environments and report hashes together before updating any summary.
+Playwright writes fresh raw JSON to `evaluation/accessibility/playwright-results.json` and its HTML report under `playwright-report/`. `evaluation/accessibility/latest.json` is the retained Windows summary; a later raw run does not automatically make that dated summary current. The later Linux result is a separate receipt linked from [release readiness](RELEASE_READINESS.md). Keep dates, environments and report hashes together before updating any summary.
 
 Sanitize machine paths before publishing the raw JSON with `node scripts/sanitize-report.mjs evaluation/accessibility/playwright-results.json`. An absent report means no recorded run in that checkout. Screenshot/axe artifacts are development evidence and are excluded from the source-only package. Automated rules cannot prove that explanations are understandable or that every screen reader works correctly.
 
@@ -74,4 +74,4 @@ Record reviewer, date, browser/OS, assistive technology, observed result and iss
 - The initial UI is English only. Source acronyms and some quoted regulatory wording remain technical; a verified plain-language glossary needs further work.
 - Screen-reader announcement order, long source-disclosure navigation, mobile assistive technology and forced-color support need human validation.
 
-Report reproducible accessibility issues through [CONTRIBUTING.md](CONTRIBUTING.md), with the browser, device, assistive technology and task affected. Avoid private resident information; sensitive security/privacy details belong in the [private reporting channel](SECURITY.md#reporting-a-problem).
+Report reproducible accessibility issues through [CONTRIBUTING.md](../CONTRIBUTING.md), with the browser, device, assistive technology and task affected. Avoid private resident information; sensitive security/privacy details belong in the [private reporting channel](../SECURITY.md#reporting-a-problem).

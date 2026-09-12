@@ -6,7 +6,7 @@ Start with the [project overview](../README.md) for capabilities, a screenshot a
 
 | Task | Main guide |
 | --- | --- |
-| Understand the source collection and its dates | [Data sources](../DATA_SOURCES.md) |
+| Understand the source collection and its dates | [Data sources](DATA_SOURCES.md) |
 | Fetch and review evidence for a source-only installation | [Distribution and source setup](DISTRIBUTION.md) |
 | Configure no-model, Ollama or API assistance | [Model configuration](LLM.md) |
 | Understand addresses, jurisdiction, parcels and nearby records | [Geospatial behavior](GEOSPATIAL.md) |
@@ -15,11 +15,11 @@ Start with the [project overview](../README.md) for capabilities, a screenshot a
 
 | Topic | Main guide |
 | --- | --- |
-| Ingestion, retrieval, citations, provenance and uncertainty | [Methodology](../METHODOLOGY.md) |
+| Ingestion, retrieval, citations, provenance and uncertainty | [Methodology](METHODOLOGY.md) |
 | What evaluation measures and how people review answers | [Evaluation and review](EVALUATION.md) |
 | Run the offline suite, compare regressions or evaluate a model | [Evaluation suite](EVAL_SUITE.md) |
-| Accessibility support and the manual review checklist | [Accessibility](../ACCESSIBILITY.md) |
-| Product coverage and decision boundaries | [Limitations](../LIMITATIONS.md) |
+| Accessibility support and the manual review checklist | [Accessibility](ACCESSIBILITY.md) |
+| Product coverage and decision boundaries | [Limitations](LIMITATIONS.md) |
 | Security controls, data flow, operator responsibilities and reporting | [Security](../SECURITY.md) |
 | Add trusted guardrail checks | [Guardrail extension guide](GUARDRAIL_INSERTS.md) |
 | Software, external information and model licensing | [Notices](../NOTICE.md) |

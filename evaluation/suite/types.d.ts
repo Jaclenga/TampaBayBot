@@ -1,13 +1,27 @@
 export interface EvaluationCheck {
   id: string;
   passed: boolean | null;
-  kind: "behavior" | "integrity" | "privacy" | "robustness" | "proxy";
+  kind:
+    | "behavior"
+    | "integrity"
+    | "privacy"
+    | "robustness"
+    | "proxy"
+    | "accuracy"
+    | "citation";
   expected?: unknown;
   observed?: unknown;
 }
 export interface EvaluationCase {
   id: string;
-  suite: "navigation" | "guardrails" | "providers" | "metamorphic" | "live";
+  suite:
+    | "navigation"
+    | "guardrails"
+    | "providers"
+    | "metamorphic"
+    | "jurisdiction"
+    | "quality"
+    | "live";
   title: string;
   fixture:
     | "public_snapshot"

@@ -112,6 +112,41 @@ export default function Evaluation() {
               ? copy.suiteFailures
               : copy.suiteNoFailures}
           </p>
+          {offlineReport.automatedQuality && (
+            <>
+              <h3>{copy.qualityTitle}</h3>
+              <p className="evaluation-intro">
+                {copy.qualityExplanation}
+              </p>
+              <div className="evaluation-table">
+                <table>
+                  <caption>{copy.qualityCaption}</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">{copy.check}</th>
+                      <th scope="col">{copy.suitePassed}</th>
+                      <th scope="col">{copy.suiteFailed}</th>
+                      <th scope="col">{copy.qualityNotApplicable}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { label: copy.qualityAccuracy, metric: offlineReport.automatedQuality.factualAccuracy },
+                      { label: copy.qualityCitationCorrectness, metric: offlineReport.automatedQuality.citationCorrectness },
+                      { label: copy.qualityCitationCompleteness, metric: offlineReport.automatedQuality.citationCompleteness },
+                    ].map(({ label, metric }) => (
+                      <tr key={label}>
+                        <th scope="row">{label}</th>
+                        <td>{metric.passed}</td>
+                        <td>{metric.failed}</td>
+                        <td>{metric.notApplicable}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         </section>
       )}
       <div className="about-sections">

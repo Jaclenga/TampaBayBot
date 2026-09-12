@@ -2,7 +2,7 @@
 
 This is the command, report-format and scorer-contract reference for offline evaluation, optional live-model runs and regression comparison. For metric interpretation and human review, use [EVALUATION.md](EVALUATION.md). Dated results and environments are recorded in [release readiness](RELEASE_READINESS.md).
 
-The default offline suite has 224 hand-authored cases using preserved public evidence and synthetic fixtures. It requires no model server, credential or paid inference. The source-only package initially has no evidence: [load and review a corpus](DISTRIBUTION.md#populate-and-validate-locally) first. Empty `not_run` placeholders are not successful evaluations, and fresh source content may require reviewed changes to the dated expectations.
+The default offline suite has 236 hand-authored cases using preserved public evidence and synthetic fixtures. Twelve cases measure bounded factual accuracy, citation correctness and citation completeness against a checked-in claim oracle. It requires no model server, credential or paid inference. The source-only package initially has no evidence: [load and review a corpus](DISTRIBUTION.md#populate-and-validate-locally) first. Empty `not_run` placeholders are not successful evaluations, and fresh source content may require reviewed changes to the dated expectations.
 
 ## Run offline
 
@@ -49,6 +49,7 @@ This is the separate strict narrative evaluator. It reads the same benchmark def
 | `providers` | 55 | Native Ollama and compatible Chat Completions adapters; valid selections, invalid JSON/IDs, changed or shortened quotes, missing primary evidence, tool calls, refusals, response bounds, redirects, outages, cancellation and conservative-state bypass |
 | `metamorphic` | 28 | Fixed-seed case/spacing/punctuation changes, corpus shuffling and duplicate chunks, instruction attacks, and decision preservation across synthetic provider selections |
 | `jurisdiction` | 19 | City/county source isolation, locality aliases, unincorporated/excluded city wording, missing/conflicting areas, city names inside street addresses, and rejection of cross-city model selections |
+| `quality` | 12 | Authored exact claims across Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco; case-level factual accuracy, citation-to-claim correctness and claim citation coverage |
 
 Every case identifies its data as `public_snapshot`, `synthetic`, or `public_snapshot_with_synthetic_input`. Synthetic agencies, identifiers and failure payloads are test material. Case titles are safe labels or checked-in public questions; reports omit private probes, raw answer bodies, credentials and raw provider errors.
 
@@ -56,7 +57,7 @@ The reference date is **2026-09-12T12:00:00.000Z**, from `evaluation/scenarios.m
 
 ## Read the scores
 
-Each named check has `passed: true`, `false`, or `null`, and a kind: `behavior`, `integrity`, `privacy`, `robustness`, or `proxy`. **Null means not applicable; it never counts as a pass.** An empty suite, a case without checks, a case with only null checks, duplicate identifiers or malformed results cannot produce an empty success. Required fields must be owned and serializable; non-JSON expectation/observation values are rejected. Reports detach nested case data and provenance from caller mutations. Execution failures are recorded as fixed failed checks, and other cases continue.
+Each named check has `passed: true`, `false`, or `null`, and a kind: `behavior`, `integrity`, `privacy`, `robustness`, `proxy`, `accuracy`, or `citation`. **Null means not applicable; it never counts as a pass.** An empty suite, a case without checks, a case with only null checks, duplicate identifiers or malformed results cannot produce an empty success. Required fields must be owned and serializable; non-JSON expectation/observation values are rejected. Reports detach nested case data and provenance from caller mutations. Execution failures are recorded as fixed failed checks, and other cases continue.
 
 The shared navigation scorer independently checks source/chunk registration, recomputed SHA-256, literal quotes, citation identifiers and markers, section/page/record/layer, publisher labels, official-source classification, URLs, source dates and snapshot age. It verifies that an `answered` body contains only the permitted navigation framing and full supplied quotations. A fabricated factual body can therefore fail even when its evidence metadata and `[E1]` marker are valid.
 
@@ -64,7 +65,19 @@ Expected source IDs, next-step URLs and required terms are useful proxies. Exact
 
 `tests/evaluation-scoring.test.mjs` uses handwritten valid outputs and deliberate mutations to establish that the scorer rejects fabricated quotes, altered bodies, false hashes, wrong locators, unofficial sources, unknown/duplicate markers and changed conservative decisions. These tests verify the evaluator itself; they do not replace a semantic claim audit.
 
-Reports leave human factual-correctness, completeness and resident-usefulness scores null; the narrative report also leaves unsupported-claim rate unscored. [Evaluation methodology](EVALUATION.md#reading-the-metrics) explains why. Whole-case median and p95 duration reflect the measured machine and workload; offline timings are not model latency or service-capacity measurements.
+The `quality` suite uses [`quality-benchmark.json`](../evaluation/quality-benchmark.json), which was authored separately from runtime output. It stores questions, expected status, stable claim IDs, SHA-256 hashes of exact expected claims, and the source/chunk pairs allowed to support them. It does not copy the source excerpts into the source-only distribution. Before scoring, the suite verifies every hash and support pair against the retained corpus, then runs the question through the ordinary guarded entrypoint with inference disabled. The answer implementation never receives the oracle.
+
+The three quality metrics have separate failure conditions:
+
+| Metric | Pass condition for one case |
+| --- | --- |
+| Factual accuracy | The answer has the expected status and exactly the authored claim set in the fixed extractive format, with no additional claim paragraph |
+| Citation correctness | Every citation that is present resolves to evidence whose exact claim hash and source/chunk pair match the authored support relation; zero citations are N/A here and fail completeness |
+| Citation completeness | Every extractive claim paragraph has a valid citation marker; an answer with no claim cannot pass |
+
+These are deterministic case-level scores over 12 dated, hand-authored reference claims. They are stronger than keyword proxies, but they are not semantic entailment judgments, current-source audits, blind holdout results or estimates for arbitrary questions. `tests/evaluation-quality.test.mjs` proves the scorer rejects a fabricated cited claim, a real but non-supporting citation, missing citations, partial coverage and additional unsupported claims. The JSON and Markdown reports expose the aggregates under `automatedQuality`; the oracle hash is included in comparison provenance.
+
+Reports leave independent human factual-correctness, completeness and resident-usefulness scores null; the narrative report also leaves unsupported-claim rate unscored. [Evaluation methodology](EVALUATION.md#reading-the-metrics) explains why. Whole-case median and p95 duration reflect the measured machine and workload; offline timings are not model latency or service-capacity measurements.
 
 ## Evaluate an explicitly configured model
 

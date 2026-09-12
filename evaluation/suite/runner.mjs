@@ -8,6 +8,7 @@ import { runGuardrailSuite } from "./guardrails.mjs";
 import { runProviderSuite } from "./providers.mjs";
 import { runMetamorphicSuite } from "./metamorphic.mjs";
 import { runJurisdictionSuite } from "./jurisdiction.mjs";
+import { runQualitySuite } from "./quality.mjs";
 import {
   makeReport,
   reportMarkdown,
@@ -26,6 +27,7 @@ export const OFFLINE_SUITES = Object.freeze({
   providers: runProviderSuite,
   metamorphic: runMetamorphicSuite,
   jurisdiction: runJurisdictionSuite,
+  quality: runQualitySuite,
 });
 const sha = (text) => createHash("sha256").update(text).digest("hex");
 
@@ -51,6 +53,9 @@ async function hashTree(directory, suffixes = [".mjs", ".ts", ".json"]) {
 export async function loadEvaluationContext(root = PROJECT_ROOT) {
   const sourceText = await fs.readFile(path.join(root, "data/sources.json"));
   const chunkText = await fs.readFile(path.join(root, "data/chunks.json"));
+  const qualityBenchmarkText = await fs.readFile(
+    path.join(root, "evaluation/quality-benchmark.json"),
+  );
   let commit = null,
     dirty = null;
   try {
@@ -92,6 +97,7 @@ export async function loadEvaluationContext(root = PROJECT_ROOT) {
       scenarioHash: sha(
         await fs.readFile(path.join(root, "evaluation/scenarios.mjs")),
       ),
+      qualityBenchmarkHash: sha(qualityBenchmarkText),
       gitCommit: commit,
       workingTreeDirty: dirty,
       nodeVersion: process.version,

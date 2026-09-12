@@ -1,8 +1,8 @@
 # Known limitations
 
-ParcelPrivateer is an independent source-only alpha for housing-information navigation. It cannot make an eligibility decision, give an official zoning determination or approve a permit. This guide summarizes the boundaries a resident or operator needs to understand; [release readiness](docs/RELEASE_READINESS.md) records the current evidence and remaining launch work.
+ParcelPrivateer is an independent source-only alpha for housing-information navigation. It cannot make an eligibility decision, give an official zoning determination or approve a permit. This guide summarizes the boundaries a resident or operator needs to understand; [release readiness](RELEASE_READINESS.md) records the current evidence and remaining launch work.
 
-The public source package starts with no evidence and cannot answer factual questions until its operator [loads and reviews sources](docs/DISTRIBUTION.md). Results from the populated development checkout do not establish the quality of a newly acquired corpus.
+The public source package starts with no evidence and cannot answer factual questions until its operator [loads and reviews sources](DISTRIBUTION.md). Results from the populated development checkout do not establish the quality of a newly acquired corpus.
 
 ## Information and answer coverage
 
@@ -10,7 +10,7 @@ The public source package starts with no evidence and cannot answer factual ques
 - Answers use deterministic retrieval and literal excerpts, with optional model-assisted evidence selection. They can be repetitive or relevant without fully resolving the question. An exact quotation can still be incomplete or unhelpful in context; a model can select valid evidence poorly.
 - Explicit routing patterns and synonyms can miss unusual phrasing, mixed intents, acronyms and spelling errors.
 - Authority weights do not establish legal precedence. Conflict detection addresses only directly opposing application-status statements for the same program. Exceptions, superseded rules and other contradictions require review.
-- Some evaluation measures are labeled template/keyword proxies. They are not real-world accuracy estimates, source accuracy audits or guarantees of completeness.
+- Some evaluation measures are labeled template/keyword proxies. The separate claim-quality suite measures exact authored claims and citation relations for 12 dated fixtures. Neither is a real-world accuracy estimate, source accuracy audit or guarantee of completeness for arbitrary questions.
 
 ## Freshness and availability
 
@@ -31,7 +31,7 @@ Operators must assign a refresh owner, run ingestion at the configured interval,
 - The MVP does not check every historic/overlay district, flood constraint, easement, deed restriction, utility condition, variance or site-specific approval.
 - Multiple features, missing fields and transfer limits remain uncertainty states. No result is an official property or project determination.
 
-Use the official maps and planners for whole-property decisions. See [GIS methods](docs/GEOSPATIAL.md).
+Use the official maps and planners for whole-property decisions. See [GIS methods](GEOSPATIAL.md).
 
 ## Development records
 
@@ -51,16 +51,16 @@ The app is English-first. Separated UI strings are preparation for localization,
 
 ## Privacy and operations
 
-The app does not save questions or addresses to a database or browser storage. Eligible questions and public excerpts go to the configured model provider when assistance is enabled. Address text goes to the configured Hillsborough and Pinellas locators; selected coordinates go to connected municipal-boundary and property services. Opening the optional map sends coordinates to OpenStreetMap. Transient caches, host logs and provider retention are separate. This is not a promise of anonymity or zero retention. [SECURITY.md](SECURITY.md#data-flow-and-privacy) explains each boundary.
+The app does not save questions or addresses to a database or browser storage. Eligible questions and public excerpts go to the configured model provider when assistance is enabled. Address text goes to the configured Hillsborough and Pinellas locators; selected coordinates go to connected municipal-boundary and property services. Opening the optional map sends coordinates to OpenStreetMap. Transient caches, host logs and provider retention are separate. This is not a promise of anonymity or zero retention. [SECURITY.md](../SECURITY.md#data-flow-and-privacy) explains each boundary.
 
-Identifier and instruction-pattern checks are limited: they can miss disclosures or reject unrelated text, and trusted extensions are not sandboxed. Validation constrains model output but cannot guarantee useful evidence selection. The recorded [Ollama tests](docs/OLLAMA_TESTING.md) cover one model/configuration; other deployments need their own review. Keep `LLM_PROVIDER=none` for the default no-model path, and use the [model guide](docs/LLM.md) for local/hosted configuration and cloud-forwarding limits.
+Identifier and instruction-pattern checks are limited: they can miss disclosures or reject unrelated text, and trusted extensions are not sandboxed. Validation constrains model output but cannot guarantee useful evidence selection. The recorded [Ollama tests](OLLAMA_TESTING.md) cover one model/configuration; other deployments need their own review. Keep `LLM_PROVIDER=none` for the default no-model path, and use the [model guide](LLM.md) for local/hosted configuration and cloud-forwarding limits.
 
-Shared request/concurrency limits, a source-refresh schedule, monitoring, retention and an operational rollback process remain operator responsibilities. A private vulnerability-reporting channel exists, but no staffed incident-response guarantee is made. [Security and operator requirements](SECURITY.md) define the controls present and the work needed before unrestricted resident access.
+Shared request/concurrency limits, a source-refresh schedule, monitoring, retention and an operational rollback process remain operator responsibilities. A private vulnerability-reporting channel exists, but no staffed incident-response guarantee is made. [Security and operator requirements](../SECURITY.md) define the controls present and the work needed before unrestricted resident access.
 
-Historical Windows and Linux production-browser runs exposed a local-runtime transport failure after an unread upload was rejected. Current Windows application verification passes all 15 cases by testing stalled uploads against the exact compiled Worker through a direct route and retaining the static-assets route for resident, asset, accessibility and response-policy checks. This verifies the application behavior but does not establish how a hosted edge or Miniflare's defective local static-assets proxy behaves after an abandoned upload. The [follow-up report](docs/BUG_FIX_FOLLOWUP_2026-09-12.md) preserves the earlier evidence.
+Historical Windows and Linux production-browser runs exposed a local-runtime transport failure after an unread upload was rejected. Current Windows application verification passes all 15 cases by testing stalled uploads against the exact compiled Worker through a direct route and retaining the static-assets route for resident, asset, accessibility and response-policy checks. This verifies the application behavior but does not establish how a hosted edge or Miniflare's defective local static-assets proxy behaves after an abandoned upload. The [follow-up report](BUG_FIX_FOLLOWUP_2026-09-12.md) preserves the earlier evidence.
 
-Public source availability is separate from operating a public resident service. Authenticated hosted smoke testing and an operator's provider/deployment checks remain separate release steps, recorded in [release readiness](docs/RELEASE_READINESS.md).
+Public source availability is separate from operating a public resident service. Authenticated hosted smoke testing and an operator's provider/deployment checks remain separate release steps, recorded in [release readiness](RELEASE_READINESS.md).
 
 ## Terms and independence
 
-Public access does not imply unrestricted redistribution. External terms apply separately from MIT, and the project is not an official City, County or State service. [NOTICE.md](NOTICE.md) records attribution and independence; the [distribution policy](docs/DISTRIBUTION.md) governs source packages.
+Public access does not imply unrestricted redistribution. External terms apply separately from MIT, and the project is not an official City, County or State service. [NOTICE.md](../NOTICE.md) records attribution and independence; the [distribution policy](DISTRIBUTION.md) governs source packages.

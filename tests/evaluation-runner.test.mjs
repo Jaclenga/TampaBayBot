@@ -34,6 +34,7 @@ const provenance = {
   suiteDefinitionHash: "fixture-suite-hash",
   benchmarkHash: "fixture-benchmark-hash",
   scenarioHash: "fixture-scenario-hash",
+  qualityBenchmarkHash: "fixture-quality-benchmark-hash",
 };
 const fixtureCheck = (id = "decision", passed = true, extra = {}) => ({
   id,
@@ -336,7 +337,7 @@ test("weakened expectations and changes in check kind require review even if che
   }
 });
 
-test("comparison requires complete matching corpus, question and scenario provenance unless explicitly reviewed", () => {
+test("comparison requires complete matching corpus, question, scenario and quality provenance unless explicitly reviewed", () => {
   const baseline = report();
   for (const key of Object.keys(provenance)) {
     const candidate = report();

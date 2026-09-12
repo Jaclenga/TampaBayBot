@@ -77,13 +77,13 @@ Run commands from the project root. Use the checks appropriate to the change and
 
 `npm run check` combines typecheck, lint, code tests, the legacy evaluation, the offline suite and build. It does not run source regeneration checks, browser checks or real-model tests. Source-only release checks cover its manifest, packaging and standalone smoke; their success does not imply that the full corpus or browser suite passed.
 
-Failed source refreshes preserve previous evidence with its original dates and an unavailable state, then exit unsuccessfully. Review changed text, metadata, terms and evaluation results before using refreshed material. See [data sources](../DATA_SOURCES.md) and [distribution](DISTRIBUTION.md) for acquisition and licensing, [evaluation suite](EVAL_SUITE.md) for focused runs/comparisons, and [LLM.md](LLM.md#reproduce-integration-checks) for real Ollama testing. Release preparation and secret scanning are documented in [distribution](DISTRIBUTION.md) and [security](../SECURITY.md).
+Failed source refreshes preserve previous evidence with its original dates and an unavailable state, then exit unsuccessfully. Review changed text, metadata, terms and evaluation results before using refreshed material. See [data sources](DATA_SOURCES.md) and [distribution](DISTRIBUTION.md) for acquisition and licensing, [evaluation suite](EVAL_SUITE.md) for focused runs/comparisons, and [LLM.md](LLM.md#reproduce-integration-checks) for real Ollama testing. Release preparation and secret scanning are documented in [distribution](DISTRIBUTION.md) and [security](../SECURITY.md).
 
 ## Browser and accessibility checks
 
 `npm run test:a11y` and `npm run test:e2e` invoke the same Playwright suite. Resident tests expect `LLM_PROVIDER=none` and the documented evidence corpus; provider-enabled tests use the separate fixtures described in [LLM.md](LLM.md).
 
-[ACCESSIBILITY.md](../ACCESSIBILITY.md) is canonical for Chromium installation, default port 3100, testing an existing preview, production Worker/CSP checks, PowerShell environment variables and report locations. It also distinguishes automated checks from manual keyboard, screen-reader, text-resizing and resident review.
+[ACCESSIBILITY.md](ACCESSIBILITY.md) is canonical for Chromium installation, default port 3100, testing an existing preview, production Worker/CSP checks, PowerShell environment variables and report locations. It also distinguishes automated checks from manual keyboard, screen-reader, text-resizing and resident review.
 
 The known rejected-upload transport failure occurs in Windows and Linux local production runs. See [release readiness](RELEASE_READINESS.md) for actual outcomes and [the investigation](BUG_FIX_FOLLOWUP_2026-09-12.md) for scope. The standalone deployment smoke uses a different, bounded test set.
 

@@ -23,4 +23,4 @@ For claim review, list each substantive claim in the answer and explanation. Mar
 
 Do not publish a single aggregate “AI accuracy” score. Report each dimension, the sample size, unrated items, serious failures, and corrective actions separately. Any fabricated program, fabricated citation, unsupported official approval, wrong-jurisdiction recommendation, or inaccessible essential action is a release blocker even when other dimensions score well.
 
-Mark completed rows `review_status: "reviewed_by_human"`. Running the evaluation script preserves completed review rows and flags whether their saved response changed; review changed responses again. A production release requires this human review and the separate accessibility checklist in `ACCESSIBILITY.md`.
+Mark completed rows `review_status: "reviewed_by_human"`. Running the evaluation script preserves completed review rows and flags whether their saved response changed; review changed responses again. A production release requires this human review and the separate [accessibility checklist](../../docs/ACCESSIBILITY.md).

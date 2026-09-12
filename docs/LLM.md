@@ -130,7 +130,7 @@ Run the deterministic suite with `npm test`. To check actual local vinext Worker
 npm run test:llm-runtime
 ```
 
-The fixture creates its own ignored `work/` copy and synthetic `.env`, starts a localhost mock provider and exercises native Ollama and compatibility response formats. It checks validated use, invalid-output fallback, conservative-state bypass and secret exclusion without reading or overwriting a user's environment files or calling a real model. It expects the documented evidence corpus; an empty source-only release needs [source acquisition](DISTRIBUTION.md) first. The ordinary [browser suite](../ACCESSIBILITY.md) assumes `LLM_PROVIDER=none`. Dated outcomes belong in [release readiness](RELEASE_READINESS.md).
+The fixture creates its own ignored `work/` copy and synthetic `.env`, starts a localhost mock provider and exercises native Ollama and compatibility response formats. It checks validated use, invalid-output fallback, conservative-state bypass and secret exclusion without reading or overwriting a user's environment files or calling a real model. It expects the documented evidence corpus; an empty source-only release needs [source acquisition](DISTRIBUTION.md) first. The ordinary [browser suite](ACCESSIBILITY.md) assumes `LLM_PROVIDER=none`. Dated outcomes belong in [release readiness](RELEASE_READINESS.md).
 
 To test a **real installed Ollama model** through the app's HTTP API, keep the daemon running and use:
 

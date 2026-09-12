@@ -49,17 +49,17 @@ Sources include Tampa, St. Petersburg, Clearwater, Hillsborough County, Pinellas
 
 Nearby activity currently comes from the Tampa-only [Tampa Development Records](https://github.com/Jaclenga/Tampa-Development-Records) project. St. Petersburg, Clearwater and other areas receive an explicit coverage message. Its observed records have their own dates and attribution; they are not regulations or a complete, current construction inventory.
 
-Coverage is bounded, and public information can change or become unavailable. The app distinguishes when a source was retrieved from when its publisher updated it. See [data sources](DATA_SOURCES.md) and [geospatial methods](docs/GEOSPATIAL.md).
+Coverage is bounded, and public information can change or become unavailable. The app distinguishes when a source was retrieved from when its publisher updated it. See [data sources](docs/DATA_SOURCES.md) and [geospatial methods](docs/GEOSPATIAL.md).
 
 ## Trust and evidence
 
 Answers expose literal excerpts, source URLs and provenance, including retrieval dates and section, page, record or layer references where available. Government sources and independent development records remain separately labeled.
 
-Missing evidence, stale or unavailable sources, ambiguous locations and questions requiring official judgment produce explicit uncertainty states. Optional model selections must retain valid evidence references and unchanged quotations. These checks make answers inspectable; they do not establish completeness, applicability or detection of every source conflict. See [methodology](METHODOLOGY.md).
+Missing evidence, stale or unavailable sources, ambiguous locations and questions requiring official judgment produce explicit uncertainty states. Optional model selections must retain valid evidence references and unchanged quotations. These checks make answers inspectable; they do not establish completeness, applicability or detection of every source conflict. See [methodology](docs/METHODOLOGY.md).
 
 ## Evaluation
 
-Recorded automated code and offline evaluation checks passed for the development corpus. Synthetic provider tests check transport, validation and fallback behavior; separate real Ollama/Meta Llama 3 tests exercised actual inference. Neither is a general factual-accuracy score or a measure of resident usefulness.
+Recorded automated code and offline evaluation checks passed for the development corpus. The suite includes bounded factual-accuracy, citation-correctness and citation-completeness cases for 12 exact authored claims; these are dated development fixtures, not a general accuracy score. Synthetic provider tests check transport, validation and fallback behavior; separate real Ollama/Meta Llama 3 tests exercised actual inference. None measures resident usefulness.
 
 An agent review examined sample responses. **Independent human review remains pending.** The complete browser suite also retains a documented local-runtime transport failure on Windows and Linux.
 
@@ -98,13 +98,13 @@ Enabled providers receive eligible questions and bounded public excerpts to sele
 - Automated accessibility checks do not establish WCAG conformance; manual assistive-technology review is still needed.
 - A local-runtime upload transport issue and outstanding operational controls limit readiness for unrestricted resident use.
 
-Read [limitations](LIMITATIONS.md) for the full scope and [security](SECURITY.md) for data handling and private vulnerability reporting.
+Read [limitations](docs/LIMITATIONS.md) for the full scope and [security](SECURITY.md) for data handling and private vulnerability reporting.
 
 ## Documentation
 
-**Using ParcelPrivateer:** [Data sources](DATA_SOURCES.md) · [Models](docs/LLM.md) · [Geospatial behavior](docs/GEOSPATIAL.md)
+**Using ParcelPrivateer:** [Data sources](docs/DATA_SOURCES.md) · [Models](docs/LLM.md) · [Geospatial behavior](docs/GEOSPATIAL.md)
 
-**Trust and evaluation:** [Methodology](METHODOLOGY.md) · [Evaluation](docs/EVALUATION.md) · [Accessibility](ACCESSIBILITY.md) · [Limitations](LIMITATIONS.md) · [Security](SECURITY.md)
+**Trust and evaluation:** [Methodology](docs/METHODOLOGY.md) · [Evaluation](docs/EVALUATION.md) · [Accessibility](docs/ACCESSIBILITY.md) · [Limitations](docs/LIMITATIONS.md) · [Security](SECURITY.md)
 
 **Development and deployment:** [Contributing](CONTRIBUTING.md) · [Developer guide](docs/DEVELOPMENT.md) · [Deployment](docs/DEPLOYMENT.md) · [Distribution](docs/DISTRIBUTION.md) · [Release readiness](docs/RELEASE_READINESS.md)
 

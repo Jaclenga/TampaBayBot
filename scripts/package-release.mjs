@@ -7,8 +7,8 @@ import { SUITE_VERSION } from "../evaluation/suite/report.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const SOURCE_DIRS = ["app", "components", "lib", "scripts", "tests", "vendor", "build"];
-const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "next.config.ts", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "ACCESSIBILITY.md", "LIMITATIONS.md", "METHODOLOGY.md", "CHANGELOG.md"];
-const GUIDE_FILES = ["README.md", "DEVELOPMENT.md", "EVALUATION.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LLM.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "ASSETS.md", "RELEASE_READINESS.md", "OLLAMA_TESTING.md", "BUG_FIX_FOLLOWUP_2026-09-12.md", "SECRET_SCANNING.md", "ALPHA_VERIFICATION.json", "TAMPA_BAY_VERIFICATION.json"];
+const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "next.config.ts", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"];
+const GUIDE_FILES = ["README.md", "ACCESSIBILITY.md", "DATA_SOURCES.md", "DEVELOPMENT.md", "EVALUATION.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LIMITATIONS.md", "LLM.md", "METHODOLOGY.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "ASSETS.md", "RELEASE_READINESS.md", "OLLAMA_TESTING.md", "BUG_FIX_FOLLOWUP_2026-09-12.md", "SECRET_SCANNING.md", "ALPHA_VERIFICATION.json", "TAMPA_BAY_VERIFICATION.json"];
 const GENERATED_FIELDS = ["retrieval_date", "source_updated_date", "content_hash", "normalized_content_hash", "raw_path", "last_attempt", "last_error", "response_url", "content_type", "etag", "last_modified", "content_changed_at", "record_count", "searchable_point_count", "excluded_point_count"];
 const NOTICE = "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy.";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -57,8 +57,8 @@ function emptyLegacyReport(template) {
 
 function emptySuiteReport() {
   const checks = { passed: 0, failed: 0, applicable: 0, notApplicable: 0, rate: null };
-  const suites = Object.fromEntries(["navigation", "guardrails", "providers", "metamorphic", "jurisdiction"].map((name) => [name, { cases: 0, passed: 0, failed: 0, checks }]));
-  return { schemaVersion: 1, suiteVersion: SUITE_VERSION, mode: "not_run", status: "not_run", startedAt: null, completedAt: "", provenance: {}, summary: { cases: 0, passed: 0, failed: 0, checks, suites }, metrics: {}, humanEvaluation: { status: "not_run" }, limitations: [NOTICE], cases: [] };
+  const suites = Object.fromEntries(["navigation", "guardrails", "providers", "metamorphic", "jurisdiction", "quality"].map((name) => [name, { cases: 0, passed: 0, failed: 0, checks }]));
+  return { schemaVersion: 1, suiteVersion: SUITE_VERSION, mode: "not_run", status: "not_run", startedAt: null, completedAt: "", provenance: {}, summary: { cases: 0, passed: 0, failed: 0, checks, suites }, metrics: {}, automatedQuality: null, humanEvaluation: { status: "not_run" }, limitations: [NOTICE], cases: [] };
 }
 
 export function omitUnavailableMarkdownLinks(markdown, filename, availableFiles) {
@@ -95,7 +95,7 @@ export async function createSourceRelease({ root = ROOT, output }) {
   for (const directory of SOURCE_DIRS) for (const name of await sourceFiles(root, directory)) inputs.add(name);
   for (const guide of GUIDE_FILES) inputs.add(`docs/${guide}`);
   for (const name of await sourceFiles(root, "evaluation/suite")) inputs.add(name);
-  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/benchmark.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
+  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/benchmark.json", "evaluation/quality-benchmark.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
   // The release gets its own source-only CI workflow, if supplied by the maintainer.
   inputs.add(".github/workflows/source-release.yml");
 
@@ -119,7 +119,7 @@ export async function createSourceRelease({ root = ROOT, output }) {
     "evaluation/agent-audit/responses.json": "[]\n",
     "evaluation/human-audit/responses.json": "[]\n",
     "evaluation/suite/results/latest.json": json(emptySuiteReport()),
-    "DATA_SOURCES.md": "# Source registry\n\n" + NOTICE + "\n\nPublisher URLs, source categories and fetch configuration are in `data/sources.json`; retrieval dates are unset until you fetch. See [distribution and terms](docs/DISTRIBUTION.md) and [geographic methods](docs/GEOSPATIAL.md).\n",
+    "docs/DATA_SOURCES.md": "# Source registry\n\n" + NOTICE + "\n\nPublisher URLs, source categories and fetch configuration are in [`data/sources.json`](../data/sources.json); retrieval dates are unset until you fetch. See [distribution and terms](DISTRIBUTION.md) and [geographic methods](GEOSPATIAL.md).\n",
   };
   for (const [name, value] of Object.entries(generated)) payload.set(name, Buffer.from(value));
   const extraIgnores = "\n# Locally fetched external evidence and response artifacts are not source releases.\n/data/raw/\n/data/normalized/\n/data/chunks.json\n/data/ingestion-report.json\n/data/verification-report.json\n/evaluation/results/\n/evaluation/agent-audit/responses.json\n/evaluation/human-audit/responses.json\n/evaluation/suite/results/\n";

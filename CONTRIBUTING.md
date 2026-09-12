@@ -1,12 +1,12 @@
 # Contributing
 
-Contributions should make a resident's next step clearer and the evidence easier to inspect. Start with the [development guide](docs/DEVELOPMENT.md) for setup, code layout, commands and browser testing, then read the [methodology](METHODOLOGY.md), [source notes](DATA_SOURCES.md) and [limitations](LIMITATIONS.md).
+Contributions should make a resident's next step clearer and the evidence easier to inspect. Start with the [development guide](docs/DEVELOPMENT.md) for setup, code layout, commands and browser testing, then read the [methodology](docs/METHODOLOGY.md), [source notes](docs/DATA_SOURCES.md) and [limitations](docs/LIMITATIONS.md).
 
 ## Before opening a pull request
 
 Use the committed lockfile and run checks appropriate to the change. Cited-answer tests need acquired evidence; an empty source-only checkout is not a populated benchmark. The [development guide](docs/DEVELOPMENT.md#commands-and-evidence-prerequisites) explains these prerequisites.
 
-For UI changes, inspect keyboard operation, focus, announcements, narrow-screen reflow and text resizing as well as running [browser checks](ACCESSIBILITY.md). Record checks actually performed. Automation does not replace a screen-reader or independent human audit.
+For UI changes, inspect keyboard operation, focus, announcements, narrow-screen reflow and text resizing as well as running [browser checks](docs/ACCESSIBILITY.md). Record checks actually performed. Automation does not replace a screen-reader or independent human audit.
 
 Never commit credentials, local environment files, real resident questions, application documents or personal account data. Use synthetic or public test inputs and inspect generated reports before sharing them. Model setup belongs in [LLM.md](docs/LLM.md); reporting and privacy boundaries belong in [SECURITY.md](SECURITY.md).
 
@@ -25,7 +25,7 @@ Use [GitHub private vulnerability reporting](https://github.com/Jaclenga/ParcelP
 5. Regenerate evidence, run evaluations and add regression cases for meaningful coverage or conflict changes.
 6. Document changed terms and dates. Keep downloaded snapshots out of the source-only release; follow the [distribution policy](docs/DISTRIBUTION.md).
 
-Failed refreshes must preserve dated evidence and an unavailable state rather than invent replacements. Program availability, eligibility requirements and legal effective dates require explicit support. For independent development-data updates, review the normalized file, change the pinned commit and digest deliberately, preserve date meanings, and rerun integrity/geographic checks. See [source notes](DATA_SOURCES.md) and [geospatial behavior](docs/GEOSPATIAL.md).
+Failed refreshes must preserve dated evidence and an unavailable state rather than invent replacements. Program availability, eligibility requirements and legal effective dates require explicit support. For independent development-data updates, review the normalized file, change the pinned commit and digest deliberately, preserve date meanings, and rerun integrity/geographic checks. See [source notes](docs/DATA_SOURCES.md) and [geospatial behavior](docs/GEOSPATIAL.md).
 
 ## Changing answers, geography or models
 

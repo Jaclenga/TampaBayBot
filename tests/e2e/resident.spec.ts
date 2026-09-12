@@ -66,9 +66,9 @@ test("evaluation page exposes the published offline cases and exact failure coun
   expect(report.mode).toBe("offline");
   expect(Array.isArray(report.cases)).toBe(true);
   expect(Object.keys(report.summary.suites)).toEqual(
-    expect.arrayContaining(["navigation", "guardrails", "providers", "metamorphic", "jurisdiction"]),
+    expect.arrayContaining(["navigation", "guardrails", "providers", "metamorphic", "jurisdiction", "quality"]),
   );
-  expect(report.summary.cases).toBeGreaterThanOrEqual(224);
+  expect(report.summary.cases).toBeGreaterThanOrEqual(236);
   expect(report.cases).toHaveLength(report.summary.cases);
   const totalFailed = report.cases.filter(
     (item: { checks: { passed: boolean | null }[] }) =>
@@ -115,8 +115,27 @@ test("evaluation page exposes the published offline cases and exact failure coun
   const suiteDisclosure = page.getByRole("region", { name: "Offline engineering checks" });
   await expect(suiteDisclosure).toContainText("Provider responses are synthetic");
   await expect(suiteDisclosure).toContainText(
-    "do not evaluate a real model or establish answer accuracy",
+    "do not establish open-ended model accuracy",
   );
+  const qualityTable = page.getByRole("table", {
+    name: "Claim-level checks against retained public snapshots",
+  });
+  await expect(qualityTable).toBeVisible();
+  for (const [label, key] of [
+    ["Factual accuracy", "factualAccuracy"],
+    ["Citation correctness", "citationCorrectness"],
+    ["Citation completeness", "citationCompleteness"],
+  ] as const) {
+    const metric = report.automatedQuality[key];
+    const cells = qualityTable
+      .getByRole("row", { name: new RegExp(`^${label}`) })
+      .getByRole("cell");
+    await expect(cells).toHaveText([
+      String(metric.passed),
+      String(metric.failed),
+      String(metric.notApplicable),
+    ]);
+  }
   await expect(
     page.getByRole("link", { name: "Offline engineering suite report (JSON)" }),
   ).toHaveAttribute("href", "/api/evaluation?artifact=suite");

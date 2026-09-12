@@ -2,7 +2,7 @@
 
 This guide defines address selection, jurisdiction and parcel queries, nearby-development calculations and their technical limits. The adapter uses first-party published services; a geocode supplies a candidate, not an automatic parcel determination. Runtime code uses Web APIs compatible with the Cloudflare Worker runtime and needs no GIS account, geocoding token or Node-only GIS dependency.
 
-The public source package includes query/fetch configuration but no downloaded GIS or development evidence. Live lookups need the configured remote services. [DATA_SOURCES.md](../DATA_SOURCES.md) identifies publishers, [SECURITY.md](../SECURITY.md#data-flow-and-privacy) explains data flow, and [release readiness](RELEASE_READINESS.md) records dated integration results.
+The public source package includes query/fetch configuration but no downloaded GIS or development evidence. Live lookups need the configured remote services. [DATA_SOURCES.md](DATA_SOURCES.md) identifies publishers, [SECURITY.md](../SECURITY.md#data-flow-and-privacy) explains data flow, and [release readiness](RELEASE_READINESS.md) records dated integration results.
 
 ## Services and fields
 
