@@ -233,7 +233,7 @@ async function check(name, test) {
 
 async function ask(base, question) {
   const response = await fetch(`${base}/api/ask`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json', Origin: base }, body: JSON.stringify({ question }),
+    method: 'POST', headers: { 'Content-Type': 'application/json', Origin: base }, body: JSON.stringify({ question, jurisdictionId: 'tampa' }),
     signal: AbortSignal.timeout(config.timeoutMs + 15000),
   });
   const text = await response.text();

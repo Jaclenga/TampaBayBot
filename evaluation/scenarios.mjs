@@ -10,6 +10,7 @@ function fixtureSource(id, title, topic = 'fixture-housing') {
     retrieval_date: EVALUATION_DATE, refresh_days: 7, topic_id: topic,
     next_step: { label: 'Synthetic test resource', url: `https://fixture.invalid/${id}` },
     synthetic_fixture: true,
+    jurisdiction_ids: ['tampa'],
   };
 }
 

@@ -2,10 +2,16 @@ import { test, expect } from "@playwright/test";
 import { request as httpRequest } from "node:http";
 import { request as httpsRequest } from "node:https";
 
-test("incomplete uploads return safe timeouts from every input API", async ({ baseURL }) => {
+test("incomplete uploads return safe timeouts from every input API", async ({ baseURL, request }) => {
+  // Wrangler's local static-assets proxy has a known abandoned-body transport
+  // defect. Exercise the exact built Worker without that proxy for this test;
+  // the remaining tests retain the production static-assets route.
+  const uploadBaseURL = process.env.PLAYWRIGHT_INPUT_BASE_URL ??
+    process.env.PLAYWRIGHT_BASE_URL ??
+    (process.env.PLAYWRIGHT_PRODUCTION_SECURITY === "true" ? "http://127.0.0.1:3101" : baseURL);
   const results = await Promise.all(["ask", "location", "property", "development"].map(route =>
     new Promise<{ status: number | undefined; body: string }>((resolve, reject) => {
-      const url = new URL(`/api/${route}`, baseURL);
+      const url = new URL(`/api/${route}`, uploadBaseURL);
       const client = (url.protocol === "https:" ? httpsRequest : httpRequest)(url, {
         method: "POST", headers: { "Content-Type": "application/json", "Transfer-Encoding": "chunked" },
       });
@@ -26,6 +32,8 @@ test("incomplete uploads return safe timeouts from every input API", async ({ ba
     expect(result.status).toBe(408);
     expect(JSON.parse(result.body)).toEqual({ error: "The request took too long to upload. Please try again.", code: "request_timeout" });
   }
+  const health = await request.get(new URL("/api/health", uploadBaseURL).href);
+  expect(health.status()).toBe(200);
 });
 
 test("Worker refuses unused image processing routes before redirecting or fetching", async ({ request }) => {

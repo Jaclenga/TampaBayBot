@@ -31,6 +31,7 @@ const ANSWER_STATUSES = [
   "conflicting_evidence",
   "potentially_outdated",
   "needs_location",
+  "needs_jurisdiction",
   "official_judgment",
   "out_of_scope",
   "unavailable_source",
@@ -54,6 +55,7 @@ function syntheticCorpus(now) {
   const sources = [
     {
       source_id: "provider-housing",
+      jurisdiction_ids: ["tampa"],
       title: "Synthetic housing assistance application notice",
       agency: "Synthetic evaluation agency",
       canonical_url: "https://example.invalid/evaluation/housing",
@@ -64,6 +66,7 @@ function syntheticCorpus(now) {
     },
     {
       source_id: "provider-contact",
+      jurisdiction_ids: ["tampa"],
       title: "Synthetic housing assistance application contact",
       agency: "Synthetic evaluation agency",
       canonical_url: "https://example.invalid/evaluation/contact",
@@ -87,7 +90,7 @@ function syntheticCorpus(now) {
       retrieved_at: timestamp,
     },
   ];
-  return { sources, chunks, now: timestamp };
+  return { sources, chunks, jurisdictionId: "tampa", now: timestamp };
 }
 
 function providerConfig(provider, extra = {}) {

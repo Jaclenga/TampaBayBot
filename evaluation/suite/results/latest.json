@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "suiteVersion": "1.0.0",
+  "suiteVersion": "1.1.0",
   "mode": "not_run",
   "status": "not_run",
   "startedAt": null,
@@ -55,6 +55,18 @@
         }
       },
       "metamorphic": {
+        "cases": 0,
+        "passed": 0,
+        "failed": 0,
+        "checks": {
+          "passed": 0,
+          "failed": 0,
+          "applicable": 0,
+          "notApplicable": 0,
+          "rate": null
+        }
+      },
+      "jurisdiction": {
         "cases": 0,
         "passed": 0,
         "failed": 0,

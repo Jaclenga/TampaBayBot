@@ -128,11 +128,13 @@ export async function runLiveSuite({
           const baseline = answerQuestion(benchmark.question, {
             sources,
             chunks,
+            jurisdictionId: benchmark.jurisdictionId ?? "tampa",
             now,
           });
           const answer = await answerWithGuardrails(benchmark.question, {
             sources,
             chunks,
+            jurisdictionId: benchmark.jurisdictionId ?? "tampa",
             now,
             config,
             fetchImpl: (...args) => {

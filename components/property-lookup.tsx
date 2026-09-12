@@ -61,6 +61,9 @@ function Layer({ layer, title }: { layer?: LayerResult; title: string }) {
       ) : (
         <p>{layer.message || copy.unknown}</p>
       )}
+      {!layer.records.length && layer.sourceUrl && (
+        <SourceLink url={layer.sourceUrl}>{copy.source}</SourceLink>
+      )}
       {layer.message && layer.records.length > 0 && (
         <p className="small muted">{layer.message}</p>
       )}
@@ -102,24 +105,28 @@ export default function PropertyLookup({
   useEffect(() => {
     if (property) propertyRef.current?.focus();
   }, [property]);
+  function resetSelection() {
+    request.current?.abort();
+    activityRequest.current?.abort();
+    setPoint(null);
+    setProperty(null);
+    setDevelopment(null);
+    setBusy(false);
+    setActivityBusy(false);
+    setError("");
+    setActivityError("");
+    setShowMap(false);
+  }
   async function searchAddress() {
     if (!address.trim()) {
       setError(en.form.empty);
       return;
     }
-    request.current?.abort();
-    activityRequest.current?.abort();
+    resetSelection();
     const ctl = new AbortController();
     request.current = ctl;
     setBusy(true);
-    setActivityBusy(false);
-    setError("");
-    setActivityError("");
     setLookup(null);
-    setPoint(null);
-    setProperty(null);
-    setDevelopment(null);
-    setShowMap(false);
     try {
       const result = await post<AddressLookup>(
         "/api/location",
@@ -228,6 +235,11 @@ export default function PropertyLookup({
             {copy.select}
           </h4>
           <p>{lookup.message}</p>
+          {!!lookup.warnings?.length && (
+            <ul className="warning-list">
+              {lookup.warnings.map((warning) => <li key={warning}>{warning}</li>)}
+            </ul>
+          )}
           {lookup.candidates.map((candidate) => (
             <button
               className="candidate"
@@ -285,18 +297,7 @@ export default function PropertyLookup({
           {lookup && (
             <button
               className="text-button"
-              onClick={() => {
-                request.current?.abort();
-                activityRequest.current?.abort();
-                setPoint(null);
-                setProperty(null);
-                setDevelopment(null);
-                setBusy(false);
-                setActivityBusy(false);
-                setError("");
-                setActivityError("");
-                setShowMap(false);
-              }}
+              onClick={resetSelection}
             >
               {copy.chooseDifferent}
             </button>
@@ -304,6 +305,14 @@ export default function PropertyLookup({
           {property && (
             <>
               <p>{property.message}</p>
+              {!property.boundary && !!property.boundaryChecks?.length && (
+                <details className="data-limits">
+                  <summary>{copy.boundaryChecks}</summary>
+                  {property.boundaryChecks.map((layer) => (
+                    <Layer key={layer.jurisdictionId} layer={layer} title={layer.title} />
+                  ))}
+                </details>
+              )}
               {property.warnings.length > 0 && (
                 <ul className="warning-list">
                   {property.warnings.map((w) => (

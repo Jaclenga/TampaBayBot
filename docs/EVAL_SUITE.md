@@ -1,8 +1,8 @@
 # Evaluation suite
 
-Run `npm run eval:suite` for the versioned offline engineering evaluation. Its default **205 cases** exercise navigation, guardrails, provider contracts and repeatable input/corpus variations. They use preserved public evidence and explicitly synthetic fixtures. No language-model server, credential or paid API call is required.
+This is the command, report-format and scorer-contract reference for offline evaluation, optional live-model runs and regression comparison. For metric interpretation and human review, use [EVALUATION.md](EVALUATION.md). Dated results and environments are recorded in [release readiness](RELEASE_READINESS.md).
 
-This is a hand-authored development suite, used while building the application. A passing report describes the checked behaviors; it is not a blind holdout, an AI accuracy score, or a completed human review. The separate 77-question benchmark and review method (development artifact omitted from source-only release) remains available.
+The default offline suite has 224 hand-authored cases using preserved public evidence and synthetic fixtures. It requires no model server, credential or paid inference. The source-only package initially has no evidence: [load and review a corpus](DISTRIBUTION.md#populate-and-validate-locally) first. Empty `not_run` placeholders are not successful evaluations, and fresh source content may require reviewed changes to the dated expectations.
 
 ## Run offline
 
@@ -30,7 +30,15 @@ npm run eval:suite -- --suite guardrails,providers --output work/evals/targeted
 
 The offline runner disables global outbound `fetch`. Provider scenarios inject synthetic HTTP responses into the actual adapter and guarded application path. They do not contact the configured `.env` provider, download models or exercise real inference. Custom trusted test code still needs review; replacing `fetch` is not an operating-system network sandbox.
 
-The CI workflow (development artifact omitted from source-only release) runs this offline suite and uploads its reports alongside the separate legacy benchmark, browser and runtime artifacts. CI makes no paid model calls. A checked-in workflow is not evidence that a remote CI job has completed.
+The development CI workflow (development artifact omitted from source-only release) runs this suite against the retained corpus and uploads reports alongside benchmark, browser and runtime artifacts. The public source-only workflow instead checks the unpopulated distribution; it does not claim those corpus-dependent cases passed. Both avoid paid inference. Actual run results and the distinction between source and development CI belong in [release readiness](RELEASE_READINESS.md).
+
+## Narrative benchmark and human packets
+
+```sh
+npm run evaluate
+```
+
+This is the separate strict narrative evaluator. It reads the same benchmark definitions used by the navigation suite, writes `evaluation/benchmark.json`, `evaluation/results/latest.json` and `evaluation/results/responses.json`, and prepares `evaluation/human-audit/responses.json`. It preserves completed human judgments and flags changed responses. The unified `eval:suite` command does not rewrite these files or historical agent reviews. See [human-review methodology](EVALUATION.md#independent-human-review) before changing review records.
 
 ## What the cases cover
 
@@ -40,12 +48,11 @@ The CI workflow (development artifact omitted from source-only release) runs thi
 | `guardrails` | 45 | Synthetic private-identifier patterns, legitimate sensitive housing questions, instruction bypass, five hook stages, block/skip behavior, malformed decisions, timeout, mutation isolation and sanitized errors |
 | `providers` | 55 | Native Ollama and compatible Chat Completions adapters; valid selections, invalid JSON/IDs, changed or shortened quotes, missing primary evidence, tool calls, refusals, response bounds, redirects, outages, cancellation and conservative-state bypass |
 | `metamorphic` | 28 | Fixed-seed case/spacing/punctuation changes, corpus shuffling and duplicate chunks, instruction attacks, and decision preservation across synthetic provider selections |
+| `jurisdiction` | 19 | City/county source isolation, locality aliases, unincorporated/excluded city wording, missing/conflicting areas, city names inside street addresses, and rejection of cross-city model selections |
 
 Every case identifies its data as `public_snapshot`, `synthetic`, or `public_snapshot_with_synthetic_input`. Synthetic agencies, identifiers and failure payloads are test material. Case titles are safe labels or checked-in public questions; reports omit private probes, raw answer bodies, credentials and raw provider errors.
 
 The reference date is **2026-09-12T12:00:00.000Z**, from `evaluation/scenarios.mjs`. Runtime answers use the actual current date. When refreshing the corpus, review the reference date and expectations deliberately; a fixed historical test date does not establish that program instructions remain current.
-
-The stronger location assertions exposed three previously ignored flags: questions about Clearwater and Orlando, and a request to infer building permission from nearby development, still requested an address despite returning outside-coverage or official-judgment states. Those flags were corrected, and a focused core regression preserves ordinary Tampa property lookup behavior.
 
 ## Read the scores
 
@@ -57,7 +64,7 @@ Expected source IDs, next-step URLs and required terms are useful proxies. Exact
 
 `tests/evaluation-scoring.test.mjs` uses handwritten valid outputs and deliberate mutations to establish that the scorer rejects fabricated quotes, altered bodies, false hashes, wrong locators, unofficial sources, unknown/duplicate markers and changed conservative decisions. These tests verify the evaluator itself; they do not replace a semantic claim audit.
 
-Reports leave human factual-correctness, completeness and resident-usefulness scores null. The legacy report also leaves unsupported-claim rate unscored. Whole-case median and p95 duration reflect this machine and workload; offline timings are not model latency or service-capacity measurements. GIS correctness, browser accessibility and manual assistive-technology review remain separate.
+Reports leave human factual-correctness, completeness and resident-usefulness scores null; the narrative report also leaves unsupported-claim rate unscored. [Evaluation methodology](EVALUATION.md#reading-the-metrics) explains why. Whole-case median and p95 duration reflect the measured machine and workload; offline timings are not model latency or service-capacity measurements.
 
 ## Evaluate an explicitly configured model
 
@@ -132,4 +139,4 @@ Keep reusable case functions in `evaluation/suite/`; `runner.mjs` registers offl
 
 Compute `passed` from independently authored requirements; the literal `true` above only illustrates the shape. Preserve stable IDs, make inapplicability explicit, catch per-case failures without serializing private text, and inject synthetic responses for offline provider cases. Use targeted group runs while developing and the full suite before release. If a scorer changes, include mutations that would previously have escaped it and version/review changed expectations.
 
-`npm run evaluate` remains the separate strict 77-case legacy command. It updates the public benchmark reports and refreshes pending human-review packets while preserving completed human judgments. `eval:suite` does not rewrite those files or the historical agent audit. The 30 human reviews remain pending until named independent reviewers perform them; neither an offline nor live engineering report completes that work.
+Changes to report formats or evaluation commands must preserve the distinction between engineering results and [independent human review](EVALUATION.md#independent-human-review). Neither an offline nor live report completes that work.

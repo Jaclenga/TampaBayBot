@@ -2,20 +2,20 @@
 
 ParcelPrivateer can use an operator-selected model through **Ollama** or an **OpenAI-compatible Chat Completions endpoint**. `LLM_PROVIDER=none` is the default: the existing deterministic, cited answer path runs without a model. The adapter uses HTTP directly; a paid service or provider SDK is not required.
 
-The model's job is deliberately bounded. It selects from already-retrieved evidence and returns evidence IDs with full literal excerpts. It cannot add free-form facts, new citations, eligibility decisions or project approvals. This lets an operator use a local/open-weight model or a remote API while retaining the same evidence checks and conservative answer states.
+The model selects from already-retrieved evidence and returns evidence IDs with full literal excerpts. It cannot add free-form facts, new citations, eligibility decisions or project approvals. The contract below applies to both local and remote providers.
 
 ## What a model receives and can change
 
 1. Routing, retrieval, source selection and the initial cited answer run first.
 2. A configured provider is considered only when that answer has status `answered`. Insufficient evidence, official judgment, conflicting/stale evidence and location/coverage states remain on the deterministic path.
-3. The server sends the current resident question, bounded retrieved evidence containing IDs/titles/excerpts, and selector instructions to the configured model endpoint. It sends no application conversation history, credentials inside the prompt, parcel-owner data, or complete corpus.
+3. The server sends the current resident question, bounded retrieved evidence containing IDs/titles/excerpts, and selector instructions to the configured model endpoint. It does not attach application conversation history, provider credentials, property-lookup results or the complete corpus. The question itself can contain personal information the resident typed.
 4. The model returns one to three structured selections. The first supplied evidence entry must stay first, and each selection must contain a supplied ID with its full literal quote. Unsupported IDs, duplicate entries, altered/reordered primary evidence, unexpected prose, malformed output and incomplete responses fail validation.
 5. The application builds the answer from validated selections. Existing status, evidence records, official next steps, explanation and warnings remain under application control. The model does not issue tool calls or trigger another source fetch.
 6. Invalid configuration, an unreachable/slow provider, response limits or invalid output return the original deterministic answer with fallback metadata. Provider keys, base URLs and raw error details are not returned to the browser.
 
-The API's generation metadata distinguishes disabled, skipped, model-assisted and fallback behavior. A successful model response is not a source-validity check or an accuracy score. Literal evidence can still be incomplete or poorly selected. No live model-quality benchmark is claimed by this integration; deterministic adapter fixtures verify boundaries, not resident usefulness of a particular model.
+The API's generation metadata distinguishes disabled, skipped, model-assisted and fallback behavior. [Real Ollama engineering tests](OLLAMA_TESTING.md) have run, separately from synthetic adapter fixtures. Neither establishes general accuracy or resident usefulness: literal evidence can still be incomplete or poorly selected.
 
-The guarded API screens questions before retrieval and runs additive checks around evidence, model use and the response. Recognizable instruction attacks skip the model while preserving navigation. Narrow identifier/key patterns can block a question, but they do not provide complete personal-data detection or redaction; legitimate questions involving income, disability or other sensitive housing circumstances remain supported. See [guardrail prompt inserts and runtime hooks](GUARDRAIL_INSERTS.md) for the five stages, built-in boundaries and operator extension contract.
+The guarded API screens input and surrounds model use with application checks. See [guardrail inserts and hooks](GUARDRAIL_INSERTS.md) for the stages, narrow screening limits and extension contract; provider validation does not replace those checks.
 
 ## Configuration
 
@@ -90,7 +90,7 @@ For a remote service, use the actual HTTPS API root documented by that provider,
 
 A deployed web app cannot use `127.0.0.1` to call Ollama on the resident's PC. The app and model must both run locally for the direct same-device setup. An operator can instead provide a reachable, authenticated HTTPS model service; exposing a bare Ollama port publicly is not required by this integration. Cloud-only model services and remote inference are not local processing, even when the application software is open source.
 
-For Sites deployment, configure the selected `LLM_*` values through the host's **runtime environment bindings/secrets**, then deploy and verify them. Keep API keys out of Vite build-time values, `NEXT_PUBLIC_*` variables, frontend bundles and `.openai/hosting.json`. The application reads runtime bindings server-side; adding a local `.env` does not configure an already-deployed review site. Cloudflare documents development files and deployed secrets separately. [Cloudflare secrets documentation](https://developers.cloudflare.com/workers/vite-plugin/reference/secrets/)
+For hosted deployment, configure `LLM_*` through runtime environment bindings/secrets, then deploy and verify them. Keep API keys out of Vite build-time values, `NEXT_PUBLIC_*` variables, frontend bundles and `.openai/hosting.json`. A local `.env` does not configure an already-deployed app. [Independent deployment](DEPLOYMENT.md#optional-model-provider) provides the Wrangler steps; the maintainer's Sites environment uses its own runtime bindings. [Cloudflare secrets documentation](https://developers.cloudflare.com/workers/vite-plugin/reference/secrets/)
 
 The default deployed configuration stays `none` unless the deployment operator enables a provider. A provider configured on a hosted app applies to eligible requests served by that app; it is not a per-resident endpoint setting. Check the displayed provider/data-flow disclosure before sending a question.
 
@@ -130,7 +130,7 @@ Run the deterministic suite with `npm test`. To check actual local vinext Worker
 npm run test:llm-runtime
 ```
 
-The dedicated runtime fixture creates its own ignored `work/` copy and synthetic `.env`, starts a localhost mock provider and exercises native Ollama and compatibility response formats. It checks validated use, invalid-output fallback, conservative-state bypass and secret exclusion from inspected surfaces. It does not read or overwrite a user's `.env`, download a model or call a real provider. The ordinary browser/accessibility suite assumes `LLM_PROVIDER=none`; use this dedicated fixture for provider-enabled transport checks. The September 12, 2026 runtime report (development artifact omitted from source-only release) records passing checks for all three modes. This is not a real-inference quality result.
+The fixture creates its own ignored `work/` copy and synthetic `.env`, starts a localhost mock provider and exercises native Ollama and compatibility response formats. It checks validated use, invalid-output fallback, conservative-state bypass and secret exclusion without reading or overwriting a user's environment files or calling a real model. It expects the documented evidence corpus; an empty source-only release needs [source acquisition](DISTRIBUTION.md) first. The ordinary [browser suite](../ACCESSIBILITY.md) assumes `LLM_PROVIDER=none`. Dated outcomes belong in [release readiness](RELEASE_READINESS.md).
 
 To test a **real installed Ollama model** through the app's HTTP API, keep the daemon running and use:
 
@@ -140,16 +140,12 @@ npm run test:ollama-runtime -- --allow-provider-call --model llama3:8b --timeout
 
 This separate runner creates an isolated local app fixture, requires an installed local model, and forwards requests to Ollama through a loopback proxy that counts calls without changing completions. Eligible questions must return accepted model output; a safe fallback fails that check. Conservative questions, instruction attacks and synthetic identifiers must make zero provider calls. It also checks the app's model disclosure and blocks access to the fixture's `.env`. The runner never reads or overwrites the user's environment files, changes hosted settings or downloads weights. Reports under ignored `work/evals/live/` identify the selected model/digest, server version, token counts and timings without retaining prompts or completions.
 
-For broader real-model cases and repeated runs, see the [live evaluation instructions](EVAL_SUITE.md#evaluate-an-explicitly-configured-model). These are engineering checks; human assessment of evidence usefulness remains separate.
+For broader real-model cases and repeated runs, see the [live evaluation instructions](EVAL_SUITE.md#evaluate-an-explicitly-configured-model). Use the [recorded Ollama results](OLLAMA_TESTING.md) for model identity, timings, outcomes and their limits. Human assessment of evidence usefulness remains separate.
 
 ## Privacy, security and evaluation limits
 
 With `none`, questions are not sent to a model. With an enabled provider, eligible questions and the selected public evidence are sent to that provider. A question can contain an address or personal information the resident typed; source selection does not redact that text. Provider retention, logs, routing, subprocesses and cloud forwarding depend on the chosen service. Local mode has the strongest geographic meaning when both app and weights run on the same controlled machine.
 
-The app does not persist conversation history, but that does not control the provider's or hosting platform's logs. Keep model keys server-side, configure access/cost/concurrency limits, and test the chosen provider's retention policy before resident use. Software licensing is separate from model-weight licenses and API terms.
+The app does not persist conversation history, but that does not control the provider's or hosting platform's logs. Software licensing is separate from model-weight licenses and API terms. [SECURITY.md](../SECURITY.md) owns retention, access and operating limits; [GUARDRAIL_INSERTS.md](GUARDRAIL_INSERTS.md) owns injection defenses and their limits.
 
-Prompt injection can try to influence a model's selection. The application constrains and validates output instead of trusting a prompt alone. Invalid model output cannot change an official-judgment or other conservative status, add a new citation, or cause source/tool execution. Valid-but-unhelpful evidence selections still require evaluation and human review.
-
-Use the existing deterministic benchmark as a regression baseline, then evaluate the chosen real model/version separately using public or synthetic questions. Record model identity, configuration, latency, fallback rate, selection usefulness and failures without saving real resident prompts. A synthetic local HTTP provider test proves transport/environment/fallback behavior, not that any downloaded model understands Tampa housing information.
-
-See [methodology](../METHODOLOGY.md), [security boundaries](../SECURITY.md) and [limitations](../LIMITATIONS.md). No real-model quality, local GPU performance or paid remote-provider reliability result is implied by these setup instructions.
+Use public or synthetic questions to evaluate the selected model/version. Record identity, configuration, latency, fallback behavior and selection usefulness without saving real resident prompts. Keep synthetic transport checks, real inference and human review distinct as described in [evaluation](EVALUATION.md).

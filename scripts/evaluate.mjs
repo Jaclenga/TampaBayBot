@@ -15,7 +15,7 @@ const ratio = values => values.length ? { passed: values.filter(Boolean).length,
 
 for (const benchmark of benchmarks) {
   const corpus = prepareScenario(benchmark.scenario, sources, chunks);
-  const answer = answerQuestion(benchmark.question, { ...corpus, now: EVALUATION_DATE });
+  const answer = answerQuestion(benchmark.question, { ...corpus, jurisdictionId: benchmark.jurisdictionId, now: EVALUATION_DATE });
   const evidenceText = answer.evidence.map(evidence => evidence.quote).join(' ').toLowerCase();
   const citationResults = answer.evidence.map(evidence => {
     const source = corpus.sources.find(item => item.source_id === evidence.source_id);

@@ -99,7 +99,7 @@ test("suite independently detects corrupt content hashes instead of copying curr
 
 test("each execution failure is sanitized and later cases still run", async () => {
   const results = await runMetamorphicSuite({
-    sources: [null],
+    sources: [{ get jurisdiction_ids() { throw new Error("private synthetic evaluation failure"); } }],
     chunks: [],
     now,
   });

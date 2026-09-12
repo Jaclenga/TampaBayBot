@@ -7,6 +7,8 @@ import { en } from "@/lib/i18n/en";
 import { SourceLink } from "./site-shell";
 import PropertyLookup from "./property-lookup";
 import { dateLabel } from "@/lib/i18n/format";
+import { JURISDICTIONS } from "@/lib/coverage.mjs";
+import type { JurisdictionId } from "@/lib/coverage.mjs";
 
 const subscribeToReady = () => () => {};
 const clientReady = () => true;
@@ -48,6 +50,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
     serverReady,
   );
   const [question, setQuestion] = useState("");
+  const [jurisdictionId, setJurisdictionId] = useState<JurisdictionId>("tampa-bay");
   const [answer, setAnswer] = useState<ResidentAnswer | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -80,7 +83,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
       const response = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: text }),
+        body: JSON.stringify({ question: text, jurisdictionId }),
         signal: request.signal,
       });
       const result = await response.json();
@@ -118,6 +121,27 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
             }}
             aria-busy={busy}
           >
+            <div className="area-picker">
+              <label htmlFor="jurisdiction">{en.form.area}</label>
+              <select
+                id="jurisdiction"
+                value={jurisdictionId}
+                disabled={!ready}
+                aria-describedby="jurisdiction-hint"
+                onChange={(event) => {
+                  controller.current?.abort();
+                  setBusy(false);
+                  setAnswer(null);
+                  setError("");
+                  setJurisdictionId(event.target.value as JurisdictionId);
+                }}
+              >
+                {JURISDICTIONS.map((area) => (
+                  <option key={area.id} value={area.id}>{area.label}</option>
+                ))}
+              </select>
+              <p className="small muted" id="jurisdiction-hint">{en.form.areaHint}</p>
+            </div>
             <label htmlFor="question">{en.form.label}</label>
             <div className={`question-input ${error ? "invalid" : ""}`}>
               <textarea
@@ -199,6 +223,9 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
             <p className="answer-lead">
               <CitedText answer={answer} />
             </p>
+            {answer.jurisdictionLabel && (
+              <p className="small muted">{en.answer.area}: {answer.jurisdictionLabel}</p>
+            )}
             {answer.generation?.status === "used" && (
               <p className="muted small">{en.answer.modelUsed}</p>
             )}
@@ -312,18 +339,14 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
           {answer.nextSteps.length > 0 && (
             <aside className="next-steps" aria-labelledby="next-title">
               <h2 id="next-title">{en.answer.next}</h2>
-              {answer.nextSteps.length > 0 ? (
-                <ol>
-                  {answer.nextSteps.map((step) => (
-                    <li key={step.url}>
-                      <SourceLink url={step.url}>{step.label}</SourceLink>
-                      <small>{step.agency}</small>
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <p>{en.about.approach}</p>
-              )}
+              <ol>
+                {answer.nextSteps.map((step) => (
+                  <li key={step.url}>
+                    <SourceLink url={step.url}>{step.label}</SourceLink>
+                    <small>{step.agency}</small>
+                  </li>
+                ))}
+              </ol>
               <Link href="/sources" className="text-link">
                 {en.nav.sources}
                 <ArrowRight size={15} aria-hidden="true" />

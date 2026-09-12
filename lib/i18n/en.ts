@@ -7,18 +7,20 @@ export const en = {
     evaluation: "Evaluation",
   },
   hero: {
-    title: "Tampa housing information",
+    title: "Tampa Bay housing information",
     description:
-      "Find housing assistance, property information, permits, and public records.",
+      "Find housing assistance, property information, permits, and public records for your community.",
   },
   form: {
     label: "Ask a question or enter an address",
+    area: "Your city or county",
+    areaHint: "Choose an area or name it in your question. A mailing address alone does not establish city jurisdiction.",
     placeholder: "How can I get help with housing?",
     submit: "Search",
     busy: "Searching...",
     privacy:
       "Skip names, account numbers, and other private details. Questions are not saved by this app.",
-    empty: "Enter a housing question or a Tampa street address.",
+    empty: "Enter a housing question or a Tampa Bay street address.",
     error: "We couldn’t complete that search. Please try again.",
     max: "Keep your question under 1,000 characters.",
   },
@@ -70,6 +72,7 @@ export const en = {
   ],
   answer: {
     title: "Answer",
+    area: "Source coverage",
     modelUsed:
       "A language model selected these source excerpts. Their wording was checked against the saved evidence.",
     modelFallback:
@@ -89,12 +92,12 @@ export const en = {
   },
   property: {
     title: "Add a property to your question",
-    label: "Tampa street address",
+    label: "Tampa Bay street address",
     placeholder: "For example, 315 E Kennedy Blvd, Tampa",
     submit: "Find address",
     busy: "Looking up the address…",
     disclosure:
-      "Address searches are sent to the City of Tampa’s public GIS service. No address history is saved by this app.",
+      "Address searches are sent to public GIS services serving Tampa Bay. No address history is saved by this app.",
     select: "Confirm the matching address",
     choose: "Use this address",
     loading: "Checking public property layers…",
@@ -129,6 +132,7 @@ export const en = {
     conflicting_evidence: "Sources need reconciliation",
     potentially_outdated: "Check current information",
     needs_location: "A location will help",
+    needs_jurisdiction: "Choose a city or county",
     official_judgment: "Confirm with the responsible agency",
     out_of_scope: "Outside this service",
     unavailable_source: "Source unavailable",
@@ -150,12 +154,12 @@ export const en = {
     methodText:
       "The app retrieves passages from a versioned public-source index and shows exact excerpts. An optional local or API language model can select excerpts; the app checks their wording and citations before displaying them. It cannot make official determinations. Source documents are data, never instructions.",
     method2:
-      "Location searches query public GIS layers. Nearby development records come from the independent Tampa Development Records project and retain original-source provenance. Sources can be incomplete, unavailable, or outdated.",
+      "Location searches query public GIS layers for the confirmed jurisdiction. Nearby development records currently come from the Tampa-only Tampa Development Records snapshot; it does not cover St. Petersburg or Clearwater. Sources can be incomplete, unavailable, or outdated.",
   },
   about: {
     title: "About ParcelPrivateer",
     intro:
-      "ParcelPrivateer brings housing resources, property context, and public development records into one place to help Tampa residents find an understandable next step.",
+      "ParcelPrivateer brings housing resources, property context, and public development records into one place to help Tampa Bay residents find an understandable next step. Source coverage is shown for each jurisdiction.",
     approachTitle: "How answers work",
     approach:
       "Each answer keeps its evidence close. We show the source, explain uncertainty, and route important decisions to the responsible agency. This first release offers source-backed navigation, not personalized legal or eligibility decisions.",
@@ -174,7 +178,7 @@ export const en = {
   },
   footer: {
     statement:
-      "ParcelPrivateer is an independent open-source project, not affiliated with the City of Tampa. Verify important decisions with the responsible agency.",
+      "ParcelPrivateer is an independent open-source project, not affiliated with any city or county government. Verify important decisions with the responsible agency.",
     access: "Accessibility",
     privacy: "Privacy",
     navigation: "Footer navigation",

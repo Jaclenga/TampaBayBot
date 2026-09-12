@@ -3,11 +3,12 @@ import { lstat, mkdir, readdir, readFile, realpath, writeFile } from "node:fs/pr
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sanitizeReportValue } from "./sanitize-report.mjs";
+import { SUITE_VERSION } from "../evaluation/suite/report.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const SOURCE_DIRS = ["app", "components", "lib", "scripts", "tests", "vendor", "build"];
-const ROOT_FILES = ["package.json", "package-lock.json", "next.config.ts", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "ACCESSIBILITY.md", "LIMITATIONS.md", "METHODOLOGY.md", "CHANGELOG.md"];
-const GUIDE_FILES = ["DISTRIBUTION.md", "DEPLOYMENT.md", "LLM.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "ASSETS.md", "RELEASE_READINESS.md", "OLLAMA_TESTING.md", "BUG_FIX_FOLLOWUP_2026-09-12.md", "SECRET_SCANNING.md", "ALPHA_VERIFICATION.json"];
+const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "next.config.ts", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "ACCESSIBILITY.md", "LIMITATIONS.md", "METHODOLOGY.md", "CHANGELOG.md"];
+const GUIDE_FILES = ["README.md", "DEVELOPMENT.md", "EVALUATION.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LLM.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "ASSETS.md", "RELEASE_READINESS.md", "OLLAMA_TESTING.md", "BUG_FIX_FOLLOWUP_2026-09-12.md", "SECRET_SCANNING.md", "ALPHA_VERIFICATION.json", "TAMPA_BAY_VERIFICATION.json"];
 const GENERATED_FIELDS = ["retrieval_date", "source_updated_date", "content_hash", "normalized_content_hash", "raw_path", "last_attempt", "last_error", "response_url", "content_type", "etag", "last_modified", "content_changed_at", "record_count", "searchable_point_count", "excluded_point_count"];
 const NOTICE = "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy.";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -56,8 +57,8 @@ function emptyLegacyReport(template) {
 
 function emptySuiteReport() {
   const checks = { passed: 0, failed: 0, applicable: 0, notApplicable: 0, rate: null };
-  const suites = Object.fromEntries(["navigation", "guardrails", "providers", "metamorphic"].map((name) => [name, { cases: 0, passed: 0, failed: 0, checks }]));
-  return { schemaVersion: 1, suiteVersion: "1.0.0", mode: "not_run", status: "not_run", startedAt: null, completedAt: "", provenance: {}, summary: { cases: 0, passed: 0, failed: 0, checks, suites }, metrics: {}, humanEvaluation: { status: "not_run" }, limitations: [NOTICE], cases: [] };
+  const suites = Object.fromEntries(["navigation", "guardrails", "providers", "metamorphic", "jurisdiction"].map((name) => [name, { cases: 0, passed: 0, failed: 0, checks }]));
+  return { schemaVersion: 1, suiteVersion: SUITE_VERSION, mode: "not_run", status: "not_run", startedAt: null, completedAt: "", provenance: {}, summary: { cases: 0, passed: 0, failed: 0, checks, suites }, metrics: {}, humanEvaluation: { status: "not_run" }, limitations: [NOTICE], cases: [] };
 }
 
 export function omitUnavailableMarkdownLinks(markdown, filename, availableFiles) {
@@ -71,53 +72,7 @@ export function omitUnavailableMarkdownLinks(markdown, filename, availableFiles)
   });
 }
 
-const RELEASE_README = `# ParcelPrivateer source-only alpha
-
-Independent, MIT-licensed Tampa housing-information software with optional local Ollama or API model assistance.
-
-${NOTICE}
-
-## Start locally
-
-Use Node.js 24 LTS. The app needs no account, database or model credentials in its default mode.
-
-\`\`\`sh
-npm ci
-npm run dev -- --port 3001
-\`\`\`
-
-The unpopulated app starts safely and exposes source links, but has no evidence to answer factual questions. Read [source distribution and publisher terms](docs/DISTRIBUTION.md), then download sources directly from their publishers:
-
-\`\`\`sh
-npm run ingest
-npm run dev -- --port 3001
-\`\`\`
-
-An unavailable publisher causes ingestion to return an error and preserves an explicit unavailable state. Review the ingestion report and source content before serving residents. A fresh download is not the historical development corpus and is not guaranteed to pass its dated benchmark expectations unchanged.
-
-## Validate your corpus
-
-\`\`\`sh
-npm run ingest -- --check
-npm test
-npm run evaluate
-npm run eval:suite
-npm run typecheck
-npm run build
-\`\`\`
-
-Those complete regression commands require populated evidence; do not treat their failures on an empty corpus as passing checks. Evaluation commands regenerate local reports and preserve failures. Historical agent/human reviews are not recreated automatically. [Evaluation guide](docs/EVAL_SUITE.md).
-
-For local Meta models, read [Ollama/provider setup](docs/LLM.md). For independent hosting, read [deployment](docs/DEPLOYMENT.md). A hosted server cannot reach a model on your computer through its own localhost.
-
-## Release boundary
-
-This is an alpha source distribution, not a validated public resident service. Independent human review, manual accessibility checks, operator abuse limits and hosted verification remain deployment requirements. The Windows local static-assets runtime has a known follow-up request failure after a rejected unread upload; deployment relevance requires verification. [Security](SECURITY.md), [limitations](LIMITATIONS.md), [contributions](CONTRIBUTING.md).
-
-The manifest lists packaged file hashes. Downloaded HTML/PDF/JSON/CSV data, evidence chunks, screenshots, historical response packets, owner hosting identity, environment files and Git history are excluded. Tests and benchmark definitions are original software; fixture examples do not represent residents. [MIT license](LICENSE), [external-source notices](NOTICE.md).
-
-See [release notes](CHANGELOG.md), [alpha verification](docs/ALPHA_VERIFICATION.json) and the [private security-reporting instructions](SECURITY.md#reporting-a-problem). The documented results identify the tested development tree or source-only package; they are not a claim that this newly populated corpus has passed those checks.
-`;
+const RELEASE_README = "# ParcelPrivateer\n\n" + NOTICE + "\n\nSee [distribution and source setup](docs/DISTRIBUTION.md).\n";
 
 export async function createSourceRelease({ root = ROOT, output }) {
   root = await realpath(root);
@@ -152,7 +107,7 @@ export async function createSourceRelease({ root = ROOT, output }) {
   const sources = JSON.parse(await readFile(path.join(root, "data/sources.json"), "utf8"));
   const legacy = JSON.parse(await readFile(path.join(root, "evaluation/results/latest.json"), "utf8"));
   const generated = {
-    "README.md": RELEASE_README,
+    "README.md": payload.get("README.md")?.toString("utf8") ?? RELEASE_README,
     ".gitattributes": "* text=auto eol=lf\n",
     "public/.gitkeep": "",
     "data/sources.json": json(emptySourceRegistry(sources)),

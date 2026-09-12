@@ -221,6 +221,10 @@ test('incomplete, filtered, tool-calling, and malformed model responses are not 
     () => compatible(selection(), { finish_reason: 'content_filter' }),
     () => compatible(selection(), { finish_reason: undefined }),
     () => json({ choices: [{ finish_reason: 'stop', message: { content: selection(), tool_calls: [{ function: { name: 'approve' } }] } }] }),
+    () => json({ choices: [{ finish_reason: 'stop', message: { content: selection(), function_call: { name: 'approve' } } }] }),
+    () => json({ choices: [{ finish_reason: 'stop', message: { content: selection(), refusal: 'Cannot select evidence.' } }] }),
+    () => json({ choices: [{ finish_reason: 'stop', message: null }] }),
+    () => json({ choices: [{ finish_reason: 'stop', message: { content: { selections: [] } } }] }),
     () => compatible('```json\n' + selection() + '\n```'),
     () => compatible('{broken json'),
   ];
@@ -228,7 +232,15 @@ test('incomplete, filtered, tool-calling, and malformed model responses are not 
     const result = await synthesizeAnswer(snapshot(), { config: configFor('openai-compatible'), fetchImpl: async () => response() });
     assert.equal(result.generation.reason, 'invalid_output');
   }
-  for (const extra of [{ done: false }, { message: { content: selection(), function_call: { name: 'approve' } } }]) {
+  for (const extra of [
+    { done: false },
+    { tool_calls: [{ function: { name: 'approve' } }] },
+    { function_call: { name: 'approve' } },
+    { message: { content: selection(), tool_calls: [{ function: { name: 'approve' } }] } },
+    { message: { content: selection(), function_call: { name: 'approve' } } },
+    { message: null },
+    { message: { content: { selections: [] } } },
+  ]) {
     const result = await synthesizeAnswer(snapshot(), { config: configFor(), fetchImpl: async () => json({ done: true, message: { content: selection() }, ...extra }) });
     assert.equal(result.generation.reason, 'invalid_output');
   }

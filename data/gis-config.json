@@ -5,50 +5,269 @@
   "cache_ttl_ms": 300000,
   "max_cache_entries": 64,
   "max_response_bytes": 1000000,
-  "geocoder": {
-    "source_id": "tampa-gis",
-    "agency": "City of Tampa GIS",
-    "url": "https://arcgis.tampagov.net/arcgis/rest/services/Locators/SiteAddressLocator/GeocodeServer",
-    "single_line_field": "SingleLine",
-    "coverage": "Hillsborough County address points",
-    "max_candidates": 5,
-    "minimum_score": 75
+  "region_bounds": {
+    "west": -83,
+    "south": 27.45,
+    "east": -81.85,
+    "north": 28.65
   },
-  "layers": {
-    "parcel": {
-      "source_id": "tampa-gis",
-      "agency": "Hillsborough County Property Appraiser data served by City of Tampa GIS",
-      "title": "Tax Parcel",
-      "url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0",
-      "fields": ["OBJECTID", "FOLIO", "PIN", "SITE_ADDR", "SITE_CITY", "MUNI"],
-      "expected_refresh": "daily, according to service metadata"
-    },
-    "boundary": {
+  "region_description": "Broad coordinate guard for the Hillsborough, Pinellas and Pasco area; this envelope does not establish county or municipal jurisdiction.",
+  "max_candidates": 8,
+  "geocoders": [
+    {
       "source_id": "tampa-gis",
       "agency": "City of Tampa GIS",
-      "title": "Tampa Boundary",
-      "url": "https://arcgis.tampagov.net/arcgis/rest/services/AdministrativeArea/TampaBoundary/FeatureServer/0",
-      "fields": ["OBJECTID", "Municipality", "LASTUPDATE"]
+      "url": "https://arcgis.tampagov.net/arcgis/rest/services/Locators/SiteAddressLocator/GeocodeServer",
+      "single_line_field": "SingleLine",
+      "coverage": "Hillsborough County address points",
+      "max_candidates": 5,
+      "minimum_score": 75,
+      "id": "hillsborough"
     },
-    "zoning": {
-      "source_id": "tampa-gis",
-      "agency": "City of Tampa GIS",
-      "title": "Zoning District",
-      "url": "https://arcgis.tampagov.net/arcgis/rest/services/OpenData/Planning/MapServer/28",
-      "fields": ["OBJECTID", "ZONECLASS", "ZONEDESC", "LASTUPDATE", "REFERENCE", "LDFILENUMBER"]
-    },
-    "futureLandUse": {
-      "source_id": "planhillsborough-flu",
-      "agency": "Hillsborough County City-County Planning Commission / Plan Hillsborough",
-      "title": "Tampa Future Land Use",
-      "url": "https://gis.tpcmaps.org/arcgis/rest/services/LandUse/FutureLU_TA/MapServer/0",
-      "fields": ["OBJECTID", "FLUE", "FLU_DESC", "JURISDICTION"],
-      "expected_refresh": "quarterly, according to service metadata"
+    {
+      "id": "pinellas",
+      "source_id": "pinellas-gis",
+      "agency": "Pinellas County GIS",
+      "url": "https://egis.pinellas.gov/gis/rest/services/GeocodingPro/eGISComposite_Pro/GeocodeServer",
+      "single_line_field": "SingleLine",
+      "coverage": "Pinellas County address points",
+      "max_candidates": 5,
+      "minimum_score": 75
     }
-  },
+  ],
+  "jurisdictions": [
+    {
+      "id": "tampa",
+      "name": "City of Tampa",
+      "boundary_label": "Tampa",
+      "layers": {
+        "parcel": {
+          "source_id": "tampa-gis",
+          "agency": "Hillsborough County Property Appraiser data served by City of Tampa GIS",
+          "title": "Tax Parcel",
+          "url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0",
+          "fields": [
+            "OBJECTID",
+            "FOLIO",
+            "PIN",
+            "SITE_ADDR",
+            "SITE_CITY",
+            "MUNI"
+          ],
+          "expected_refresh": "daily, according to service metadata",
+          "record": {
+            "label": "FOLIO",
+            "description": "SITE_ADDR",
+            "parcelId": "FOLIO",
+            "pin": "PIN",
+            "address": "SITE_ADDR"
+          }
+        },
+        "boundary": {
+          "source_id": "tampa-gis",
+          "agency": "City of Tampa GIS",
+          "title": "Tampa Boundary",
+          "url": "https://arcgis.tampagov.net/arcgis/rest/services/AdministrativeArea/TampaBoundary/FeatureServer/0",
+          "fields": [
+            "OBJECTID",
+            "Municipality",
+            "LASTUPDATE"
+          ],
+          "record": {
+            "label": "Municipality",
+            "updatedAt": "LASTUPDATE"
+          }
+        },
+        "zoning": {
+          "source_id": "tampa-gis",
+          "agency": "City of Tampa GIS",
+          "title": "Zoning District",
+          "url": "https://arcgis.tampagov.net/arcgis/rest/services/OpenData/Planning/MapServer/28",
+          "fields": [
+            "OBJECTID",
+            "ZONECLASS",
+            "ZONEDESC",
+            "LASTUPDATE",
+            "REFERENCE",
+            "LDFILENUMBER"
+          ],
+          "record": {
+            "label": "ZONECLASS",
+            "description": "ZONEDESC",
+            "updatedAt": "LASTUPDATE"
+          }
+        },
+        "futureLandUse": {
+          "source_id": "planhillsborough-flu",
+          "agency": "Hillsborough County City-County Planning Commission / Plan Hillsborough",
+          "title": "Tampa Future Land Use",
+          "url": "https://gis.tpcmaps.org/arcgis/rest/services/LandUse/FutureLU_TA/MapServer/0",
+          "fields": [
+            "OBJECTID",
+            "FLUE",
+            "FLU_DESC",
+            "JURISDICTION"
+          ],
+          "expected_refresh": "quarterly, according to service metadata",
+          "record": {
+            "label": "FLUE",
+            "description": "FLU_DESC"
+          }
+        }
+      }
+    },
+    {
+      "id": "st-petersburg",
+      "name": "City of St. Petersburg",
+      "boundary_label": "ST PETERSBURG",
+      "layers": {
+        "boundary": {
+          "source_id": "pinellas-gis",
+          "agency": "Pinellas County GIS",
+          "title": "St. Petersburg Municipal Boundary",
+          "url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/22",
+          "fields": [
+            "OBJECTID",
+            "NAME",
+            "LASTUPDATE"
+          ],
+          "record": {
+            "label": "NAME",
+            "updatedAt": "LASTUPDATE"
+          }
+        },
+        "parcel": {
+          "source_id": "pinellas-gis",
+          "agency": "Pinellas County GIS / Property Appraiser data",
+          "title": "Pinellas County Parcel",
+          "url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Parcels/MapServer/1",
+          "fields": [
+            "OBJECTID",
+            "PARCELID",
+            "STRAP",
+            "SITE_ADDRESS",
+            "SITE_CITY"
+          ],
+          "record": {
+            "label": "PARCELID",
+            "description": "SITE_ADDRESS",
+            "parcelId": "PARCELID",
+            "pin": "STRAP",
+            "address": "SITE_ADDRESS"
+          }
+        },
+        "zoning": {
+          "source_id": "st-petersburg-gis",
+          "agency": "City of St. Petersburg Planning & Economic Development",
+          "title": "St. Petersburg Zoning District",
+          "url": "https://egis.stpete.org/arcgis/rest/services/ServicesDOTS/Zoning/MapServer/0",
+          "fields": [
+            "OBJECTID",
+            "ZONECLASS",
+            "ZONEDESC"
+          ],
+          "record": {
+            "label": "ZONECLASS",
+            "description": "ZONEDESC"
+          }
+        },
+        "futureLandUse": {
+          "source_id": "st-petersburg-gis",
+          "agency": "City of St. Petersburg Planning & Economic Development",
+          "title": "St. Petersburg Future Land Use",
+          "url": "https://egis.stpete.org/arcgis/rest/services/ServicesDOTS/Zoning/MapServer/2",
+          "fields": [
+            "OBJECTID",
+            "LANDUSECODE"
+          ],
+          "record": {
+            "label": "LANDUSECODE"
+          }
+        }
+      }
+    },
+    {
+      "id": "clearwater",
+      "name": "City of Clearwater",
+      "boundary_label": "CLEARWATER",
+      "layers": {
+        "boundary": {
+          "source_id": "pinellas-gis",
+          "agency": "Pinellas County GIS",
+          "title": "Clearwater Municipal Boundary",
+          "url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/5",
+          "fields": [
+            "OBJECTID",
+            "NAME",
+            "LASTUPDATE"
+          ],
+          "record": {
+            "label": "NAME",
+            "updatedAt": "LASTUPDATE"
+          }
+        },
+        "parcel": {
+          "source_id": "pinellas-gis",
+          "agency": "Pinellas County GIS / Property Appraiser data",
+          "title": "Pinellas County Parcel",
+          "url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Parcels/MapServer/1",
+          "fields": [
+            "OBJECTID",
+            "PARCELID",
+            "STRAP",
+            "SITE_ADDRESS",
+            "SITE_CITY"
+          ],
+          "record": {
+            "label": "PARCELID",
+            "description": "SITE_ADDRESS",
+            "parcelId": "PARCELID",
+            "pin": "STRAP",
+            "address": "SITE_ADDRESS"
+          }
+        },
+        "zoning": {
+          "source_id": "clearwater-gis",
+          "agency": "City of Clearwater GIS / Planning",
+          "title": "Clearwater Zoning",
+          "url": "https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/Zoning_WGS84/MapServer/1",
+          "fields": [
+            "OBJECTID",
+            "ZONING",
+            "ZONING_DESC",
+            "last_edited_date"
+          ],
+          "record": {
+            "label": "ZONING",
+            "description": "ZONING_DESC",
+            "updatedAt": "last_edited_date"
+          }
+        },
+        "futureLandUse": {
+          "source_id": "clearwater-gis",
+          "agency": "City of Clearwater Planning",
+          "title": "Clearwater Future Land Use",
+          "url": "https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/FLU_w_PPC_Colors_WGS84/MapServer/0",
+          "fields": [
+            "OBJECTID",
+            "LU",
+            "adopted_ordinance",
+            "amend_effective_date",
+            "last_edited_date"
+          ],
+          "record": {
+            "label": "LU",
+            "updatedAt": "last_edited_date"
+          }
+        }
+      }
+    }
+  ],
   "limitations": [
     "Point intersections identify mapped context at the selected address point; they do not check every part of a parcel for split zoning.",
-    "Only the City of Tampa boundary is checked. A Tampa mailing address does not establish City jurisdiction.",
+    "Direct property layers are configured for Tampa, St. Petersburg and Clearwater only. Other Tampa Bay municipalities and unincorporated areas return missing or unverified coverage.",
+    "Geocoder city names and mailing addresses do not establish jurisdiction; municipal polygon queries choose the land-use sources.",
+    "Pasco address geocoding and municipal property layers are not configured; regional navigation does not imply direct property lookup coverage.",
     "A layer designation is not a development entitlement, approval, or official zoning determination.",
     "Layer update timestamps may describe one feature rather than the currency of the entire dataset."
   ]

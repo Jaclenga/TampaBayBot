@@ -38,7 +38,7 @@
     "private_reporting": "https://github.com/Jaclenga/ParcelPrivateer/security/advisories/new"
   },
   "known_issues": [
-    "Recorded complete Windows production-browser suite: 13 passed, 1 failed, 0 skipped. A rejected unread oversized upload can break a subsequent pooled request in the local static-assets runtime. Hosted/Linux relevance is unverified.",
+    "Complete browser runs on Windows and later Linux local runtimes each recorded 13 passed, 1 failed, 0 skipped. A rejected unread oversized upload can break a subsequent pooled request in the local static-assets runtime. Actual hosted impact remains unverified. Later aggregate evidence: https://github.com/Jaclenga/ParcelPrivateer/releases/download/v0.1.0-alpha.1/linux-browser-followup.json",
     "Independent review of 30 answers and manual assistive-technology/resident task testing remain pending.",
     "Fresh source ingestion depends on publisher availability and may invalidate dated benchmark expectations. Empty source distributions cannot produce evidence-grounded answers before ingestion.",
     "Shared abuse/rate/concurrency limits, monitoring, retention, source refresh ownership and actual hosted smoke verification remain operator work before unrestricted resident use.",

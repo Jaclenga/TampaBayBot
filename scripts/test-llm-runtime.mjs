@@ -174,7 +174,7 @@ async function startWorker(provider) {
 }
 
 async function postQuestion(base, question) {
-  const response = await fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: base }, body: JSON.stringify({ question }), signal: AbortSignal.timeout(30000) });
+  const response = await fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: base }, body: JSON.stringify({ question, jurisdictionId: 'tampa' }), signal: AbortSignal.timeout(30000) });
   const text = await response.text();
   assertNoSecrets(text, 'API JSON');
   return { status: response.status, text, body: JSON.parse(text) };

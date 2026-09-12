@@ -25,6 +25,7 @@ export async function runNavigationSuite({
       const output = await answer(benchmark.question, {
         ...structuredClone(corpus),
         now,
+        jurisdictionId: benchmark.jurisdictionId,
         config: parseLlmConfig({ LLM_PROVIDER: "none" }),
       });
       checks = [

@@ -35,6 +35,7 @@ function syntheticCorpus(now) {
   const sources = [
     {
       source_id: "suite-housing",
+      jurisdiction_ids: ["tampa"],
       title: "Synthetic housing assistance notice",
       agency: "Synthetic evaluation agency",
       canonical_url: "https://example.invalid/evaluation/housing",
@@ -45,6 +46,7 @@ function syntheticCorpus(now) {
     },
     {
       source_id: "suite-contact",
+      jurisdiction_ids: ["tampa"],
       title: "Synthetic housing assistance contact",
       agency: "Synthetic evaluation agency",
       canonical_url: "https://example.invalid/evaluation/contact",
@@ -68,7 +70,7 @@ function syntheticCorpus(now) {
       retrieved_at: timestamp,
     },
   ];
-  return { sources, chunks, now: timestamp };
+  return { sources, chunks, jurisdictionId: "tampa", now: timestamp };
 }
 
 function citationIntegrity(answer, options) {
@@ -111,7 +113,7 @@ export async function runGuardrailSuite({
   now = "2026-09-12T12:00:00Z",
 } = {}) {
   const synthetic = syntheticCorpus(now);
-  const publicOptions = { sources, chunks, now };
+  const publicOptions = { sources, chunks, jurisdictionId: "tampa", now };
   const cases = [];
   const add = (id, title, properties = {}) =>
     cases.push({

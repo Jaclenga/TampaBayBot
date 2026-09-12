@@ -1,6 +1,29 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+test("regional questions require an area and city changes keep evidence in the selected jurisdiction", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Tampa Bay housing information" })).toBeVisible();
+  const area = page.getByLabel("Your city or county");
+  await expect(area).toHaveValue("tampa-bay");
+  await page.getByLabel("Ask a question or enter an address").fill("Where can I find housing assistance?");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await expect(page.locator(".status-label")).toHaveText("Choose a city or county");
+
+  for (const [id, agency] of [["st-petersburg", "St. Petersburg"], ["clearwater", "Clearwater"]]) {
+    await area.selectOption(id);
+    await expect(page.locator(".answer-layout")).toHaveCount(0);
+    const response = page.waitForResponse(result => result.url().endsWith("/api/ask") && result.request().method() === "POST");
+    await page.getByRole("button", { name: "Search", exact: true }).click();
+    const answer = await (await response).json();
+    expect(answer.jurisdictionId).toBe(id);
+    expect(answer.evidence.length).toBeGreaterThan(0);
+    expect(answer.evidence.some((item: { agency: string }) => item.agency.includes(agency))).toBe(true);
+    expect(answer.evidence.some((item: { source_id: string }) => item.source_id.startsWith("tampa-") || item.source_id === "hillsborough-help")).toBe(false);
+    await expect(page.locator(".evidence-card").first()).toBeVisible();
+  }
+});
+
 test("home, source library, and about page meet automated WCAG A/AA checks", async ({
   page,
 }, testInfo) => {
@@ -43,9 +66,9 @@ test("evaluation page exposes the published offline cases and exact failure coun
   expect(report.mode).toBe("offline");
   expect(Array.isArray(report.cases)).toBe(true);
   expect(Object.keys(report.summary.suites)).toEqual(
-    expect.arrayContaining(["navigation", "guardrails", "providers", "metamorphic"]),
+    expect.arrayContaining(["navigation", "guardrails", "providers", "metamorphic", "jurisdiction"]),
   );
-  expect(report.summary.cases).toBeGreaterThanOrEqual(205);
+  expect(report.summary.cases).toBeGreaterThanOrEqual(224);
   expect(report.cases).toHaveLength(report.summary.cases);
   const totalFailed = report.cases.filter(
     (item: { checks: { passed: boolean | null }[] }) =>
@@ -107,7 +130,7 @@ test("model selection and fallback remain labeled with accessible source citatio
   request,
 }, testInfo) => {
   const response = await request.post("/api/ask", {
-    data: { question: "Where can I find help paying for housing?" },
+    data: { question: "Where can I find help paying for housing?", jurisdictionId: "tampa" },
   });
   expect(response.ok()).toBeTruthy();
   const baseline = await response.json();
@@ -127,6 +150,7 @@ test("model selection and fallback remain labeled with accessible source citatio
     }),
   );
   await page.goto("/");
+  await page.getByLabel("Your city or county").selectOption("tampa");
   for (const current of ["used", "fallback"]) {
     status = current;
     const question = page.getByLabel("Ask a question or enter an address");
@@ -169,6 +193,7 @@ test("keyboard search produces inspectable citations and actionable next steps",
     page.getByRole("link", { name: "Skip to main content" }),
   ).toBeFocused();
   await page.keyboard.press("Enter");
+  await page.getByLabel("Your city or county").selectOption("tampa");
   const question = page.getByLabel("Ask a question or enter an address");
   await expect(question).toBeEnabled();
   await question.focus();
@@ -213,6 +238,7 @@ test("empty questions show an accessible error and unsupported programs remain u
   page,
 }) => {
   await page.goto("/");
+  await page.getByLabel("Your city or county").selectOption("tampa");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText(
     "Enter a housing question",
@@ -236,6 +262,7 @@ test("small screens, enlarged text and reduced motion retain all primary control
   await page.setViewportSize({ width: 375, height: 812 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await page.getByLabel("Your city or county").selectOption("tampa");
   await expect(page.getByRole("button", { name: "Search", exact: true })).toBeEnabled();
   expect(
     await page.evaluate(
@@ -271,11 +298,12 @@ test("an address entered as the question opens a prefilled property lookup witho
     return route.fulfill({ json: { candidates: [], message: "Synthetic lookup" } });
   });
   await page.goto("/");
+  await page.getByLabel("Your city or county").selectOption("tampa");
   const question = page.getByLabel("Ask a question or enter an address");
   await expect(question).toBeEnabled();
   await question.fill("315 E Kennedy Blvd, Tampa");
   await page.getByRole("button", { name: "Search", exact: true }).click();
-  await expect(page.getByLabel("Tampa street address")).toHaveValue(
+  await expect(page.getByLabel("Tampa Bay street address")).toHaveValue(
     "315 E Kennedy Blvd, Tampa",
   );
   await expect(page.locator(".answer-lead")).toContainText(
@@ -362,12 +390,13 @@ test("property workflow requires address confirmation and handles GIS failures w
     }),
   );
   await page.goto("/");
+  await page.getByLabel("Your city or county").selectOption("tampa");
   await page
     .getByRole("button", { name: "What zoning applies to this address?" })
     .click();
-  await expect(page.getByLabel("Tampa street address")).toBeVisible();
+  await expect(page.getByLabel("Tampa Bay street address")).toBeVisible();
   await page
-    .getByLabel("Tampa street address")
+    .getByLabel("Tampa Bay street address")
     .fill("315 E Kennedy Blvd, Tampa");
   await page.getByRole("button", { name: "Find address", exact: true }).click();
   await expect(
@@ -398,12 +427,26 @@ test("property workflow requires address confirmation and handles GIS failures w
     contentType: "application/json",
   });
   expect(results.violations).toEqual([]);
+
+  await page.getByRole("button", { name: "Choose a different match" }).click();
+  await expect(page.getByRole("heading", { name: "Confirm the matching address" })).toBeFocused();
+  await expect(page.getByRole("heading", { name: "Property context", exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: /Test address B/ }).click();
+  await expect(page.locator(".selected-address")).toContainText("Test address B");
+  await expect(page.getByText("Property service unavailable.", { exact: true })).toBeVisible();
+  expect(propertyRequests).toBe(2);
+
+  await page.getByRole("button", { name: "Find address", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Confirm the matching address" })).toBeFocused();
+  await expect(page.locator(".selected-property")).toHaveCount(0);
+  expect(propertyRequests).toBe(2);
 });
 
 test("private identifiers show an accessible error and residents can correct the question", async ({
   page,
 }, testInfo) => {
   await page.goto("/");
+  await page.getByLabel("Your city or county").selectOption("tampa");
   const input = page.getByLabel("Ask a question or enter an address");
   await expect(input).toBeEnabled();
   await input.fill("My SSN is 000-00-0000. Where can I find housing help?");

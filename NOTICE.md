@@ -1,6 +1,6 @@
 # Notices and attribution
 
-ParcelPrivateer is an independent open-source project using public information. It is not endorsed by or an official service of the City of Tampa, Hillsborough County, Plan Hillsborough / Hillsborough County City-County Planning Commission, Florida Housing Finance Corporation, or the State of Florida.
+ParcelPrivateer is an independent open-source project using public information. It is not endorsed by or an official service of Tampa, St. Petersburg, Clearwater, Hillsborough County, Pinellas County, Pasco County, Plan Hillsborough / Hillsborough County City-County Planning Commission, Florida Housing Finance Corporation, or the State of Florida.
 
 It provides informational navigation, not legal advice, official eligibility/zoning determinations, permit approval, or guarantees of funding, construction, completeness or source availability. Verify important decisions with the responsible agency.
 
@@ -12,11 +12,9 @@ Original ParcelPrivateer software is licensed under [MIT](LICENSE), copyright 20
 
 The [register](data/sources.json) and [source documentation](DATA_SOURCES.md) identify publishers, URLs, dates, hashes, coverage and known terms. Source text, documents, GIS data, agency names/trademarks, photographs and external records are not relicensed under MIT by their inclusion or use here.
 
-The development/review checkout preserves selected raw responses and normalized excerpts as evidence. Public alpha source packages omit those snapshots, extracted chunks, quote-bearing response reports and screenshots; they retain publisher links and operator-controlled ingestion code. This does not change or sanitize the development repository's history. See [source-only distribution](docs/DISTRIBUTION.md) for exact package contents, bootstrap commands and the dated terms review.
+Public alpha packages distribute the software and fetch configuration without the development archive's downloaded evidence or response packets. They do not sanitize or republish that private history. The [source-only distribution policy](docs/DISTRIBUTION.md) is the canonical reference for exclusions, bootstrap commands and the dated publisher-terms review, including City copy permissions and Plan Hillsborough restrictions. No blanket redistribution permission is claimed for the combined corpus.
 
-The City of Tampa's [Conditions and Use](https://www.tampa.gov/about-us/tampagov/conditions-and-use) generally permits copying/distributing public information with exceptions for copyrighted material and the City seal. This is not treated as permission for all embedded or third-party material. Linked images and map sheets are not downloaded by the narrative pipeline. Plan Hillsborough's published disclaimer includes map-use and reproduction-for-sale limits. Source packages do not claim blanket redistribution permission for the combined corpus.
-
-City-served parcel data is attributed to the Hillsborough County Property Appraiser in service metadata. City GIS supplies address, boundary and zoning services; Plan Hillsborough supplies future land-use data. Attribution identifies responsibility and does not imply endorsement.
+Tampa-served parcel data is attributed to the Hillsborough County Property Appraiser. Pinellas County serves the parcel and municipal-boundary layers used for St. Petersburg and Clearwater; their city GIS services supply local zoning and future land use. Tampa GIS and Plan Hillsborough supply the Tampa layers. Attribution identifies responsibility and does not imply endorsement. Redistribution terms for the added city/county snapshots remain unverified; they are excluded from source-only packages.
 
 ## Tampa Development Records
 

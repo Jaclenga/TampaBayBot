@@ -43,7 +43,7 @@ const rows = [
   ['z13','What zoning is at ??? 000 / nowhere address?','zoning','tampa-zoning','needs_location','malformed address'],
   ['z14','How many units are allowed in RM-24?','zoning','tampa-zoning','insufficient_evidence','numerical limit missing'],
   ['z15','Are the adopted future land use maps a current official survey?','zoning','plan-hillsborough-maps','answered','source limitations'],
-  ['z16','What zoning applies to my parcel in Clearwater?','zoning',null,'missing_geographic_coverage','outside coverage'],
+  ['z16','What zoning applies to my parcel in Clearwater?','zoning','clearwater-zoning','needs_location','Clearwater coverage requires property confirmation'],
   ['p01','Where can I start a residential permit application?','permitting','tampa-permits','answered','straightforward'],
   ['p02','How do I get a permit for a condo remodel?','permitting','tampa-permits','answered','condominium exception'],
   ['p03','Where is the residential new construction permit application guide?','permitting','tampa-permit-guide','answered','PDF evidence'],
@@ -81,7 +81,7 @@ const rows = [
 
 const geography = ['needs_location', 'missing_geographic_coverage'];
 export const benchmarks = rows.map(([id, question, category, source, status, challenge, scenario = 'baseline']) => ({
-  id, question, category, expected_source: source ? [source] : [],
+  id, question, category, jurisdictionId: id === 'z16' ? 'clearwater' : 'tampa', expected_source: source ? [source] : [],
   expected_key_facts: status === 'answered' ? ['Provide the relevant source excerpt and an official next step; do not infer eligibility or project approval.']
     : [`Clearly state ${status.replaceAll('_', ' ')} and do not claim an unverified answer.`],
   answering_possible: status === 'answered' ? 'navigation_or_source_excerpt' : 'only_uncertainty_and_navigation',
@@ -89,6 +89,8 @@ export const benchmarks = rows.map(([id, question, category, source, status, cha
   expected_next_step_resource: source && !source.startsWith('fixture-') ? source : null,
   geographic_requirements: geography.includes(status) ? (status === 'needs_location' ? 'Address and jurisdiction must be resolved by the separate GIS lookup; no property claim yet.' : 'Do not apply Tampa local rules outside coverage.') : 'No property-specific answer expected.',
   expected_needs_address: status === 'needs_location', challenge, scenario,
+  expected_jurisdiction_id: id === 'z16' ? 'clearwater' : 'tampa',
+  expected_needs_jurisdiction: false,
 }));
 
 const facts = {

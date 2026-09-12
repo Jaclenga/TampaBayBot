@@ -1,6 +1,6 @@
 import sources from "@/data/sources.json";
 import chunks from "@/data/chunks.json";
-import { readInput, inputText, json, RequestInputError } from "@/lib/http";
+import { readInput, inputText, inputJurisdiction, json, inputErrorJson } from "@/lib/http";
 import { parseLlmConfig } from "@/lib/llm/index.mjs";
 import { getRuntimeEnv } from "@/lib/runtime-env.mjs";
 import { answerWithGuardrails } from "@/lib/guardrails/navigator.mjs";
@@ -14,24 +14,15 @@ export async function POST(request: Request) {
       await answerWithGuardrails(question, {
         sources,
         chunks,
+        jurisdictionId: inputJurisdiction(input.jurisdictionId),
         extraGuards: siteGuards,
         config: parseLlmConfig(getRuntimeEnv()),
         signal: request.signal,
       }),
     );
   } catch (error) {
-    if (error instanceof RequestInputError)
-      return json({ error: error.message, code: error.code }, error.status);
     if (error instanceof GuardrailError)
       return json({ error: error.message, code: error.code }, error.status);
-    return json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unable to answer this question.",
-      },
-      400,
-    );
+    return inputErrorJson(error, "Unable to answer this question.");
   }
 }

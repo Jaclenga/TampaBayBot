@@ -157,7 +157,7 @@ try {
     assert.equal(response.status, 200); assert.equal((await response.json()).length, health.sources);
   });
   await check('actual_question_api_without_model', async () => {
-    const response = await fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: 'Where can I find help paying for housing?' }), signal: AbortSignal.timeout(10000) });
+    const response = await fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: 'Where can I find help paying for housing?', jurisdictionId: 'tampa' }), signal: AbortSignal.timeout(10000) });
     assert.equal(response.status, 200); const answer = await response.json();
     assert.equal(answer.generation.status, 'disabled'); assert.equal(answer.generation.mode, 'extractive');
     if (health.chunks === 0) assert.ok(['insufficient_evidence', 'unavailable_source'].includes(answer.status), 'An empty corpus must return a conservative unavailable-evidence state.');

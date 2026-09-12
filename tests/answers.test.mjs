@@ -10,7 +10,9 @@ import { benchmarks } from '../evaluation/benchmarks.mjs';
 
 const sources = JSON.parse(fs.readFileSync(new URL('../data/sources.json', import.meta.url), 'utf8'));
 const chunks = JSON.parse(fs.readFileSync(new URL('../data/chunks.json', import.meta.url), 'utf8'));
-const answer = (question, scenario = 'baseline') => answerQuestion(question, { ...prepareScenario(scenario, sources, chunks), now: EVALUATION_DATE });
+// Original Tampa fixtures retain explicit local context after the regional default changed.
+const answer = (question, scenario = 'baseline') => answerQuestion(question, { ...prepareScenario(scenario, sources, chunks), now: EVALUATION_DATE, jurisdictionId: 'tampa' });
+const regionalAnswer = question => answerQuestion(question, { sources, chunks, now: EVALUATION_DATE });
 
 test('current renter help does not imply move-in-only RMAP pays existing leases', () => {
   const result = answer('I am behind on rent at the apartment where I already live.');
@@ -40,7 +42,7 @@ test('program and property determinations require agency judgment', () => {
 
 test('outside coverage and official judgment do not solicit an address; local property lookup still does', () => {
   for (const [question, status] of [
-    ['What zoning applies to my parcel in Clearwater?', 'missing_geographic_coverage'],
+    ['What zoning applies to my parcel in Miami?', 'missing_geographic_coverage'],
     ['Are there development records near my neighborhood in Orlando?', 'missing_geographic_coverage'],
     ['What does nearby development prove I can build?', 'official_judgment'],
   ]) {
@@ -80,7 +82,7 @@ test('city names inside street names do not override the supplied locality', () 
     assert.equal(outside.needsAddress, false);
   }
   assert.equal(answer('What zoning applies to my property in Miami?').status, 'missing_geographic_coverage');
-  assert.equal(answer('What zoning applies to 315 E Kennedy Blvd, St Petersburg?').status, 'missing_geographic_coverage');
+  assert.equal(regionalAnswer('What zoning applies to 315 E Kennedy Blvd, St Petersburg?').status, 'needs_location');
   assert.equal(answer('123 St Petersburg Road, Tampa').status, 'needs_location');
 });
 
@@ -90,15 +92,17 @@ test('unrelated nearby questions do not solicit property information', () => {
   assert.equal(result.needsAddress, false);
 });
 
-test('punctuated St. Petersburg locality stays outside coverage without rejecting a Tampa street name', () => {
+test('punctuated St. Petersburg locality selects its city without rejecting a Tampa street name', () => {
   for (const question of [
     'What zoning applies to 315 E Kennedy Blvd, St. Petersburg?',
     '123 Miami Street, St. Petersburg',
     'What zoning applies to my property in St. Petersburg?',
   ]) {
-    const result = answer(question);
-    assert.equal(result.status, 'missing_geographic_coverage', question);
-    assert.equal(result.needsAddress, false, question);
+    const result = regionalAnswer(question);
+    assert.equal(result.status, 'needs_location', question);
+    assert.equal(result.jurisdictionId, 'st-petersburg', question);
+    assert.equal(result.needsAddress, true, question);
+    assert.ok(result.evidence.every(item => !item.source_id.startsWith('tampa-')));
   }
   for (const question of ['123 St. Petersburg Road, Tampa', '123 Saint Petersburg Road, Tampa']) {
     const result = answer(question);
@@ -121,6 +125,26 @@ test('application conflicts expose both current statements for the same topic', 
   assert.equal(result.evidence.length, 2);
   assert.ok(result.evidence.some(evidence => /currently open/.test(evidence.quote)));
   assert.ok(result.evidence.some(evidence => /currently closed/.test(evidence.quote)));
+});
+
+test('multiple application conflicts retain topic order and the first passage for each status', () => {
+  const corpus = prepareScenario('conflict', sources, chunks);
+  const otherSources = corpus.sources.map(source => ({
+    ...source, source_id: `other-${source.source_id}`, topic_id: 'another-housing-program',
+  }));
+  const otherChunks = corpus.chunks.map(chunk => ({
+    ...chunk, id: `other-${chunk.id}`, source_id: `other-${chunk.source_id}`,
+  }));
+  const duplicateOpen = { ...corpus.chunks[0], id: 'later-open-passage' };
+  const orderedChunks = [corpus.chunks[0], ...otherChunks, duplicateOpen, corpus.chunks[1]];
+  const hits = [
+    { source: corpus.sources[0], chunk: corpus.chunks[0] },
+    { source: otherSources[0], chunk: otherChunks[0] },
+  ];
+  const conflict = findApplicationConflicts(hits, [...corpus.sources, ...otherSources], orderedChunks, new Date(EVALUATION_DATE));
+  assert.equal(conflict.topic, corpus.sources[0].topic_id);
+  assert.deepEqual(conflict.hits.map(hit => hit.chunk.id), corpus.chunks.map(chunk => chunk.id));
+  assert.deepEqual(conflict.hits.map(hit => hit.applicationStatus), ['open', 'closed']);
 });
 
 test('different programs with different availability are not a conflict', () => {
@@ -175,7 +199,7 @@ test('an unavailable source with no preserved evidence returns a usable official
 });
 
 test('an unavailable refresh with preserved evidence is disclosed', () => {
-  const result = answerQuestion('I need a security deposit', { sources: sources.map(source => ({ ...source, status: 'unavailable' })), chunks, now: EVALUATION_DATE });
+  const result = answerQuestion('I need a security deposit', { sources: sources.map(source => ({ ...source, status: 'unavailable' })), chunks, now: EVALUATION_DATE, jurisdictionId: 'tampa' });
   assert.ok(result.evidence.length);
   assert.ok(result.warnings.some(warning => /could not be refreshed/.test(warning)));
 });
@@ -199,7 +223,7 @@ test('maps are not treated as detailed zoning rules or official property decisio
   assert.equal(answer('What does RM-24 mean?').status, 'insufficient_evidence');
   assert.equal(answer('What zoning is at Main Street?').status, 'needs_location');
   assert.equal(answer('What zoning is at 315 E Kennedy Blvd?').status, 'needs_location');
-  assert.equal(answer('What zoning applies in Clearwater?').status, 'missing_geographic_coverage');
+  assert.equal(regionalAnswer('What zoning applies to my parcel in Clearwater?').status, 'needs_location');
 });
 
 test('permit status and future development cannot be inferred from general guidance', () => {
@@ -209,7 +233,7 @@ test('permit status and future development cannot be inferred from general guida
 });
 
 test('metadata fragments and menu headings do not become narrative evidence', () => {
-  const result = retrieve('What is zoning?', { sources, chunks, route: routeQuestion('What is zoning?'), now: new Date(EVALUATION_DATE) });
+  const result = retrieve('What is zoning?', { sources, chunks, route: routeQuestion('What is zoning?', { jurisdictionId: 'tampa' }), now: new Date(EVALUATION_DATE) });
   assert.ok(result.hits.length);
   assert.ok(result.hits.every(hit => (hit.chunk.text.match(/":/g) ?? []).length <= 5));
 });
@@ -224,7 +248,7 @@ test('quotes preserve a literal contiguous substring and important short caveats
 test('all benchmark responses keep source, hash, quotation, and citation marker integrity', () => {
   for (const benchmark of benchmarks) {
     const corpus = prepareScenario(benchmark.scenario, sources, chunks);
-    const result = answerQuestion(benchmark.question, { ...corpus, now: EVALUATION_DATE });
+    const result = answerQuestion(benchmark.question, { ...corpus, now: EVALUATION_DATE, jurisdictionId: benchmark.jurisdictionId });
     for (const evidence of result.evidence) {
       const chunk = corpus.chunks.find(item => item.id === evidence.chunk_id);
       assert.ok(chunk && chunk.text.includes(evidence.quote), benchmark.id);

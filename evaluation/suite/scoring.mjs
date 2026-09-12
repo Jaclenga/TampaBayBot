@@ -15,6 +15,7 @@ const STATUSES = new Set([
   "conflicting_evidence",
   "potentially_outdated",
   "needs_location",
+  "needs_jurisdiction",
   "official_judgment",
   "out_of_scope",
   "unavailable_source",
@@ -36,6 +37,9 @@ const PRESERVED_FIELDS = [
   "nextSteps",
   "warnings",
   "needsAddress",
+  "jurisdictionId",
+  "jurisdictionLabel",
+  "needsJurisdiction",
   "situation",
   "requirementsToVerify",
 ];
@@ -48,6 +52,12 @@ const official = (source) =>
     String(source?.authoritative_status ?? "").toLowerCase(),
   );
 const normalized = (value) => value ?? null;
+const JURISDICTION_LABELS = new Map([
+  ['tampa-bay', 'Tampa Bay'], ['tampa', 'Tampa'],
+  ['st-petersburg', 'St. Petersburg'], ['clearwater', 'Clearwater'],
+  ['hillsborough-county', 'Hillsborough County'],
+  ['pinellas-county', 'Pinellas County'], ['pasco-county', 'Pasco County'],
+]);
 
 function indexRecords(records, key) {
   const index = new Map();
@@ -173,7 +183,10 @@ export function scoreNavigationAnswer({
       Array.isArray(output.nextSteps) &&
       Array.isArray(output.warnings) &&
       warnings.every((item) => typeof item === "string") &&
-      typeof output.needsAddress === "boolean",
+      typeof output.needsAddress === "boolean" &&
+      JURISDICTION_LABELS.has(output.jurisdictionId) &&
+      output.jurisdictionLabel === JURISDICTION_LABELS.get(output.jurisdictionId) &&
+      typeof output.needsJurisdiction === "boolean",
     "integrity",
   );
   add(
@@ -217,6 +230,10 @@ export function scoreNavigationAnswer({
 
   each("citation_source_and_chunk_registered", ({ item, source, chunk }) =>
     Boolean(source && chunk && chunk.source_id === item.source_id),
+  );
+  each("citation_jurisdiction_matches", ({ source }) =>
+    Boolean(JURISDICTION_LABELS.has(output.jurisdictionId) &&
+      Array.isArray(source?.jurisdiction_ids) && source.jurisdiction_ids.includes(output.jurisdictionId)),
   );
   each("citation_quote_exact", ({ item, chunk }) =>
     Boolean(
@@ -335,6 +352,28 @@ export function scoreNavigationAnswer({
     "next_steps_unique",
     new Set(steps.map((step) => step?.url)).size === steps.length,
     "integrity",
+  );
+  add(
+    "next_steps_jurisdiction_matches",
+    steps.length ? steps.every(step => Array.from(sourceIndex.index.values()).some(source =>
+      Array.isArray(source.jurisdiction_ids) && source.jurisdiction_ids.includes(output.jurisdictionId) &&
+      step?.url === registeredUrl(source, source.next_step?.url) && step?.agency === source.agency &&
+      step?.label === (source.next_step?.label ?? `Visit ${source.title}`))) : null,
+    "integrity",
+  );
+  add(
+    "expected_jurisdiction",
+    benchmark.expected_jurisdiction_id ? output.jurisdictionId === benchmark.expected_jurisdiction_id : null,
+    "behavior",
+    benchmark.expected_jurisdiction_id,
+    JURISDICTION_LABELS.has(output.jurisdictionId) ? output.jurisdictionId : "invalid",
+  );
+  add(
+    "expected_jurisdiction_request",
+    typeof benchmark.expected_needs_jurisdiction === "boolean" ? output.needsJurisdiction === benchmark.expected_needs_jurisdiction : null,
+    "behavior",
+    benchmark.expected_needs_jurisdiction,
+    typeof output.needsJurisdiction === "boolean" ? output.needsJurisdiction : null,
   );
   add(
     "expected_category",

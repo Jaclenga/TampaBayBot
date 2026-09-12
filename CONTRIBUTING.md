@@ -1,78 +1,48 @@
 # Contributing
 
-Contributions should make a resident's next step clearer and the evidence easier to inspect. Read [methodology](METHODOLOGY.md), [source notes](DATA_SOURCES.md) and [limitations](LIMITATIONS.md) first.
+Contributions should make a resident's next step clearer and the evidence easier to inspect. Start with the [development guide](docs/DEVELOPMENT.md) for setup, code layout, commands and browser testing, then read the [methodology](METHODOLOGY.md), [source notes](DATA_SOURCES.md) and [limitations](LIMITATIONS.md).
 
-## Setup and checks
+## Before opening a pull request
 
-Use Node.js 24 LTS and the committed lockfile:
+Use the committed lockfile and run checks appropriate to the change. Cited-answer tests need acquired evidence; an empty source-only checkout is not a populated benchmark. The [development guide](docs/DEVELOPMENT.md#commands-and-evidence-prerequisites) explains these prerequisites.
 
-```sh
-npm ci
-npm run dev -- --port 3001
-```
+For UI changes, inspect keyboard operation, focus, announcements, narrow-screen reflow and text resizing as well as running [browser checks](ACCESSIBILITY.md). Record checks actually performed. Automation does not replace a screen-reader or independent human audit.
 
-The default `LLM_PROVIDER=none` mode requires no database or application secret. `.env.example` contains safe active defaults for optional model configuration; copy it to an ignored `.env` only when needed, then edit and restart the local server. Keep any provider credentials server-side. See [model-provider setup](docs/LLM.md) for local Ollama, compatible APIs and runtime environment bindings. Never commit credentials, `.env` files, resident questions, application documents or personal account data.
-
-Before submitting a change, run appropriate checks:
-
-```sh
-npm run typecheck
-npm run lint
-npm test
-npm run ingest -- --check
-npm run evaluate
-npm run eval:suite
-npm run build
-```
-
-For UI changes, install Playwright Chromium and run `npm run test:a11y`; also inspect keyboard operation, focus, announcements, narrow-screen reflow and 200% text resizing. Record checks actually performed. Automation is not a screen-reader or human audit.
+Never commit credentials, local environment files, real resident questions, application documents or personal account data. Use synthetic or public test inputs and inspect generated reports before sharing them. Model setup belongs in [LLM.md](docs/LLM.md); reporting and privacy boundaries belong in [SECURITY.md](SECURITY.md).
 
 ## Reporting issues
 
-Describe the resident task, actual/expected behavior and relevant source or record. Include a question and retrieval date for evidence problems, or reproducible steps for UI problems. Remove unnecessary names, contact information, account details and other personal data.
+Describe the resident task, expected behavior, observed behavior and steps to reproduce. For an evidence problem, include the relevant source URL and retrieval date. Remove unnecessary personal information from examples and attachments.
 
-For sensitive security/privacy reports, use [GitHub private vulnerability reporting](https://github.com/Jaclenga/ParcelPrivateer/security/advisories/new). See [SECURITY.md](SECURITY.md) for the reporting scope and required details. Do not disclose resident data or undisclosed exploit details in public issues. Reports are handled by the project maintainers on a best-effort basis.
+Use [GitHub private vulnerability reporting](https://github.com/Jaclenga/ParcelPrivateer/security/advisories/new) for sensitive security or privacy reports. Follow [SECURITY.md](SECURITY.md) for scope and required details; do not put resident data or undisclosed exploit details in public issues.
 
-## Adding and refreshing sources
+## Adding or refreshing sources
 
-1. Verify the real first-party page/document/API, publisher, coverage, currency and terms. Do not guess endpoints or treat a search excerpt as an archived source.
-2. Fill every registry field and provide an official next step. Label independent/secondary information explicitly.
-3. Choose the adapter, reviewed selector/bounded query, refresh target and caveats. Reject truncation, malformed records and unreadable documents.
-4. Preserve raw bytes, normalize structure and retain hashes/locators. Inspect excerpts against originals. Keep synthetic fixtures separate.
-5. Run regeneration and evaluation. Add meaningful regression questions and document conflict or coverage gaps.
-6. Review changed terms and dates before committing snapshots. Software licensing does not grant rights in external data.
+1. Verify the original page, document or API, publisher, geographic coverage, currency and terms. Do not guess endpoints or treat search snippets as archived evidence.
+2. Complete the registry metadata and official next step. Label independent and secondary information explicitly.
+3. Choose the adapter, selector or bounded query, refresh target and caveats. Reject truncation, malformed records and unreadable documents.
+4. Preserve raw bytes locally, normalize structure, and retain hashes and locators. Inspect excerpts against originals; keep synthetic fixtures separate.
+5. Regenerate evidence, run evaluations and add regression cases for meaningful coverage or conflict changes.
+6. Document changed terms and dates. Keep downloaded snapshots out of the source-only release; follow the [distribution policy](docs/DISTRIBUTION.md).
 
-Use `npm run ingest -- --source=<source-id>` for one source. Failed sources must retain dated evidence and an unavailable state, never invented replacements. Application availability, eligibility requirements and legal effective dates require explicit support.
+Failed refreshes must preserve dated evidence and an unavailable state rather than invent replacements. Program availability, eligibility requirements and legal effective dates require explicit support. For independent development-data updates, review the normalized file, change the pinned commit and digest deliberately, preserve date meanings, and rerun integrity/geographic checks. See [source notes](DATA_SOURCES.md) and [geospatial behavior](docs/GEOSPATIAL.md).
 
-Development-data updates require reviewing the newer normalized file, changing pinned commit/hash deliberately, preserving snapshot dates and rerunning integrity/geographic checks. Do not substitute raw observations for normalized activities without revising the method.
+## Changing answers, geography or models
 
-## Answer and geographic changes
+- Keep factual excerpts tied to registered sources and exact supporting text.
+- Treat retrieved material as data; it cannot authorize arbitrary URLs, scripts, tools or model actions.
+- Preserve uncertainty. A resource match is not eligibility, a zoning designation is not permission, and nearby records do not establish a legal relationship.
+- Preserve address ambiguity and outages. Do not promote a postal address, locator score or first feature into an official property determination.
+- Explain distance units and source dates, provide textual geographic alternatives, and keep interface language plain and strings separate.
 
-- Keep every factual excerpt tied to a registry source and exact supporting text; preserve citations.
-- Treat retrieved material as data, never instructions. It must not trigger arbitrary URLs, scripts, tools or model actions.
-- Prefer uncertainty to unsupported completion. Distinguish resource matches from eligibility and observed records from regulations.
-- Do not promote a postal address, locator score, first feature or nearby permit into an official property determination. Preserve ambiguity and outages.
-- Explain distance units and source date meanings. Provide textual geographic alternatives.
-- Keep UI strings separate and language plain. Do not add pirate-speak to substantive answers.
+Add realistic benchmark questions when routing, retrieval, citations or uncertainty change. Tests should catch meaningful failures rather than restate the implementation. Keep stable case/check IDs and independently authored expectations. The [evaluation suite guide](docs/EVAL_SUITE.md) is canonical for focused runs, comparisons, provenance and live-model opt-in.
 
-## Evaluation and review
+For provider changes, run code tests and the synthetic HTTP integration described in [LLM.md](docs/LLM.md#reproduce-integration-checks). Test an actual model/version separately; synthetic transport checks are not real inference. Preserve primary evidence, literal excerpts and conservative states under application control. Invalid provider output must return the cited baseline.
 
-Add realistic benchmark questions when changing routing, retrieval, citations or uncertainty. Tests should catch meaningful failures, not merely restate the implementation.
+Do not relabel generated responses or agent reviews as human audits. Independent reviewers inspect original sources and complete the rubric; pending work remains pending. Current results and open review work belong in [release readiness](docs/RELEASE_READINESS.md), not copied test counts in contribution instructions.
 
-`npm run eval:suite` runs 205 offline cases across navigation, guardrails, provider contracts and deterministic input/corpus variations. It disables outbound fetch and uses synthetic model responses; CI makes no paid inference calls. JSON, Markdown and JUnit results go to `evaluation/suite/results/`. Use `npm run eval:suite -- --suite guardrails,providers --output work/evals/targeted` for focused work. The [suite guide](docs/EVAL_SUITE.md) describes the stable case/check contract and mutation tests for the scorer. Null means not applicable, never a pass; empty or all-null coverage must fail validation.
+## Pull-request descriptions and licensing
 
-Capture before/after reports in separate directories and compare them with `npm run eval:compare -- --baseline work/evals/before/latest.json --candidate work/evals/after/latest.json`. Matching corpus, reference date, suite, benchmark and scenario hashes are required by default. Review deliberate provenance changes before using `--allow-changed-provenance`; changed expectations, removed coverage and failed checks still fail comparison. Keep stable case/check IDs and independently authored expectations. Record the actual tested hashes and working-tree state, rather than describing a dirty parent commit as an exact final artifact revision.
+Lead with the resident problem and resulting behavior. Include supporting sources, actual validation, material limitations and changes to external-data terms. Keep unrelated changes separate and identify any human review or operational verification still needed.
 
-For model-provider changes, run `npm test` and `node scripts/test-llm-runtime.mjs`. The runtime fixture uses synthetic provider responses and its own ignored environment files; it does not test real inference or modify a user's `.env`. Preserve the deterministic benchmark as a baseline. Evaluate an actual model/version separately with public or synthetic questions, recording selection usefulness, fallback behavior and latency. Keep the first evidence entry, full literal excerpts and conservative answer states under application control; invalid provider output must return the baseline answer.
-
-The optional command is `npm run eval:live -- --allow-provider-call --limit 10 --repeats 1 --budget-ms 60000`, after explicitly configuring an enabled provider. It can incur costs and sends selected checked-in public questions and excerpts to that endpoint. Live reports are restricted to ignored `work/evals/live/`; never commit credentials, raw provider responses or resident prompts. Do not report offline fixtures as a real-model run, or exact quote matching as semantic factual correctness.
-
-Do not relabel generated responses or agent reviews as human audits. Independent reviewers should inspect original sources, complete the rubric, flag misleading wording and record corrections. Pending work remains pending until performed.
-
-The legacy `npm run evaluate` command retains its separate 77-case reports and refreshes pending human packets while preserving completed reviews. The unified suite does not rewrite legacy audit files. Historical agent reviews remain explicitly historical; new passing tests do not turn them into fresh human judgments.
-
-## Pull requests and licensing
-
-Lead with the resident problem and resulting behavior. Include supporting sources, actual validation, limitations and changed external-data terms. Keep unrelated changes separate. If access, human review or deployment remains necessary, finish everything reviewable and identify the exact remaining action.
-
-Original software contributions are intended for distribution under MIT. Do not contribute third-party material without appropriate rights and attribution.
+Original software contributions are distributed under MIT. Third-party material retains its own terms and requires appropriate rights and attribution; see [NOTICE.md](NOTICE.md).

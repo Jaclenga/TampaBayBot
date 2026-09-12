@@ -3,9 +3,9 @@ import { Header, Footer } from "@/components/site-shell";
 import "./globals.css";
 // Every document receives a new CSP nonce from the Worker.
 export const dynamic = "force-dynamic";
-const title = "ParcelPrivateer | Tampa housing information";
+const title = "ParcelPrivateer | Tampa Bay housing information";
 const description =
-  "Housing resources, zoning, permits, and public development records for Tampa residents, with links to official sources.";
+  "Housing resources, zoning, permits, and public development records for Tampa Bay residents, including Tampa, St. Petersburg, and Clearwater, with links to official sources.";
 export const metadata: Metadata = {
   title,
   description,

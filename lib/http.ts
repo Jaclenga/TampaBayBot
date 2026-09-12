@@ -1,3 +1,6 @@
+import { isJurisdictionId } from "./coverage.mjs";
+import { withinServiceRegion } from "./geospatial/index.mjs";
+
 export const privateHeaders = {
   "Cache-Control": "no-store",
   "X-Content-Type-Options": "nosniff",
@@ -7,6 +10,10 @@ export function json(data: unknown, status = 200) {
 }
 
 export const REQUEST_BODY_TIMEOUT_MS = 10_000;
+export const REQUEST_BODY_MAX_BYTES = 8_192;
+// Fully consume only modest, truthfully declared oversized requests. This keeps
+// pooled Worker connections reusable without allowing an unbounded drain.
+export const REJECTED_BODY_DRAIN_LIMIT_BYTES = 64 * 1_024;
 
 export class RequestInputError extends Error {
   readonly status: number;
@@ -20,10 +27,20 @@ export class RequestInputError extends Error {
   }
 }
 
+export function inputErrorJson(error: unknown, fallback: string) {
+  if (error instanceof RequestInputError)
+    return json({ error: error.message, code: error.code }, error.status);
+  return json({ error: error instanceof Error ? error.message : fallback }, 400);
+}
+
 export async function readInput(
   request: Request,
   { timeoutMs = REQUEST_BODY_TIMEOUT_MS }: { timeoutMs?: number } = {},
 ): Promise<Record<string, unknown>> {
+  const declaredLength = Number(request.headers.get("content-length"));
+  const drainDeclaredOversize =
+    declaredLength > REQUEST_BODY_MAX_BYTES &&
+    declaredLength <= REJECTED_BODY_DRAIN_LIMIT_BYTES;
   try {
     if (
       !Number.isInteger(timeoutMs) ||
@@ -43,7 +60,10 @@ export async function readInput(
         origin !== new URL(request.url).origin)
     )
       throw new Error("Use this service from its own website.");
-    if (Number(request.headers.get("content-length")) > 8192)
+    if (
+      declaredLength > REQUEST_BODY_MAX_BYTES &&
+      !drainDeclaredOversize
+    )
       throw new Error("The request is too long.");
   } catch (error) {
     // Tell the transport to discard rejected uploads, including before a reader exists.
@@ -85,7 +105,11 @@ export async function readInput(
         break;
       }
       total += value.byteLength;
-      if (total > 8192) throw new Error("The request is too long.");
+      if (total > REQUEST_BODY_MAX_BYTES) {
+        if (!drainDeclaredOversize || total > declaredLength)
+          throw new Error("The request is too long.");
+        continue;
+      }
       if (value.byteLength) parts.push(value);
     }
   };
@@ -101,6 +125,7 @@ export async function readInput(
     }
     reader.releaseLock();
   }
+  if (drainDeclaredOversize) throw new Error("The request is too long.");
   const bytes = new Uint8Array(total);
   let at = 0;
   for (const part of parts) {
@@ -122,18 +147,18 @@ export function inputText(value: unknown, max = 1000): string {
     throw new Error("Enter a valid question or address.");
   return value.trim();
 }
+export function inputJurisdiction(value: unknown) {
+  if (value === undefined) return "tampa-bay";
+  if (!isJurisdictionId(value)) throw new Error("Choose a supported Tampa Bay area.");
+  return value;
+}
 export function inputPoint(input: Record<string, unknown>) {
   if (
     typeof input.latitude !== "number" ||
     typeof input.longitude !== "number" ||
-    !Number.isFinite(input.latitude) ||
-    !Number.isFinite(input.longitude) ||
-    input.latitude < 27.5 ||
-    input.latitude > 28.4 ||
-    input.longitude < -82.9 ||
-    input.longitude > -82.0
+    !withinServiceRegion({ latitude: input.latitude, longitude: input.longitude })
   )
-    throw new Error("Select a location within the Tampa service area.");
+    throw new Error("Select a location within the Tampa Bay service area.");
   return {
     latitude: input.latitude,
     longitude: input.longitude,

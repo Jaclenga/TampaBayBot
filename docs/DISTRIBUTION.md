@@ -2,6 +2,8 @@
 
 Public alpha packages distribute the original software, test and benchmark definitions, publisher links and fetch configuration. They do **not** distribute downloaded source snapshots, extracted evidence, response packets or screenshots. The app starts with an empty corpus and reports that evidence is unavailable until an operator fetches and reviews sources.
 
+This guide is the canonical packaging, regeneration and publication-history policy. [Release readiness](RELEASE_READINESS.md) records which checks have actually run; [deployment](DEPLOYMENT.md) covers operating a built instance.
+
 This choice resolves the release-package uncertainty by omitting the material. It does not declare that all agency content is restricted, grant new rights, or establish that every intended later use is permitted. MIT covers the original software; dependencies, model weights and external information retain their respective terms.
 
 ## Publisher review recorded September 12, 2026
@@ -21,7 +23,7 @@ The review establishes a conservative packaging policy and records the limits of
 From a maintainer checkout:
 
 ```sh
-node scripts/package-release.mjs --output work/releases/v0.1.0-alpha.1-source
+node scripts/package-release.mjs --output work/releases/v0.1.0-alpha.2-source
 ```
 
 The output path must be a new directory under `work/releases/`; existing output is never deleted or replaced. The script uses an explicit source-file policy, rejects symlinked inputs and redirected output ancestors, and never copies `.git`, installed dependencies, secrets, owner `.openai` metadata, ignored work or deployment artifacts. It does not change the working corpus or rewrite repository history.
@@ -35,9 +37,9 @@ The omitted content is:
 - historical accessibility, security, Ollama and local/hosted deployment reports;
 - screenshot images, external data archives, owner hosting configuration and Git history.
 
-Required JSON import paths are replaced with honest placeholders: zero chunks, unset retrieval dates, unavailable sources, empty response/review arrays and reports marked `not_run`. The packaged README describes this initial state. The source registry retains publisher URLs, operator-authored descriptions, fetch settings and next-step links. Historical agent review scripts/ratings are omitted so bootstrap cannot attach old judgments to new answers.
+Required JSON import paths are replaced with honest placeholders: zero chunks, unset retrieval dates, unavailable sources, empty response/review arrays and reports marked `not_run`. Packaging reuses the project README overview, whose alpha notice explains this initial state. Relative links to omitted artifacts, including screenshots, become explanatory text rather than broken links. The source registry retains publisher URLs, operator-authored descriptions, fetch settings and next-step links. Historical agent review scripts/ratings are omitted so bootstrap cannot attach old judgments to new answers.
 
-The package includes `.github/workflows/source-release.yml` when present, plus the dedicated Gitleaks scanner setup, configuration and metadata-only report template. It excludes historical scan reports and the corpus-dependent development workflow. Source-build checks do not count the missing corpus's regression/evaluation cases as passes. Any generated local corpus remains outside source distribution; never replace a failing test with an invented historical success.
+The package includes the documentation index, developer/evaluation guides and `.github/workflows/source-release.yml` when present, plus the dedicated Gitleaks scanner setup, configuration and metadata-only report template. It excludes historical scan reports and the corpus-dependent development workflow. Source-build checks do not count the missing corpus's regression/evaluation cases as passes. Any generated local corpus remains outside source distribution; never replace a failing test with an invented historical success.
 
 ## Populate and validate locally
 

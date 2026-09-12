@@ -203,6 +203,27 @@ summary:focus-visible,
 .question-form {
   max-width: 1020px;
 }
+.area-picker {
+  margin-bottom: 20px;
+}
+.area-picker label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.area-picker select {
+  width: 100%;
+  max-width: 420px;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.area-picker p {
+  margin: 6px 0 0;
+}
 .question-form > label {
   display: block;
   margin-bottom: 9px;

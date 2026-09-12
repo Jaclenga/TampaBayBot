@@ -15,6 +15,7 @@ async function request(path, body) {
 const health = await request("/api/health");
 const answer = await request("/api/ask", {
   question: "Where can I find help paying for housing?",
+  jurisdictionId: "tampa",
 });
 const sources = await request("/api/sources");
 const evaluation = await request("/api/evaluation");

@@ -7,6 +7,7 @@ import { runNavigationSuite } from "./navigation.mjs";
 import { runGuardrailSuite } from "./guardrails.mjs";
 import { runProviderSuite } from "./providers.mjs";
 import { runMetamorphicSuite } from "./metamorphic.mjs";
+import { runJurisdictionSuite } from "./jurisdiction.mjs";
 import {
   makeReport,
   reportMarkdown,
@@ -24,6 +25,7 @@ export const OFFLINE_SUITES = Object.freeze({
   guardrails: runGuardrailSuite,
   providers: runProviderSuite,
   metamorphic: runMetamorphicSuite,
+  jurisdiction: runJurisdictionSuite,
 });
 const sha = (text) => createHash("sha256").update(text).digest("hex");
 

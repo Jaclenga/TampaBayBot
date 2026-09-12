@@ -23,6 +23,7 @@ function fixture() {
       url: "https://fixture.invalid/housing/apply",
     },
     categories: ["housing"],
+    jurisdiction_ids: ['tampa'],
     synthetic_fixture: true,
   };
   const chunk = {
@@ -78,6 +79,7 @@ function fixture() {
       nextSteps: [{ ...source.next_step, agency: source.agency }],
       warnings: [],
       needsAddress: false,
+      jurisdictionId: 'tampa', jurisdictionLabel: 'Tampa', needsJurisdiction: false,
       generation: { mode: "extractive", provider: "none", status: "disabled" },
     },
   };
@@ -91,6 +93,16 @@ function scored(value) {
 function failed(value, id) {
   assert.equal(scored(value)[id].passed, false, id);
 }
+
+test('foreign jurisdiction quotes and next steps fail even when their provenance is exact', () => {
+  const value = fixture();
+  value.answer.jurisdictionId = 'clearwater';
+  value.answer.jurisdictionLabel = 'Clearwater';
+  failed(value, 'citation_jurisdiction_matches');
+  failed(value, 'next_steps_jurisdiction_matches');
+  value.sources[0].jurisdiction_ids = undefined;
+  failed(value, 'citation_jurisdiction_matches');
+});
 
 test("handwritten exact-evidence response passes applicable checks and keeps unmeasured cases null", () => {
   const checks = scoreNavigationAnswer(fixture());

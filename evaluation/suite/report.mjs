@@ -1,4 +1,4 @@
-export const SUITE_VERSION = "1.0.0";
+export const SUITE_VERSION = "1.1.0";
 const kinds = new Set([
   "behavior",
   "integrity",
@@ -11,6 +11,7 @@ const suites = new Set([
   "guardrails",
   "providers",
   "metamorphic",
+  "jurisdiction",
   "live",
 ]);
 const fixtures = new Set([

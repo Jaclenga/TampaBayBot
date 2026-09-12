@@ -1,8 +1,25 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readInput, inputText, inputPoint, json, RequestInputError, REQUEST_BODY_TIMEOUT_MS } from '../lib/http.ts';
+import { readInput, inputText, inputPoint, inputJurisdiction, json, inputErrorJson, RequestInputError, REQUEST_BODY_TIMEOUT_MS, REJECTED_BODY_DRAIN_LIMIT_BYTES } from '../lib/http.ts';
 
 const site = 'https://parcelprivateer.example';
+
+test('API input errors preserve status, safe codes, fallback text, and no-store headers', async () => {
+  for (const [error, status, body] of [
+    [new RequestInputError('Upload timed out.', 408, 'request_timeout'), 408, { error: 'Upload timed out.', code: 'request_timeout' }],
+    [new RequestInputError('Upload interrupted.', 400, 'request_aborted'), 400, { error: 'Upload interrupted.', code: 'request_aborted' }],
+    [new Error('Send a JSON request.'), 400, { error: 'Send a JSON request.' }],
+    [{ message: 'private detail', status: 503, code: 'untrusted' }, 400, { error: 'Lookup unavailable.' }],
+    [null, 400, { error: 'Lookup unavailable.' }],
+  ]) {
+    const response = inputErrorJson(error, 'Lookup unavailable.');
+    assert.equal(response.status, status);
+    assert.deepEqual(await response.json(), body);
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+    assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
+  }
+});
+
 function request(body = '{"address":"315 E Kennedy Blvd"}', headers = {}) {
   return new Request(`${site}/api/property`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body });
 }
@@ -31,7 +48,7 @@ test('preflight rejections cancel unread uploads without waiting for cancellatio
     ['Content-Type', 'text/plain', /JSON/],
     ['Origin', 'https://foreign.example', /own website/],
     ['Origin', 'not a URL', /Invalid URL/],
-    ['Content-Length', '9000', /too long/],
+    ['Content-Length', String(REJECTED_BODY_DRAIN_LIMIT_BYTES + 1), /too long/],
   ]) {
     for (const result of ['pending', 'rejected']) {
       let reads = 0;
@@ -51,6 +68,23 @@ test('preflight rejections cancel unread uploads without waiting for cancellatio
       assert.equal(body.locked, false);
     }
   }
+});
+
+test('modest declared oversized bodies are drained within a fixed cap before rejection', async () => {
+  let cancelled = false;
+  const body = new ReadableStream({
+    start(controller) {
+      controller.enqueue(new Uint8Array(4_096));
+      controller.enqueue(new Uint8Array(4_904));
+      controller.close();
+    },
+    cancel() { cancelled = true; },
+  });
+  const input = streamedRequest(body);
+  input.headers.set('Content-Length', '9000');
+  await assert.rejects(readInput(input), /too long/);
+  assert.equal(cancelled, false);
+  assert.equal(body.locked, false);
 });
 
 test('HTTP input rejects malformed JSON, null, arrays, and JSON primitives', async () => {
@@ -241,6 +275,16 @@ test('question and address limits reject coercion, missing values and oversized 
   assert.throws(() => inputText('a'.repeat(201), 200));
 });
 
+test('jurisdiction input defaults to the region and rejects unrecognized or coerced areas', () => {
+  assert.equal(inputJurisdiction(undefined), 'tampa-bay');
+  for (const value of ['tampa', 'st-petersburg', 'clearwater', 'pinellas-county', 'hillsborough-county', 'pasco-county']) {
+    assert.equal(inputJurisdiction(value), value);
+  }
+  for (const value of [null, '', 'miami', 'Tampa', ['clearwater'], {}, 0, 'https://evil.example']) {
+    assert.throws(() => inputJurisdiction(value), /supported Tampa Bay area/);
+  }
+});
+
 test('property input requires finite numeric coordinates and omits unapproved fields', () => {
   assert.deepEqual(inputPoint({ latitude: 27.947664, longitude: -82.457244, address: '315 E Kennedy Blvd', owner: 'not a requested field', url: 'https://evil.example' }), { latitude: 27.947664, longitude: -82.457244, address: '315 E Kennedy Blvd' });
   for (const input of [
@@ -248,7 +292,7 @@ test('property input requires finite numeric coordinates and omits unapproved fi
     { latitude: NaN, longitude: -82.45 }, { latitude: Infinity, longitude: -82.45 },
     { latitude: null, longitude: -82.45 }, { latitude: -82.45, longitude: 27.9 },
     { latitude: 40.7, longitude: -74 }, { latitude: 27.9, longitude: -181 },
-  ]) assert.throws(() => inputPoint(input), /Tampa service area/);
+  ]) assert.throws(() => inputPoint(input), /Tampa Bay service area/);
   assert.equal(inputPoint({ latitude: 27.9, longitude: -82.45 }).address, '');
 });
 

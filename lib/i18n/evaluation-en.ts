@@ -20,7 +20,7 @@ export const evaluationEn = {
   } as Record<string, string>,
   suiteTitle: "Offline engineering checks",
   suiteExplanation:
-    "This run checks navigation, guardrails, provider behavior, and variations in questions and sources. Provider responses are synthetic; they do not evaluate a real model or establish answer accuracy. Independent human review remains pending.",
+    "This run checks navigation, jurisdiction boundaries, guardrails, provider behavior, and variations in questions and sources. Provider responses are synthetic; they do not evaluate a real model or establish answer accuracy. Independent human review remains pending.",
   suitePublished: "Run completed",
   suiteCaption: "Published offline engineering cases",
   suiteName: "Suite",
@@ -35,6 +35,7 @@ export const evaluationEn = {
     guardrails: "Guardrails",
     providers: "Provider adapters (synthetic)",
     metamorphic: "Question and source variations",
+    jurisdiction: "Regional coverage and jurisdiction",
   } as Record<string, string>,
   humanTitle: "Human review",
   humanText:

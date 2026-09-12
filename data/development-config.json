@@ -18,12 +18,20 @@
   "min_radius_meters": 100,
   "max_radius_meters": 5000,
   "snapshot_stale_after_days": 30,
-  "coverage": "Core normalized activities from eight named City GIS layers observed on August 23, 2026. The expanded Accela dataset and later raw-only observations are not included.",
+  "coverage": "City of Tampa only. Core normalized activities from eight named City GIS layers observed on August 23, 2026. The expanded Accela dataset and later raw-only observations are not included.",
   "limitations": [
+    "No St. Petersburg, Clearwater, other Pinellas County, or Pasco County development-record coverage is included. A Tampa municipal boundary match is required before this snapshot is searched.",
     "Public records describe reported activity and status; they do not prove physical construction started or finished.",
     "This is an independent source-bounded snapshot, not a complete or current inventory of all Tampa development.",
     "Distance is straight-line great-circle distance to the normalized record point, not walking distance, parcel-boundary distance, or a legal relationship.",
     "Normalized activities may combine several source records or locations. Only the published representative point is searched.",
     "A missing nearby result does not establish that no activity occurred."
-  ]
+  ],
+  "jurisdiction_id": "tampa",
+  "record_bounds": {
+    "west": -82.9,
+    "south": 27.55,
+    "east": -82,
+    "north": 28.25
+  }
 }
