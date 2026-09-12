@@ -1,0 +1,5 @@
+[
+{{- range $index, $finding := . }}{{ if $index }},{{ end }}
+{"rule":{{ $finding.RuleID | toJson }},"file":{{ $finding.File | toJson }},"line":{{ $finding.StartLine }},"commit":{{ $finding.Commit | toJson }}}
+{{- end }}
+]

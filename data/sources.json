@@ -1,0 +1,533 @@
+[
+  {
+    "source_id": "tampa-rmap",
+    "title": "Rental and Move-In Assistance Program (RMAP)",
+    "agency": "City of Tampa Housing and Community Development",
+    "jurisdiction": "City of Tampa",
+    "canonical_url": "https://www.tampa.gov/housing-and-community-development/rental-move-in-assistance",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "Rental and Move-In Assistance Program (RMAP) — official public information and resident next steps.",
+    "expected_refresh_frequency": "weekly",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "City of Tampa",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "The current phase describes new move-in costs only. Do not infer eligibility, application capacity, or funding availability. The displayed income table is labeled 2025.",
+    "categories": [
+      "housing",
+      "navigation"
+    ],
+    "keywords": [
+      "rent",
+      "rental",
+      "move in",
+      "deposit",
+      "RMAP",
+      "housing assistance"
+    ],
+    "next_step": {
+      "label": "Review the official RMAP application process",
+      "url": "https://www.tampa.gov/housing-and-community-development/rental-move-in-assistance"
+    },
+    "refresh_days": 7,
+    "topic_id": "rmap",
+    "selector": "article",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "tampa-hrrp",
+    "title": "Apply to the Housing Rehabilitation & Renovation Program (HRRP)",
+    "agency": "City of Tampa Housing and Community Development",
+    "jurisdiction": "City of Tampa",
+    "canonical_url": "https://www.tampa.gov/housing-and-community-development/apply-housing-rehabilitation-renovation-program-hrrp",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "Apply to the Housing Rehabilitation & Renovation Program (HRRP) — official public information and resident next steps.",
+    "expected_refresh_frequency": "weekly",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "City of Tampa",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "At retrieval the page says it is not accepting new applications, while projecting a summer 2026 reopening subject to funding. That projection is not evidence of reopening.",
+    "categories": [
+      "housing",
+      "navigation"
+    ],
+    "keywords": [
+      "home repair",
+      "rehabilitation",
+      "renovation",
+      "homeowner",
+      "HRRP"
+    ],
+    "next_step": {
+      "label": "Check the official home-repair program status",
+      "url": "https://www.tampa.gov/housing-and-community-development/apply-housing-rehabilitation-renovation-program-hrrp"
+    },
+    "refresh_days": 7,
+    "topic_id": "hrrp",
+    "selector": "article",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "hillsborough-help",
+    "title": "Help Me, Hillsborough",
+    "agency": "Hillsborough County",
+    "jurisdiction": "Hillsborough County",
+    "canonical_url": "https://hcfl.gov/residents/human-services/help-me-hillsborough",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "Help Me, Hillsborough — official public information and resident next steps.",
+    "expected_refresh_frequency": "every two weeks",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "Hillsborough County",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "County resource directory; individual programs have different service areas and eligibility.",
+    "categories": [
+      "housing",
+      "navigation"
+    ],
+    "keywords": [
+      "county",
+      "rent",
+      "eviction",
+      "homeless",
+      "repair",
+      "assistance",
+      "landlord"
+    ],
+    "next_step": {
+      "label": "Find help through Hillsborough County",
+      "url": "https://hcfl.gov/residents/human-services/help-me-hillsborough"
+    },
+    "refresh_days": 14,
+    "topic_id": "hillsborough-help",
+    "selector": "body",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "florida-housing",
+    "title": "Homebuyers and Renters — Resources",
+    "agency": "Florida Housing Finance Corporation",
+    "jurisdiction": "Florida",
+    "canonical_url": "https://www.floridahousing.org/buyers-renters/buy-or-rent/resources",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "Homebuyers and Renters — Resources — official public information and resident next steps.",
+    "expected_refresh_frequency": "monthly",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "Florida",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "State-created public corporation. Eligibility and funding must be confirmed with the relevant program or participating provider.",
+    "categories": [
+      "housing",
+      "navigation"
+    ],
+    "keywords": [
+      "buy",
+      "homebuyer",
+      "down payment",
+      "SHIP",
+      "affordable apartment",
+      "rent"
+    ],
+    "next_step": {
+      "label": "Explore Florida Housing buyer and renter resources",
+      "url": "https://www.floridahousing.org/buyers-renters/buy-or-rent/resources"
+    },
+    "refresh_days": 30,
+    "topic_id": "florida-housing",
+    "selector": "body",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "tampa-zoning",
+    "title": "Zoning Maps",
+    "agency": "City of Tampa Development Coordination",
+    "jurisdiction": "City of Tampa",
+    "canonical_url": "https://www.tampa.gov/development-coordination/zoning/maps",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "Zoning Maps — official public information and resident next steps.",
+    "expected_refresh_frequency": "monthly",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "City of Tampa",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "The City advises consulting Chapter 27 and planners before property decisions. Zoning source map is revised monthly; interactive data refreshed daily per this page.",
+    "categories": [
+      "zoning",
+      "navigation"
+    ],
+    "keywords": [
+      "zoning",
+      "zone",
+      "RM-24",
+      "land use",
+      "parcel",
+      "folio",
+      "code"
+    ],
+    "next_step": {
+      "label": "Look up the official Tampa zoning map",
+      "url": "https://www.tampa.gov/development-coordination/zoning/maps"
+    },
+    "refresh_days": 30,
+    "topic_id": "zoning",
+    "selector": "article",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "tampa-permits",
+    "title": "Residential Permits",
+    "agency": "City of Tampa Construction Services",
+    "jurisdiction": "City of Tampa",
+    "canonical_url": "https://www.tampa.gov/construction-services/residential-permits",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "Residential Permits — official public information and resident next steps.",
+    "expected_refresh_frequency": "monthly",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "City of Tampa",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "Page distinguishes single-family residences and duplexes from condominium projects requiring a commercial permit. Project-specific requirements require agency confirmation.",
+    "categories": [
+      "permitting",
+      "navigation"
+    ],
+    "keywords": [
+      "permit",
+      "roof",
+      "fence",
+      "remodel",
+      "condo",
+      "condominium",
+      "duplex",
+      "construction"
+    ],
+    "next_step": {
+      "label": "Find the right residential permit category",
+      "url": "https://www.tampa.gov/construction-services/residential-permits"
+    },
+    "refresh_days": 30,
+    "topic_id": "permits",
+    "selector": "article",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "tampa-permit-guide",
+    "title": "Residential New Construction — Permit Application Guide",
+    "agency": "City of Tampa Construction Services",
+    "jurisdiction": "City of Tampa",
+    "canonical_url": "https://www.tampa.gov/sites/default/files/document/2026/permit-application-guide-residential-new-construction_ada.pdf",
+    "source_type": "pdf",
+    "authoritative_status": "first-party",
+    "description": "Residential New Construction — Permit Application Guide — official public information and resident next steps.",
+    "expected_refresh_frequency": "monthly",
+    "ingestion_method": "http-fetch-pdf-text-per-page",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "City of Tampa",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "PDF page locators use physical PDF page numbers, beginning at 1. The guide does not establish project approval.",
+    "categories": [
+      "permitting",
+      "navigation"
+    ],
+    "keywords": [
+      "permit",
+      "new construction",
+      "application",
+      "building",
+      "documents",
+      "Accela"
+    ],
+    "next_step": {
+      "label": "Read the official new-construction application guide",
+      "url": "https://www.tampa.gov/sites/default/files/document/2026/permit-application-guide-residential-new-construction_ada.pdf"
+    },
+    "refresh_days": 30,
+    "topic_id": "permit-guide",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "tampa-development-contact",
+    "title": "Contact Us — Development Coordination",
+    "agency": "City of Tampa Development Coordination",
+    "jurisdiction": "City of Tampa",
+    "canonical_url": "https://www.tampa.gov/development-coordination/contact-us",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "Contact Us — Development Coordination — official public information and resident next steps.",
+    "expected_refresh_frequency": "monthly",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "City of Tampa",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "Contact directory should be checked directly if information differs from another City page.",
+    "categories": [
+      "navigation",
+      "zoning",
+      "permitting",
+      "development"
+    ],
+    "keywords": [
+      "contact",
+      "who",
+      "phone",
+      "planner",
+      "variance",
+      "rezoning",
+      "addressing",
+      "construction"
+    ],
+    "next_step": {
+      "label": "Contact Tampa Development Coordination",
+      "url": "https://www.tampa.gov/development-coordination/contact-us"
+    },
+    "refresh_days": 30,
+    "topic_id": "development-contact",
+    "selector": "article",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "plan-hillsborough-maps",
+    "title": "GIS Maps & Data Files",
+    "agency": "Plan Hillsborough / Hillsborough County City-County Planning Commission",
+    "jurisdiction": "Hillsborough County and municipalities",
+    "canonical_url": "https://planhillsborough.org/gis-maps-data-files/",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "GIS Maps & Data Files — official public information and resident next steps.",
+    "source_data_updated_date": "2026-09-01",
+    "expected_refresh_frequency": "quarterly",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "The page's disclaimer requires confirmation with official records, limits map use to planning, and states map sheets may not be reproduced for sale without specific approval. No general dataset redistribution license verified; linked map files and media are not redistributed by this narrative snapshot.",
+    "geographic_coverage": "Hillsborough County and municipalities",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "Source explicitly says quarterly maps should be verified with agency planners for a specific parcel. Adopted maps must not be confused with draft plan updates.",
+    "categories": [
+      "zoning",
+      "navigation"
+    ],
+    "keywords": [
+      "future land use",
+      "FLU",
+      "comprehensive plan",
+      "adopted map",
+      "planning",
+      "maps"
+    ],
+    "next_step": {
+      "label": "View adopted future land-use maps",
+      "url": "https://planhillsborough.org/gis-maps-data-files/"
+    },
+    "refresh_days": 90,
+    "topic_id": "plan-hillsborough-maps",
+    "selector": ".entry-content",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "tampa-housing",
+    "title": "Housing and Community Development",
+    "agency": "City of Tampa Housing and Community Development",
+    "jurisdiction": "City of Tampa",
+    "canonical_url": "https://www.tampa.gov/housing-and-community-development",
+    "source_type": "html",
+    "authoritative_status": "first-party",
+    "description": "Housing and Community Development — official public information and resident next steps.",
+    "expected_refresh_frequency": "every two weeks",
+    "ingestion_method": "http-fetch-html-semantic-blocks",
+    "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+    "geographic_coverage": "City of Tampa",
+    "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+    "notes": "Department navigation, housing information line and program links. Program status is time-sensitive; follow the program-specific page.",
+    "categories": [
+      "housing",
+      "navigation"
+    ],
+    "keywords": [
+      "housing",
+      "landlord",
+      "tenant",
+      "lease",
+      "legal",
+      "help",
+      "assistance",
+      "DARE"
+    ],
+    "next_step": {
+      "label": "Contact Tampa housing services and explore programs",
+      "url": "https://www.tampa.gov/housing-and-community-development"
+    },
+    "refresh_days": 14,
+    "topic_id": "housing",
+    "selector": "article",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "tampa-gis",
+    "title": "City of Tampa GIS: address, parcels, zoning and boundary",
+    "agency": "City of Tampa GIS (parcel data credited to Hillsborough County Property Appraiser)",
+    "jurisdiction": "City of Tampa; county-wide locator/parcels as identified by each layer",
+    "canonical_url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0",
+    "fetch_url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0?f=pjson",
+    "source_type": "arcgis",
+    "authoritative_status": "first-party",
+    "description": "Official queryable GIS services for address candidates, parcels, municipal boundary and zoning; each result retains its exact endpoint and layer.",
+    "expected_refresh_frequency": "daily",
+    "ingestion_method": "http-fetch-arcgis-metadata; live feature query",
+    "license_or_terms_status": "Public ArcGIS endpoint; consult service copyrightText and City GIS disclaimer. No blanket license inferred.",
+    "geographic_coverage": "Layer-specific: City of Tampa zoning/boundary and broader address/parcel coverage.",
+    "temporal_coverage": "Current service metadata at retrieval; individual features may have their own update dates.",
+    "notes": "A Tampa mailing address does not establish City jurisdiction. Resolve candidates and boundary before zoning. Spatial matches are informational, not an official determination.",
+    "categories": [
+      "zoning",
+      "navigation"
+    ],
+    "keywords": [
+      "parcel",
+      "address",
+      "zoning",
+      "folio",
+      "boundary",
+      "GIS"
+    ],
+    "next_step": {
+      "label": "Inspect official parcel service metadata",
+      "url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0"
+    },
+    "refresh_days": 1,
+    "layer": "Parcels/TaxParcel/FeatureServer/0",
+    "related_endpoints": [
+      {
+        "role": "geocoder",
+        "url": "https://arcgis.tampagov.net/arcgis/rest/services/Locators/SiteAddressLocator/GeocodeServer"
+      },
+      {
+        "role": "parcels",
+        "url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0"
+      },
+      {
+        "role": "zoning",
+        "url": "https://arcgis.tampagov.net/arcgis/rest/services/OpenData/Planning/MapServer/28"
+      },
+      {
+        "role": "boundary",
+        "url": "https://arcgis.tampagov.net/arcgis/rest/services/AdministrativeArea/TampaBoundary/FeatureServer/0"
+      }
+    ],
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "planhillsborough-flu",
+    "title": "Tampa Future Land Use — official GIS layer",
+    "agency": "Plan Hillsborough / Hillsborough County City-County Planning Commission",
+    "jurisdiction": "City of Tampa",
+    "canonical_url": "https://gis.tpcmaps.org/arcgis/rest/services/LandUse/FutureLU_TA/MapServer/0",
+    "fetch_url": "https://gis.tpcmaps.org/arcgis/rest/services/LandUse/FutureLU_TA/MapServer/0?f=pjson",
+    "source_type": "arcgis",
+    "authoritative_status": "first-party",
+    "description": "Official Tampa future land-use GIS layer; preserve FLUE, FLU_DESC and jurisdiction in observed results.",
+    "expected_refresh_frequency": "quarterly",
+    "ingestion_method": "http-fetch-arcgis-metadata; live feature query",
+    "license_or_terms_status": "Public ArcGIS endpoint; Plan Hillsborough GIS disclaimer and service copyright apply. No blanket license inferred.",
+    "geographic_coverage": "City of Tampa",
+    "temporal_coverage": "Service metadata at retrieval; quarterly updates stated by provider.",
+    "notes": "A future land-use designation is different from zoning and does not establish permission for a project. Check recent amendments with planners.",
+    "categories": [
+      "zoning",
+      "navigation"
+    ],
+    "keywords": [
+      "future land use",
+      "FLU",
+      "FLUE",
+      "planning",
+      "comprehensive plan"
+    ],
+    "next_step": {
+      "label": "Verify land-use maps with Plan Hillsborough",
+      "url": "https://planhillsborough.org/gis-maps-data-files/"
+    },
+    "refresh_days": 90,
+    "layer": "LandUse/FutureLU_TA/MapServer/0",
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  },
+  {
+    "source_id": "tampa-development-records",
+    "title": "Tampa Development Records — normalized development activity",
+    "agency": "Tampa Development Records (independent public-data project)",
+    "jurisdiction": "Tampa-area coverage of the selected City development layers",
+    "canonical_url": "https://github.com/Jaclenga/Tampa-Development-Records",
+    "fetch_url": "https://raw.githubusercontent.com/Jaclenga/Tampa-Development-Records/b1ac7fc705fe667ff046be11f76dcb8aa3b3d872/data/processed/tampa_development_activity.csv",
+    "source_type": "csv",
+    "authoritative_status": "independent",
+    "description": "Independent normalization of observed public development records, used for nearby activity and temporal context.",
+    "expected_refresh_frequency": "weekly check for newer upstream snapshot",
+    "ingestion_method": "live-query-only",
+    "license_or_terms_status": "Independent repository terms and underlying City record terms are separate from ParcelPrivateer software licensing; consult upstream LICENSE/NOTICE.",
+    "geographic_coverage": "Coverage of eight selected City development activity layers; not all permits or projects.",
+    "temporal_coverage": "Core normalized CSV snapshot 2026-08-23; pinned repository commit b1ac7fc705fe667ff046be11f76dcb8aa3b3d872.",
+    "notes": "Record activity does not establish construction, completion, zoning permission or approval. Original source_url/source_endpoint retained where available. The geospatial ingestion script owns the normalized observation snapshot.",
+    "categories": [
+      "development"
+    ],
+    "keywords": [
+      "development",
+      "nearby",
+      "construction",
+      "record",
+      "recent",
+      "activity"
+    ],
+    "next_step": {
+      "label": "Inspect Tampa Development Records methodology and original records",
+      "url": "https://github.com/Jaclenga/Tampa-Development-Records"
+    },
+    "refresh_days": 7,
+    "status": "unavailable",
+    "retrieval_date": null,
+    "source_updated_date": null,
+    "last_error": "Not fetched in this source-only distribution."
+  }
+]

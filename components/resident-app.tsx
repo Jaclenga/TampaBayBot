@@ -1,0 +1,369 @@
+"use client";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
+import { ArrowRight, ChevronRight, Search, Undo2 } from "lucide-react";
+import type { ResidentAnswer } from "@/lib/core/answer.mjs";
+import { en } from "@/lib/i18n/en";
+import { SourceLink } from "./site-shell";
+import PropertyLookup from "./property-lookup";
+import { dateLabel } from "@/lib/i18n/format";
+
+const subscribeToReady = () => () => {};
+const clientReady = () => true;
+const serverReady = () => false;
+function CitedText({ answer }: { answer: ResidentAnswer }) {
+  return (
+    <>
+      {answer.answer.split(/(\[E\d+\])/).map((text, index) => {
+        const id = text.match(/^\[(E\d+)\]$/)?.[1];
+        return id && answer.evidence.some((item) => item.id === id) ? (
+          <a
+            key={index}
+            className="citation-link"
+            href={`#evidence-${id}`}
+            aria-label={`${en.labels.citation} ${id}`}
+            onClick={(event) => {
+              const detail = document.getElementById(`evidence-${id}`);
+              if (detail instanceof HTMLDetailsElement) {
+                event.preventDefault();
+                detail.open = true;
+                detail.querySelector("summary")?.focus();
+              }
+            }}
+          >
+            {text}
+          </a>
+        ) : (
+          text
+        );
+      })}
+    </>
+  );
+}
+
+export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
+  const ready = useSyncExternalStore(
+    subscribeToReady,
+    clientReady,
+    serverReady,
+  );
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState<ResidentAnswer | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const input = useRef<HTMLTextAreaElement>(null);
+  const answerTitle = useRef<HTMLHeadingElement>(null);
+  const controller = useRef<AbortController | null>(null);
+  useEffect(() => () => controller.current?.abort(), []);
+  useEffect(() => {
+    if (answer) answerTitle.current?.focus();
+  }, [answer]);
+  async function ask(text = question) {
+    if (!text.trim()) {
+      setError(en.form.empty);
+      input.current?.focus();
+      return;
+    }
+    if (text.length > 1000) {
+      setError(en.form.max);
+      input.current?.focus();
+      return;
+    }
+    controller.current?.abort();
+    const request = new AbortController();
+    controller.current = request;
+    setQuestion(text);
+    setBusy(true);
+    setError("");
+    setAnswer(null);
+    try {
+      const response = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: text }),
+        signal: request.signal,
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || en.form.error);
+      if (!request.signal.aborted) setAnswer(result);
+    } catch (err) {
+      if (!request.signal.aborted)
+        setError(err instanceof Error ? err.message : en.form.error);
+    } finally {
+      if (!request.signal.aborted) setBusy(false);
+    }
+  }
+  function reset() {
+    controller.current?.abort();
+    setBusy(false);
+    setAnswer(null);
+    setQuestion("");
+    setError("");
+    input.current?.focus();
+  }
+  return (
+    <main id="main">
+      <section
+        className={`hero ${answer ? "hero-compact" : ""}`}
+        aria-labelledby="hero-title"
+      >
+        <div className="hero-inner">
+          <h1 id="hero-title">{en.hero.title}</h1>
+          <p className="hero-description">{en.hero.description}</p>
+          <form
+            className="question-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void ask();
+            }}
+            aria-busy={busy}
+          >
+            <label htmlFor="question">{en.form.label}</label>
+            <div className={`question-input ${error ? "invalid" : ""}`}>
+              <textarea
+                id="question"
+                disabled={!ready}
+                ref={input}
+                rows={2}
+                value={question}
+                onChange={(e) => {
+                  setQuestion(e.target.value);
+                  setError("");
+                }}
+                maxLength={1000}
+                placeholder={en.form.placeholder}
+                aria-invalid={!!error}
+                aria-describedby={
+                  error ? "question-error question-privacy" : "question-privacy"
+                }
+              />
+              <button
+                className="primary-button"
+                type="submit"
+                disabled={!ready || busy}
+              >
+                {busy ? en.form.busy : en.form.submit}
+                <Search size={18} aria-hidden="true" />
+              </button>
+            </div>
+            {error && (
+              <p className="error-text" id="question-error" role="alert">
+                {error}
+              </p>
+            )}
+            <p className="privacy-hint" id="question-privacy">
+              {en.form.privacy} {modelNotice}
+            </p>
+          </form>
+          {!answer && (
+            <div className="example-prompts">
+              <span>{en.examplesLabel}</span>
+              <div>
+                {en.examples.map((example) => (
+                  <button
+                    key={example}
+                    onClick={() => void ask(example)}
+                    disabled={!ready || busy}
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          <p className="sr-only" role="status">
+            {busy ? en.form.busy : ""}
+          </p>
+        </div>
+      </section>
+      {answer ? (
+        <section
+          className={`answer-layout content-width ${answer.nextSteps.length ? "" : "answer-only"}`}
+          aria-labelledby="answer-title"
+        >
+          <div className="answer-main">
+            <div className="section-topline">
+              <span
+                className={`status-label ${answer.status === "answered" ? "positive" : ""}`}
+              >
+                {en.status[answer.status] || answer.status.replaceAll("_", " ")}
+              </span>
+              <button className="text-button" onClick={reset}>
+                <Undo2 size={15} aria-hidden="true" />
+                {en.answer.clear}
+              </button>
+            </div>
+            <h2 id="answer-title" tabIndex={-1} ref={answerTitle}>
+              {en.answer.title}
+            </h2>
+            <p className="answer-lead">
+              <CitedText answer={answer} />
+            </p>
+            {answer.generation?.status === "used" && (
+              <p className="muted small">{en.answer.modelUsed}</p>
+            )}
+            {answer.generation?.status === "fallback" && (
+              <p className="muted small">{en.answer.modelFallback}</p>
+            )}
+            {answer.meaning && (
+              <section className="meaning">
+                <h3>{en.answer.meaning}</h3>
+                <p>{answer.meaning}</p>
+              </section>
+            )}
+            {answer.warnings.length > 0 && (
+              <ul className="warning-list">
+                {answer.warnings.map((w) => (
+                  <li key={w}>{w}</li>
+                ))}
+              </ul>
+            )}
+            {!!answer.requirementsToVerify?.length && (
+              <details className="verification">
+                <summary>{en.answer.verify}</summary>
+                <ul>
+                  {answer.requirementsToVerify.map((requirement) => (
+                    <li key={requirement}>{requirement}</li>
+                  ))}
+                </ul>
+              </details>
+            )}
+            {answer.evidence.length > 0 && (
+              <section className="evidence-section">
+                <h3>
+                  {en.answer.evidence}
+                  <span>{answer.evidence.length}</span>
+                </h3>
+                <p className="muted small">{en.answer.snapshot}</p>
+                <div className="evidence-list">
+                  {answer.evidence.map((item, index) => (
+                    <details
+                      className="evidence-card"
+                      id={`evidence-${item.id}`}
+                      key={item.id}
+                      open={index === 0}
+                    >
+                      <summary>
+                        <span className="evidence-number">{index + 1}</span>
+                        <span>
+                          <strong>{item.title}</strong>
+                          <small>{item.agency}</small>
+                        </span>
+                        <ChevronRight size={16} aria-hidden="true" />
+                      </summary>
+                      <div className="evidence-body">
+                        <blockquote>{item.quote}</blockquote>
+                        <dl>
+                          <div>
+                            <dt>{en.answer.retrieved}</dt>
+                            <dd>{dateLabel(item.retrieved_at)}</dd>
+                          </div>
+                          <div>
+                            <dt>{en.answer.updated}</dt>
+                            <dd>{dateLabel(item.source_updated_date)}</dd>
+                          </div>
+                          {item.section && (
+                            <div>
+                              <dt>{en.labels.section}</dt>
+                              <dd>{item.section}</dd>
+                            </div>
+                          )}
+                          {item.page && (
+                            <div>
+                              <dt>{en.labels.page}</dt>
+                              <dd>{item.page}</dd>
+                            </div>
+                          )}
+                          {item.record_id && (
+                            <div>
+                              <dt>{en.labels.record}</dt>
+                              <dd>{item.record_id}</dd>
+                            </div>
+                          )}
+                          {item.layer && (
+                            <div>
+                              <dt>{en.labels.layer}</dt>
+                              <dd>{item.layer}</dd>
+                            </div>
+                          )}
+                        </dl>
+                        {item.stale && (
+                          <p className="stale-note">
+                            {en.status.potentially_outdated}
+                          </p>
+                        )}
+                        <SourceLink url={item.url}>
+                          {en.answer.source}
+                        </SourceLink>
+                      </div>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            )}
+            {answer.needsAddress && (
+              <PropertyLookup
+                initialAddress={
+                  /^\s*\d+\s+\S/.test(answer.query) ? answer.query : ""
+                }
+              />
+            )}
+          </div>
+          {answer.nextSteps.length > 0 && (
+            <aside className="next-steps" aria-labelledby="next-title">
+              <h2 id="next-title">{en.answer.next}</h2>
+              {answer.nextSteps.length > 0 ? (
+                <ol>
+                  {answer.nextSteps.map((step) => (
+                    <li key={step.url}>
+                      <SourceLink url={step.url}>{step.label}</SourceLink>
+                      <small>{step.agency}</small>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>{en.about.approach}</p>
+              )}
+              <Link href="/sources" className="text-link">
+                {en.nav.sources}
+                <ArrowRight size={15} aria-hidden="true" />
+              </Link>
+            </aside>
+          )}
+        </section>
+      ) : (
+        <>
+          <section
+            className="services content-width"
+            aria-labelledby="services-title"
+          >
+            <div className="section-heading">
+              <div>
+                <h2 id="services-title">{en.servicesTitle}</h2>
+                <p>{en.servicesIntro}</p>
+              </div>
+            </div>
+            <div className="service-grid">
+              {en.services.map((service) => {
+                return (
+                  <button
+                    className={`service-card service-${service.id}`}
+                    key={service.id}
+                    onClick={() => void ask(service.prompt)}
+                    disabled={!ready || busy}
+                  >
+                    <h3>{service.label}</h3>
+                    <p>{service.text}</p>
+                    <span className="service-arrow">
+                      <ArrowRight size={18} aria-hidden="true" />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        </>
+      )}
+    </main>
+  );
+}

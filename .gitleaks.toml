@@ -1,0 +1,4 @@
+title = "ParcelPrivateer release secret scan"
+
+[extend]
+useDefault = true

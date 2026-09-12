@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "version": "0.1.0-alpha.1",
+  "date": "2026-09-12",
+  "distribution": "Original source only; archived third-party evidence and private development Git history excluded. Public evidence/evaluation placeholders are explicitly not_run or unavailable.",
+  "local_alpha_checks": {
+    "environment": { "node": "24.13.1", "platform": "Windows" },
+    "scope": "Development source and its retained 257-chunk corpus, before source-only packaging. Source-release tests also verify packaging exclusion, portable report sanitization and manifest tampering rejection.",
+    "code_tests": { "passed": 197, "failed": 0, "skipped": 0 },
+    "offline_evaluation": { "cases_passed": 205, "cases_failed": 0, "applicable_checks_passed": 3902, "checks_not_applicable": 582 },
+    "synthetic_provider_runtime": { "checks_passed": 32, "providers": ["none", "ollama", "openai-compatible"], "real_inference": false },
+    "typecheck": "passed",
+    "lint": "passed",
+    "production_build": "passed",
+    "npm_audit": { "scope": "production and development dependencies", "findings": 0 }
+  },
+  "independent_deployment": {
+    "scope": "Actual Wrangler dry-run and local production Worker HTTP; no Sites project identity or environment files.",
+    "populated_corpus_checks_passed": 9,
+    "empty_source_distribution_checks_passed": 9,
+    "external_account_deployment": "unverified: no independent Cloudflare account connected",
+    "instructions": "docs/DEPLOYMENT.md"
+  },
+  "recorded_real_model_verification": {
+    "rerun_for_packaging_changes": false,
+    "ollama": "0.24.0",
+    "model": "llama3:8b (Meta Llama 3 8B, Q4_0)",
+    "native_repeated_cases_passed": 24,
+    "app_http_checks_passed": 9,
+    "compatibility_cases_passed": 2,
+    "human_usefulness": "unscored",
+    "details": "docs/OLLAMA_TESTING.md"
+  },
+  "release_specific_receipts": {
+    "scope": "Exact public commit, clean history/source scan, manifest hashes and Linux source-distribution CI are recorded with the tag, independently from populated-corpus results above.",
+    "release": "https://github.com/Jaclenga/ParcelPrivateer/releases/tag/v0.1.0-alpha.1",
+    "ci": "https://github.com/Jaclenga/ParcelPrivateer/actions/workflows/source-release.yml",
+    "private_reporting": "https://github.com/Jaclenga/ParcelPrivateer/security/advisories/new"
+  },
+  "known_issues": [
+    "Recorded complete Windows production-browser suite: 13 passed, 1 failed, 0 skipped. A rejected unread oversized upload can break a subsequent pooled request in the local static-assets runtime. Hosted/Linux relevance is unverified.",
+    "Independent review of 30 answers and manual assistive-technology/resident task testing remain pending.",
+    "Fresh source ingestion depends on publisher availability and may invalidate dated benchmark expectations. Empty source distributions cannot produce evidence-grounded answers before ingestion.",
+    "Shared abuse/rate/concurrency limits, monitoring, retention, source refresh ownership and actual hosted smoke verification remain operator work before unrestricted resident use.",
+    "The private development archive contains 11 third-party tokenlike HTML findings. It is preserved privately and is not part of the public alpha's Git history."
+  ]
+}

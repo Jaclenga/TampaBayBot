@@ -1,0 +1,53 @@
+name: Source alpha build and security
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  distribution:
+    runs-on: ubuntu-latest
+    outputs:
+      present: ${{ steps.source.outputs.present }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: source
+        shell: bash
+        run: |
+          if test -f SOURCE_RELEASE_MANIFEST.json; then
+            echo 'present=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'present=false' >> "$GITHUB_OUTPUT"
+            echo 'This checkout is the development archive, not a source-only distribution.'
+          fi
+  verify-source:
+    needs: distribution
+    if: needs.distribution.outputs.present == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm run release:verify
+      - run: npm run security:scan
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: node --test --test-isolation=none tests/source-release.test.mjs
+      - run: npm run build:standalone -- --name parcelprivateer-source-alpha --outdir work/standalone/ci-alpha
+      - run: npm run test:standalone -- --directory work/standalone/ci-alpha
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-alpha-verification
+          path: |
+            evaluation/security/release-secret-scan.json
+            work/standalone/ci-alpha/verification.json
+            work/standalone/ci-alpha/artifact.json

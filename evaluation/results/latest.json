@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "status": "not_run",
+  "evaluated_as_of": null,
+  "benchmark_count": 0,
+  "baseline_count": 0,
+  "synthetic_scenario_count": 0,
+  "metrics": {
+    "retrieval_expected_source_hit": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "authoritative_source_selection": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "citation_exact_quotation": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "citation_provenance_integrity": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "citation_completeness_template_proxy": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "expected_evidence_key_terms_proxy": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "factual_support": {
+      "score": null,
+      "status": "not_run",
+      "note": "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy."
+    },
+    "unsupported_claim_rate": {
+      "score": null,
+      "status": "not_run",
+      "note": "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy."
+    },
+    "stale_source_detection": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "stale_scenario_uncertainty": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "appropriate_uncertainty": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "category_routing": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "government_next_step_routing": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "geographic_correctness": {
+      "score": null,
+      "status": "not_run",
+      "note": "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy."
+    },
+    "requests_location_when_required": {
+      "passed": 0,
+      "total": 0,
+      "rate": null
+    },
+    "next_step_usefulness": {
+      "score": null,
+      "status": "not_run",
+      "note": "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy."
+    }
+  },
+  "known_limitations": [
+    "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy."
+  ],
+  "failures": []
+}

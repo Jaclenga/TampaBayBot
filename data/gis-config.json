@@ -1,0 +1,55 @@
+{
+  "verified_at": "2026-09-12",
+  "coordinate_system": "EPSG:4326",
+  "timeout_ms": 12000,
+  "cache_ttl_ms": 300000,
+  "max_cache_entries": 64,
+  "max_response_bytes": 1000000,
+  "geocoder": {
+    "source_id": "tampa-gis",
+    "agency": "City of Tampa GIS",
+    "url": "https://arcgis.tampagov.net/arcgis/rest/services/Locators/SiteAddressLocator/GeocodeServer",
+    "single_line_field": "SingleLine",
+    "coverage": "Hillsborough County address points",
+    "max_candidates": 5,
+    "minimum_score": 75
+  },
+  "layers": {
+    "parcel": {
+      "source_id": "tampa-gis",
+      "agency": "Hillsborough County Property Appraiser data served by City of Tampa GIS",
+      "title": "Tax Parcel",
+      "url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0",
+      "fields": ["OBJECTID", "FOLIO", "PIN", "SITE_ADDR", "SITE_CITY", "MUNI"],
+      "expected_refresh": "daily, according to service metadata"
+    },
+    "boundary": {
+      "source_id": "tampa-gis",
+      "agency": "City of Tampa GIS",
+      "title": "Tampa Boundary",
+      "url": "https://arcgis.tampagov.net/arcgis/rest/services/AdministrativeArea/TampaBoundary/FeatureServer/0",
+      "fields": ["OBJECTID", "Municipality", "LASTUPDATE"]
+    },
+    "zoning": {
+      "source_id": "tampa-gis",
+      "agency": "City of Tampa GIS",
+      "title": "Zoning District",
+      "url": "https://arcgis.tampagov.net/arcgis/rest/services/OpenData/Planning/MapServer/28",
+      "fields": ["OBJECTID", "ZONECLASS", "ZONEDESC", "LASTUPDATE", "REFERENCE", "LDFILENUMBER"]
+    },
+    "futureLandUse": {
+      "source_id": "planhillsborough-flu",
+      "agency": "Hillsborough County City-County Planning Commission / Plan Hillsborough",
+      "title": "Tampa Future Land Use",
+      "url": "https://gis.tpcmaps.org/arcgis/rest/services/LandUse/FutureLU_TA/MapServer/0",
+      "fields": ["OBJECTID", "FLUE", "FLU_DESC", "JURISDICTION"],
+      "expected_refresh": "quarterly, according to service metadata"
+    }
+  },
+  "limitations": [
+    "Point intersections identify mapped context at the selected address point; they do not check every part of a parcel for split zoning.",
+    "Only the City of Tampa boundary is checked. A Tampa mailing address does not establish City jurisdiction.",
+    "A layer designation is not a development entitlement, approval, or official zoning determination.",
+    "Layer update timestamps may describe one feature rather than the currency of the entire dataset."
+  ]
+}

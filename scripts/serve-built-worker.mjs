@@ -1,0 +1,82 @@
+/** Serve the built deployment entrypoint in local Workerd for production browser tests. */
+import assert from 'node:assert/strict';
+import { readFile, readdir, mkdir, realpath } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import { dirname, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const require = createRequire(import.meta.url);
+// Use the exact Miniflare runtime installed with the project's pinned Wrangler.
+const wranglerRequire = createRequire(require.resolve('wrangler/package.json'));
+const { Miniflare, convertV4MiniflareOptions } = wranglerRequire('miniflare');
+const args = process.argv.slice(2);
+assert.ok(args.length === 0 || (args.length === 2 && args[0] === '--port'), 'Usage: node scripts/serve-built-worker.mjs [--port 3100]');
+const port = args.length ? Number(args[1]) : 3100;
+assert.ok(Number.isInteger(port) && port >= 1024 && port <= 65535, 'Choose an unprivileged local port.');
+const serverRoot = await realpath(resolve(project, 'dist/server'));
+const config = JSON.parse(await readFile(resolve(serverRoot, 'wrangler.json'), 'utf8'));
+const entrypoint = await realpath(resolve(serverRoot, config.main));
+assert.ok(entrypoint.startsWith(`${serverRoot}${sep}`), 'The built entrypoint must stay in dist/server.');
+const clientRoot = await realpath(resolve(project, 'dist/client'));
+assert.equal(await realpath(resolve(serverRoot, config.assets.directory)), clientRoot, 'The built asset directory must be dist/client.');
+assert.equal(config.d1_databases?.length ?? 0, 0, 'This local fixture does not configure database bindings.');
+assert.equal(config.r2_buckets?.length ?? 0, 0, 'This local fixture does not configure storage bindings.');
+const stateRoot = resolve(project, 'work/built-worker-state');
+await mkdir(stateRoot, { recursive: true });
+assert.deepEqual(config.rules, [{ type: 'ESModule', globs: ['**/*.js', '**/*.mjs'] }], 'Update the fixture module loader if build rules change.');
+const modules = [{ type: 'ESModule', path: entrypoint }];
+async function collectModules(directory) {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    if (entry.name.startsWith('.')) continue;
+    const path = resolve(directory, entry.name);
+    if (entry.isDirectory()) await collectModules(path);
+    else if (entry.isFile() && /\.m?js$/.test(entry.name) && path !== entrypoint) modules.push({ type: 'ESModule', path });
+  }
+}
+await collectModules(serverRoot);
+assert.ok(config.assets.run_worker_first === undefined || typeof config.assets.run_worker_first === 'boolean', 'Update this fixture for path-specific Worker-first routing.');
+
+const runtime = new Miniflare(convertV4MiniflareOptions({
+  name: config.name,
+  host: '127.0.0.1', port,
+  rootPath: serverRoot,
+  modules,
+  modulesRoot: serverRoot,
+  compatibilityDate: config.compatibility_date,
+  compatibilityFlags: config.compatibility_flags,
+  // No .env files, resident inputs, provider secrets or host environment are loaded.
+  bindings: { ...config.vars, LLM_PROVIDER: 'none' },
+  assets: {
+    directory: clientRoot,
+    binding: config.assets.binding,
+    routerConfig: {
+      has_user_worker: true,
+      invoke_user_worker_ahead_of_assets: config.assets.run_worker_first,
+    },
+  },
+  resourcePersistencePath: resolve(stateRoot, 'resources'),
+  isolatedResourcePersistencePath: resolve(stateRoot, 'isolated'),
+  resourceTmpPath: resolve(stateRoot, 'tmp'),
+  unsafeDevRegistryPath: resolve(stateRoot, 'registry'),
+  unsafeRegisterWorker: false,
+  telemetry: { enabled: false },
+  logRequests: false,
+}));
+let stopping = false;
+async function stop() {
+  if (stopping) return;
+  stopping = true;
+  await runtime.dispose();
+}
+for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, () => {
+  void stop().catch(error => { console.error(error); process.exitCode = 1; });
+});
+try {
+  const url = await runtime.ready;
+  const runtimeVersion = wranglerRequire('miniflare/package.json').version;
+  console.log(`Built Worker ready at ${url} (Miniflare ${runtimeVersion}; ${config.compatibility_date}; model provider none).`);
+} catch (error) {
+  await stop();
+  throw error;
+}

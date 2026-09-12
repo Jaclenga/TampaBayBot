@@ -1,0 +1,64 @@
+{
+  "name": "parcelprivateer",
+  "version": "0.1.0-alpha.1",
+  "private": true,
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "dev": "vinext dev",
+    "build": "vinext build",
+    "start": "vinext start",
+    "test": "node --test --test-isolation=none tests/*.test.mjs lib/ingestion/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "ingest": "node --use-system-ca scripts/ingest.mjs",
+    "evaluate": "node scripts/evaluate.mjs --strict",
+    "eval:suite": "node scripts/eval-suite.mjs",
+    "eval:live": "node scripts/eval-suite.mjs --mode live",
+    "eval:compare": "node scripts/eval-suite.mjs --mode compare",
+    "test:a11y": "playwright test",
+    "check": "npm run typecheck && npm run lint && npm test && npm run evaluate && npm run eval:suite && npm run build",
+    "ingest:development": "node --use-system-ca lib/development/ingest.mjs",
+    "test:e2e": "playwright test",
+    "test:llm-runtime": "node scripts/test-llm-runtime.mjs",
+    "test:ollama-runtime": "node scripts/test-ollama-runtime.mjs",
+    "build:standalone": "node scripts/build-standalone.mjs",
+    "test:standalone": "node scripts/test-standalone.mjs",
+    "release:source": "node scripts/package-release.mjs",
+    "release:verify": "node scripts/verify-source-release.mjs",
+    "security:setup": "node --use-env-proxy --use-system-ca scripts/setup-gitleaks.mjs",
+    "security:scan": "node --use-env-proxy --use-system-ca scripts/scan-secrets.mjs"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "lucide-react": "^1.45.0",
+    "next": "16.3.5",
+    "pdf-parse": "^2.4.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@cloudflare/vite-plugin": "1.54.8",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "@vitejs/plugin-rsc": "0.5.26",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.3.5",
+    "image-size": "file:vendor/image-dimensions",
+    "react-server-dom-webpack": "19.2.8",
+    "typescript": "5.9.3",
+    "vinext": "0.0.50",
+    "vite": "8.3.0",
+    "wrangler": "4.131.1"
+  },
+  "overrides": {
+    "image-size": "$image-size"
+  },
+  "type": "module",
+  "license": "MIT"
+}

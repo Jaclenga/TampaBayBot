@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": "1.0.0",
+  "mode": "not_run",
+  "status": "not_run",
+  "startedAt": null,
+  "completedAt": "",
+  "provenance": {},
+  "summary": {
+    "cases": 0,
+    "passed": 0,
+    "failed": 0,
+    "checks": {
+      "passed": 0,
+      "failed": 0,
+      "applicable": 0,
+      "notApplicable": 0,
+      "rate": null
+    },
+    "suites": {
+      "navigation": {
+        "cases": 0,
+        "passed": 0,
+        "failed": 0,
+        "checks": {
+          "passed": 0,
+          "failed": 0,
+          "applicable": 0,
+          "notApplicable": 0,
+          "rate": null
+        }
+      },
+      "guardrails": {
+        "cases": 0,
+        "passed": 0,
+        "failed": 0,
+        "checks": {
+          "passed": 0,
+          "failed": 0,
+          "applicable": 0,
+          "notApplicable": 0,
+          "rate": null
+        }
+      },
+      "providers": {
+        "cases": 0,
+        "passed": 0,
+        "failed": 0,
+        "checks": {
+          "passed": 0,
+          "failed": 0,
+          "applicable": 0,
+          "notApplicable": 0,
+          "rate": null
+        }
+      },
+      "metamorphic": {
+        "cases": 0,
+        "passed": 0,
+        "failed": 0,
+        "checks": {
+          "passed": 0,
+          "failed": 0,
+          "applicable": 0,
+          "notApplicable": 0,
+          "rate": null
+        }
+      }
+    }
+  },
+  "metrics": {},
+  "humanEvaluation": {
+    "status": "not_run"
+  },
+  "limitations": [
+    "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy."
+  ],
+  "cases": []
+}
