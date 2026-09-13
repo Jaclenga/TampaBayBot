@@ -46,6 +46,7 @@
     "source:stage": "node --use-system-ca scripts/source-refresh.mjs stage",
     "source:review": "node scripts/source-refresh.mjs review",
     "source:apply": "node scripts/source-refresh.mjs apply",
+    "source:deploy": "node scripts/source-refresh.mjs deploy",
     "source:rollback": "node scripts/source-refresh.mjs rollback",
     "source:recover": "node scripts/source-refresh.mjs recover"
   },

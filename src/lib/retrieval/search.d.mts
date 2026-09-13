@@ -2,6 +2,7 @@ import type { Source, Chunk } from '../core/answer.mjs';
 import type { QuestionRoute } from '../core/router.mjs';
 export interface RetrievalHit { source: Source; chunk: Chunk; score: number; matches: number; stale: boolean; detailScore: number }
 export function requestedDetailScore(question: string, text: string): number;
+export function requestedDetails(question: string, text?: string): string[];
 export function tokens(text: unknown, expand?: boolean): string[];
 export function isInstructionText(text: unknown): boolean;
 export function isAuthoritative(source: Partial<Source>): boolean;

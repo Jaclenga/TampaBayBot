@@ -90,6 +90,30 @@ test('offline staging verifies preserved raw hashes and does not perform network
   const failed = await stageRefresh(root, { offline: true }); assert.equal(failed.report.failures, 1);
 });
 
+test('offline regeneration cannot relabel an old snapshot using an edited publisher definition', async t => {
+  const { root, source, corpus } = await refreshFixture(t);
+  await writeFile(join(root, 'data/sources.json'), json([{ ...source, canonical_url: 'https://example.gov/another-city', jurisdiction_ids: ['clearwater'] }]));
+  const staged = await stageRefresh(root, { offline: true, fetchImpl: async () => { throw new Error('Offline must not fetch'); } });
+  const candidate = await inspectCandidate(root, staged.directory);
+  assert.equal(staged.report.failures, 1);
+  assert.equal(staged.report.sources[0].error_code, 'offline_configuration_requires_acquisition');
+  assert.equal(candidate.corpus.sources[0].status, 'unavailable');
+  assert.equal(candidate.corpus.sources[0].raw_path, undefined);
+  assert.equal(candidate.corpus.chunks.length, 0);
+  assert.deepEqual(await readCorpus(root), corpus);
+});
+
+test('a refreshed page without a publisher update date does not inherit the prior page date', async t => {
+  const { root, source, corpus } = await refreshFixture(t);
+  const dated = makeCorpus([{ ...source, source_updated_date: '2025-12-01' }], corpus.chunks);
+  await writeFile(join(root, 'data/corpus.json'), json(dated));
+  await writeFile(join(root, 'data/sources.json'), json(dated.sources));
+  const staged = await stageRefresh(root, { fetchImpl: fetchUpdated });
+  const candidate = await inspectCandidate(root, staged.directory);
+  assert.equal(candidate.corpus.sources[0].source_updated_date, null);
+  assert.equal((await readCorpus(root)).sources[0].source_updated_date, '2025-12-01');
+});
+
 test('failed or unselected configuration changes cannot relabel retained evidence into another jurisdiction', async t => {
   for (const unselected of [false, true]) {
     const { root, source, corpus } = await refreshFixture(t);

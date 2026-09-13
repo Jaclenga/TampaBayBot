@@ -1,4 +1,4 @@
-import { tokens, isAuthoritative, sourceIsStale } from '../retrieval/search.mjs';
+import { tokens, isAuthoritative, sourceIsStale, requestedDetailScore } from '../retrieval/search.mjs';
 
 export function safeSourceUrl(candidate, canonical) {
   try {
@@ -16,7 +16,7 @@ export function selectQuote(text, question, maxLength = 720) {
   const sentences = [...text.matchAll(/[^.!?\n]+(?:[.!?](?=\s|$)|$)/g)].map(match => ({ text: match[0].trim(), index: match.index + match[0].indexOf(match[0].trim()) }));
   if (!sentences.length) return text.slice(0, maxLength).trim();
   const scored = sentences.map(sentence => ({ ...sentence, score: tokens(sentence.text).reduce((total, token) => total + (query.has(token) ? 1 : 0), 0) + (/not (?:currently )?accepting|closed|online only|move.in|paused/i.test(sentence.text) ? 1 : 0) }));
-  scored.sort((a, b) => b.score - a.score || a.index - b.index);
+  scored.sort((a, b) => requestedDetailScore(question, b.text) - requestedDetailScore(question, a.text) || b.score - a.score || a.index - b.index);
   const selected = scored[0];
   const next = sentences.find(sentence => sentence.index > selected.index);
   const end = next && next.text.split(/\s+/).length >= 5 && next.index + next.text.length - selected.index <= maxLength ? next.index + next.text.length : selected.index + selected.text.length;

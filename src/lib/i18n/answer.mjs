@@ -1,6 +1,8 @@
 // Translate application-authored navigation only. Quotes, source titles, agencies,
 // URLs and recorded facts remain exact original evidence, never model translations.
 const MESSAGES = new Map([
+  ['I found relevant guidance, but the available source quotations do not establish every amount, fee, time period, or deadline you asked for.', 'Encontré orientación pertinente, pero las citas disponibles no confirman todos los montos, las tarifas, los períodos o las fechas límite que solicitó.'],
+  ['Ask the responsible agency to confirm the missing detail before relying on this resource.', 'Pida a la agencia responsable que confirme el dato que falta antes de confiar en este recurso.'],
   ['I could not determine this reliably from the available public information.', 'No pude determinarlo de forma fiable con la información pública disponible.'],
   ['Enter a question about housing, zoning, permits, development, or an agency you need to find.', 'Escriba una pregunta sobre vivienda, zonificación, permisos, desarrollo o la agencia que necesita encontrar.'],
   ['I can help with Tampa Bay housing resources, zoning, permits, development records, and finding the responsible agency.', 'Puedo ayudarle a encontrar recursos de vivienda, zonificación, permisos, registros de desarrollo y la agencia responsable en Tampa Bay.'],

@@ -393,9 +393,11 @@ export default function PropertyLookup({
                 <div className="independent-note">
                   <strong>{development.title || copy.projectTitle}</strong>
                   <span>{development.authoritativeStatus === "independent public-data project" ? copy.independent : development.authoritativeStatus === "official city GIS records" ? copy.official : development.authoritativeStatus}</span>
-                  <SourceLink url={development.sourceUrl}>
-                    {development.authoritativeStatus === "independent public-data project" ? copy.methodology : copy.sourceDetails}
-                  </SourceLink>
+                  {development.sourceUrl && (
+                    <SourceLink url={development.sourceUrl}>
+                      {development.authoritativeStatus === "independent public-data project" ? copy.methodology : copy.sourceDetails}
+                    </SourceLink>
+                  )}
                 </div>
                 <p>{development.message}</p>
                 {development.status === "potentially_outdated" && (
@@ -404,8 +406,12 @@ export default function PropertyLookup({
                   </p>
                 )}
                 <p className="small muted">
-                  {development.sourceSnapshotDate ? <>{copy.snapshotLabel}: {dateLabel(development.sourceSnapshotDate)} · </> : <>{copy.liveLabel} · </>}
-                  {copy.retrievedLabel}: {dateLabel(development.retrievedAt)}
+                  {development.status === "missing_coverage" ? copy.noDevelopmentQuery : (
+                    <>
+                      {development.sourceSnapshotDate ? <>{copy.snapshotLabel}: {dateLabel(development.sourceSnapshotDate)} · </> : <>{copy.liveLabel} · </>}
+                      {copy.retrievedLabel}: {dateLabel(development.retrievedAt)}
+                    </>
+                  )}
                 </p>
                 {development.warnings.length > 0 && (
                   <details className="data-limits">

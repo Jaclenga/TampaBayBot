@@ -10,6 +10,8 @@ Run `npm ci`, `npm test`, `npm run typecheck`, and `npm run lint`. These source 
 
 In a public source checkout, run `npm run release:manifest` after the final source edit, inspect its changed-file list and diff, then run `npm run release:verify`. Commit the updated manifest with the change. Manifest preparation refuses fetched evidence, populated audit packets and private files; it cannot authorize them by changing hashes. If you acquired sources locally, use the source-only candidate packager described in [distribution](docs/DISTRIBUTION.md), rather than rehashing the populated tree.
 
+Only the portable `docs/ALPHA_VERIFICATION.json` and `docs/TAMPA_BAY_VERIFICATION.json` summaries are included as JSON documentation. Keep deployment receipts and machine-specific reports in ignored local work; rehashing them does not make them source-release content. Record new public verification scope and outcomes in [release readiness](docs/RELEASE_READINESS.md), keeping historical observations dated.
+
 For UI changes, inspect keyboard operation, focus, announcements, narrow-screen reflow and text resizing as well as running [browser checks](docs/ACCESSIBILITY.md). Record checks actually performed. Automation does not replace a screen-reader or independent human audit.
 
 Never commit credentials, local environment files, real resident questions, application documents or personal account data. Use synthetic or public test inputs and inspect generated reports before sharing them. Model setup belongs in [LLM.md](docs/LLM.md); reporting and privacy boundaries belong in [SECURITY.md](SECURITY.md).

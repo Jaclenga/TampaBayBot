@@ -119,20 +119,40 @@ export async function publishCorpus(root, corpus, { expectedGeneration, checkpoi
   return { generation: corpus.generation, previous_generation: previous.generation };
 }
 
-export async function recoverPublication(root) {
-  const lock = await workspacePath(root, 'data/.source-update.lock');
+export async function recoverPublication(root, { checkpoint = async () => {} } = {}) {
+  // Serialize stale-owner inspection and removal. A second recovery must never
+  // unlink a fresh publisher's lock based on the first recovery's stale owner.
+  // Never automatically remove this guard: interrupted recovery requires the
+  // explicit owner inspection documented in SOURCE_UPDATES.md.
+  const guard = await workspacePath(root, 'data/.source-recovery.lock');
+  await mkdir(dirname(guard), { recursive: true });
+  let handle;
+  try { handle = await open(guard, 'wx'); }
+  catch (error) {
+    if (error.code === 'EEXIST') throw new Error('Source recovery is locked. Inspect data/.source-recovery.lock and confirm no recovery process is running before manual cleanup; see docs/SOURCE_UPDATES.md.');
+    throw error;
+  }
   try {
-    const owner = JSON.parse(await readFile(lock, 'utf8'));
-    let alive = true;
-    try { process.kill(owner.pid, 0); } catch (error) { if (error.code === 'ESRCH') alive = false; else throw error; }
-    assert.ok(!alive, 'Refusing recovery while the publication owner is still running');
-    await unlink(lock);
-  } catch (error) { if (error.code !== 'ENOENT') throw error; }
-  return withPublicationLock(root, async () => {
-    const corpus = await readCorpus(root); const preservedMirrors = await preserveMirrorEdits(root, corpus);
-    await synchronizeMirrors(root, corpus);
-    return { status: 'recovered', generation: corpus.generation, preserved_mirrors: preservedMirrors };
-  });
+    await handle.writeFile(json({ pid: process.pid, started_at: new Date().toISOString() })); await handle.sync(); await handle.close();
+    const lock = await workspacePath(root, 'data/.source-update.lock');
+    try {
+      const owner = JSON.parse(await readFile(lock, 'utf8'));
+      let alive = true;
+      try { process.kill(owner.pid, 0); } catch (error) { if (error.code === 'ESRCH') alive = false; else throw error; }
+      assert.ok(!alive, 'Refusing recovery while the publication owner is still running');
+      await checkpoint('stale_owner_confirmed');
+      await unlink(lock);
+    } catch (error) { if (error.code !== 'ENOENT') throw error; }
+    return await withPublicationLock(root, async () => {
+      await checkpoint('publication_locked');
+      const corpus = await readCorpus(root); const preservedMirrors = await preserveMirrorEdits(root, corpus);
+      await synchronizeMirrors(root, corpus);
+      return { status: 'recovered', generation: corpus.generation, preserved_mirrors: preservedMirrors };
+    });
+  } finally {
+    try { await handle.close(); } catch { /* Already closed. */ }
+    await unlink(guard);
+  }
 }
 
 export async function rollbackCorpus(root, generation, expectedGeneration) {

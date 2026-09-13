@@ -9,6 +9,7 @@ export const propertyEn = {
   sourceDetails: 'Source details',
   areaMatch: 'Mapped project area intersects the search radius',
   liveLabel: 'Live query',
+  noDevelopmentQuery: 'No development records were queried for this location.',
   parcelAnalysis: 'Whole-parcel map check',
   parcelScopes: { whole_parcel: 'Full parcel polygon', address_point: 'Address point only; whole parcel not checked' },
   partialCount: 'This count covers returned records only. Additional matches may exist.',

@@ -10,6 +10,9 @@ Renamed the project to TampaBayBot, aligning application branding, package names
 - Retain temporary topic and jurisdiction context for follow-up questions, with a reset control and existing privacy boundaries. Add Spanish housing navigation and interface text while preserving original source quotations.
 - Add Pasco parcel and unincorporated zoning/land-use queries, whole-parcel intersections with explicit point fallback, and Clearwater planning-case queries. St. Petersburg development queries report upstream failures; Pasco development remains an explicit coverage gap.
 - Document contributor manifest updates and strengthen release verification to reject downloaded evidence, populated historical reports, private configuration and unsupported payload paths even when their hashes match.
+- Require matching fresh evidence for explicit factual questions, preserve multiple program restrictions, and handle Spanish application/coverage follow-ups. Missing facts no longer receive a general `answered` response.
+- Retry approved source deployments with verified artifact copies, preserve changed-source provenance and publisher dates honestly, and reject private deployment receipts during manifest preparation.
+- Correct Pasco agency-navigation provenance and prevent cold demo startup from reloading away a successful answer.
 
 Consolidated the application, components, runtime libraries and Worker under `src/`, and moved the Sites build adapter under `scripts/build/`. Added a documented root layout plus canonical package, contribution and maintainer references to the public repository, `Jaclenga/TampaBayBot`.
 

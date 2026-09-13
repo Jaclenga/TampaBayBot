@@ -45,10 +45,16 @@ test('semantic verification rejects correctly hashed downloaded evidence and pri
     ['evaluation/human-audit/responses.json', [{ question: 'resident input sentinel' }], /response packets/],
     ['data/raw/source/page.html', 'external bytes', /Forbidden distribution path/],
     ['.openai/hosting.json', { project_id: 'owner sentinel' }, /Forbidden distribution path/],
+    ['docs/alpha-private-deployment.json', { project_id: 'owner sentinel' }, /Unreviewed documentation artifact/],
+    ['docs/deployment.json', { account_id: 'owner sentinel' }, /Unreviewed documentation artifact/],
+    ['Docs/Deployment.JSON', { account_id: 'owner sentinel' }, /Unreviewed documentation artifact/],
     ['evaluation/results/latest.json', { status: 'passed', benchmark_count: 1 }, /Historical evaluation/],
   ]) await fixture(async root => {
     await forgeEntry(root, name, value);
     await assert.rejects(verifySourceRelease(root), message);
+    const manifestBefore = await readFile(path.join(root, 'SOURCE_RELEASE_MANIFEST.json'), 'utf8');
+    await assert.rejects(updateSourceManifest(root), message);
+    assert.equal(await readFile(path.join(root, 'SOURCE_RELEASE_MANIFEST.json'), 'utf8'), manifestBefore);
   });
 });
 test('source PR command includes added source files and refuses populated registries', async () => {

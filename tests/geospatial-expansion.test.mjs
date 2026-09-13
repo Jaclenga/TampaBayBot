@@ -137,3 +137,48 @@ test('unverified jurisdictions cannot query an official adapter or trust caller-
   assert.equal(result.status, 'unavailable');
   assert.equal(calls, 0);
 });
+
+test('Pasco development navigation retains its own provenance without implying a searched Tampa snapshot', async () => {
+  let calls = 0;
+  const client = createDevelopmentClient({
+    locateJurisdiction: async () => ({ status: 'verified', jurisdictionId: 'pasco', jurisdiction: 'Pasco County', boundaryChecks: [] }),
+    fetcher: async () => { calls++; throw new Error('No development dataset is configured for Pasco.'); },
+  });
+  const result = await client.getNearbyDevelopment(point);
+  assert.equal(result.status, 'missing_coverage');
+  assert.equal(result.sourceId, 'pasco-permits');
+  assert.equal(result.sourceUrl, development.official_fallbacks.pasco.url);
+  assert.equal(result.authoritativeStatus, 'official agency navigation');
+  assert.equal(result.sourceSnapshotDate, null);
+  assert.equal(result.commit, null);
+  assert.equal(result.retrievedAt, null);
+  assert.equal(result.totalMatchesExact, false);
+  assert.match(result.coverage, /Pasco County/);
+  assert.match(result.distanceMethod, /No spatial record query/);
+  assert.doesNotMatch(JSON.stringify(result), /Tampa|Haversine|independent snapshot/);
+  assert.deepEqual(result.records, []);
+  assert.equal(calls, 0);
+});
+
+test('St Petersburg distinguishes one available district from complete service outages', async () => {
+  const sources = development.official_sources.filter(source => source.jurisdiction_id === 'st-petersburg');
+  for (const available of [true, false]) {
+    const calls = [];
+    const client = createDevelopmentClient({
+      locateJurisdiction: async () => ({ status: 'verified', jurisdictionId: 'st-petersburg', jurisdiction: 'City of St. Petersburg', boundaryChecks: [] }),
+      fetcher: async url => {
+        calls.push(url);
+        return available && String(url).startsWith(sources[0].url + '/query?')
+          ? json({ features: [] })
+          : json({ error: { code: 400, message: 'Synthetic upstream outage' } });
+      },
+    });
+    const result = await client.getNearbyDevelopment({ latitude: 27.7732, longitude: -82.6398 });
+    assert.equal(result.status, available ? 'partial' : 'unavailable');
+    assert.equal(result.totalMatchesExact, false);
+    assert.equal(result.services.filter(service => service.status === 'unavailable').length, available ? 2 : 3);
+    assert.deepEqual(result.records, []);
+    assert.equal(calls.length, 3);
+    assert.ok(calls.every(url => sources.some(source => String(url).startsWith(source.url + '/query?'))));
+  }
+});

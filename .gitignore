@@ -45,6 +45,7 @@ next-env.d.ts
 !.env.example
 /data/raw/development/
 /data/generations/
+/data/.source-*.lock
 /playwright-report/
 /test-results/
 *.tsbuildinfo

@@ -46,7 +46,9 @@ export function resolveConversation(question, { conversation, jurisdictionId = '
   const text = intentText(question);
   const placeOnly = JURISDICTIONS.some(area => intentText(area.label) === text || area.id === text) ||
     /^(?:(?:(?:i live|i am|im|vivo|estoy) (?:in|en)|in|en) )?(?:unincorporated )?(?:tampa|(?:st\.?|saint) (?:petersburg|pete)|stpete|clearwater|(?:hillsborough|pinellas|pasco)(?: county)?|county (?:hillsborough|pinellas|pasco))\.?$/.test(text);
-  const followup = /^(?:and |also |what about |does (?:it|that)|is (?:it|that)|can i apply|how (?:do|can) i apply|how much|how long|what (?:documents|requirements)|when (?:can|do)|where (?:do|can)|can it|y |tambien |eso |ese programa|lo cubre|cubre |que documentos|que requisitos)/.test(text);
+  // Match the normalized intent vocabulary: Spanish "cubre eso" is "covers it",
+  // and "ese programa" becomes "that program" before reaching this point.
+  const followup = /^(?:and |also |what about |does (?:it|that)|is (?:it|that)|(?:it|that(?: program)?) covers|covers (?:it|that)|can i apply|how (?:do|can) i apply|how much|how long|what (?:documents|requirements)|what(?:s| is| are) (?:the |el |la )?(?:maximum|minimum|amount|fee|cost|deadline|loan term)|when (?:can|do)|where (?:do|can|apply)|can it|y |tambien |that program|lo covers)/.test(text);
   const implicit = current.subjectCategory === 'navigation' || current.outOfScope;
   const explicitOtherProgram = /\b(?:rmap|hrrp|ship)\b/.test(text);
   const newTopic = !implicit && current.subjectCategory !== context.topic;

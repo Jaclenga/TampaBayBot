@@ -3,7 +3,7 @@ import { relative, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { applyRefresh, inspectCandidate, stageRefresh } from '../src/lib/ingestion/refresh.mjs';
 import { json, readCorpus, recoverPublication, rollbackCorpus, workspacePath, writeAtomic } from '../src/lib/ingestion/generation.mjs';
-import { buildReviewedCandidate, deployReviewedBuild } from './build-source-refresh.mjs';
+import { buildReviewedCandidate, deployAppliedCandidate } from './build-source-refresh.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const [command, ...args] = process.argv.slice(2);
@@ -39,17 +39,16 @@ if (command === 'stage') {
     console.log(`Local review: ${relative(root, filename)}`);
   }
 } else if (command === 'apply') {
-  const receipt = await applyRefresh(root, { directory: values.candidate, approve: values.approve, reviewer: values.reviewer,
+  let receipt = await applyRefresh(root, { directory: values.candidate, approve: values.approve, reviewer: values.reviewer,
     validateAndBuild: candidate => buildReviewedCandidate(root, candidate, { workerName: values['worker-name'] }) });
   if (values.deploy) {
-    const filename = await workspacePath(root, `${values.candidate}/application.json`);
-    try { receipt.deployment = await deployReviewedBuild(root, receipt); }
-    catch { receipt.deployment = { status: 'failed', note: 'The reviewed local corpus was applied. Inspect the operator deployment output and retry deployment or roll back explicitly.' }; process.exitCode = 1; }
-    await writeAtomic(filename, json(receipt));
+    receipt = await deployAppliedCandidate(root, { directory: values.candidate, approve: values.approve });
   }
   console.log(json(receipt));
+} else if (command === 'deploy') {
+  console.log(json(await deployAppliedCandidate(root, { directory: values.candidate, approve: values.approve })));
 } else if (command === 'rollback') {
   console.log(json(await rollbackCorpus(root, values.generation, values['expect-current'])));
 } else if (command === 'recover') {
   console.log(json(await recoverPublication(root)));
-} else throw new Error('Usage: source-refresh.mjs stage|review|apply|rollback|recover [options]. See docs/SOURCE_UPDATES.md.');
+} else throw new Error('Usage: source-refresh.mjs stage|review|apply|deploy|rollback|recover [options]. See docs/SOURCE_UPDATES.md.');

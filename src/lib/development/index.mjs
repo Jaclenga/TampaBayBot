@@ -160,7 +160,16 @@ export function createDevelopmentClient({ fetcher = fetch, settings = config, no
         const official = await getOfficialDevelopment(location, point, radiusMeters);
         if (official) return official;
         const fallback = settings.official_fallbacks?.[location.jurisdictionId];
-        return { ...emptyResult('missing_coverage', 'No development-record adapter is configured for this jurisdiction. Use the responsible agency portal; a missing dataset does not mean no activity exists.'), ...(fallback ? { sourceUrl: fallback.url, title: fallback.title, authoritativeStatus: 'official agency navigation', sourceSnapshotDate: null, commit: null } : {}) };
+        return {
+          ...emptyResult('missing_coverage', 'No development-record adapter is configured for this jurisdiction. Use the responsible agency portal; a missing dataset does not mean no activity exists.'),
+          sourceId: fallback?.source_id ?? '', sourceUrl: fallback?.url ?? '',
+          title: fallback?.title ?? `${location.jurisdiction ?? location.jurisdictionId} development records`,
+          authoritativeStatus: fallback ? 'official agency navigation' : 'no configured dataset',
+          sourceSnapshotDate: null, commit: null, totalMatchesExact: false,
+          distanceMethod: 'No spatial record query was performed.',
+          coverage: `No development-record dataset is configured for ${location.jurisdiction ?? location.jurisdictionId}.`,
+          warnings: ['A missing dataset does not mean no development or permit activity exists.'],
+        };
       }
       if (location.status === 'missing_coverage' || (location.status === 'verified' && location.jurisdictionId !== settings.jurisdiction_id)) {
         return emptyResult('missing_coverage', 'This independent development snapshot covers the City of Tampa only. St. Petersburg, Clearwater and other Tampa Bay locations are not included.');

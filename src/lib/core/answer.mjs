@@ -1,5 +1,5 @@
 import { routeQuestion, normalizeQuestion, intentText } from './router.mjs';
-import { retrieve, isInstructionText, isAuthoritative, requestedDetailScore } from '../retrieval/search.mjs';
+import { retrieve, isInstructionText, isAuthoritative, requestedDetailScore, requestedDetails } from '../retrieval/search.mjs';
 import { makeEvidence, safeSourceUrl, findApplicationConflicts } from '../citations/evidence.mjs';
 import { housingSituation, verificationQuestions } from '../housing/navigation.mjs';
 import { sourceCoversJurisdiction } from '../coverage.mjs';
@@ -61,7 +61,10 @@ function unsupportedResponse(answer, unsupported) {
   return answer;
 }
 
-function selectHits(hits, question, route, sources, chunks) {
+const CLOSED_QUALIFICATION = /\bapplications?\b.{0,45}\b(?:closed|paused)\b|\bnot (?:currently )?accepting\b/i;
+const RESTRICTED_QUALIFICATION = /\bnot eligible\b|\b(?:move[ -]?in|existing leases?|occupied units?|assistance (?:is )?(?:available )?(?:for|to))\b[^.!?\n]{0,70}\bonly\b|\b(?:program|assistance)\b[^.!?\n]{0,40}\blimited to\b/i;
+
+function selectHits(hits, question, route, sources, chunks, now) {
   const ranked = [...hits];
   const text = intentText(question);
   const priority = [];
@@ -157,20 +160,27 @@ function selectHits(hits, question, route, sources, chunks) {
   // from that same source can answer the resident's specific amount/term question.
   // Never substitute a number from an unrelated program or another jurisdiction.
   const primary = selected[0];
-  const detail = primary && hits.filter(hit => hit.source.source_id === primary.source.source_id && hit.detailScore > 0)
-    .sort((a, b) => b.detailScore - a.detailScore || b.score - a.score)[0];
-  if (detail && !selected.some(hit => hit.chunk.id === detail.chunk.id)) selected.splice(1, 0, detail);
-  if (detail) {
-    const closed = /\bapplications?\b.{0,45}\b(?:closed|paused)\b|\bnot (?:currently )?accepting\b/i;
-    const qualifications = chunks.filter(chunk => chunk.source_id === primary.source.source_id && chunk.id !== detail.chunk.id &&
-      !isInstructionText(chunk.text) && (closed.test(chunk.text) || /\bnot eligible\b|\b(?:program|assistance)\b.{0,60}\bonly\b/i.test(chunk.text)))
-      .sort((a, b) => Number(closed.test(b.text)) - Number(closed.test(a.text)));
-    const qualification = qualifications[0];
-    const primaryQualified = closed.test(primary.chunk.text) || /\bnot eligible\b|\b(?:program|assistance)\b.{0,60}\bonly\b/i.test(primary.chunk.text);
-    if (qualification && qualification.id !== primary.chunk.id && (!primaryQualified || closed.test(qualification.text) && !closed.test(primary.chunk.text))) {
-      const existing = selected.findIndex(hit => hit.chunk.id === qualification.id);
-      if (existing >= 0) selected.splice(existing, 1);
-      selected.unshift({ source: primary.source, chunk: qualification, score: primary.score });
+  const fields = requestedDetails(question);
+  if (primary && fields.length) {
+    // Search the chosen program's complete, filtered evidence. A factual row must
+    // not disappear merely because other sources filled the general top-k list.
+    const primaryChunks = chunks.filter(chunk => chunk.source_id === primary.source.source_id);
+    const details = retrieve(question, { sources: [primary.source], chunks: primaryChunks, route, now, limit: primaryChunks.length }).hits
+      .filter(hit => hit.detailScore > 0).sort((a, b) => Number(a.stale) - Number(b.stale) || b.detailScore - a.detailScore || b.score - a.score);
+    for (const field of fields) {
+      const detail = details.find(hit => requestedDetails(question, hit.chunk.text).includes(field));
+      if (detail && !selected.some(hit => hit.chunk.id === detail.chunk.id)) selected.splice(1, 0, detail);
+    }
+    if (details.length) {
+      // Closed applications and a move-in-only restriction can be separate rows;
+      // keep both instead of allowing one caution to replace the other.
+      const qualifications = [CLOSED_QUALIFICATION, RESTRICTED_QUALIFICATION].map(pattern =>
+        primaryChunks.find(chunk => pattern.test(chunk.text) && !isInstructionText(chunk.text))).filter(Boolean);
+      for (const chunk of qualifications.reverse()) {
+        const existing = selected.findIndex(hit => hit.chunk.id === chunk.id);
+        if (existing >= 0) selected.splice(existing, 1);
+        selected.unshift({ source: primary.source, chunk, score: primary.score });
+      }
     }
   }
   return selected;
@@ -211,7 +221,7 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
   }
   const retrieval = retrieve(query, { sources, chunks, route, now: date, limit: 15 });
   if (retrieval.quarantined.length) answer.warnings.push('Some source text was excluded because it contained instructions aimed at an assistant or executable markup.');
-  let selected = selectHits(retrieval.hits, query, route, sources, chunks);
+  let selected = selectHits(retrieval.hits, query, route, sources, chunks, date);
   const additionalPassages = [];
   if (route.subjectCategory === 'housing' && /\b(person|disability|disabled|accommodation|cannot.*online)\b/.test(route.normalized)) additionalPassages.push(['tampa-rmap', /If an individual has a disability that substantially limits/i]);
   if (route.subjectCategory === 'housing' && /\b(homeless|sleep|shelter|nowhere)\b/.test(route.normalized)) additionalPassages.push(['hillsborough-help', /Find your closest Community Resource Center or contact the Call Center/i]);
@@ -304,12 +314,24 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
     answer.nextSteps = [];
     return answer;
   }
+  const fields = requestedDetails(query);
+  const details = answer.evidence.filter(item => item.source_id === main.source_id && !item.stale && requestedDetailScore(query, item.quote) > 0);
+  if (fields.some(field => !details.some(item => requestedDetails(query, item.quote).includes(field)))) {
+    answer.status = 'insufficient_evidence';
+    answer.answer = 'I found relevant guidance, but the available source quotations do not establish every amount, fee, time period, or deadline you asked for.';
+    answer.meaning = 'Ask the responsible agency to confirm the missing detail before relying on this resource.';
+    return answer;
+  }
   answer.status = 'answered';
   answer.answer = `Start with ${main.title}. The source says: “${main.quote}” [${main.id}]`;
-  const detail = answer.evidence.find(item => item.source_id === main.source_id && item.id !== main.id && requestedDetailScore(query, item.quote) > 0 && !item.stale);
-  if (detail) {
-    answer.answer += `\n\nThe same source gives this detail: “${detail.quote}” [${detail.id}]`;
-    answer.requiredEvidenceIds = [main.id, detail.id];
+  if (fields.length) {
+    answer.requiredEvidenceIds = [main.id];
+    const context = answer.evidence.filter(item => item.source_id === main.source_id && item.id !== main.id && !item.stale &&
+      (details.includes(item) || CLOSED_QUALIFICATION.test(item.quote) || RESTRICTED_QUALIFICATION.test(item.quote)));
+    for (const item of context) {
+      answer.answer += `\n\nThe same source gives this detail: “${item.quote}” [${item.id}]`;
+      answer.requiredEvidenceIds.push(item.id);
+    }
   }
   answer.meaning = route.subjectCategory === 'housing'
     ? 'This resource may be relevant to your situation. Use its official application or contact path and check the questions below; this is not an eligibility decision.'

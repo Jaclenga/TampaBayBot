@@ -75,6 +75,7 @@ export async function stageRefresh(root, { output, sourceId, offline = false, fe
     try {
       let bytes; let http = {}; let attempts = 0;
       if (offline) {
+        if (configurationChanged) throw new DownloadError('offline_configuration_requires_acquisition');
         assert.ok(source.raw_path?.startsWith(`data/raw/${source.source_id}/`), 'No preserved raw snapshot');
         bytes = await readFile(await workspacePath(root, source.raw_path));
         assert.ok(bytes.length <= 30 * 1024 * 1024, 'Preserved source exceeds size cap');
@@ -98,7 +99,7 @@ export async function stageRefresh(root, { output, sourceId, offline = false, fe
         const target = await workspacePath(directory, `payload/${name}`); await writeAtomic(target, value);
         payload.push({ path: name, sha256: digest(value), bytes: Buffer.byteLength(value) });
       }
-      Object.assign(source, { ...http, retrieval_date: retrievedAt, source_updated_date: normalized.source_updated_date ?? source.source_updated_date ?? null,
+      Object.assign(source, { ...http, retrieval_date: retrievedAt, source_updated_date: normalized.source_updated_date ?? null,
         content_hash: rawHash, normalized_content_hash: normalizedHash, raw_path: rawPath, normalized_path: normalizedPath,
         status: 'available', last_attempt: attemptedAt, last_error: null });
       if (previous?.normalized_content_hash && previous.normalized_content_hash !== normalizedHash) source.content_changed_at = attemptedAt;

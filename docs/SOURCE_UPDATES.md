@@ -12,6 +12,8 @@ npm run source:stage -- --output work/source-refresh/review-001
 
 The output must be a new directory below `work/source-refresh/`. Add `--source tampa-rmap` to refresh one source, or `--offline` to regenerate from preserved snapshots without network access. A failed source returns a nonzero exit code and retains its previous dated evidence in the candidate with status `unavailable` only when its source definition is unchanged. If configuration changed but acquisition failed or that source was not selected, the candidate withholds old evidence instead of relabeling it into a different jurisdiction, agency or source. Originals remain preserved. The active application remains unchanged.
 
+Offline regeneration requires unchanged publisher configuration. If a URL, jurisdiction, agency, selector or other authored setting changes, acquire the source online before reviewing the new definition. Preserved bytes alone cannot establish that the replacement publisher serves the same evidence. When a newly acquired page has no publisher update date, the candidate records that date as unknown instead of carrying over the previous page's date.
+
 Each download permits at most 30 MiB, read incrementally before allocating the complete body. Missing or incorrect `Content-Length` cannot bypass the cap. HTTPS redirects are bounded and cannot downgrade to HTTP. Each attempt has a 45-second deadline; at most three attempts and 120 seconds are allowed per source. Transient HTTP failures and transport errors use bounded exponential backoff. `Retry-After` seconds and HTTP dates are honored; an excessively long publisher delay stops the source instead of retrying early.
 
 The candidate contains an immutable corpus proposal, content-addressed raw/normalized snapshots, a digest manifest, and `report.json`. The report contains source IDs, status/date/hash changes, configuration field names, added/removed chunk counts and generic failure codes. It contains no downloaded excerpts. Original raw snapshots and earlier normalized files are retained.
@@ -48,6 +50,8 @@ npm run source:recover
 
 Recovery refuses to clear a lock owned by a running process. It restores both compatibility mirrors from the authoritative envelope. Any differing mirror bytes, including un-staged registry edits, are first preserved under ignored `work/source-recovery/`; the returned `preserved_mirrors` path identifies the backup. Rollback also preserves draft mirror edits before replacing the active registry.
 
+A separate `data/.source-recovery.lock` serializes recovery before it inspects a stale publication owner. Normal completion and handled failures remove this recovery guard. If a recovery process is forcibly terminated, the guard deliberately blocks further recovery instead of automatically deleting potentially active ownership. Inspect and preserve the guard's contents, including its PID and start time; confirm through the operating system that no recovery process is still running. Only then manually remove **the recovery guard** and rerun `npm run source:recover`. Do not manually remove a live `data/.source-update.lock` or run simultaneous guard cleanup commands.
+
 To restore a known archived generation, pass both the target and the generation you expect to be active:
 
 ```sh
@@ -58,9 +62,25 @@ Rollback uses the same atomic publication path and retains provenance. It change
 
 ## Deployment handoff
 
-Use the verified `build.config` path from `application.json` with your hosting account's deployment command. Adding `--deploy` to `source:apply` executes an operator-configured command after successful application. Set `TAMPABAYBOT_SOURCE_DEPLOY_ARGV` to a JSON array containing the executable and its arguments. No shell parsing is performed; `{config}`, `{artifact}` and `{generation}` are replaced with the verified build's paths/identity.
+Adding `--deploy` to `source:apply` executes an operator-configured command after successful application. To deploy an already applied candidate, including retrying a failed command, use its original reviewed digest:
 
-For example, configure the Node executable and your installed Wrangler CLI path with arguments `deploy`, `--config`, `{config}`. Supply credentials through your normal operator environment, not through candidate files or repository commits. On Windows, use an executable such as `node.exe` rather than a `.cmd` wrapper. Add `--deploy` only when that command should actually run. A failed deployment is recorded distinctly from local corpus application. A successful command does not establish hosted correctness; complete your authenticated/own-account smoke check as described in [deployment](DEPLOYMENT.md).
+```sh
+npm run source:deploy -- --candidate work/source-refresh/review-001 --approve SHA256_FROM_REVIEW
+```
+
+This command checks the candidate and application receipt, requires that generation to remain active, and recomputes the hash of every compiled server file, public asset and deployment config against the standalone verification receipt. Changed upload bytes, another config path or a later local generation stop deployment before the external command runs. It then copies those verified files into a new ignored `work/source-deploy/` attempt directory, checks the copied bytes again, and runs the deployment command there. Wrangler can write its temporary files beside the copied config without changing the reviewed build. Each attempt has separate working and log directories recorded in `application.json`. The publication lock also prevents local application or rollback while deployment runs. A retry uses a fresh copy of the same build and preserves prior attempt outcomes; it does not acquire or apply evidence again.
+
+Set `TAMPABAYBOT_SOURCE_DEPLOY_ARGV` to a JSON array containing the executable and its arguments. Use absolute executable and script paths because the command runs from its attempt directory. No shell parsing is performed; `{config}` and `{artifact}` name that attempt's verified upload copy, and `{generation}` names the reviewed generation. For a local Wrangler installation, this PowerShell example configures the command without running it:
+
+```powershell
+$env:TAMPABAYBOT_SOURCE_DEPLOY_ARGV = ConvertTo-Json -Compress -InputObject @(
+  (Get-Command node.exe).Source,
+  (Join-Path (Get-Location) 'node_modules/wrangler/bin/wrangler.js'),
+  'deploy', '--config', '{config}'
+)
+```
+
+Supply credentials through your normal operator environment, not through candidate files or repository commits. On Windows, use an executable such as `node.exe` rather than a `.cmd` wrapper. `source:deploy` and `source:apply --deploy` actually run the configured command. A failed deployment is recorded distinctly from local corpus application. If an interruption leaves an attempt marked `running`, inspect the hosting provider before retrying: the remote upload may have completed. A successful command does not establish hosted correctness; complete your authenticated/own-account smoke check as described in [deployment](DEPLOYMENT.md).
 
 ## Scheduled review
 

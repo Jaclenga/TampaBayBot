@@ -1,6 +1,6 @@
 # Release readiness
 
-**As of September 12, 2026: v0.1.0-alpha.4 is a published source-only alpha. Readiness for an unrestricted resident-facing service is not established.**
+**As of September 13, 2026: the public main branch includes the updates below; v0.1.0-alpha.4 remains the historical source-only release tag. Readiness for an unrestricted resident-facing service is not established.**
 
 This is the canonical record of release status, completed verification and remaining review. [Release notes](../CHANGELOG.md) summarize changes; dated bug scans and model reports preserve earlier observations. Documentation changes do not rerun those checks or change the frozen release tag.
 
@@ -9,6 +9,19 @@ This is the canonical record of release status, completed verification and remai
 Current source now includes offline synthetic application/browser tests, mandatory semantic release validation, a contributor manifest command, a fictional demo, staged atomic source updates with scheduled metadata reports, short factual evidence retrieval, temporary follow-up context, Spanish question/navigation support, and expanded GIS adapters. The tagged alpha observations below describe earlier source and are not rerun claims for these changes. [Source updates](SOURCE_UPDATES.md), [demo](DEMO.md), and [live coverage verification](COVERAGE_EXPANSION.md) document their exact scope.
 
 St. Petersburg district-project record queries remain unavailable upstream. Shared operational limits, actual hosted verification, independent human review and manual accessibility work remain open.
+
+### Selected review updates: 1–3 and 6–8
+
+| Review item | Current behavior and regression coverage |
+| --- | --- |
+| 1. Requested facts | Short factual rows remain usable with source context. Explicit amount, fee, duration and deadline questions require matching fresh evidence; missing details return uncertainty. Long excerpts retain the requested fact, and optional providers must preserve the amount and separate application restrictions. See `tests/resident-workflows.test.mjs`. |
+| 2. Offline public checks | `npm test` / `test:source` run original synthetic fixtures without the development corpus. The four Chromium demo checks exercise keyboard citations, mobile layout, temporary clarification context and Spanish. A fresh start must not reload and lose the answer. A missing source manifest fails public CI. |
+| 3. Source updates | Weekly acquisition produces a metadata review report. Exact-digest approval precedes validation, build and atomic local application. `source:deploy` retries an approved build and checks its generation and artifact bytes. Failed downloads, changed source definitions, recovery and rollback have separate regression coverage. Deployment remains an explicit operator action. See [source updates](SOURCE_UPDATES.md). |
+| 6. Follow-ups | Only a bounded topic/program/jurisdiction object remains in page memory. English and Spanish clarification and application/coverage follow-ups preserve the subject; reset, reload and new topics clear context. No prior freeform question text is stored. |
+| 7. Language and region | Spanish question routing and navigation preserve original source quotations. Pasco property and whole-parcel map checks and the Clearwater development adapter remain covered by synthetic GIS tests. Missing Pasco development coverage links to its agency without claiming a live record query or borrowing Tampa snapshot provenance. See [coverage](COVERAGE_EXPANSION.md) for dated live checks and upstream limits. |
+| 8. Contributor workflow | The isolated fictional demo and its labeled screenshot are included. `release:manifest` validates actual empty evidence/report content before updating hashes. Private deployment JSON receipts remain excluded even when their manifest hashes are recomputed. [Contributing](../CONTRIBUTING.md) documents ordinary source pull requests. |
+
+The September 13 offline evaluation passed all **236 cases and 4,370 applicable checks**, including all 77 narrative cases and the 12 exact-claim quality cases; 582 checks were not applicable. The retained corpus was not reacquired. This run checks software regressions against dated evidence, not current publisher truth or resident usefulness. Items 4 (production operations/full hosted verification) and 5 (independent human and screen-reader review) were outside the selected implementation scope and remain listed below.
 
 ## Historical v0.1.0-alpha.4 evaluation and repository organization
 
