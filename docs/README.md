@@ -6,6 +6,9 @@ Start with the [project overview](../README.md) for capabilities, a screenshot a
 
 | Task | Main guide |
 | --- | --- |
+| Try the interface without downloading evidence | [Fictional demo](DEMO.md) |
+| Stage, review and apply source changes | [Source updates](SOURCE_UPDATES.md) |
+| Inspect expanded geographic services and their live verification | [Coverage expansion](COVERAGE_EXPANSION.md) |
 | Understand the source collection and its dates | [Data sources](DATA_SOURCES.md) |
 | Fetch and review evidence for a source-only installation | [Distribution and source setup](DISTRIBUTION.md) |
 | Configure no-model, Ollama or API assistance | [Model configuration](LLM.md) |

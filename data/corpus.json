@@ -1,0 +1,1485 @@
+{
+  "schema_version": 1,
+  "generation": "8cf5c9f9435a07a1491d9832cafc22fef0a44baad0ab2df4ca5bd03cea3c7be9",
+  "sources": [
+    {
+      "source_id": "tampa-rmap",
+      "title": "Rental and Move-In Assistance Program (RMAP)",
+      "agency": "City of Tampa Housing and Community Development",
+      "jurisdiction": "City of Tampa",
+      "canonical_url": "https://www.tampa.gov/housing-and-community-development/rental-move-in-assistance",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Rental and Move-In Assistance Program (RMAP) — official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "City of Tampa",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "The current phase describes new move-in costs only. Do not infer eligibility, application capacity, or funding availability. The displayed income table is labeled 2025.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "rent",
+        "rental",
+        "move in",
+        "deposit",
+        "RMAP",
+        "housing assistance"
+      ],
+      "next_step": {
+        "label": "Review the official RMAP application process",
+        "url": "https://www.tampa.gov/housing-and-community-development/rental-move-in-assistance"
+      },
+      "refresh_days": 7,
+      "topic_id": "rmap",
+      "selector": "article",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "tampa-hrrp",
+      "title": "Apply to the Housing Rehabilitation & Renovation Program (HRRP)",
+      "agency": "City of Tampa Housing and Community Development",
+      "jurisdiction": "City of Tampa",
+      "canonical_url": "https://www.tampa.gov/housing-and-community-development/apply-housing-rehabilitation-renovation-program-hrrp",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Apply to the Housing Rehabilitation & Renovation Program (HRRP) — official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "City of Tampa",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "At retrieval the page says it is not accepting new applications, while projecting a summer 2026 reopening subject to funding. That projection is not evidence of reopening.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "home repair",
+        "rehabilitation",
+        "renovation",
+        "homeowner",
+        "HRRP"
+      ],
+      "next_step": {
+        "label": "Check the official home-repair program status",
+        "url": "https://www.tampa.gov/housing-and-community-development/apply-housing-rehabilitation-renovation-program-hrrp"
+      },
+      "refresh_days": 7,
+      "topic_id": "hrrp",
+      "selector": "article",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "hillsborough-help",
+      "title": "Help Me, Hillsborough",
+      "agency": "Hillsborough County",
+      "jurisdiction": "Hillsborough County",
+      "canonical_url": "https://hcfl.gov/residents/human-services/help-me-hillsborough",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Help Me, Hillsborough — official public information and resident next steps.",
+      "expected_refresh_frequency": "every two weeks",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "Hillsborough County",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "County resource directory; individual programs have different service areas and eligibility.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "county",
+        "rent",
+        "eviction",
+        "homeless",
+        "repair",
+        "assistance",
+        "landlord"
+      ],
+      "next_step": {
+        "label": "Find help through Hillsborough County",
+        "url": "https://hcfl.gov/residents/human-services/help-me-hillsborough"
+      },
+      "refresh_days": 14,
+      "topic_id": "hillsborough-help",
+      "selector": "body",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa",
+        "hillsborough-county"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "florida-housing",
+      "title": "Homebuyers and Renters — Resources",
+      "agency": "Florida Housing Finance Corporation",
+      "jurisdiction": "Florida",
+      "canonical_url": "https://www.floridahousing.org/buyers-renters/buy-or-rent/resources",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Homebuyers and Renters — Resources — official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "Florida",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "State-created public corporation. Eligibility and funding must be confirmed with the relevant program or participating provider.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "buy",
+        "homebuyer",
+        "down payment",
+        "SHIP",
+        "affordable apartment",
+        "rent"
+      ],
+      "next_step": {
+        "label": "Explore Florida Housing buyer and renter resources",
+        "url": "https://www.floridahousing.org/buyers-renters/buy-or-rent/resources"
+      },
+      "refresh_days": 30,
+      "topic_id": "florida-housing",
+      "selector": "body",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa",
+        "st-petersburg",
+        "clearwater",
+        "hillsborough-county",
+        "pinellas-county",
+        "pasco-county",
+        "tampa-bay"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "tampa-zoning",
+      "title": "Zoning Maps",
+      "agency": "City of Tampa Development Coordination",
+      "jurisdiction": "City of Tampa",
+      "canonical_url": "https://www.tampa.gov/development-coordination/zoning/maps",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Zoning Maps — official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "City of Tampa",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "The City advises consulting Chapter 27 and planners before property decisions. Zoning source map is revised monthly; interactive data refreshed daily per this page.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "zoning",
+        "zone",
+        "RM-24",
+        "land use",
+        "parcel",
+        "folio",
+        "code"
+      ],
+      "next_step": {
+        "label": "Look up the official Tampa zoning map",
+        "url": "https://www.tampa.gov/development-coordination/zoning/maps"
+      },
+      "refresh_days": 30,
+      "topic_id": "zoning",
+      "selector": "article",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "tampa-permits",
+      "title": "Residential Permits",
+      "agency": "City of Tampa Construction Services",
+      "jurisdiction": "City of Tampa",
+      "canonical_url": "https://www.tampa.gov/construction-services/residential-permits",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Residential Permits — official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "City of Tampa",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Page distinguishes single-family residences and duplexes from condominium projects requiring a commercial permit. Project-specific requirements require agency confirmation.",
+      "categories": [
+        "permitting",
+        "navigation"
+      ],
+      "keywords": [
+        "permit",
+        "roof",
+        "fence",
+        "remodel",
+        "condo",
+        "condominium",
+        "duplex",
+        "construction"
+      ],
+      "next_step": {
+        "label": "Find the right residential permit category",
+        "url": "https://www.tampa.gov/construction-services/residential-permits"
+      },
+      "refresh_days": 30,
+      "topic_id": "permits",
+      "selector": "article",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "tampa-permit-guide",
+      "title": "Residential New Construction — Permit Application Guide",
+      "agency": "City of Tampa Construction Services",
+      "jurisdiction": "City of Tampa",
+      "canonical_url": "https://www.tampa.gov/sites/default/files/document/2026/permit-application-guide-residential-new-construction_ada.pdf",
+      "source_type": "pdf",
+      "authoritative_status": "first-party",
+      "description": "Residential New Construction — Permit Application Guide — official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-pdf-text-per-page",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "City of Tampa",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "PDF page locators use physical PDF page numbers, beginning at 1. The guide does not establish project approval.",
+      "categories": [
+        "permitting",
+        "navigation"
+      ],
+      "keywords": [
+        "permit",
+        "new construction",
+        "application",
+        "building",
+        "documents",
+        "Accela"
+      ],
+      "next_step": {
+        "label": "Read the official new-construction application guide",
+        "url": "https://www.tampa.gov/sites/default/files/document/2026/permit-application-guide-residential-new-construction_ada.pdf"
+      },
+      "refresh_days": 30,
+      "topic_id": "permit-guide",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "tampa-development-contact",
+      "title": "Contact Us — Development Coordination",
+      "agency": "City of Tampa Development Coordination",
+      "jurisdiction": "City of Tampa",
+      "canonical_url": "https://www.tampa.gov/development-coordination/contact-us",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Contact Us — Development Coordination — official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "City of Tampa",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Contact directory should be checked directly if information differs from another City page.",
+      "categories": [
+        "navigation",
+        "zoning",
+        "permitting",
+        "development"
+      ],
+      "keywords": [
+        "contact",
+        "who",
+        "phone",
+        "planner",
+        "variance",
+        "rezoning",
+        "addressing",
+        "construction"
+      ],
+      "next_step": {
+        "label": "Contact Tampa Development Coordination",
+        "url": "https://www.tampa.gov/development-coordination/contact-us"
+      },
+      "refresh_days": 30,
+      "topic_id": "development-contact",
+      "selector": "article",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "plan-hillsborough-maps",
+      "title": "GIS Maps & Data Files",
+      "agency": "Plan Hillsborough / Hillsborough County City-County Planning Commission",
+      "jurisdiction": "Hillsborough County and municipalities",
+      "canonical_url": "https://planhillsborough.org/gis-maps-data-files/",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "GIS Maps & Data Files — official public information and resident next steps.",
+      "source_data_updated_date": "2026-09-01",
+      "expected_refresh_frequency": "quarterly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "The page's disclaimer requires confirmation with official records, limits map use to planning, and states map sheets may not be reproduced for sale without specific approval. No general dataset redistribution license verified; linked map files and media are not redistributed by this narrative snapshot.",
+      "geographic_coverage": "Hillsborough County and municipalities",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Source explicitly says quarterly maps should be verified with agency planners for a specific parcel. Adopted maps must not be confused with draft plan updates.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "future land use",
+        "FLU",
+        "comprehensive plan",
+        "adopted map",
+        "planning",
+        "maps"
+      ],
+      "next_step": {
+        "label": "View adopted future land-use maps",
+        "url": "https://planhillsborough.org/gis-maps-data-files/"
+      },
+      "refresh_days": 90,
+      "topic_id": "plan-hillsborough-maps",
+      "selector": ".entry-content",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa",
+        "hillsborough-county"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "tampa-housing",
+      "title": "Housing and Community Development",
+      "agency": "City of Tampa Housing and Community Development",
+      "jurisdiction": "City of Tampa",
+      "canonical_url": "https://www.tampa.gov/housing-and-community-development",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Housing and Community Development — official public information and resident next steps.",
+      "expected_refresh_frequency": "every two weeks",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general dataset redistribution license verified; source terms remain applicable. Government HTML/PDF text snapshots preserved for evidence; linked media are not downloaded.",
+      "geographic_coverage": "City of Tampa",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Department navigation, housing information line and program links. Program status is time-sensitive; follow the program-specific page.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "housing",
+        "landlord",
+        "tenant",
+        "lease",
+        "legal",
+        "help",
+        "assistance",
+        "DARE"
+      ],
+      "next_step": {
+        "label": "Contact Tampa housing services and explore programs",
+        "url": "https://www.tampa.gov/housing-and-community-development"
+      },
+      "refresh_days": 14,
+      "topic_id": "housing",
+      "selector": "article",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "tampa-gis",
+      "title": "City of Tampa GIS: address, parcels, zoning and boundary",
+      "agency": "City of Tampa GIS (parcel data credited to Hillsborough County Property Appraiser)",
+      "jurisdiction": "City of Tampa; county-wide locator/parcels as identified by each layer",
+      "canonical_url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0",
+      "fetch_url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0?f=pjson",
+      "source_type": "arcgis",
+      "authoritative_status": "first-party",
+      "description": "Official queryable GIS services for address candidates, parcels, municipal boundary and zoning; each result retains its exact endpoint and layer.",
+      "expected_refresh_frequency": "daily",
+      "ingestion_method": "http-fetch-arcgis-metadata; live feature query",
+      "license_or_terms_status": "Public ArcGIS endpoint; consult service copyrightText and City GIS disclaimer. No blanket license inferred.",
+      "geographic_coverage": "Layer-specific: City of Tampa zoning/boundary and broader address/parcel coverage.",
+      "temporal_coverage": "Current service metadata at retrieval; individual features may have their own update dates.",
+      "notes": "A Tampa mailing address does not establish City jurisdiction. Resolve candidates and boundary before zoning. Spatial matches are informational, not an official determination.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "parcel",
+        "address",
+        "zoning",
+        "folio",
+        "boundary",
+        "GIS"
+      ],
+      "next_step": {
+        "label": "Inspect official parcel service metadata",
+        "url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0"
+      },
+      "refresh_days": 1,
+      "layer": "Parcels/TaxParcel/FeatureServer/0",
+      "related_endpoints": [
+        {
+          "role": "geocoder",
+          "url": "https://arcgis.tampagov.net/arcgis/rest/services/Locators/SiteAddressLocator/GeocodeServer"
+        },
+        {
+          "role": "parcels",
+          "url": "https://arcgis.tampagov.net/arcgis/rest/services/Parcels/TaxParcel/FeatureServer/0"
+        },
+        {
+          "role": "zoning",
+          "url": "https://arcgis.tampagov.net/arcgis/rest/services/OpenData/Planning/MapServer/28"
+        },
+        {
+          "role": "boundary",
+          "url": "https://arcgis.tampagov.net/arcgis/rest/services/AdministrativeArea/TampaBoundary/FeatureServer/0"
+        }
+      ],
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "planhillsborough-flu",
+      "title": "Tampa Future Land Use — official GIS layer",
+      "agency": "Plan Hillsborough / Hillsborough County City-County Planning Commission",
+      "jurisdiction": "City of Tampa",
+      "canonical_url": "https://gis.tpcmaps.org/arcgis/rest/services/LandUse/FutureLU_TA/MapServer/0",
+      "fetch_url": "https://gis.tpcmaps.org/arcgis/rest/services/LandUse/FutureLU_TA/MapServer/0?f=pjson",
+      "source_type": "arcgis",
+      "authoritative_status": "first-party",
+      "description": "Official Tampa future land-use GIS layer; preserve FLUE, FLU_DESC and jurisdiction in observed results.",
+      "expected_refresh_frequency": "quarterly",
+      "ingestion_method": "http-fetch-arcgis-metadata; live feature query",
+      "license_or_terms_status": "Public ArcGIS endpoint; Plan Hillsborough GIS disclaimer and service copyright apply. No blanket license inferred.",
+      "geographic_coverage": "City of Tampa",
+      "temporal_coverage": "Service metadata at retrieval; quarterly updates stated by provider.",
+      "notes": "A future land-use designation is different from zoning and does not establish permission for a project. Check recent amendments with planners.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "future land use",
+        "FLU",
+        "FLUE",
+        "planning",
+        "comprehensive plan"
+      ],
+      "next_step": {
+        "label": "Verify land-use maps with Plan Hillsborough",
+        "url": "https://planhillsborough.org/gis-maps-data-files/"
+      },
+      "refresh_days": 90,
+      "layer": "LandUse/FutureLU_TA/MapServer/0",
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "tampa-development-records",
+      "title": "Tampa Development Records — normalized development activity",
+      "agency": "Tampa Development Records (independent public-data project)",
+      "jurisdiction": "Tampa-area coverage of the selected City development layers",
+      "canonical_url": "https://github.com/Jaclenga/Tampa-Development-Records",
+      "fetch_url": "https://raw.githubusercontent.com/Jaclenga/Tampa-Development-Records/b1ac7fc705fe667ff046be11f76dcb8aa3b3d872/data/processed/tampa_development_activity.csv",
+      "source_type": "csv",
+      "authoritative_status": "independent",
+      "description": "Independent normalization of observed public development records, used for nearby activity and temporal context.",
+      "expected_refresh_frequency": "weekly check for newer upstream snapshot",
+      "ingestion_method": "live-query-only",
+      "license_or_terms_status": "Independent repository terms and underlying City record terms are separate from TampaBayBot software licensing; consult upstream LICENSE/NOTICE.",
+      "geographic_coverage": "Coverage of eight selected City development activity layers; not all permits or projects.",
+      "temporal_coverage": "Core normalized CSV snapshot 2026-08-23; pinned repository commit b1ac7fc705fe667ff046be11f76dcb8aa3b3d872.",
+      "notes": "Record activity does not establish construction, completion, zoning permission or approval. Original source_url/source_endpoint retained where available. The geospatial ingestion script owns the normalized observation snapshot.",
+      "categories": [
+        "development"
+      ],
+      "keywords": [
+        "development",
+        "nearby",
+        "construction",
+        "record",
+        "recent",
+        "activity"
+      ],
+      "next_step": {
+        "label": "Inspect Tampa Development Records methodology and original records",
+        "url": "https://github.com/Jaclenga/Tampa-Development-Records"
+      },
+      "refresh_days": 7,
+      "status": "unavailable",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "st-petersburg-renters",
+      "title": "St. Pete Guide for Renters",
+      "agency": "City of St. Petersburg",
+      "jurisdiction": "City of St. Petersburg",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "canonical_url": "https://www.stpete.org/residents/housing/guide_for_renters.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "St. Pete Guide for Renters: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "City of St. Petersburg",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "City renter and eviction resource navigation. This guide is not a promise of rental funding, legal advice, vacancy or program eligibility.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "rent",
+        "renter",
+        "eviction",
+        "tenant",
+        "rental assistance",
+        "housing",
+        "homeless"
+      ],
+      "next_step": {
+        "label": "Review St. Pete Guide for Renters",
+        "url": "https://www.stpete.org/residents/housing/guide_for_renters.php"
+      },
+      "refresh_days": 7,
+      "topic_id": "st-petersburg-renters",
+      "selector": "#post",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "st-petersburg-rehab",
+      "title": "Housing Rehabilitation Assistance Program",
+      "agency": "City of St. Petersburg",
+      "jurisdiction": "City of St. Petersburg",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "canonical_url": "https://www.stpete.org/residents/housing/homeowners/housing_rehabilitation_assistance_program.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Housing Rehabilitation Assistance Program: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "City of St. Petersburg",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Home repair assistance is limited to qualified owner-occupants within City municipal boundaries. Income rules distinguish the CRA from other City areas; confirm funding, property and household requirements with staff.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "repair",
+        "homeowner",
+        "rehabilitation",
+        "roof",
+        "accessibility",
+        "home repair"
+      ],
+      "next_step": {
+        "label": "Review Housing Rehabilitation Assistance Program",
+        "url": "https://www.stpete.org/residents/housing/homeowners/housing_rehabilitation_assistance_program.php"
+      },
+      "refresh_days": 7,
+      "topic_id": "st-petersburg-rehab",
+      "selector": "#post",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "st-petersburg-zoning",
+      "title": "St. Petersburg Zoning Resources and Map",
+      "agency": "City of St. Petersburg",
+      "jurisdiction": "City of St. Petersburg",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "canonical_url": "https://www.stpete.org/business/planning___zoning/zoning.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "St. Petersburg Zoning Resources and Map: official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "City of St. Petersburg",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Chapter 16 and map navigation. Linked code sections, matrices and attachments are not ingested as full regulatory text. A mapped designation does not establish permission for a project.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "zoning",
+        "land use",
+        "district",
+        "parcel",
+        "code",
+        "planning",
+        "ADU"
+      ],
+      "next_step": {
+        "label": "Review St. Petersburg Zoning Resources and Map",
+        "url": "https://www.stpete.org/business/planning___zoning/zoning.php"
+      },
+      "refresh_days": 30,
+      "topic_id": "st-petersburg-zoning",
+      "selector": "#post",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "st-petersburg-permits",
+      "title": "St. Petersburg Building Permits",
+      "agency": "City of St. Petersburg",
+      "jurisdiction": "City of St. Petersburg",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "canonical_url": "https://www.stpete.org/business/building_permitting/building_permits.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "St. Petersburg Building Permits: official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "City of St. Petersburg",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "City permit application and repair guidance. Exemptions have scope and flood-hazard conditions; do not infer that a project is exempt or approved. The page includes differing office-hour statements; confirm current hours with staff.",
+      "categories": [
+        "permitting",
+        "navigation"
+      ],
+      "keywords": [
+        "permit",
+        "building",
+        "construction",
+        "renovation",
+        "inspection",
+        "repair"
+      ],
+      "next_step": {
+        "label": "Review St. Petersburg Building Permits",
+        "url": "https://www.stpete.org/business/building_permitting/building_permits.php"
+      },
+      "refresh_days": 30,
+      "topic_id": "st-petersburg-permits",
+      "selector": "#post",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "clearwater-housing",
+      "title": "Clearwater Affordable Housing Options",
+      "agency": "City of Clearwater",
+      "jurisdiction": "City of Clearwater",
+      "jurisdiction_ids": [
+        "clearwater"
+      ],
+      "canonical_url": "https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Affordable-Housing-Options",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Clearwater Affordable Housing Options: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "City of Clearwater",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "City housing navigation includes county and partner referrals with separate service areas and eligibility. A listing is not evidence of an open voucher waitlist or available apartment.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "rent",
+        "renter",
+        "housing assistance",
+        "homeless",
+        "eviction",
+        "affordable housing"
+      ],
+      "next_step": {
+        "label": "Review Clearwater Affordable Housing Options",
+        "url": "https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Affordable-Housing-Options"
+      },
+      "refresh_days": 7,
+      "topic_id": "clearwater-housing",
+      "selector": "#main-content",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "clearwater-rehab",
+      "title": "Clearwater Home Preservation Program",
+      "agency": "City of Clearwater",
+      "jurisdiction": "City of Clearwater",
+      "jurisdiction_ids": [
+        "clearwater"
+      ],
+      "canonical_url": "https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Apply-to-the-Home-Preservation-Program",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Clearwater Home Preservation Program: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "City of Clearwater",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "At retrieval the page accepts applications but says they will not advance until funding is available. Property must be within incorporated Clearwater limits; a Clearwater postal address elsewhere in Pinellas County is insufficient. Owner-occupancy and other requirements apply.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "home repair",
+        "homeowner",
+        "rehabilitation",
+        "roof",
+        "accessibility",
+        "preservation"
+      ],
+      "next_step": {
+        "label": "Review Clearwater Home Preservation Program",
+        "url": "https://www.myclearwater.com/My-Neighborhood-and-Community-Programs/Programs-and-Services-Available-for-Residents/Apply-to-the-Home-Preservation-Program"
+      },
+      "refresh_days": 7,
+      "topic_id": "clearwater-rehab",
+      "selector": "#main-content",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "clearwater-zoning",
+      "title": "Clearwater Planning and Zoning Approvals",
+      "agency": "City of Clearwater",
+      "jurisdiction": "City of Clearwater",
+      "jurisdiction_ids": [
+        "clearwater"
+      ],
+      "canonical_url": "https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Clearwater Planning and Zoning Approvals: official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "City of Clearwater",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Official City planning, code and map navigation. Full Community Development Code and linked application forms are not ingested; zoning designation or application does not establish project approval.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "zoning",
+        "land use",
+        "district",
+        "parcel",
+        "code",
+        "planning",
+        "annexation"
+      ],
+      "next_step": {
+        "label": "Review Clearwater Planning and Zoning Approvals",
+        "url": "https://www.myclearwater.com/Business-Development/Planning-and-Zoning-Approvals"
+      },
+      "refresh_days": 30,
+      "topic_id": "clearwater-zoning",
+      "selector": "#main-content",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "clearwater-permits",
+      "title": "Clearwater Construction Permit Applications",
+      "agency": "City of Clearwater",
+      "jurisdiction": "City of Clearwater",
+      "jurisdiction_ids": [
+        "clearwater"
+      ],
+      "canonical_url": "https://www.myclearwater.com/Business-Development/Permitting/02-Get-A-Building-Permit-Apply-Online/Apply-for-Construction-Permits",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Clearwater Construction Permit Applications: official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "City of Clearwater",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Steps for Clearwater Accela construction permit applications. Portal registration and application submission do not establish permit approval. Direct resident documents to the official portal, not this app.",
+      "categories": [
+        "permitting",
+        "navigation"
+      ],
+      "keywords": [
+        "permit",
+        "construction",
+        "building",
+        "application",
+        "Accela",
+        "inspection"
+      ],
+      "next_step": {
+        "label": "Review Clearwater Construction Permit Applications",
+        "url": "https://www.myclearwater.com/Business-Development/Permitting/02-Get-A-Building-Permit-Apply-Online/Apply-for-Construction-Permits"
+      },
+      "refresh_days": 30,
+      "topic_id": "clearwater-permits",
+      "selector": "#main-content",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pinellas-housing-directory",
+      "title": "Pinellas County Affordable Housing Directory",
+      "agency": "Pinellas County",
+      "jurisdiction": "Pinellas County",
+      "jurisdiction_ids": [
+        "pinellas-county",
+        "st-petersburg",
+        "clearwater"
+      ],
+      "canonical_url": "https://pinellas.gov/affordable-housing-directory/",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Pinellas County Affordable Housing Directory: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Pinellas County directory/service; individual program coverage must be checked",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "Countywide directory only: St. Petersburg, Clearwater and Largo have separate housing offices for specified programs. County homeownership assistance is not presumed available in those cities; verify each listed provider and program.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "housing",
+        "rental",
+        "rent",
+        "homebuyer",
+        "assistance",
+        "apartment",
+        "housing authority"
+      ],
+      "next_step": {
+        "label": "Review Pinellas County Affordable Housing Directory",
+        "url": "https://pinellas.gov/affordable-housing-directory/"
+      },
+      "refresh_days": 7,
+      "topic_id": "pinellas-housing-directory",
+      "selector": "#section-content",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pinellas-family-housing",
+      "title": "Pinellas County Family Housing Assistance Program",
+      "agency": "Pinellas County Human Services",
+      "jurisdiction": "Pinellas County",
+      "jurisdiction_ids": [
+        "pinellas-county",
+        "st-petersburg",
+        "clearwater"
+      ],
+      "canonical_url": "https://pinellas.gov/programs/family-housing-assistance-program/",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Pinellas County Family Housing Assistance Program: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Pinellas County directory/service; individual program coverage must be checked",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "FHAP serves eligible Pinellas County families experiencing homelessness referred by the County Coordinated Entry System. Program navigation does not establish eligibility, referral acceptance, funding or an available placement.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "housing assistance",
+        "homeless",
+        "family",
+        "rent",
+        "deposit",
+        "rental",
+        "FHAP"
+      ],
+      "next_step": {
+        "label": "Review Pinellas County Family Housing Assistance Program",
+        "url": "https://pinellas.gov/programs/family-housing-assistance-program/"
+      },
+      "refresh_days": 7,
+      "topic_id": "pinellas-family-housing",
+      "selector": "#section-content",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pinellas-permits",
+      "title": "Applying for a Pinellas County Building Permit",
+      "agency": "Pinellas County Building and Development Review Services",
+      "jurisdiction": "Pinellas County",
+      "jurisdiction_ids": [
+        "pinellas-county"
+      ],
+      "canonical_url": "https://pinellas.gov/applying-for-a-building-permit/",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Applying for a Pinellas County Building Permit: official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Unincorporated Pinellas County plus Belleair Beach, Belleair Shore, Indian Rocks Beach, Kenneth City, Oldsmar and Safety Harbor; excludes City permitting in St. Petersburg and Clearwater.",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "The Do we serve your area? section names unincorporated Pinellas and six contract cities. A later FAQ inconsistently directs unincorporated applicants toward municipal departments. Preserve the conflict and confirm authority with staff; do not apply County permitting rules to St. Petersburg or Clearwater.",
+      "categories": [
+        "permitting",
+        "navigation"
+      ],
+      "keywords": [
+        "permit",
+        "building",
+        "construction",
+        "inspection",
+        "application"
+      ],
+      "next_step": {
+        "label": "Review Applying for a Pinellas County Building Permit",
+        "url": "https://pinellas.gov/applying-for-a-building-permit/"
+      },
+      "refresh_days": 30,
+      "topic_id": "pinellas-permits",
+      "selector": "#section-content",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pasco-housing",
+      "title": "Pasco County Community Development",
+      "agency": "Pasco County Community Development",
+      "jurisdiction": "Pasco County",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "canonical_url": "https://www.pascocountyfl.gov/services/community_development/index.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Pasco County Community Development: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Pasco County; individual program and municipal authority limits apply",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "County housing, rehabilitation and homelessness program navigation. Individual programs have separate requirements and funding; a listed program is not evidence that an application is accepted or approved.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "housing",
+        "homebuyer",
+        "assistance",
+        "homeless",
+        "repair",
+        "homeowner"
+      ],
+      "next_step": {
+        "label": "Review Pasco County Community Development",
+        "url": "https://www.pascocountyfl.gov/services/community_development/index.php"
+      },
+      "refresh_days": 7,
+      "topic_id": "pasco-housing",
+      "selector": "#freeform-main",
+      "paragraph_container_selector": "#freeform-main .col-md-12",
+      "heading_selector": "#freeform-main .col-md-12 > .subheader",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pasco-rehab",
+      "title": "Pasco County Owner Occupied Rehabilitation",
+      "agency": "Pasco County Community Development",
+      "jurisdiction": "Pasco County",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "canonical_url": "https://www.pascocountyfl.gov/services/community_development/programs/owner_occupied_rehab.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Pasco County Owner Occupied Rehabilitation: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Pasco County; individual program and municipal authority limits apply",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "The source explicitly covers all Pasco County including its six cities. Owner-occupancy, home value, length of ownership and other restrictions apply. Income table is labeled May 2026. Assistance is a conditional loan, not an unconditional grant.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "home repair",
+        "rehabilitation",
+        "homeowner",
+        "roof",
+        "accessibility",
+        "PascoFix"
+      ],
+      "next_step": {
+        "label": "Review Pasco County Owner Occupied Rehabilitation",
+        "url": "https://www.pascocountyfl.gov/services/community_development/programs/owner_occupied_rehab.php"
+      },
+      "refresh_days": 7,
+      "topic_id": "pasco-rehab",
+      "selector": "#freeform-main",
+      "paragraph_container_selector": "#freeform-main .col-md-12",
+      "heading_selector": "#freeform-main .col-md-12 > .subheader",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pasco-help",
+      "title": "Pasco County Human Services",
+      "agency": "Pasco County Human Services",
+      "jurisdiction": "Pasco County",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "canonical_url": "https://www.pascocountyfl.gov/services/human_services/index.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Pasco County Human Services: official public information and resident next steps.",
+      "expected_refresh_frequency": "weekly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Pasco County; individual program and municipal authority limits apply",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "County case-management and utility-assistance navigation. This page does not establish a rental-assistance program. Individual core programs have separate conditions; do not infer eligibility or current funding.",
+      "categories": [
+        "housing",
+        "navigation"
+      ],
+      "keywords": [
+        "utility",
+        "assistance",
+        "financial",
+        "case management",
+        "resource center"
+      ],
+      "next_step": {
+        "label": "Review Pasco County Human Services",
+        "url": "https://www.pascocountyfl.gov/services/human_services/index.php"
+      },
+      "refresh_days": 7,
+      "topic_id": "pasco-help",
+      "selector": "#freeform-main",
+      "paragraph_container_selector": "#freeform-main .col-md-12",
+      "heading_selector": "#freeform-main .col-md-12 > .subheader",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pasco-zoning",
+      "title": "Pasco County Planning and Development",
+      "agency": "Pasco County Planning and Development",
+      "jurisdiction": "Pasco County",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "canonical_url": "https://www.pascocountyfl.gov/services/planning_and_development/index.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Pasco County Planning and Development: official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Pasco County; individual program and municipal authority limits apply",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "County planning and zoning navigation; incorporated municipalities may exercise separate authority. Pasco 2050 draft/update scheduling is not evidence of adoption. Confirm applicable jurisdiction and current adopted rules with planners.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "zoning",
+        "planning",
+        "land use",
+        "comprehensive plan",
+        "code",
+        "development"
+      ],
+      "next_step": {
+        "label": "Review Pasco County Planning and Development",
+        "url": "https://www.pascocountyfl.gov/services/planning_and_development/index.php"
+      },
+      "refresh_days": 30,
+      "topic_id": "pasco-zoning",
+      "selector": "#freeform-main",
+      "paragraph_container_selector": "#freeform-main .col-md-12",
+      "heading_selector": "#freeform-main .col-md-12 > .subheader",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pasco-permits",
+      "title": "Pasco County Building Construction",
+      "agency": "Pasco County Building Construction Services",
+      "jurisdiction": "Pasco County",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "canonical_url": "https://www.pascocountyfl.gov/services/building_construction/index.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Pasco County Building Construction: official public information and resident next steps.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Pasco County; individual program and municipal authority limits apply",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "County building permit navigation. Confirm whether the County or a municipality is the permitting authority before applying. Filing requirements and fee notices do not establish an approval or exemption.",
+      "categories": [
+        "permitting",
+        "navigation"
+      ],
+      "keywords": [
+        "permit",
+        "building",
+        "construction",
+        "inspection",
+        "application",
+        "PascoGateway"
+      ],
+      "next_step": {
+        "label": "Review Pasco County Building Construction",
+        "url": "https://www.pascocountyfl.gov/services/building_construction/index.php"
+      },
+      "refresh_days": 30,
+      "topic_id": "pasco-permits",
+      "selector": "#freeform-main",
+      "paragraph_container_selector": "#freeform-main .col-md-12",
+      "heading_selector": "#freeform-main .col-md-12 > .subheader",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pinellas-gis",
+      "title": "Pinellas County GIS: address, parcels and municipal boundaries",
+      "agency": "Pinellas County GIS",
+      "jurisdiction": "Pinellas County",
+      "jurisdiction_ids": [
+        "pinellas-county",
+        "st-petersburg",
+        "clearwater"
+      ],
+      "canonical_url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Parcels/MapServer/1",
+      "fetch_url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Parcels/MapServer/1?f=pjson",
+      "source_type": "arcgis",
+      "authoritative_status": "first-party",
+      "description": "Official GIS service metadata; each live result retains its exact endpoint, layer, object identifier and retrieval time.",
+      "expected_refresh_frequency": "daily metadata check",
+      "ingestion_method": "http-fetch-arcgis-metadata; live feature query",
+      "license_or_terms_status": "Public ArcGIS endpoint. Service copyrightText and agency GIS terms apply; no blanket redistribution license inferred.",
+      "geographic_coverage": "Pinellas County address/parcel service; boundary tests configured for St. Petersburg and Clearwater",
+      "temporal_coverage": "Service metadata at retrieval; live feature updates may have separate dates.",
+      "notes": "Postal city names do not establish municipal jurisdiction. Confirm the municipal boundary before using city zoning. A point intersection is informational and does not determine every designation on a parcel or project approval.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "parcel",
+        "address",
+        "zoning",
+        "land use",
+        "boundary",
+        "GIS"
+      ],
+      "next_step": {
+        "label": "Inspect Pinellas County GIS: address, parcels and municipal boundaries",
+        "url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Parcels/MapServer/1"
+      },
+      "refresh_days": 1,
+      "layer": "PublicWebGIS/Parcels/MapServer/1",
+      "related_endpoints": [
+        {
+          "role": "geocoder",
+          "url": "https://egis.pinellas.gov/gis/rest/services/GeocodingPro/eGISComposite_Pro/GeocodeServer"
+        },
+        {
+          "role": "parcels",
+          "url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Parcels/MapServer/1"
+        },
+        {
+          "role": "st-petersburg-boundary",
+          "url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/22"
+        },
+        {
+          "role": "clearwater-boundary",
+          "url": "https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/5"
+        }
+      ],
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "st-petersburg-gis",
+      "title": "St. Petersburg GIS zoning and future land use",
+      "agency": "City of St. Petersburg GIS",
+      "jurisdiction": "City of St. Petersburg",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "canonical_url": "https://egis.stpete.org/arcgis/rest/services/ServicesDOTS/Zoning/MapServer/0",
+      "fetch_url": "https://egis.stpete.org/arcgis/rest/services/ServicesDOTS/Zoning/MapServer/0?f=pjson",
+      "source_type": "arcgis",
+      "authoritative_status": "first-party",
+      "description": "Official GIS service metadata; each live result retains its exact endpoint, layer, object identifier and retrieval time.",
+      "expected_refresh_frequency": "daily metadata check",
+      "ingestion_method": "http-fetch-arcgis-metadata; live feature query",
+      "license_or_terms_status": "Public ArcGIS endpoint. Service copyrightText and agency GIS terms apply; no blanket redistribution license inferred.",
+      "geographic_coverage": "City of St. Petersburg",
+      "temporal_coverage": "Service metadata at retrieval; live feature updates may have separate dates.",
+      "notes": "Postal city names do not establish municipal jurisdiction. Confirm the municipal boundary before using city zoning. A point intersection is informational and does not determine every designation on a parcel or project approval.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "parcel",
+        "address",
+        "zoning",
+        "land use",
+        "boundary",
+        "GIS"
+      ],
+      "next_step": {
+        "label": "Inspect St. Petersburg GIS zoning and future land use",
+        "url": "https://egis.stpete.org/arcgis/rest/services/ServicesDOTS/Zoning/MapServer/0"
+      },
+      "refresh_days": 1,
+      "layer": "ServicesDOTS/Zoning/MapServer/0",
+      "related_endpoints": [
+        {
+          "role": "zoning",
+          "url": "https://egis.stpete.org/arcgis/rest/services/ServicesDOTS/Zoning/MapServer/0"
+        },
+        {
+          "role": "future-land-use",
+          "url": "https://egis.stpete.org/arcgis/rest/services/ServicesDOTS/Zoning/MapServer/2"
+        }
+      ],
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "clearwater-gis",
+      "title": "Clearwater GIS zoning and future land use",
+      "agency": "City of Clearwater GIS",
+      "jurisdiction": "City of Clearwater",
+      "jurisdiction_ids": [
+        "clearwater"
+      ],
+      "canonical_url": "https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/Zoning_WGS84/MapServer/1",
+      "fetch_url": "https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/Zoning_WGS84/MapServer/1?f=pjson",
+      "source_type": "arcgis",
+      "authoritative_status": "first-party",
+      "description": "Official GIS service metadata; each live result retains its exact endpoint, layer, object identifier and retrieval time.",
+      "expected_refresh_frequency": "daily metadata check",
+      "ingestion_method": "http-fetch-arcgis-metadata; live feature query",
+      "license_or_terms_status": "Public ArcGIS endpoint. Service copyrightText and agency GIS terms apply; no blanket redistribution license inferred.",
+      "geographic_coverage": "City of Clearwater",
+      "temporal_coverage": "Service metadata at retrieval; live feature updates may have separate dates.",
+      "notes": "Postal city names do not establish municipal jurisdiction. Confirm the municipal boundary before using city zoning. A point intersection is informational and does not determine every designation on a parcel or project approval.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "parcel",
+        "address",
+        "zoning",
+        "land use",
+        "boundary",
+        "GIS"
+      ],
+      "next_step": {
+        "label": "Inspect Clearwater GIS zoning and future land use",
+        "url": "https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/Zoning_WGS84/MapServer/1"
+      },
+      "refresh_days": 1,
+      "layer": "ArcGISMapServices/Zoning_WGS84/MapServer/1",
+      "related_endpoints": [
+        {
+          "role": "zoning",
+          "url": "https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/Zoning_WGS84/MapServer/1"
+        },
+        {
+          "role": "future-land-use",
+          "url": "https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/FLU_w_PPC_Colors_WGS84/MapServer/0"
+        }
+      ],
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    },
+    {
+      "source_id": "pasco-maps",
+      "title": "Pasco County GIS and Interactive Mapper",
+      "agency": "Pasco County Geographic Information Systems",
+      "jurisdiction": "Pasco County",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "canonical_url": "https://www.pascocountyfl.gov/services/gis/index.php",
+      "source_type": "html",
+      "authoritative_status": "first-party",
+      "description": "Official County GIS responsibility, interactive mapper and data-hub navigation.",
+      "expected_refresh_frequency": "monthly",
+      "ingestion_method": "http-fetch-html-semantic-blocks",
+      "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
+      "geographic_coverage": "Pasco County; individual program and municipal authority limits apply",
+      "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
+      "notes": "County narrative GIS guidance is separate from the live Pasco address, parcel and land-use adapters configured in data/gis-config.json. Linked maps and shapefiles are not reproduced in the narrative corpus. Municipal boundary checks withhold county zoning and future land use inside incorporated areas.",
+      "categories": [
+        "zoning",
+        "navigation"
+      ],
+      "keywords": [
+        "GIS",
+        "map",
+        "mapper",
+        "parcel",
+        "zoning",
+        "land use",
+        "shapefile"
+      ],
+      "next_step": {
+        "label": "Open the official Pasco County GIS and mapper guidance",
+        "url": "https://www.pascocountyfl.gov/services/gis/index.php"
+      },
+      "refresh_days": 30,
+      "topic_id": "pasco-maps",
+      "selector": "#freeform-main",
+      "paragraph_container_selector": "#freeform-main .col-md-12",
+      "heading_selector": "#freeform-main .col-md-12 > .subheader",
+      "status": "unavailable",
+      "retrieval_date": null,
+      "source_updated_date": null,
+      "last_error": "Not fetched in this source-only distribution."
+    }
+  ],
+  "chunks": []
+}

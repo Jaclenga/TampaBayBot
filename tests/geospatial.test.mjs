@@ -171,14 +171,14 @@ test('St Petersburg and Clearwater choose their verified municipal layers withou
     assert.equal(result.status, 'found');
     assert.equal(result.jurisdictionId, cityId);
     assert.equal(result.coverage.status, 'verified');
-    assert.equal(result.boundaryChecks.length, 3);
+    assert.equal(result.boundaryChecks.length, gisConfig.jurisdictions.length);
     assert.equal(result.parcel.sourceId, 'pinellas-gis');
     assert.equal(result.zoning.sourceId, `${cityId}-gis`);
     assert.equal(result.futureLandUse.sourceId, `${cityId}-gis`);
     assert.equal(result.evidence.length, 4);
     assert.ok(result.evidence.every(e => /objectIds=/.test(e.url)));
     assert.doesNotMatch(JSON.stringify(result), /must not be reflected|DISABILITY_EXEMP|OWNER1/);
-    assert.equal(calls.length, 6);
+    assert.equal(calls.length, gisConfig.jurisdictions.length + 3);
     assert.ok(calls.every(url => !Object.entries(tampa.layers).some(([kind, layer]) => kind !== 'boundary' && url.href.startsWith(layer.url))));
   }
 });
@@ -221,7 +221,7 @@ test('wrong, overlapping, and incomplete municipal boundaries block all property
     assert.equal(result.coverage.status, 'unverified');
     assert.equal(result.parcel.records.length, 0);
     assert.equal(result.zoning.records.length, 0);
-    assert.equal(calls.length, 3);
+    assert.equal(calls.length, gisConfig.jurisdictions.length);
   }
 });
 
@@ -234,7 +234,7 @@ test('other Tampa Bay locations have explicit missing municipal coverage and Pas
   assert.equal(result.jurisdictionId, null);
   assert.equal(result.parcel.status, 'missing_coverage');
   assert.match(result.message, /responsible municipality or county/);
-  assert.equal(calls.length, 3);
+  assert.equal(calls.length, gisConfig.jurisdictions.length);
 });
 
 test('a Clearwater layer outage stays partial while an unverified boundary never becomes absent coverage', async () => {
@@ -256,7 +256,7 @@ test('CSV parser supports actual CSV quoting and rejects malformed or malicious 
 });
 
 const headers = ['activity_id', 'source_record_id', 'latitude', 'longitude', 'source_endpoint', 'source_url', 'retrieved_at_utc', 'address', 'record_type', 'status', 'status_date', 'last_updated', 'record_created_date', 'description', 'location_count'];
-const fixtureSettings = { ...developmentConfig, sha256: null };
+const fixtureSettings = { ...developmentConfig, sha256: null, official_sources: [] };
 function csvFor(records) {
   const escape = value => `"${String(value ?? '').replaceAll('"', '""')}"`;
   return [headers.join(','), ...records.map(row => headers.map(h => escape(row[h])).join(','))].join('\n');
@@ -277,7 +277,7 @@ test('development searches require a server-side Tampa boundary decision and nev
     assert.equal(result.jurisdictionId, cityId);
     if (cityId !== 'tampa') {
       assert.deepEqual(result.records, []);
-      assert.match(result.message, /City of Tampa only/);
+      assert.match(result.message, /City of Tampa only|No development-record adapter/);
     }
   }
 });

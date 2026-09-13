@@ -1,9 +1,12 @@
 "use client";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Search, Undo2 } from "lucide-react";
 import type { ResidentAnswer } from "@/lib/core/answer.mjs";
-import { en } from "@/lib/i18n/en";
+import { en as english } from "@/lib/i18n/en";
+import { useLocale } from "@/lib/i18n/locale";
+import { localizeAnswer } from "@/lib/i18n/answer.mjs";
+import type { ConversationContext } from "@/lib/core/conversation.mjs";
 import { SourceLink } from "./site-shell";
 import PropertyLookup from "./property-lookup";
 import { dateLabel } from "@/lib/i18n/format";
@@ -14,6 +17,7 @@ const subscribeToReady = () => () => {};
 const clientReady = () => true;
 const serverReady = () => false;
 function CitedText({ answer }: { answer: ResidentAnswer }) {
+  const { copy: en } = useLocale();
   return (
     <>
       {answer.answer.split(/(\[E\d+\])/).map((text, index) => {
@@ -44,6 +48,9 @@ function CitedText({ answer }: { answer: ResidentAnswer }) {
 }
 
 export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
+  const { locale, copy: en } = useLocale();
+  const privacyNotice = modelNotice === english.modelPrivacy.disabled ? en.modelPrivacy.disabled
+    : modelNotice === english.modelPrivacy.enabled ? en.modelPrivacy.enabled : modelNotice;
   const ready = useSyncExternalStore(
     subscribeToReady,
     clientReady,
@@ -51,7 +58,9 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
   );
   const [question, setQuestion] = useState("");
   const [jurisdictionId, setJurisdictionId] = useState<JurisdictionId>("tampa-bay");
-  const [answer, setAnswer] = useState<ResidentAnswer | null>(null);
+  const [rawAnswer, setAnswer] = useState<ResidentAnswer | null>(null);
+  const answer = useMemo(() => rawAnswer ? localizeAnswer(rawAnswer, locale) : null, [rawAnswer, locale]);
+  const [conversation, setConversation] = useState<ConversationContext | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const input = useRef<HTMLTextAreaElement>(null);
@@ -83,12 +92,16 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
       const response = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: text, jurisdictionId }),
+        body: JSON.stringify({ question: text, jurisdictionId, ...(conversation ? { conversation } : {}) }),
         signal: request.signal,
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || en.form.error);
-      if (!request.signal.aborted) setAnswer(result);
+      if (!request.signal.aborted) {
+        setAnswer(result);
+        setConversation(result.conversation ?? null);
+        if (!result.needsJurisdiction && result.jurisdictionId) setJurisdictionId(result.jurisdictionId);
+      }
     } catch (err) {
       if (!request.signal.aborted)
         setError(err instanceof Error ? err.message : en.form.error);
@@ -100,12 +113,13 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
     controller.current?.abort();
     setBusy(false);
     setAnswer(null);
+    setConversation(null);
     setQuestion("");
     setError("");
     input.current?.focus();
   }
   return (
-    <main id="main">
+    <main id="main" lang={locale}>
       <section
         className={`hero ${answer ? "hero-compact" : ""}`}
         aria-labelledby="hero-title"
@@ -113,6 +127,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
         <div className="hero-inner">
           <h1 id="hero-title">{en.hero.title}</h1>
           <p className="hero-description">{en.hero.description}</p>
+          {locale === 'es' && <p className="small muted">{en.language.scope}</p>}
           <form
             className="question-form"
             onSubmit={(event) => {
@@ -131,6 +146,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                 onChange={(event) => {
                   controller.current?.abort();
                   setBusy(false);
+                  if (!answer?.needsJurisdiction) setConversation(null);
                   setAnswer(null);
                   setError("");
                   setJurisdictionId(event.target.value as JurisdictionId);
@@ -176,8 +192,9 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
               </p>
             )}
             <p className="privacy-hint" id="question-privacy">
-              {en.form.privacy} {modelNotice}
+              {en.form.privacy} {privacyNotice}
             </p>
+            {conversation && <p className="small muted">{en.answer.followup}</p>}
           </form>
           {!answer && (
             <div className="example-prompts">
@@ -223,6 +240,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
             <p className="answer-lead">
               <CitedText answer={answer} />
             </p>
+            {answer.conversationUsed && <p className="small muted">{en.answer.continuing}</p>}
             {answer.jurisdictionLabel && (
               <p className="small muted">{en.answer.area}: {answer.jurisdictionLabel}</p>
             )}
@@ -262,6 +280,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                   <span>{answer.evidence.length}</span>
                 </h3>
                 <p className="muted small">{en.answer.snapshot}</p>
+                <p className="muted small">{en.answer.originalQuotes}</p>
                 <div className="evidence-list">
                   {answer.evidence.map((item, index) => (
                     <details
@@ -279,8 +298,12 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                         <ChevronRight size={16} aria-hidden="true" />
                       </summary>
                       <div className="evidence-body">
-                        <blockquote>{item.quote}</blockquote>
+                        <blockquote lang={item.language ?? 'und'}>{item.quote}</blockquote>
                         <dl>
+                          <div>
+                            <dt>{en.answer.sourceLanguage}</dt>
+                            <dd>{item.language === 'en' ? 'English' : item.language === 'es' ? 'Español' : en.answer.languageUnknown}</dd>
+                          </div>
                           <div>
                             <dt>{en.answer.retrieved}</dt>
                             <dd>{dateLabel(item.retrieved_at)}</dd>

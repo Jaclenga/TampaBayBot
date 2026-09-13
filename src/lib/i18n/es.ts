@@ -1,0 +1,60 @@
+import { en } from './en';
+
+export const es: typeof en = {
+  ...en,
+  language: { label: 'Language / Idioma', scope: 'Las preguntas y la navegación están disponibles en inglés y español. Las herramientas de propiedades y las páginas de referencia están actualmente en inglés.' },
+  nav: { ask: 'Hacer una pregunta', sources: 'Fuentes públicas', about: 'Acerca del proyecto', evaluation: 'Evaluación' },
+  hero: { title: 'Información sobre vivienda en Tampa Bay', description: 'Encuentre ayuda para la vivienda, información de propiedades, permisos y registros públicos de su comunidad.' },
+  form: {
+    label: 'Haga una pregunta o escriba una dirección', area: 'Su ciudad o condado',
+    areaHint: 'Elija una zona o nómbrela en su pregunta. Una dirección postal por sí sola no confirma la jurisdicción municipal.',
+    placeholder: '¿Cómo puedo obtener ayuda para la vivienda?', submit: 'Buscar', busy: 'Buscando…',
+    privacy: 'No incluya nombres, números de cuenta ni otros datos privados. Esta aplicación no guarda las preguntas.',
+    empty: 'Escriba una pregunta sobre vivienda o una dirección de Tampa Bay.',
+    error: 'No pudimos completar la búsqueda. Inténtelo de nuevo.', max: 'Limite su pregunta a 1.000 caracteres.',
+  },
+  examplesLabel: 'Preguntas frecuentes',
+  modelPrivacy: {
+    disabled: 'La ayuda del modelo está desactivada. Su pregunta no se envía a un modelo de lenguaje.',
+    enabled: 'La ayuda del modelo está activada. Su pregunta y los fragmentos de fuentes públicas seleccionados se envían al servicio de modelo configurado para este sitio, que puede procesarlos o conservarlos.',
+  },
+  examples: ['¿Dónde encuentro ayuda para pagar el alquiler?', '¿Qué zonificación tiene esta propiedad?', '¿Hay registros de desarrollo cerca de mí?'],
+  servicesTitle: 'Buscar por tema', servicesIntro: 'Elija un tema para empezar.',
+  services: [
+    { id: 'housing', label: 'Ayuda para la vivienda', text: 'Recursos para inquilinos y propietarios.', prompt: '¿Dónde encuentro ayuda para pagar el alquiler?' },
+    { id: 'zoning', label: 'Zonificación y uso del suelo', text: 'Mapas oficiales e información sobre propiedades.', prompt: '¿Cómo encuentro la zonificación y el uso del suelo de una propiedad?' },
+    { id: 'permitting', label: 'Permisos y proyectos', text: 'Encuentre la información adecuada sobre permisos.', prompt: '¿Qué agencia tramita los permisos para reparar una casa?' },
+    { id: 'development', label: 'Desarrollo cercano', text: 'Consulte lo que muestran los registros públicos.', prompt: '¿Hay registros de desarrollo recientes cerca de mí?' },
+    { id: 'navigation', label: 'Contactos de agencias', text: 'Encuentre la oficina, el formulario o el recurso indicado.', prompt: '¿Qué agencia responde preguntas sobre vivienda?' },
+  ],
+  answer: {
+    title: 'Respuesta', area: 'Cobertura de las fuentes',
+    modelUsed: 'Un modelo de lenguaje seleccionó estos fragmentos. Se comprobó que su texto coincide con las fuentes guardadas.',
+    modelFallback: 'La ayuda del modelo no produjo un resultado verificable. Esta respuesta utiliza la búsqueda habitual de fuentes.',
+    meaning: 'Qué significa', evidence: 'Fuentes que puede consultar', next: 'Qué puede hacer ahora',
+    verify: 'Requisitos que debe confirmar', clear: 'Empezar una pregunta nueva',
+    followup: 'Puede hacer una pregunta de seguimiento. Este contexto temporal se borra al empezar una pregunta nueva o recargar la página.',
+    continuing: 'Se está usando el tema de su pregunta anterior.', source: 'Leer la fuente original',
+    retrieved: 'Fecha de consulta', updated: 'Fecha de actualización de la fuente', unknownDate: 'La fuente no indica la fecha', count: 'fuentes',
+    snapshot: 'Las respuestas usan copias guardadas de fuentes públicas. Consulte el enlace oficial para obtener información actualizada.',
+    sourceLanguage: 'Idioma de la fuente', languageUnknown: 'No registrado', originalQuotes: 'Las citas se conservan en su idioma original y no se traducen.',
+  },
+  status: {
+    answered: 'Fuentes encontradas', insufficient_evidence: 'Se necesita más información',
+    conflicting_evidence: 'Las fuentes no coinciden', potentially_outdated: 'Confirme la información actual',
+    needs_location: 'Se necesita una ubicación', needs_jurisdiction: 'Elija una ciudad o condado',
+    official_judgment: 'Confirme con la agencia responsable', out_of_scope: 'Fuera del alcance del servicio',
+    unavailable_source: 'Fuente no disponible', missing_geographic_coverage: 'Fuera de la cobertura disponible',
+  },
+  footer: {
+    statement: 'TampaBayBot es un proyecto independiente de código abierto, sin afiliación con ningún gobierno municipal o de condado. Verifique las decisiones importantes con la agencia responsable.',
+    access: 'Accesibilidad', privacy: 'Privacidad', navigation: 'Navegación del pie de página',
+  },
+  common: { skip: 'Saltar al contenido principal', opens: 'se abre en otra pestaña', close: 'Cerrar', retry: 'Intentar de nuevo' },
+  labels: {
+    ...en.labels,
+    home: 'Inicio de TampaBayBot', navigation: 'Navegación principal', section: 'Sección', page: 'Página',
+    record: 'Registro', layer: 'Capa GIS', sourceTerms: 'Cobertura, vigencia y condiciones',
+    sourceId: 'Identificador de fuente', projectAbout: 'Leer sobre el proyecto', citation: 'Leer la fuente',
+  },
+};

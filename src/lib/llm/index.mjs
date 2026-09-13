@@ -37,7 +37,7 @@ export async function synthesizeAnswer(baseline, { config = parseLlmConfig(), fe
     const text = await Promise.race([Promise.resolve().then(() => adapter.complete({
       messages: request.messages, schema: request.schema, model: config.model, signal: controller.signal,
     })), timeout, cancellation]);
-    const selected = validateSelection(text, request.evidence, config.maxResponseBytes);
+    const selected = validateSelection(text, request.evidence, config.maxResponseBytes, request.requiredIds);
     return { ...baseline, answer: renderSelection(selected), generation: {
       mode: 'llm', provider: config.provider, status: 'used',
     } };

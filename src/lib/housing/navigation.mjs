@@ -1,4 +1,4 @@
-import { normalizeQuestion } from '../core/router.mjs';
+import { intentText } from '../core/router.mjs';
 
 const LOCAL_SOURCES = {
   'st-petersburg': {
@@ -36,13 +36,13 @@ const LOCAL_SOURCES = {
 };
 
 export function housingSituation(question, { jurisdictionId = 'tampa-bay' } = {}) {
-  const text = normalizeQuestion(question);
+  const text = intentText(question);
   const result = (situation, kind, tampaSources) => {
     const preferredSourceIds = jurisdictionId === 'tampa' ? tampaSources
       : jurisdictionId === 'hillsborough-county' ? (['buy', 'rental'].includes(kind) ? ['florida-housing', 'hillsborough-help'] : ['hillsborough-help'])
       : jurisdictionId === 'tampa-bay' ? ['florida-housing']
       : LOCAL_SOURCES[jurisdictionId]?.[kind] ?? [];
-    return { situation, preferredSourceIds: [...preferredSourceIds] };
+    return { situation, kind, preferredSourceIds: [...preferredSourceIds] };
   };
   if (/\b(homeless|sleep|shelter|nowhere to live|eviction|evicted)\b/.test(text)) return result('A place to stay or help keeping housing', 'urgent', ['hillsborough-help', 'tampa-housing']);
   if (/\b(repair|roof|hrrp|rehab|rehabilitation|fix|home preservation)\b/.test(text)) return result('Repairs to a home you own', 'repair', ['tampa-hrrp', 'hillsborough-help']);

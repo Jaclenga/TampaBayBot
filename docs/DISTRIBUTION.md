@@ -1,6 +1,6 @@
 # Source-only distribution
 
-Public alpha packages distribute the original software, test and benchmark definitions, publisher links and fetch configuration. They do **not** distribute downloaded source snapshots, extracted evidence, response packets or screenshots. The app starts with an empty corpus and reports that evidence is unavailable until an operator fetches and reviews sources.
+Public alpha packages distribute the original software, test and benchmark definitions, publisher links and fetch configuration. They do **not** distribute downloaded source snapshots, extracted evidence, historical response packets or historical screenshots. Original fictional demo fixtures and their labeled screenshot are included. The ordinary app starts with an empty corpus. `npm run demo` creates a separate fictional example installation; real evidence requires a staged source refresh and review.
 
 This guide is the canonical packaging, regeneration and publication-history policy. [Release readiness](RELEASE_READINESS.md) records which checks have actually run; [deployment](DEPLOYMENT.md) covers operating a built instance.
 
@@ -35,7 +35,7 @@ The omitted content is:
 - `data/raw/**`, `data/normalized/**` and the historical `data/chunks.json` corpus;
 - historical ingestion/verification reports and quote-bearing response, agent-review, human-review and suite-result artifacts;
 - historical accessibility, security, Ollama and local/hosted deployment reports;
-- screenshot images, external data archives, owner hosting configuration and Git history.
+- historical screenshots, external data archives, owner hosting configuration and Git history. The original fictional demo image under `docs/images/` is included.
 
 Required JSON import paths are replaced with honest placeholders: zero chunks, unset retrieval dates, unavailable sources, empty response/review arrays and reports marked `not_run`. Packaging reuses the project README overview, whose alpha notice explains this initial state. Relative links to omitted artifacts, including screenshots, become explanatory text rather than broken links. The source registry retains publisher URLs, operator-authored descriptions, fetch settings and next-step links. Historical agent review scripts/ratings are omitted so bootstrap cannot attach old judgments to new answers.
 
@@ -47,17 +47,16 @@ Read the publisher notes and review your intended use, then run from the unpacke
 
 ```sh
 npm ci
-npm run ingest
-npm run dev -- --port 3001
+npm run source:stage
 ```
 
-Ingestion downloads directly from configured publishers using HTTPS, records provenance and returns a nonzero exit code if a source fails. Inspect `data/ingestion-report.json` and the downloaded originals. Failed initial sources remain unavailable. Restart the server after data changes. Local GIS/development lookups additionally need their configured remote services.
+Follow [source updates](SOURCE_UPDATES.md) to inspect the candidate, approve its exact digest and apply it after validation. Staging downloads directly from configured publishers using HTTPS and preserves provenance. A single atomic corpus generation becomes active after review; registry/chunk mirrors are recoverable. Start the reviewed installation with `npm run dev -- --port 3001`. Local GIS/development lookups additionally need their configured remote services.
 
 After reviewing the populated corpus, run:
 
 ```sh
 npm run ingest -- --check
-npm test
+npm run test:corpus
 npm run evaluate
 npm run eval:suite
 npm run typecheck
@@ -67,6 +66,18 @@ npm run build
 The complete tests and dated navigation expectations require evidence. Fresh publisher content may differ from the private development snapshot; these commands preserve and report failures instead of claiming historical reproducibility. `evaluate` writes fresh response packets and pending human-review packets before returning failure on mismatched expectations. `eval:suite` writes its own results and also fails on unmet expectations. The empty historical agent-review list remains empty until a new review is actually performed. Future corpus updates need reviewed expectations and independent human assessment.
 
 For inference and hosting, see [model setup](LLM.md) and [independent deployment](DEPLOYMENT.md). Model downloads/licenses and inference-provider retention remain separate from software distribution.
+
+## Preparing a source-only pull request
+
+For ordinary code or documentation edits in a public source checkout:
+
+```sh
+npm test
+npm run release:manifest
+npm run release:verify
+```
+
+Inspect and commit the manifest diff with your changes. The command validates the actual empty registry, corpus and response reports before updating hashes, and refuses downloaded snapshots or private paths. Generated build directories are excluded. A missing manifest fails public CI. If you have locally acquired evidence, build a new source-only tree using the packager instead; it preserves your populated working tree.
 
 ## History and report hygiene
 

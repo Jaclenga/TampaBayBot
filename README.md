@@ -6,7 +6,7 @@ TampaBayBot is an independent, open-source civic-tech project for people asking 
 
 It brings together information scattered across government pages, PDFs and GIS services, and keeps the supporting evidence visible. The default answer engine works without a language model; local or API-based model assistance is optional.
 
-Choose Tampa, St. Petersburg, Clearwater, or county resources for Hillsborough, Pinellas and Pasco. Questions without a clear area ask for clarification before applying local programs or rules. Live property layers cover the three named cities; other municipalities and Pasco property lookups still have coverage gaps. [Coverage and maps](docs/GEOSPATIAL.md).
+Choose Tampa, St. Petersburg, Clearwater, or county resources for Hillsborough, Pinellas and Pasco. Questions without a clear area ask for clarification before applying local programs or rules. Live property layers cover those cities plus Pasco County parcels and unincorporated land use. Municipal authority and unavailable sources remain explicit. [Coverage and maps](docs/GEOSPATIAL.md).
 
 > **Alpha: for contributors and supervised testing.** The downloadable source release starts without loaded evidence. Fetch and review sources before expecting cited answers. Independent human review and production-readiness work remain open. See [quick start](#quick-start) and [release status](docs/RELEASE_READINESS.md).
 
@@ -25,9 +25,9 @@ Government guidance and mapped designations are distinct from observed developme
 
 ## Demo
 
-TampaBayBot Tampa Bay home page with a city or county selector, housing question field and topic links (development artifact omitted from source-only release)
+![TampaBayBot with clearly labeled fictional demo evidence](docs/images/demo.png)
 
-The historical screenshot predates the TampaBayBot rename and shows the regional interface with sources loaded. Select your city or county, or name it in your question. Try questions such as:
+Run `npm ci` and `npm run demo` to try the interface offline with clearly labeled, original fictional evidence. The demo runs in a separate directory and does not replace your sources or enable a model. See [the demo guide](docs/DEMO.md). For actual local evidence, select your city or county, or name it in your question. Example resident questions include:
 
 - “Where can I find help paying for housing?”
 - “What zoning applies to this address?”
@@ -49,7 +49,7 @@ Optional model assistance can select among evidence already retrieved by the app
 
 Sources include Tampa, St. Petersburg, Clearwater, Hillsborough County, Pinellas County, Pasco County, Plan Hillsborough and Florida Housing Finance Corporation. Each source declares its service area; county resources do not automatically apply inside every city.
 
-Nearby activity currently comes from the Tampa-only [Tampa Development Records](https://github.com/Jaclenga/Tampa-Development-Records) project. St. Petersburg, Clearwater and other areas receive an explicit coverage message. Its observed records have their own dates and attribution; they are not regulations or a complete, current construction inventory.
+Nearby activity combines the pinned [Tampa Development Records](https://github.com/Jaclenga/Tampa-Development-Records) snapshot with official Clearwater planning cases. A St. Petersburg district-project adapter reports unavailable while its official record queries fail. Sources retain distinct coverage, dates and attribution; planning cases are not proof of construction. [Expanded services and live verification](docs/COVERAGE_EXPANSION.md).
 
 Coverage is bounded, and public information can change or become unavailable. The app distinguishes when a source was retrieved from when its publisher updated it. See [data sources](docs/DATA_SOURCES.md) and [geospatial methods](docs/GEOSPATIAL.md).
 
@@ -83,14 +83,16 @@ Use Node.js 24 LTS and npm. From the project directory:
 
 ```bash
 npm ci
-npm run dev -- --port 3001
+npm run demo
 ```
 
-Open [localhost:3001](http://localhost:3001). The default `LLM_PROVIDER=none` needs no account, API key, database or `.env` file. Source downloads and live geographic lookups need internet access.
+Open [localhost:3001](http://localhost:3001). This demo uses fictional examples and needs no account, API key, database or `.env` file. `npm test` runs the offline source regression suite; `npm run test:source:browser` tests the demo in Chromium.
 
-The source-only alpha contains fetch configuration but no downloaded evidence. Follow [source setup and review](docs/DISTRIBUTION.md#populate-and-validate-locally) to load sources, then restart the app. Fresh downloads may differ from the recorded evaluation corpus.
+For real source information, follow [staged source updates](docs/SOURCE_UPDATES.md), then run `npm run dev -- --port 3001`. The public package starts without downloaded evidence. Acquired evidence and live geographic lookups need internet access; historical evaluation results do not certify fresh downloads.
 
 For PowerShell troubleshooting, development commands and API routes, see the [developer guide](docs/DEVELOPMENT.md). For your own hosting account, see [deployment](docs/DEPLOYMENT.md).
+
+Questions and navigation support English and Spanish. Follow-up questions retain a bounded topic and location context in memory until reset or reload; source quotations stay in their original language. Property tools and reference pages remain in English.
 
 ## Optional model assistance
 

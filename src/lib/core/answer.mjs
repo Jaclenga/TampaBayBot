@@ -1,11 +1,11 @@
-import { routeQuestion, normalizeQuestion } from './router.mjs';
-import { retrieve, isInstructionText, isAuthoritative } from '../retrieval/search.mjs';
+import { routeQuestion, normalizeQuestion, intentText } from './router.mjs';
+import { retrieve, isInstructionText, isAuthoritative, requestedDetailScore } from '../retrieval/search.mjs';
 import { makeEvidence, safeSourceUrl, findApplicationConflicts } from '../citations/evidence.mjs';
 import { housingSituation, verificationQuestions } from '../housing/navigation.mjs';
 import { sourceCoversJurisdiction } from '../coverage.mjs';
 
 function unknownSpecificClaim(question, sources, chunks) {
-  const text = normalizeQuestion(question);
+  const text = intentText(question);
   const corpus = normalizeQuestion(sources.map(source => `${source.title} ${(source.keywords ?? []).join(' ')} ${source.source_id}`).join(' ') + ' ' + chunks.map(chunk => chunk.text).join(' '));
   const localProgram = text.match(/\b(rmap|hrrp)\b/);
   if (localProgram && !new RegExp('\\b' + localProgram[1] + '\\b').test(corpus)) return 'program';
@@ -13,9 +13,11 @@ function unknownSpecificClaim(question, sources, chunks) {
   if (ordinance && !corpus.includes(ordinance[1])) return 'ordinance';
   if (/\b(free house|guaranteed housing|pirate|privateer grant|unicorn|sunshine key|dolphin|moonlight|universal rent|magic|free mansion|tampa gold|free-home|no questions asked)\b/.test(text)) return 'program';
   const named = String(question).match(/["“]([^"”]{4,100})["”]/);
-  if (named && /\b(program|grant|fund|ordinance)\b/i.test(question) && !corpus.includes(normalizeQuestion(named[1]))) return 'program';
+  if (named && /\b(program|grant|fund|ordinance)\b/i.test(text) && !corpus.includes(normalizeQuestion(named[1]))) return 'program';
   const properName = String(question).match(/\b(?:[A-Z][a-zA-Z-]+\s+){1,5}(?:Program|Grant|Fund|Award)\b/);
   if (properName && !corpus.includes(normalizeQuestion(properName[0]))) return 'program';
+  const spanishName = String(question).match(/\b(?:Programa|Subvenci[oó]n|Fondo)\s+(?:[A-ZÁÉÍÓÚÑ][\p{L}-]*(?:\s+|$)){1,5}/u);
+  if (spanishName && !corpus.includes(normalizeQuestion(spanishName[0]))) return 'program';
   return null;
 }
 
@@ -61,7 +63,7 @@ function unsupportedResponse(answer, unsupported) {
 
 function selectHits(hits, question, route, sources, chunks) {
   const ranked = [...hits];
-  const text = normalizeQuestion(question);
+  const text = intentText(question);
   const priority = [];
   if (route.subjectCategory === 'housing') {
     const preferred = housingSituation(question, route).preferredSourceIds;
@@ -150,6 +152,26 @@ function selectHits(hits, question, route, sources, chunks) {
     if (selected.length && !priority.includes(hit.source.source_id) && hit.score < ranked[0].score * 0.3) continue;
     selected.push(hit);
     if (selected.length === 3) break;
+  }
+  // A reviewed opening passage retains qualifications; a matching factual field
+  // from that same source can answer the resident's specific amount/term question.
+  // Never substitute a number from an unrelated program or another jurisdiction.
+  const primary = selected[0];
+  const detail = primary && hits.filter(hit => hit.source.source_id === primary.source.source_id && hit.detailScore > 0)
+    .sort((a, b) => b.detailScore - a.detailScore || b.score - a.score)[0];
+  if (detail && !selected.some(hit => hit.chunk.id === detail.chunk.id)) selected.splice(1, 0, detail);
+  if (detail) {
+    const closed = /\bapplications?\b.{0,45}\b(?:closed|paused)\b|\bnot (?:currently )?accepting\b/i;
+    const qualifications = chunks.filter(chunk => chunk.source_id === primary.source.source_id && chunk.id !== detail.chunk.id &&
+      !isInstructionText(chunk.text) && (closed.test(chunk.text) || /\bnot eligible\b|\b(?:program|assistance)\b.{0,60}\bonly\b/i.test(chunk.text)))
+      .sort((a, b) => Number(closed.test(b.text)) - Number(closed.test(a.text)));
+    const qualification = qualifications[0];
+    const primaryQualified = closed.test(primary.chunk.text) || /\bnot eligible\b|\b(?:program|assistance)\b.{0,60}\bonly\b/i.test(primary.chunk.text);
+    if (qualification && qualification.id !== primary.chunk.id && (!primaryQualified || closed.test(qualification.text) && !closed.test(primary.chunk.text))) {
+      const existing = selected.findIndex(hit => hit.chunk.id === qualification.id);
+      if (existing >= 0) selected.splice(existing, 1);
+      selected.unshift({ source: primary.source, chunk: qualification, score: primary.score });
+    }
   }
   return selected;
 }
@@ -284,6 +306,11 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
   }
   answer.status = 'answered';
   answer.answer = `Start with ${main.title}. The source says: “${main.quote}” [${main.id}]`;
+  const detail = answer.evidence.find(item => item.source_id === main.source_id && item.id !== main.id && requestedDetailScore(query, item.quote) > 0 && !item.stale);
+  if (detail) {
+    answer.answer += `\n\nThe same source gives this detail: “${detail.quote}” [${detail.id}]`;
+    answer.requiredEvidenceIds = [main.id, detail.id];
+  }
   answer.meaning = route.subjectCategory === 'housing'
     ? 'This resource may be relevant to your situation. Use its official application or contact path and check the questions below; this is not an eligibility decision.'
     : route.subjectCategory === 'development'

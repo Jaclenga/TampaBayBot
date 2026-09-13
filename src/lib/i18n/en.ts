@@ -1,5 +1,9 @@
 export const en = {
   brand: "TampaBayBot",
+  language: {
+    label: "Language / Idioma",
+    scope: "Questions and navigation are available in English and Spanish. Property tools and reference pages are currently in English.",
+  },
   nav: {
     ask: "Ask a question",
     sources: "Public sources",
@@ -82,6 +86,11 @@ export const en = {
     next: "What you can do next",
     verify: "Requirements to verify",
     clear: "Start a new question",
+    followup: "You can ask a follow-up. This temporary topic context clears when you start a new question or reload the page.",
+    continuing: "Using the topic from your previous question.",
+    sourceLanguage: "Source language",
+    languageUnknown: "Not recorded",
+    originalQuotes: "Source quotations stay in their original language and are not translated.",
     source: "Read original source",
     retrieved: "Retrieved",
     updated: "Source updated",
@@ -97,7 +106,7 @@ export const en = {
     submit: "Find address",
     busy: "Looking up the address…",
     disclosure:
-      "Address searches are sent to public GIS services serving Tampa Bay. No address history is saved by this app.",
+      "Address searches are sent to public GIS services in Hillsborough, Pinellas, and Pasco counties. No address history is saved by this app.",
     select: "Confirm the matching address",
     choose: "Use this address",
     loading: "Checking public property layers…",
@@ -154,7 +163,7 @@ export const en = {
     methodText:
       "The app retrieves passages from a versioned public-source index and shows exact excerpts. An optional local or API language model can select excerpts; the app checks their wording and citations before displaying them. It cannot make official determinations. Source documents are data, never instructions.",
     method2:
-      "Location searches query public GIS layers for the confirmed jurisdiction. Nearby development records currently come from the Tampa-only Tampa Development Records snapshot; it does not cover St. Petersburg or Clearwater. Sources can be incomplete, unavailable, or outdated.",
+      "Location searches use public GIS layers for the confirmed jurisdiction, including Pasco addresses and parcels. Pasco county zoning and future land use are withheld inside incorporated areas. Nearby records use a pinned Tampa snapshot and separate official city GIS adapters. Clearwater planning cases are queried live; St. Petersburg district-project adapters are configured but currently unavailable. Each source has its own coverage and currency limits.",
   },
   about: {
     title: "About TampaBayBot",
@@ -168,7 +177,7 @@ export const en = {
       "The app does not save questions, addresses, conversations, or personal profiles. Requests pass through the hosting provider. Address lookups go to public GIS services; an optional map goes to OpenStreetMap. Avoid entering sensitive personal information.",
     languageTitle: "Language",
     language:
-      "The interface currently supports English. UI messages are separated from application logic for translation. Legal and regulatory source material is shown in its original language.",
+      "Questions and navigation support English and Spanish. Property tools and reference pages currently use English. Source quotations remain in their original language, with the recorded source language shown when available.",
     limitsTitle: "What this release can and cannot do",
     limits:
       "This is a v0.1 review build. It uses saved source snapshots and live property lookups, which can fail or return multiple matches. It cannot guarantee complete development records or decide what is legally permitted. Human audits and assistive-technology testing are still required before a public release.",

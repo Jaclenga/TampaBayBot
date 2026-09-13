@@ -6,4 +6,5 @@ export interface QuestionRoute extends JurisdictionContext {
   outsideCoverage: boolean; officialJudgment: boolean; normalized: string;
 }
 export function normalizeQuestion(value: unknown): string;
+export function intentText(value: unknown): string;
 export function routeQuestion(question: string, options?: { jurisdictionId?: JurisdictionId }): QuestionRoute;

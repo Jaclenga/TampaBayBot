@@ -1,4 +1,4 @@
-import sources from "@/data/sources.json";
+import { sources } from "@/lib/corpus";
 export async function GET() {
   return Response.json(sources, {
     headers: {

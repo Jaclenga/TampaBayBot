@@ -7,9 +7,9 @@ import { SUITE_VERSION } from "../evaluation/suite/report.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const SOURCE_DIRS = ["src", "scripts", "tests", "vendor"];
-const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "next.config.ts", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"];
-const GUIDE_FILES = ["README.md", "ACCESSIBILITY.md", "DATA_SOURCES.md", "DEVELOPMENT.md", "EVALUATION.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LIMITATIONS.md", "LLM.md", "METHODOLOGY.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "ASSETS.md", "RELEASE_READINESS.md", "OLLAMA_TESTING.md", "BUG_FIX_FOLLOWUP_2026-09-12.md", "SECRET_SCANNING.md", "ALPHA_VERIFICATION.json", "TAMPA_BAY_VERIFICATION.json"];
-const GENERATED_FIELDS = ["retrieval_date", "source_updated_date", "content_hash", "normalized_content_hash", "raw_path", "last_attempt", "last_error", "response_url", "content_type", "etag", "last_modified", "content_changed_at", "record_count", "searchable_point_count", "excluded_point_count"];
+const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "next.config.ts", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", "playwright.source.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"];
+const GUIDE_FILES = ["README.md", "ACCESSIBILITY.md", "DATA_SOURCES.md", "DEVELOPMENT.md", "EVALUATION.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LIMITATIONS.md", "LLM.md", "METHODOLOGY.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "ASSETS.md", "RELEASE_READINESS.md", "OLLAMA_TESTING.md", "BUG_FIX_FOLLOWUP_2026-09-12.md", "SECRET_SCANNING.md", "ALPHA_VERIFICATION.json", "TAMPA_BAY_VERIFICATION.json", "SOURCE_UPDATES.md", "COVERAGE_EXPANSION.md", "DEMO.md"];
+const GENERATED_FIELDS = ["retrieval_date", "source_updated_date", "content_hash", "normalized_content_hash", "raw_path", "normalized_path", "last_attempt", "last_error", "response_url", "content_type", "etag", "last_modified", "content_changed_at", "record_count", "searchable_point_count", "excluded_point_count"];
 const NOTICE = "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy.";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
@@ -20,6 +20,12 @@ async function optionalFile(filename) {
     if (await realpath(filename) !== path.resolve(filename)) throw new Error("Release input ancestors must not redirect through a symlink or junction.");
     return await readFile(filename);
   } catch (error) { if (error.code === "ENOENT") return null; throw error; }
+}
+
+async function requiredJson(filename) {
+  const bytes = await optionalFile(filename);
+  if (bytes === null) throw new Error(`Required release input is missing: ${path.basename(filename)}`);
+  return JSON.parse(bytes.toString("utf8"));
 }
 
 async function sourceFiles(root, relative) {
@@ -98,19 +104,26 @@ export async function createSourceRelease({ root = ROOT, output }) {
   for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/benchmark.json", "evaluation/quality-benchmark.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
   // The release gets its own source-only CI workflow, if supplied by the maintainer.
   inputs.add(".github/workflows/source-release.yml");
+  inputs.add(".github/workflows/source-refresh.yml");
+  inputs.add(".github/PULL_REQUEST_TEMPLATE.md");
+  inputs.add(".github/ISSUE_TEMPLATE/bug.yml");
+  inputs.add("docs/images/demo.png");
 
   const payload = new Map();
   for (const name of [...inputs].sort()) {
     const contents = await optionalFile(path.join(root, name));
     if (contents !== null) payload.set(name, contents);
   }
-  const sources = JSON.parse(await readFile(path.join(root, "data/sources.json"), "utf8"));
-  const legacy = JSON.parse(await readFile(path.join(root, "evaluation/results/latest.json"), "utf8"));
+  const sources = await requiredJson(path.join(root, "data/sources.json"));
+  const emptySources = emptySourceRegistry(sources);
+  const emptyCorpus = { schema_version: 1, generation: digest(JSON.stringify({ sources: emptySources, chunks: [] })), sources: emptySources, chunks: [] };
+  const legacy = await requiredJson(path.join(root, "evaluation/results/latest.json"));
   const generated = {
     "README.md": payload.get("README.md")?.toString("utf8") ?? RELEASE_README,
     ".gitattributes": "* text=auto eol=lf\n",
     "public/.gitkeep": "",
-    "data/sources.json": json(emptySourceRegistry(sources)),
+    "data/sources.json": json(emptySources),
+    "data/corpus.json": json(emptyCorpus),
     "data/chunks.json": "[]\n",
     "data/ingestion-report.json": json({ status: "not_run", sources: [], note: NOTICE }),
     "data/verification-report.json": json({ status: "not_run", sources: [], note: NOTICE }),
@@ -122,13 +135,15 @@ export async function createSourceRelease({ root = ROOT, output }) {
     "docs/DATA_SOURCES.md": "# Source registry\n\n" + NOTICE + "\n\nPublisher URLs, source categories and fetch configuration are in [`data/sources.json`](../data/sources.json); retrieval dates are unset until you fetch. See [distribution and terms](DISTRIBUTION.md) and [geographic methods](GEOSPATIAL.md).\n",
   };
   for (const [name, value] of Object.entries(generated)) payload.set(name, Buffer.from(value));
-  const extraIgnores = "\n# Locally fetched external evidence and response artifacts are not source releases.\n/data/raw/\n/data/normalized/\n/data/chunks.json\n/data/ingestion-report.json\n/data/verification-report.json\n/evaluation/results/\n/evaluation/agent-audit/responses.json\n/evaluation/human-audit/responses.json\n/evaluation/suite/results/\n";
-  payload.set(".gitignore", Buffer.from((payload.get(".gitignore")?.toString() ?? "") + extraIgnores));
+  const extraIgnores = ["/data/raw/", "/data/normalized/", "/data/chunks.json", "/data/corpus.json", "/data/generations/", "/data/ingestion-report.json", "/data/verification-report.json", "/evaluation/results/", "/evaluation/agent-audit/responses.json", "/evaluation/human-audit/responses.json", "/evaluation/suite/results/"];
+  const existingIgnores = payload.get(".gitignore")?.toString() ?? "";
+  const missingIgnores = extraIgnores.filter((entry) => !existingIgnores.split(/\r?\n/).includes(entry));
+  payload.set(".gitignore", Buffer.from(existingIgnores + (missingIgnores.length ? `\n# Locally fetched evidence and response artifacts are not source releases.\n${missingIgnores.join("\n")}\n` : "")));
   const availableFiles = new Set([...payload.keys(), "SOURCE_RELEASE_MANIFEST.json"]);
   for (const [name, bytes] of payload) if (name.endsWith(".md")) payload.set(name, Buffer.from(omitUnavailableMarkdownLinks(bytes.toString("utf8"), name, availableFiles)));
-  // Every allowed payload is text. Normalize before hashing so Git's LF checkout policy
+  // Normalize text before hashing so Git's LF checkout policy
   // preserves both file bytes and manifest digests on Windows, macOS and Linux.
-  for (const [name, bytes] of payload) payload.set(name, Buffer.from(bytes.toString("utf8").replace(/\r\n?/g, "\n")));
+  for (const [name, bytes] of payload) if (!name.endsWith('.png')) payload.set(name, Buffer.from(bytes.toString("utf8").replace(/\r\n?/g, "\n")));
   const files = [...payload].map(([name, bytes]) => ({ path: name, bytes: bytes.length, sha256: digest(bytes) })).sort((a, b) => a.path.localeCompare(b.path));
   const manifest = { schema_version: 1, distribution: "source-only-alpha", content_sha256: digest(json(files)), external_snapshots_included: false, git_history_included: false, owner_hosting_config_included: false, initial_evidence_chunks: 0, note: NOTICE, excluded: ["data/raw/**", "data/normalized/**", "historical data/chunks.json", "historical derived evaluation/report artifacts", "docs/screenshots/**", ".openai/**", ".env and .dev.vars files", ".git/**", "node_modules/**", "work/**"], files };
   await mkdir(outputPath, { recursive: true });

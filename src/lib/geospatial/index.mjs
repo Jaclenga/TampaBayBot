@@ -31,6 +31,32 @@ function dateFromEpoch(value) {
   return typeof value === 'number' && Number.isFinite(value) && !Number.isNaN(new Date(value).valueOf()) ? new Date(value).toISOString() : null;
 }
 
+/** Reject incomplete, oversized, unprojected or open rings before a whole-parcel query. */
+function validatedPolygon(geometry, spatialReference, maxVertices, point) {
+  const sr = geometry?.spatialReference ?? spatialReference;
+  if ((sr?.latestWkid ?? sr?.wkid) !== 4326 || !Array.isArray(geometry?.rings) || !geometry.rings.length || geometry.rings.length > 100) return null;
+  let vertices = 0;
+  let containsPoint = false;
+  let touchesPoint = false;
+  for (const ring of geometry.rings) {
+    if (!Array.isArray(ring) || ring.length < 4) return null;
+    vertices += ring.length;
+    if (vertices > maxVertices || ring.some(pair => !Array.isArray(pair) || !withinServiceRegion({ longitude: pair[0], latitude: pair[1] }))) return null;
+    if (ring[0][0] !== ring.at(-1)[0] || ring[0][1] !== ring.at(-1)[1]) return null;
+    let area = 0;
+    for (let index = 1; index < ring.length; index++) {
+      const [ax, ay] = ring[index - 1], [bx, by] = ring[index];
+      area += (ax - ring[0][0]) * (by - ring[0][1]) - (bx - ring[0][0]) * (ay - ring[0][1]);
+      const cross = (point.longitude - ax) * (by - ay) - (point.latitude - ay) * (bx - ax);
+      if (Math.abs(cross) < 1e-12 && point.longitude >= Math.min(ax, bx) - 1e-9 && point.longitude <= Math.max(ax, bx) + 1e-9 && point.latitude >= Math.min(ay, by) - 1e-9 && point.latitude <= Math.max(ay, by) + 1e-9) touchesPoint = true;
+      if ((ay > point.latitude) !== (by > point.latitude) && point.longitude < (bx - ax) * (point.latitude - ay) / (by - ay) + ax) containsPoint = !containsPoint;
+    }
+    if (Math.abs(area) < 1e-15) return null;
+  }
+  if (!containsPoint && !touchesPoint) return null;
+  return { rings: geometry.rings.map(ring => ring.map(pair => pair.slice(0, 2))), spatialReference: { wkid: 4326 } };
+}
+
 function layerSource(layer) {
   return { sourceId: layer.source_id, sourceUrl: layer.url, agency: layer.agency, title: layer.title };
 }
@@ -38,7 +64,7 @@ function layerSource(layer) {
 function recordFor(kind, attributes, layer, retrievedAt) {
   const fields = layer.record;
   const id = String(attributes.OBJECTID);
-  const label = cleanText(attributes[fields.label]);
+  const label = cleanText(layer.fixed_label ?? attributes[fields.label]);
   const description = fields.description ? cleanText(attributes[fields.description]) : kind === 'boundary' ? 'City jurisdiction boundary' : '';
   const sourceUrl = `${layer.url}/query?${new URLSearchParams({ objectIds: id, outFields: layer.fields.join(','), returnGeometry: 'false', f: 'pjson' })}`;
   return {
@@ -99,19 +125,24 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
     return {
       status: candidates.length > 1 ? 'ambiguous_address' : candidates.length ? 'selection_required' : unavailable ? 'unavailable' : 'not_found', candidates, services, retrievedAt,
       warnings: unavailable ? ['Some address services could not be checked. The available matches may be incomplete.'] : [],
-      message: candidates.length > 1 ? 'More than one address matched. Select the location you mean before viewing property information.' : candidates.length ? 'Check the matched address, then select it to look up this location.' : unavailable ? 'An official address service could not be reached or returned an unreadable result. Try again or use the responsible city or county map.' : 'No reliable address-point match was found. Try the complete street address and ZIP code. Direct address lookup currently covers Hillsborough and Pinellas services; Pasco property lookup is not configured.',
+      message: candidates.length > 1 ? 'More than one address matched. Select the location you mean before viewing property information.' : candidates.length ? 'Check the matched address, then select it to look up this location.' : unavailable ? 'An official address service could not be reached or returned an unreadable result. Try again or use the responsible city or county map.' : 'No reliable address-point match was found. Try the street number and name, then add a city or ZIP code if needed. Official address services cover Hillsborough, Pinellas and Pasco.',
     };
   }
 
-  async function queryLayer(kind, point, layer) {
-    const params = new URLSearchParams({ geometry: `${point.longitude},${point.latitude}`, geometryType: 'esriGeometryPoint', inSR: '4326', spatialRel: 'esriSpatialRelIntersects', outFields: layer.fields.join(','), returnGeometry: 'false', resultRecordCount: '6', f: 'json' });
+  async function queryLayer(kind, point, layer, polygon = null) {
+    const limit = polygon ? settings.max_layer_records ?? 24 : 6;
+    const params = new URLSearchParams({ geometry: polygon ? JSON.stringify(polygon) : `${point.longitude},${point.latitude}`, geometryType: polygon ? 'esriGeometryPolygon' : 'esriGeometryPoint', inSR: '4326', outSR: '4326', spatialRel: 'esriSpatialRelIntersects', outFields: layer.fields.join(','), returnGeometry: kind === 'parcel' ? 'true' : 'false', resultRecordCount: String(limit), f: 'json' });
     const source = layerSource(layer);
     try {
-      const { data, retrievedAt } = await readJson(`${layer.url}/query?${params}`);
+      const { data, retrievedAt } = polygon
+        ? await readJson(`${layer.url}/query`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() })
+        : await readJson(`${layer.url}/query?${params}`);
       if (!Array.isArray(data.features) || data.features.some(f => !f.attributes || !/^\d+$/.test(String(f.attributes.OBJECTID)))) throw new Error('Unexpected layer schema.');
-      const records = data.features.slice(0, 6).map(feature => recordFor(kind, feature.attributes, layer, retrievedAt));
+      const records = data.features.slice(0, limit).map(feature => recordFor(kind, feature.attributes, layer, retrievedAt));
       if (records.some(record => !record.label)) throw new Error('Required layer designation is missing.');
-      return { ...source, status: data.exceededTransferLimit || data.features.length > 6 ? 'incomplete' : records.length > 1 ? 'ambiguous' : records.length ? 'found' : 'not_found', records, retrievedAt, message: records.length ? null : 'No intersecting feature was returned for this address point.' };
+      const status = data.exceededTransferLimit || data.features.length > limit ? 'incomplete' : records.length > 1 ? 'ambiguous' : records.length ? 'found' : 'not_found';
+      const geometry = kind === 'parcel' && status === 'found' ? validatedPolygon(data.features[0].geometry, data.spatialReference, settings.max_polygon_vertices ?? 5000, point) : null;
+      return { ...source, status, records, retrievedAt, ...(kind === 'parcel' ? { geometry } : {}), queryScope: polygon ? 'whole_parcel' : 'address_point', message: records.length ? null : `No intersecting feature was returned for this ${polygon ? 'parcel polygon' : 'address point'}.` };
     } catch {
       return { ...source, status: 'unavailable', records: [], retrievedAt: null, message: `${layer.title} could not be retrieved. This does not mean the property has no designation.` };
     }
@@ -141,7 +172,6 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
 
   async function getPropertyContext(candidate) {
     const warnings = [
-      'This lookup uses the selected address point. A parcel can cross mapped boundaries; confirm the whole property with the responsible agency.',
       'Mapped zoning and future land use do not establish permission to build or an official determination.',
     ];
     if (!validPoint(candidate) || typeof candidate.address !== 'string' || !cleanText(candidate.address)) {
@@ -153,20 +183,32 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
     const base = { address: cleanText(candidate.address), latitude: candidate.latitude, longitude: candidate.longitude, warnings, jurisdictionId, jurisdiction, boundaryChecks, coverage };
     if (located.status !== 'verified') {
       const noCoverage = located.status === 'missing_coverage';
-      const message = noCoverage ? 'Direct property lookup is configured for Tampa, St. Petersburg and Clearwater. This point is outside their mapped boundaries; contact the responsible municipality or county.' : 'Municipal jurisdiction could not be confirmed. No parcel or land-use designation is assigned; review the boundary source results.';
+      const message = noCoverage ? `Direct property lookup is configured for ${supportedJurisdictions.map(item => item.name).join(', ')}. This point is outside their mapped boundaries; contact the responsible municipality or county.` : 'Jurisdiction could not be confirmed. No parcel or land-use designation is assigned; review the boundary source results.';
       const blocked = kind => ({ status: noCoverage ? 'missing_coverage' : 'unavailable', records: [], sourceId: '', sourceUrl: '', title: kind, agency: 'Responsible municipality or county', retrievedAt: null, message });
       return { ...base, status: noCoverage ? 'missing_coverage' : 'partial', message, parcel: blocked('Parcel'), zoning: blocked('Zoning'), futureLandUse: blocked('Future Land Use'), evidence: evidenceFor(boundaryChecks) };
     }
     const selected = settings.jurisdictions.find(item => item.id === jurisdictionId);
     const { boundary } = located;
-    const [parcel, zoning, futureLandUse] = await Promise.all(['parcel', 'zoning', 'futureLandUse'].map(kind => queryLayer(kind, candidate, selected.layers[kind])));
+    const parcel = await queryLayer('parcel', candidate, selected.layers.parcel);
+    const polygon = parcel.geometry;
+    // Geometry remains internal: public results expose the scope and exact source record.
+    delete parcel.geometry;
+    const analysis = { scope: polygon ? 'whole_parcel' : 'address_point', status: polygon ? 'checked' : 'not_checked', parcelId: parcel.status === 'found' ? parcel.records[0].parcelId : null };
+    warnings.push(polygon ? 'Zoning and future land use are checked against the full returned parcel polygon. Boundary touches can return neighboring designations; agency review is needed to confirm split zoning.' : 'Whole-parcel geometry could not be verified. Zoning and future land use describe the selected address point only; split zoning elsewhere on the parcel has not been checked.');
+    let municipalities;
+    if (selected.layers.municipalities) municipalities = await queryLayer('boundary', candidate, selected.layers.municipalities, polygon);
+    const municipalBlock = municipalities && municipalities.status !== 'not_found';
+    const blocked = kind => ({ ...layerSource(selected.layers[kind]), records: [], status: municipalities?.status === 'found' || municipalities?.status === 'ambiguous' ? 'missing_coverage' : 'unavailable', retrievedAt: null, message: 'County land-use layers are limited to unincorporated Pasco. A municipal intersection or an unavailable boundary check prevents assigning county designations. Contact the municipality shown in the boundary records.' });
+    const [zoning, futureLandUse] = municipalBlock ? ['zoning', 'futureLandUse'].map(blocked) : await Promise.all(['zoning', 'futureLandUse'].map(kind => queryLayer(kind, candidate, selected.layers[kind], polygon)));
+    if (municipalBlock) warnings.push('Pasco parcels remain available countywide. County zoning and future land use are withheld where a municipal boundary intersects the selected parcel or address, or cannot be checked.');
+    if ([zoning, futureLandUse].some(layer => ['unavailable', 'incomplete'].includes(layer.status)) || municipalBlock) analysis.status = polygon ? 'incomplete' : 'not_checked';
     const results = [boundary, parcel, zoning, futureLandUse];
     const ambiguousParcel = parcel.status === 'ambiguous' || parcel.status === 'incomplete';
     if (ambiguousParcel) warnings.push('Multiple parcels intersect this address point. No single parcel is selected; verify the parcel identifier with the Property Appraiser.');
-    if ([zoning, futureLandUse].some(layer => layer.status === 'ambiguous' || layer.status === 'incomplete')) warnings.push('More than one mapped designation intersects this point. All returned matches are shown; official review is needed.');
+    if ([zoning, futureLandUse].some(layer => layer.status === 'ambiguous' || layer.status === 'incomplete')) warnings.push(`More than one mapped designation may intersect this ${polygon ? 'parcel' : 'point'}. All returned matches are shown; official review is needed.`);
     if (parcel.status === 'found' && parcel.records[0].address && parcel.records[0].address.toLowerCase() !== base.address.toLowerCase()) warnings.push('The parcel site address differs from the selected address. This can happen on shared sites; confirm the parcel identifier before relying on it.');
     const status = ambiguousParcel ? 'ambiguous_parcel' : results.every(layer => layer.status === 'found') ? 'found' : 'partial';
-    return { ...base, status, message: status === 'found' ? 'Public map records were found at the selected address point.' : 'Some property information needs verification. Review the individual source results.', boundary, parcel, zoning, futureLandUse, evidence: evidenceFor(results) };
+    return { ...base, status, message: status === 'found' ? `Public map records were found using the ${polygon ? 'whole parcel polygon' : 'selected address point'}.` : 'Some property information needs verification. Review the individual source results.', boundary, municipalities, parcel, zoning, futureLandUse, parcelAnalysis: analysis, evidence: evidenceFor([...results, ...(municipalities ? [municipalities] : [])]) };
   }
 
   return { lookupAddress, getJurisdiction, getPropertyContext };

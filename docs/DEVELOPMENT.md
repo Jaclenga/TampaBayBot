@@ -8,10 +8,10 @@ Use Node.js 24 for the toolchain used in the recorded project checks. `package.j
 
 ```sh
 npm ci
-npm run dev -- --port 3001
+npm run demo
 ```
 
-Open `http://localhost:3001`. The default `LLM_PROVIDER=none` needs no model account, application secret, `.env` file, database or Sites account. To enable a model, follow [model configuration](LLM.md); local environment files are ignored by Git.
+Open `http://localhost:3001`. The isolated demo shows a fictional-data banner and never replaces your working evidence. For an already populated and reviewed installation, use `npm run dev -- --port 3001`. The default `LLM_PROVIDER=none` needs no model account, application secret, `.env` file, database or Sites account. To enable a model, follow [model configuration](LLM.md); local environment files are ignored by Git.
 
 The source-only alpha contains an unfetched source registry and empty evidence/evaluation placeholders. The interface runs, but cited answers and corpus-dependent tests require locally acquired evidence. Follow [source acquisition and distribution](DISTRIBUTION.md) before running those checks. On a pristine source-release checkout, `npm run release:verify` checks its manifest before generated outputs are added.
 
@@ -21,7 +21,7 @@ If execution policy blocks `npm.ps1`, use `npm.cmd` and `npx.cmd`:
 
 ```powershell
 npm.cmd ci
-npm.cmd run dev -- --port 3001
+npm.cmd run demo
 ```
 
 This does not require changing execution policy. The other npm commands in this guide work in PowerShell and POSIX shells.
@@ -62,9 +62,13 @@ Run commands from the project root. Use the checks appropriate to the change and
 | --- | --- |
 | `npm run typecheck` | TypeScript checking |
 | `npm run lint` | Source and evaluation-runner linting |
-| `npm test` | Code regressions, including tests that expect an acquired corpus |
+| `npm test` / `npm run test:source` | Offline application, security, parser, provider, release and synthetic-evidence regressions |
+| `npm run test:corpus` | Complete historical regressions; needs the reviewed corpus |
+| `npm run demo` | Isolated original fictional evidence; no source downloads |
+| `npm run test:source:browser` | Chromium demo checks, including keyboard and accessibility automation |
+| `npm run release:manifest` | Regenerate a public source PR manifest after semantic distribution checks |
 | `node --test --test-isolation=none tests/source-release.test.mjs` | Source packaging, manifest and sanitization checks; no downloaded corpus needed |
-| `npm run ingest` | Fetch sources directly and regenerate evidence; outbound HTTPS and source review required |
+| `npm run ingest` | Stage fetched sources for review; does not replace the active corpus |
 | `npm run ingest -- --source=tampa-rmap` | Refresh one registered source |
 | `npm run ingest -- --offline` | Reprocess already downloaded snapshots; cannot populate an empty release |
 | `npm run ingest -- --check` | Check acquired source regeneration and provenance |
@@ -74,7 +78,7 @@ Run commands from the project root. Use the checks appropriate to the change and
 | `npm run build` | Compile the production application |
 | `npm run start` | Start Vinext's local production server after building |
 
-`npm run check` combines typecheck, lint, code tests, the legacy evaluation, the offline suite and build. It does not run source regeneration checks, browser checks or real-model tests. Source-only release checks cover its manifest, packaging and standalone smoke; their success does not imply that the full corpus or browser suite passed.
+`npm run check` combines typecheck, lint, source regressions and build. `npm run check:corpus` additionally runs the complete corpus regressions, legacy evaluation and offline suite. It does not run source regeneration checks, browser checks or real-model tests. Source-only release checks cover its manifest, packaging and standalone smoke; their success does not imply that the full corpus or browser suite passed.
 
 Failed source refreshes preserve previous evidence with its original dates and an unavailable state, then exit unsuccessfully. Review changed text, metadata, terms and evaluation results before using refreshed material. See [data sources](DATA_SOURCES.md) and [distribution](DISTRIBUTION.md) for acquisition and licensing, [evaluation suite](EVAL_SUITE.md) for focused runs/comparisons, and [LLM.md](LLM.md#reproduce-integration-checks) for real Ollama testing. Release preparation and secret scanning are documented in [distribution](DISTRIBUTION.md) and [security](../SECURITY.md).
 

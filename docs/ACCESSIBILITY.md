@@ -19,7 +19,11 @@ The current and archived axe scans reported no violations or incomplete nodes in
 
 The desktop, mobile, housing-answer and evaluation images in `docs/screenshots/` retain the earlier redesign captures associated with the 15:17 UTC browser run. An implementation agent visually inspected those earlier images; they were not refreshed or visually reviewed for the final production run. This is not a human usability audit.
 
-## Run the browser checks
+## Public source browser checks
+
+`npm run test:source:browser` starts an isolated fictional demo and verifies citations, keyboard interaction, mobile reflow, jurisdiction follow-ups and Spanish navigation, including axe scans. It needs Chromium (`npx playwright install chromium`) but no downloaded corpus or model. `docs/images/demo.png` is the current original fictional demo capture; historical screenshots remain archived separately.
+
+## Run the historical corpus browser checks
 
 These complete browser scenarios expect a populated, reviewed corpus and generated evaluation reports. The empty source-only distribution has an explicit setup screen instead; its separate release workflow checks that state without claiming the resident scenarios passed. See [source loading](DISTRIBUTION.md) and [evaluation commands](EVAL_SUITE.md).
 
@@ -71,7 +75,7 @@ Record reviewer, date, browser/OS, assistive technology, observed result and iss
 - No human screen-reader audit, accessibility expert sign-off or resident usability study has been completed. The prepared human answer audit contains no fabricated accessibility scores.
 - Automated CSS zoom is an approximation, not a substitute for browser zoom and text-only resizing. Some secondary metadata is small and must be checked with resident users and enlarged text.
 - Original government documents and OpenStreetMap are outside project control and may have their own accessibility problems. The application exposes text evidence and direct alternatives but cannot repair the original source sites.
-- The initial UI is English only. Source acronyms and some quoted regulatory wording remain technical; a verified plain-language glossary needs further work.
+- The question interface and site navigation support English and Spanish; property tools and reference pages remain in English. Source quotations retain their original language. Source acronyms and some quoted regulatory wording remain technical; a verified plain-language glossary needs further work.
 - Screen-reader announcement order, long source-disclosure navigation, mobile assistive technology and forced-color support need human validation.
 
 Report reproducible accessibility issues through [CONTRIBUTING.md](../CONTRIBUTING.md), with the browser, device, assistive technology and task affected. Avoid private resident information; sensitive security/privacy details belong in the [private reporting channel](../SECURITY.md#reporting-a-problem).

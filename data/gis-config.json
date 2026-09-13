@@ -33,6 +33,16 @@
       "coverage": "Pinellas County address points",
       "max_candidates": 5,
       "minimum_score": 75
+    },
+    {
+      "id": "pasco",
+      "source_id": "pasco-maps",
+      "agency": "Pasco County GIS",
+      "url": "https://pascogis.pascocountyfl.net/giswebs/rest/services/LocatorCompositeName/GeocodeServer",
+      "single_line_field": "SingleLine",
+      "coverage": "Pasco County address points",
+      "max_candidates": 5,
+      "minimum_score": 70
     }
   ],
   "jurisdictions": [
@@ -261,14 +271,106 @@
           }
         }
       }
+    },
+    {
+      "id": "pasco",
+      "name": "Pasco County",
+      "boundary_label": "Pasco County",
+      "layers": {
+        "boundary": {
+          "source_id": "pasco-maps",
+          "agency": "Pasco County GIS",
+          "title": "Pasco County Boundary",
+          "url": "https://pascogis.pascocountyfl.net/giswebs/rest/services/FeatureDatasets/Boundaries/MapServer/1",
+          "fields": [
+            "OBJECTID"
+          ],
+          "record": {
+            "label": null
+          },
+          "fixed_label": "Pasco County"
+        },
+        "municipalities": {
+          "source_id": "pasco-maps",
+          "agency": "Pasco County GIS",
+          "title": "Pasco Municipal Boundaries",
+          "url": "https://pascogis.pascocountyfl.net/giswebs/rest/services/FeatureDatasets/Boundaries/MapServer/3",
+          "fields": [
+            "OBJECTID",
+            "CITYNAME",
+            "last_edited_date"
+          ],
+          "record": {
+            "label": "CITYNAME",
+            "updatedAt": "last_edited_date"
+          }
+        },
+        "parcel": {
+          "source_id": "pasco-maps",
+          "agency": "Pasco County GIS",
+          "title": "Pasco County Parcel",
+          "url": "https://pascogis.pascocountyfl.net/giswebs/rest/services/PascoMapper/Parcels/MapServer/7",
+          "fields": [
+            "OBJECTID",
+            "HPARCEL",
+            "VPARCEL",
+            "SITE_ADDRESS",
+            "JURISDICTION_NAME",
+            "LAST_UPDATE"
+          ],
+          "record": {
+            "label": "HPARCEL",
+            "parcelId": "HPARCEL",
+            "pin": "VPARCEL",
+            "address": "SITE_ADDRESS",
+            "description": "SITE_ADDRESS",
+            "updatedAt": "LAST_UPDATE"
+          }
+        },
+        "zoning": {
+          "source_id": "pasco-maps",
+          "agency": "Pasco County GIS",
+          "title": "Unincorporated Pasco Zoning",
+          "url": "https://pascogis.pascocountyfl.net/giswebs/rest/services/FeatureDatasets/Landuse_Planning/MapServer/4",
+          "fields": [
+            "OBJECTID",
+            "ZN_TYPE",
+            "last_edited_date"
+          ],
+          "record": {
+            "label": "ZN_TYPE",
+            "updatedAt": "last_edited_date"
+          }
+        },
+        "futureLandUse": {
+          "source_id": "pasco-maps",
+          "agency": "Pasco County GIS",
+          "title": "Unincorporated Pasco Future Land Use",
+          "url": "https://pascogis.pascocountyfl.net/giswebs/rest/services/FeatureDatasets/Landuse_Planning/MapServer/1",
+          "fields": [
+            "OBJECTID",
+            "FLU_CODE",
+            "DESCRIPTION",
+            "DATE_STAMP",
+            "last_edited_date"
+          ],
+          "record": {
+            "label": "FLU_CODE",
+            "description": "DESCRIPTION",
+            "updatedAt": "last_edited_date"
+          }
+        }
+      }
     }
   ],
   "limitations": [
-    "Point intersections identify mapped context at the selected address point; they do not check every part of a parcel for split zoning.",
-    "Direct property layers are configured for Tampa, St. Petersburg and Clearwater only. Other Tampa Bay municipalities and unincorporated areas return missing or unverified coverage.",
-    "Geocoder city names and mailing addresses do not establish jurisdiction; municipal polygon queries choose the land-use sources.",
-    "Pasco address geocoding and municipal property layers are not configured; regional navigation does not imply direct property lookup coverage.",
+    "A unique parcel's full polygon is checked against zoning and future land-use layers when valid geometry is available. Intersections include boundary touches; multiple designations require agency review and do not by themselves prove split zoning.",
+    "Direct property layers cover Tampa, St. Petersburg, Clearwater and Pasco County. Pasco county land-use layers are used only after municipal boundaries exclude incorporated cities.",
+    "Address labels do not establish jurisdiction; authoritative boundary polygons choose land-use sources.",
+    "An unavailable, ambiguous or oversized parcel geometry falls back to a clearly identified address-point check. Whole-parcel intersections are bounded and source truncation remains explicit.",
     "A layer designation is not a development entitlement, approval, or official zoning determination.",
     "Layer update timestamps may describe one feature rather than the currency of the entire dataset."
-  ]
+  ],
+  "max_polygon_vertices": 5000,
+  "max_layer_records": 24
 }

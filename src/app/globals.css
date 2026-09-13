@@ -1371,3 +1371,10 @@ input::placeholder {
     color: black;
   }
 }
+
+.demo-banner { margin: 0; padding: 16px 24px; color: #473314; background: #fff1cc; border-bottom: 1px solid #c79b4a; text-align: center; font-size: 15px; line-height: 1.6; }
+
+.site-header > label { display: flex; align-items: center; gap: 8px; }
+.site-header > label select { min-height: 36px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--ink); font: inherit; }
+.demo-banner p { margin: 0; }
+@media (max-width: 740px) { .site-header nav { flex-wrap: wrap; gap: 12px 20px; } .site-header > label { margin-left: 0; } }

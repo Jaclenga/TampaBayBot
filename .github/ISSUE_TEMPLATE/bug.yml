@@ -1,0 +1,21 @@
+name: Bug or incorrect answer
+description: Report a reproducible software or evidence problem using public or fictional examples.
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: Task and expected result
+      description: Describe what you tried to do. Omit names, addresses, account numbers and other private details.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result and steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Version, environment and evidence
+      description: Include browser/OS, source URL/date if relevant, and whether this used fictional demo data or locally fetched evidence. Report undisclosed vulnerabilities through GitHub private vulnerability reporting.

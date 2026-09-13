@@ -16,6 +16,7 @@ export interface Chunk {
   retrieved_at?: string; content_hash?: string; url?: string; [key: string]: unknown;
 }
 export interface Evidence {
+  language?: 'en' | 'es' | 'und';
   id: string; chunk_id: string; source_id: string; title: string; agency: string;
   quote: string; section: string | null; page: number | null; record_id: string | null;
   layer: string | null; url: string; retrieved_at: string | null;
@@ -23,6 +24,9 @@ export interface Evidence {
   content_hash: string | null;
 }
 export interface ResidentAnswer {
+  requiredEvidenceIds?: string[];
+  conversation?: import('./conversation.mjs').ConversationContext | null;
+  conversationUsed?: boolean;
   generation?: {
     mode: 'extractive' | 'llm';
     provider: 'none' | 'ollama' | 'openai-compatible' | 'invalid';

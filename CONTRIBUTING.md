@@ -6,7 +6,9 @@ The canonical contribution repository is [`Jaclenga/TampaBayBot`](https://github
 
 ## Before opening a pull request
 
-Use the committed lockfile and run checks appropriate to the change. Cited-answer tests need acquired evidence; an empty source-only checkout is not a populated benchmark. The [development guide](docs/DEVELOPMENT.md#commands-and-evidence-prerequisites) explains these prerequisites.
+Run `npm ci`, `npm test`, `npm run typecheck`, and `npm run lint`. These source regressions use original synthetic fixtures and do not require downloaded evidence. Use `npm run demo` to exercise the interface. After `npx playwright install chromium`, run `npm run test:source:browser` for interface changes. Historical populated-corpus checks are separate: `npm run test:corpus`.
+
+In a public source checkout, run `npm run release:manifest` after the final source edit, inspect its changed-file list and diff, then run `npm run release:verify`. Commit the updated manifest with the change. Manifest preparation refuses fetched evidence, populated audit packets and private files; it cannot authorize them by changing hashes. If you acquired sources locally, use the source-only candidate packager described in [distribution](docs/DISTRIBUTION.md), rather than rehashing the populated tree.
 
 For UI changes, inspect keyboard operation, focus, announcements, narrow-screen reflow and text resizing as well as running [browser checks](docs/ACCESSIBILITY.md). Record checks actually performed. Automation does not replace a screen-reader or independent human audit.
 

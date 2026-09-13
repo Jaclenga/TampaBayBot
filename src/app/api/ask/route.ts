@@ -1,9 +1,8 @@
-import sources from "@/data/sources.json";
-import chunks from "@/data/chunks.json";
+import { sources, chunks } from "@/lib/corpus";
 import { readInput, inputText, inputJurisdiction, json, inputErrorJson } from "@/lib/http";
 import { parseLlmConfig } from "@/lib/llm/index.mjs";
 import { getRuntimeEnv } from "@/lib/runtime-env.mjs";
-import { answerWithGuardrails } from "@/lib/guardrails/navigator.mjs";
+import { answerResidentQuestion } from "@/lib/core/resident.mjs";
 import { GuardrailError } from "@/lib/guardrails/index.mjs";
 import { siteGuards } from "@/lib/guardrails/site.mjs";
 export async function POST(request: Request) {
@@ -11,10 +10,12 @@ export async function POST(request: Request) {
     const input = await readInput(request);
     const question = inputText(input.question);
     return json(
-      await answerWithGuardrails(question, {
+      await answerResidentQuestion(question, {
         sources,
         chunks,
         jurisdictionId: inputJurisdiction(input.jurisdictionId),
+        conversation: input.conversation,
+        ...(input.locale !== undefined ? { locale: input.locale as 'en' | 'es' } : {}),
         extraGuards: siteGuards,
         config: parseLlmConfig(getRuntimeEnv()),
         signal: request.signal,

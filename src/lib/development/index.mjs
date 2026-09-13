@@ -1,6 +1,7 @@
 import config from '../../../data/development-config.json' with { type: 'json' };
 import { createGeospatialClient, haversineMeters, validPoint, withinServiceRegion } from '../geospatial/index.mjs';
 import { fetchBoundedText } from '../geospatial/remote.mjs';
+import { createOfficialDevelopmentReader } from './official.mjs';
 
 const ACTIVITY_DATE_FIELDS = [
   ['status_date', 'source status date'],
@@ -116,6 +117,7 @@ export function normalizeDevelopmentCsv(text, settings = config) {
 }
 
 export function createDevelopmentClient({ fetcher = fetch, settings = config, now = () => new Date(), locateJurisdiction = createGeospatialClient({ fetcher }).getJurisdiction } = {}) {
+  const getOfficialDevelopment = createOfficialDevelopmentReader({ fetcher, settings, now });
   let cache;
   let inFlight;
   async function loadSnapshot() {
@@ -149,11 +151,17 @@ export function createDevelopmentClient({ fetcher = fetch, settings = config, no
     if (!validPoint(point) || typeof radiusMeters !== 'number' || !Number.isFinite(radiusMeters) || radiusMeters < settings.min_radius_meters || radiusMeters > settings.max_radius_meters) {
       return emptyResult('invalid_input', `Select a location and a distance between ${settings.min_radius_meters} and ${settings.max_radius_meters} meters.`);
     }
-    if (!withinServiceRegion(point)) return emptyResult('missing_coverage', 'This independent development snapshot covers the City of Tampa only.');
+    if (!withinServiceRegion(point)) return emptyResult('missing_coverage', 'This point is outside the supported Tampa Bay search area.');
     try {
       const location = await locateJurisdiction(point);
       base.jurisdictionId = location.jurisdictionId;
       base.boundaryChecks = location.boundaryChecks;
+      if (location.status === 'verified' && location.jurisdictionId !== settings.jurisdiction_id) {
+        const official = await getOfficialDevelopment(location, point, radiusMeters);
+        if (official) return official;
+        const fallback = settings.official_fallbacks?.[location.jurisdictionId];
+        return { ...emptyResult('missing_coverage', 'No development-record adapter is configured for this jurisdiction. Use the responsible agency portal; a missing dataset does not mean no activity exists.'), ...(fallback ? { sourceUrl: fallback.url, title: fallback.title, authoritativeStatus: 'official agency navigation', sourceSnapshotDate: null, commit: null } : {}) };
+      }
       if (location.status === 'missing_coverage' || (location.status === 'verified' && location.jurisdictionId !== settings.jurisdiction_id)) {
         return emptyResult('missing_coverage', 'This independent development snapshot covers the City of Tampa only. St. Petersburg, Clearwater and other Tampa Bay locations are not included.');
       }

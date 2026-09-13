@@ -6,6 +6,12 @@ export function containsSensitiveIdentifier(text) {
     .normalize("NFKC")
     .replace(/[\u200B-\u200D\u2060\uFEFF]/g, "")
     .replace(/[\u2010-\u2015\u2212]/g, "-");
+  // Match common Spanish labels without altering the value being screened.
+  text = text.replace(/n[uú]mero (?:de |del )?seguro social/gi, 'social security number')
+    .replace(/n[uú]mero de cuenta(?: bancaria)?/gi, 'bank account number')
+    .replace(/n[uú]mero de ruta(?: bancaria)?/gi, 'routing number')
+    .replace(/(?:clave de api|clave de acceso)/gi, 'api key')
+    .replace(/contrase[nñ]a/gi, 'password');
   if (/\b\d{3}-\d{2}-\d{4}\b/.test(text)) return true;
   if (
     /\b(?:ssn|social security(?: number)?|bank account(?: number)?|routing number|account number)\s*(?:is\s*|[:#=]\s*)?\d[\d -]{5,24}\b/i.test(

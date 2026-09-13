@@ -1,6 +1,6 @@
 import ResidentApp from "@/components/resident-app";
 import { getModelNotice } from "@/lib/llm-settings";
-import chunks from "@/data/chunks.json";
+import { chunks, demoMode } from "@/lib/corpus";
 import Link from "next/link";
 export const dynamic = "force-dynamic";
 export default function Home() {
@@ -12,5 +12,8 @@ export default function Home() {
       <Link href="/sources" className="text-link">Browse official sources</Link>
     </main>
   );
-  return <ResidentApp modelNotice={getModelNotice()} />;
+  return <>
+    {demoMode && <aside className="demo-banner" aria-label="Fictional demonstration"><p role="note"><strong>Fictional demonstration / Demostración ficticia</strong><br />All example programs and amounts are invented for testing. Do not use these examples for housing decisions. Los programas y montos son ficticios.</p></aside>}
+    <ResidentApp modelNotice={getModelNotice()} />
+  </>;
 }

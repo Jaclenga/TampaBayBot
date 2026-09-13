@@ -1,4 +1,4 @@
-import { normalizeQuestion } from '../core/router.mjs';
+import { intentText } from '../core/router.mjs';
 import { sourceCoversJurisdiction } from '../coverage.mjs';
 
 const STOP_WORDS = new Set('a an the my me i in is it be to of on at do does this that for and or can could would what which how where who are with have has from about want need please tell help get find show near by as if there any use may your you'.split(' '));
@@ -21,11 +21,44 @@ function stem(token) {
 }
 
 export function tokens(text, expand = false) {
-  const words = normalizeQuestion(text).split(/\s+/).filter(word => word.length > 1 && !STOP_WORDS.has(word));
+  const words = intentText(text).split(/\s+/).filter(word => word.length > 1 && !STOP_WORDS.has(word));
   return (expand ? words.flatMap(word => [word, ...(SYNONYMS[word] ?? [])]) : words).map(stem);
 }
 
+/** Short factual list/table rows remain separate exact quotes with their section.
+ * Bare headings, menu links and schema metadata are still not narrative evidence. */
+function usableChunk(chunk) {
+  if ((chunk.text.match(/":/g) ?? []).length > 5) return false;
+  if (chunk.text.length >= 45) return true;
+  if (chunk.text.length < 12 || !(chunk.section || chunk.title || chunk.page)) return false;
+  return /\b(?:maximum|minimum|fee|fees|limit|amount|deadline|income|hours|term|assistance|cost|applications?)\b/i.test(chunk.text)
+    && /[:$%\d]|\b(?:closed|open|required|not|only)\b/i.test(chunk.text);
+}
+
+/** Match the requested factual field in the passage itself, not its page title. */
+export function requestedDetailScore(question, text) {
+  const query = intentText(question);
+  const body = intentText(text);
+  if (!/\d|\b(?:no fee|free of charge)\b/.test(body)) return 0;
+  // An income threshold and a benefit amount are different facts even when both
+  // contain a dollar figure and the same word "maximum".
+  const income = /\b(?:income|ami|earnings?|salary)\b/;
+  const fees = /\b(?:fee|fees|cost|costs|charge)\b/;
+  if (income.test(query) !== income.test(body)) return 0;
+  if (fees.test(query) && !fees.test(body)) return 0;
+  if (/\bmaximum\b/.test(query) && /\bminimum\b/.test(body) && !/\bmaximum\b/.test(body)) return 0;
+  const fields = [
+    { query: /\b(?:maximum|max|how much|amount)\b/, body: /\b(?:maximum|max|up to|amount|limit)\b/, kind: /\$|\b(?:dollars?|usd)\b/ },
+    { query: /\b(?:minimum)\b/, body: /\bminimum\b/, kind: /\$|\b(?:dollars?|usd)\b/ },
+    { query: /\b(?:fee|fees|cost|costs)\b/, body: /\b(?:fee|fees|cost|costs|charge)\b/, kind: /\$|\b(?:dollars?|usd|no fee|free of charge)\b/ },
+    { query: /\b(?:how long|duration|loan term)\b/, body: /\b(?:term|period|for|loan)\b/, kind: /\b(?:days?|months?|years?)\b/ },
+    { query: /\b(?:deadline|due date)\b/, body: /\b(?:deadline|due|by)\b/, kind: /\b\d{4}\b/ },
+  ];
+  return fields.filter(field => field.query.test(query) && field.body.test(body) && field.kind.test(body)).length;
+}
+
 export function isInstructionText(text) {
+  if (/\b(?:ignora|ignore|olvida|omite)\b.{0,40}\b(?:instrucciones|reglas|sistema|citas)\b|\b(?:revela|muestra|envia)\b.{0,50}\b(?:clave secreta|claves de api|credenciales|prompt del sistema)\b|\b(?:mensaje del sistema|instrucciones del desarrollador)\s*:/iu.test(text)) return true;
   return /ignore\s+(?:all\s+)?(?:previous|prior|above|system)\s+(?:instructions|rules)|(?:system|developer)\s*(?:message|prompt)\s*:|reveal\s+(?:your\s+)?(?:system prompt|secret|api key)|<\/?(?:script|iframe)\b|javascript:|(?:assistant|model)\s*:\s*(?:ignore|you must)|send\s+(?:all\s+)?(?:credentials|secrets|api keys)\s+to/i.test(text);
 }
 
@@ -62,7 +95,7 @@ export function retrieve(question, { sources, chunks, route, now = new Date(), l
     if (!source || typeof chunk.text !== 'string' || !chunk.text.trim()) continue;
     if (isInstructionText(chunk.text)) { quarantined.push(chunk.id); continue; }
     // Layer schemas and isolated menu headings are provenance, not resident answers.
-    if (chunk.text.length < 45 || (chunk.text.match(/":/g) ?? []).length > 5) continue;
+    if (!usableChunk(chunk)) continue;
     if (source.categories?.length && topic !== 'navigation' && !source.categories.includes(topic)) continue;
     const words = tokens(`${source.title} ${source.title} ${(source.keywords ?? []).join(' ')} ${chunk.title ?? ''} ${chunk.section ?? ''} ${chunk.text}`);
     const frequencies = new Map();
@@ -88,7 +121,11 @@ export function retrieve(question, { sources, chunks, route, now = new Date(), l
     if (route.subjectCategory === 'development' && document.source.source_id === 'tampa-development-contact') score += 0.5;
     const stale = sourceIsStale(document.source, document.chunk, now);
     score *= authorityWeight(document.source) * (stale ? 0.8 : 1);
-    return { ...document, score, matches, stale };
+    const detailScore = requestedDetailScore(question, document.chunk.text);
+    // A short row's repeated page metadata must not outrank contextual guidance
+    // merely because BM25 rewards its length on a broad assistance question.
+    if (document.chunk.text.length < 45 && !detailScore) score *= 0.25;
+    return { ...document, score, matches, stale, detailScore };
   }).filter(item => item.score > 0).sort((a, b) => b.score - a.score || a.chunk.id.localeCompare(b.chunk.id));
-  return { hits: ranked.slice(0, limit).map(({ chunk, source, score, matches, stale }) => ({ chunk, source, score, matches, stale })), quarantined };
+  return { hits: ranked.slice(0, limit).map(({ chunk, source, score, matches, stale, detailScore }) => ({ chunk, source, score, matches, stale, detailScore })), quarantined };
 }

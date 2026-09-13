@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { lstat, readFile, readdir, realpath } from 'node:fs/promises';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { assertAllowedReleasePath, assertSourceOnlyContents, isGeneratedReleasePath } from './source-policy.mjs';
 
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 export async function verifySourceRelease(directory) {
@@ -13,6 +14,7 @@ export async function verifySourceRelease(directory) {
   const manifest = JSON.parse(await readFile(join(root, manifestName), 'utf8'));
   assert.equal(manifest.distribution, 'source-only-alpha');
   assert.equal(manifest.external_snapshots_included, false);
+  assert.equal(manifest.git_history_included, false);
   assert.equal(manifest.owner_hosting_config_included, false);
   assert.equal(manifest.initial_evidence_chunks, 0);
   assert.ok(Array.isArray(manifest.files) && manifest.files.length > 0);
@@ -22,6 +24,7 @@ export async function verifySourceRelease(directory) {
     assert.equal(typeof file.path, 'string');
     assert.ok(!file.path.includes('\\') && !file.path.split('/').some(part => !part || part === '..' || part === '.'));
     assert.ok(!expected.has(file.path), 'Duplicate manifest path.');
+    assertAllowedReleasePath(file.path);
     expected.add(file.path);
     const target = resolve(root, file.path);
     assert.ok(target.startsWith(root + sep), 'Manifest path escapes the release.');
@@ -35,13 +38,14 @@ export async function verifySourceRelease(directory) {
     for (const item of await readdir(directory, { withFileTypes: true })) {
       const target = join(directory, item.name);
       const name = relative(root, target).split(sep).join('/');
-      if (directory === root && ['.git', 'node_modules', 'work'].includes(item.name)) continue;
+      if (isGeneratedReleasePath(name)) continue;
       assert.ok(!item.isSymbolicLink(), 'Unreviewed symbolic link in release.');
       if (item.isDirectory()) await walk(target);
       else assert.ok(expected.has(name), `Unreviewed file in source release: ${name}`);
     }
   }
   await walk(root);
+  await assertSourceOnlyContents(root, manifest.files.map(file => file.path));
   return { status: 'passed', files: manifest.files.length, contentSha256: manifest.content_sha256 };
 }
 

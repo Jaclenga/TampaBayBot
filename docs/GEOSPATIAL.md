@@ -6,15 +6,15 @@ The public source package includes query/fetch configuration but no downloaded G
 
 ## Services and fields
 
-Resource navigation includes selected sources for Hillsborough, Pinellas and Pasco. Direct live property queries currently cover Tampa, St. Petersburg and Clearwater. County resource selection does not prove that a property is unincorporated or served by that county department.
+Resource navigation includes selected sources for Hillsborough, Pinellas and Pasco. Direct live property queries cover Tampa, St. Petersburg, Clearwater and Pasco County. [Coverage expansion](COVERAGE_EXPANSION.md) records the new exact endpoints, working live checks and upstream outages. County resource selection does not prove that a property is unincorporated or served by that county department.
 
-| Area | Address search | Parcel / zoning / future land use | Nearby development snapshot |
+| Area | Address search | Parcel / zoning / future land use | Nearby development source |
 | --- | --- | --- | --- |
 | Tampa | Hillsborough address locator | City boundary verified; HCPA parcel and Tampa-specific layers | Tampa-only snapshot after boundary verification |
-| St. Petersburg | Pinellas address locator | County city-boundary/parcel layers and St. Petersburg zoning/land use | Explicitly not covered |
-| Clearwater | Pinellas address locator | County city-boundary/parcel layers and Clearwater zoning/land use | Explicitly not covered |
+| St. Petersburg | Pinellas address locator | County city-boundary/parcel layers and St. Petersburg zoning/land use | Official district-project adapter; live record queries currently unavailable |
+| Clearwater | Pinellas address locator | County city-boundary/parcel layers and Clearwater zoning/land use | Official Planning Cases polygon queries; not a building-permit inventory |
 | Other Hillsborough / Pinellas municipalities and unincorporated areas | Candidates may be returned | Outside the configured municipal layers; use the responsible agency | Explicitly not covered |
-| Pasco | No connected locator | No connected property layers; narrative housing/permit/GIS resources available | Explicitly not covered |
+| Pasco | Official County address locator | County parcels; zoning/FLU only after municipal exclusion | No configured development adapter; official permit link |
 
 The endpoint inventory below matches [`data/gis-config.json`](../data/gis-config.json). The recorded September 12, 2026 observation queried these services; it does not guarantee their current availability. Every result carries a registry source ID and an exact feature query URL.
 
@@ -32,17 +32,21 @@ The endpoint inventory below matches [`data/gis-config.json`](../data/gis-config
 | Clearwater jurisdiction | [Pinellas municipal layer 5](https://egis.pinellas.gov/gis/rest/services/PublicWebGIS/Municipalities/MapServer/5) | Official Clearwater boundary intersection |
 | Clearwater zoning | [City zoning layer 1](https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/Zoning_WGS84/MapServer/1) | City zoning designation and description |
 | Clearwater future land use | [City future-land-use layer 0](https://gis.myclearwater.com/arcgis/rest/services/ArcGISMapServices/FLU_w_PPC_Colors_WGS84/MapServer/0) | City future-land-use designation |
+| Pasco address candidates | [County composite locator](https://pascogis.pascocountyfl.net/giswebs/rest/services/LocatorCompositeName/GeocodeServer) | Address-point candidates with original locator scores |
+| Pasco county / municipal boundaries | [County boundary layer 1](https://pascogis.pascocountyfl.net/giswebs/rest/services/FeatureDatasets/Boundaries/MapServer/1) and [City Limits layer 3](https://pascogis.pascocountyfl.net/giswebs/rest/services/FeatureDatasets/Boundaries/MapServer/3) | County intersection and separate incorporated-city exclusion |
+| Pasco parcels | [County parcel layer 7](https://pascogis.pascocountyfl.net/giswebs/rest/services/PascoMapper/Parcels/MapServer/7) | HPARCEL, VPARCEL, site address, jurisdiction label and update date |
+| Pasco zoning / future land use | [Zoning layer 4](https://pascogis.pascocountyfl.net/giswebs/rest/services/FeatureDatasets/Landuse_Planning/MapServer/4) and [Future Landuse layer 1](https://pascogis.pascocountyfl.net/giswebs/rest/services/FeatureDatasets/Landuse_Planning/MapServer/1) | County land-use designations only after municipal exclusion |
 
 The first four share registry entry `tampa-gis`; future land use uses `planhillsborough-flu`. Tax parcels are HCPA information served by the City. Parcel service metadata says daily updates; future-land-use metadata says quarterly updates. These are publisher expectations, not guarantees of freshness. A feature's LASTUPDATE is shown separately from our retrieval timestamp; a long-lived boundary's old edit date does not prove the boundary is obsolete.
 
 ## Geometry and uncertainty rules
 
-1. `lookupAddress(address)` queries the connected Hillsborough and Pinellas locators using `SingleLine` and `outSR=4326`. Each candidate retains its actual locator provenance. Only PointAddress/Subaddress candidates with score at least 75 and valid local coordinates are offered. Service outages remain warnings when another locator succeeds. A score is not a probability of correctness. Street approximations, ZIP centroids, malformed responses, and other coordinate systems are rejected.
+1. `lookupAddress(address)` queries the connected Hillsborough, Pinellas and Pasco locators using `SingleLine` and `outSR=4326`. Each candidate retains its actual locator provenance. Only PointAddress/Subaddress candidates with valid local coordinates and the configured minimum score are offered: 75 for Hillsborough/Pinellas and 70 for Pasco. The Pasco locator returned verified civic address points scoring 71.88 when given a mailing-city suffix. Every candidate still requires selection. Service outages remain warnings when another locator succeeds. A score is not a probability of correctness. Street approximations, ZIP centroids, malformed responses, and other coordinate systems are rejected.
 2. Even one candidate yields `selection_required`. Multiple distinct candidates yield `ambiguous_address`; identical duplicates are removed. The UI must obtain selection before calling `getPropertyContext({address,latitude,longitude})`.
-3. Context queries use longitude,latitude order in ArcGIS geometry, `inSR=4326`, and polygon/point intersection. The broad three-county coordinate guard does **not** establish jurisdiction. A municipal polygon match is required; a mailing address or selected resource area is insufficient.
-4. The adapter checks configured municipal boundaries before retrieving the matched city's parcel, zoning and future-land-use layers. Conflicting, incomplete or unverified boundaries prevent property-layer assignment. The response includes `jurisdictionId`, `boundaryChecks` and `coverage`; unsuccessful checks remain inspectable. A St. Petersburg or Clearwater point never falls back to Tampa zoning.
-5. All matching parcels/designations are retained, up to a declared six-feature limit. Multiple parcels yield `ambiguous_parcel`. Multiple layer designations remain `ambiguous`; a transfer-limit response is `incomplete`. No first match is silently promoted to a determination.
-6. The point can be near an edge, a shared building, or a parcel with split zoning. This v0.1 does not overlay the entire parcel polygon against every zoning/land-use polygon. Whole-parcel and official determinations require agency review. It also does not check all overlays, deed restrictions, flood constraints, or site-specific approvals.
+3. Context queries use longitude,latitude order in ArcGIS geometry, `inSR=4326`, and polygon/point intersection. The broad three-county coordinate guard does **not** establish jurisdiction. A configured city or Pasco County polygon match is required; a mailing address or selected resource area is insufficient.
+4. The adapter checks configured boundaries before retrieving the selected jurisdiction's parcel and land-use layers. In Pasco, a separate municipal layer checks the full parcel polygon when available, or the address point otherwise. Any municipal match or failed municipal check withholds county zoning/future land use while retaining county parcels. Conflicting, incomplete or unverified primary boundaries prevent property-layer assignment. The response includes `jurisdictionId`, `boundaryChecks` and `coverage`; unsuccessful checks remain inspectable. A St. Petersburg or Clearwater point never falls back to Tampa zoning.
+5. Matching parcels/designations are retained up to six features per point query or 24 per whole-parcel query. Multiple parcels yield `ambiguous_parcel`. Multiple layer designations remain `ambiguous`; a transfer-limit response is `incomplete`. No first match is silently promoted to a determination.
+6. The point can be near an edge, a shared building, or a parcel with split zoning. The adapter now intersects a validated full parcel polygon with the configured zoning/land-use layers. Invalid, absent or ambiguous geometry falls back to explicitly labeled point context. Multiple intersections and official determinations require agency review. It also does not check all overlays, deed restrictions, flood constraints, or site-specific approvals.
 
 `found`, `partial`, `not_found`, `missing_coverage`, `ambiguous`, `incomplete`, `invalid_input`, and `unavailable` distinguish evidence states. A source outage or a missing designation does not mean that no restriction exists. A property lookup does not infer eligible uses, density, approvals, ownership rights, or permission to build.
 
@@ -52,7 +56,7 @@ Only selected public parcel identification fields are requested. Owner names, ow
 
 The independent [Tampa Development Records project](https://github.com/Jaclenga/Tampa-Development-Records) is an activity source, **not** a regulations source.
 
-This source covers Tampa only. The adapter verifies municipality coverage before loading/searching the snapshot. Other areas return `missing_coverage`, and failed verification returns `unavailable`; neither means that no development exists. Regional navigation does not expand this dataset's coverage.
+This source covers Tampa only. Separate official adapters now query Clearwater planning cases and St. Petersburg district projects after jurisdiction verification. St. Petersburg record queries were unavailable during live verification; Pasco has no configured development source. See [expanded coverage](COVERAGE_EXPANSION.md) for exact boundaries and source semantics.
 
 `data/development-config.json` pins the actual normalized core CSV to commit `b1ac7fc705fe667ff046be11f76dcb8aa3b3d872`:
 
@@ -72,7 +76,7 @@ All matching records are counted; the nearest 30 are returned, with `truncated` 
 
 ## Retrieval bounds and reproduction
 
-GIS reads have a 12-second timeout, one-megabyte response cap, five-minute process-local cache and at most 64 cached responses. Development reads have a 15-second timeout, five-megabyte response cap, 10,000-row parser cap, SHA-256 integrity check and one-hour process-local cache with concurrent request coalescing. Failures remain explicit; no fallback rows are invented. Fixed reviewed URLs prevent user-selected source fetching. Fetch uses `redirect: 'manual'` for Workerd compatibility; all 3xx responses fail before their bodies are read or targets followed.
+GIS reads have a 12-second timeout, one-megabyte response cap, five-minute process-local cache and at most 64 cached responses. Tampa snapshot reads have a 15-second timeout, five-megabyte response cap, 10,000-row parser cap, SHA-256 integrity check and one-hour process-local cache with concurrent request coalescing. Official development layers use a one-megabyte cap per page and at most four 100-record pages per source, with five-minute caching. A numeric object-ID cursor avoids overlaps in legacy spatial offset paging; incomplete results remain labeled. Failures remain explicit; no fallback rows are invented. Fixed reviewed URLs prevent user-selected source fetching. Fetch uses `redirect: 'manual'` for Workerd compatibility; all 3xx responses fail before their bodies are read or targets followed.
 
 The optional archival command preserves the pinned raw body, provenance manifest, and normalized searchable rows locally:
 
@@ -85,7 +89,7 @@ It writes under `data/raw/development/<commit>/`; the main app still fetches the
 Run deterministic tests without live network access:
 
 ```sh
-node --test --test-isolation=none tests/geospatial.test.mjs
+node --test --test-isolation=none tests/geospatial*.test.mjs
 ```
 
 The tests cover distance units, antimeridian behavior, candidate selection, ambiguous addresses/parcels/designations, out-of-area routing, source failure, coordinate-system mismatch, exclusion of owner data, malformed CSV, hostile links, schema changes, stale snapshots, future dates, response bounds, cache coalescing, content integrity and redirect rejection. Fixtures identify themselves as test data.

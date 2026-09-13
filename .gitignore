@@ -44,15 +44,17 @@ next-env.d.ts
 
 !.env.example
 /data/raw/development/
+/data/generations/
 /playwright-report/
 /test-results/
 *.tsbuildinfo
 /tmp/
 
-# Locally fetched external evidence and response artifacts are not source releases.
+# Locally fetched evidence and response artifacts are not source releases.
 /data/raw/
 /data/normalized/
 /data/chunks.json
+/data/corpus.json
 /data/ingestion-report.json
 /data/verification-report.json
 /evaluation/results/

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Header, Footer } from "@/components/site-shell";
+import { LocaleProvider } from "@/lib/i18n/locale";
 import "./globals.css";
 // Every document receives a new CSP nonce from the Worker.
 export const dynamic = "force-dynamic";
@@ -21,9 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
-        {children}
-        <Footer />
+        <LocaleProvider>
+          <Header />
+          {children}
+          <Footer />
+        </LocaleProvider>
       </body>
     </html>
   );

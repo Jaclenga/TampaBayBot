@@ -1449,7 +1449,7 @@
     "license_or_terms_status": "Publicly accessible official material. No general redistribution license verified; source terms remain applicable. Text snapshots are preserved locally for evidence; linked media and attachments are not downloaded.",
     "geographic_coverage": "Pasco County; individual program and municipal authority limits apply",
     "temporal_coverage": "Snapshot at retrieval; source-specific dates retained without inferring current availability.",
-    "notes": "County map navigation only. Linked interactive maps and shapefiles are not reproduced in the narrative corpus. This source does not establish City zoning authority or direct app parcel support for Pasco County.",
+    "notes": "County narrative GIS guidance is separate from the live Pasco address, parcel and land-use adapters configured in data/gis-config.json. Linked maps and shapefiles are not reproduced in the narrative corpus. Municipal boundary checks withhold county zoning and future land use inside incorporated areas.",
     "categories": [
       "zoning",
       "navigation"

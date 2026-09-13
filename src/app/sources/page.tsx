@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import sources from "@/data/sources.json";
+import { sources } from "@/lib/corpus";
 import { en } from "@/lib/i18n/en";
 import { dateLabel } from "@/lib/i18n/format";
 import { SourceLink } from "@/components/site-shell";

@@ -3,6 +3,17 @@ import { en } from "./en";
 /** Property-flow copy stays separate from rendering and request logic. */
 export const propertyEn = {
   ...en.property,
+  disclosure: 'The address is sent to official Hillsborough, Pinellas and Pasco address services. Property lookup checks Tampa, St. Petersburg, Clearwater and Pasco County boundaries. County land-use layers cover unincorporated Pasco only.',
+  sourceTitle: 'Development records',
+  official: 'Official city GIS records',
+  sourceDetails: 'Source details',
+  areaMatch: 'Mapped project area intersects the search radius',
+  liveLabel: 'Live query',
+  parcelAnalysis: 'Whole-parcel map check',
+  parcelScopes: { whole_parcel: 'Full parcel polygon', address_point: 'Address point only; whole parcel not checked' },
+  partialCount: 'This count covers returned records only. Additional matches may exist.',
+  activityNote: 'Coverage varies by source: a Tampa snapshot, selected St. Petersburg project layers, and Clearwater planning cases. Check each source status and coverage.',
+  distance: 'Tampa records use straight-line point distance; official city layers use project-area intersections',
   chooseDifferent: "Choose a different match",
   loadingActivity: "Loading nearby records…",
   projectTitle: "Tampa Development Records",

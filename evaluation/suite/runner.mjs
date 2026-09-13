@@ -16,6 +16,7 @@ import {
   validateCases,
 } from "./report.mjs";
 import { EVALUATION_DATE } from "../scenarios.mjs";
+import { readCorpus, json } from "../../src/lib/ingestion/generation.mjs";
 
 export const PROJECT_ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -51,8 +52,9 @@ async function hashTree(directory, suffixes = [".mjs", ".ts", ".json"]) {
 }
 
 export async function loadEvaluationContext(root = PROJECT_ROOT) {
-  const sourceText = await fs.readFile(path.join(root, "data/sources.json"));
-  const chunkText = await fs.readFile(path.join(root, "data/chunks.json"));
+  const corpus = await readCorpus(root);
+  const sourceText = json(corpus.sources);
+  const chunkText = json(corpus.chunks);
   const qualityBenchmarkText = await fs.readFile(
     path.join(root, "evaluation/quality-benchmark.json"),
   );
@@ -79,8 +81,8 @@ export async function loadEvaluationContext(root = PROJECT_ROOT) {
     /* Source-file hashes remain usable outside a Git checkout/sandbox. */
   }
   return {
-    sources: JSON.parse(sourceText),
-    chunks: JSON.parse(chunkText),
+    sources: corpus.sources,
+    chunks: corpus.chunks,
     now: EVALUATION_DATE,
     provenance: {
       evaluatedAsOf: EVALUATION_DATE,

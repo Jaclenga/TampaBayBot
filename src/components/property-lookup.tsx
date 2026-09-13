@@ -305,6 +305,12 @@ export default function PropertyLookup({
           {property && (
             <>
               <p>{property.message}</p>
+              {property.parcelAnalysis && (
+                <p className="small"><strong>{copy.parcelAnalysis}:</strong> {copy.parcelScopes[property.parcelAnalysis.scope]}</p>
+              )}
+              {property.municipalities && property.municipalities.status !== "not_found" && (
+                <Layer layer={property.municipalities} title={property.municipalities.title} />
+              )}
               {!property.boundary && !!property.boundaryChecks?.length && (
                 <details className="data-limits">
                   <summary>{copy.boundaryChecks}</summary>
@@ -385,10 +391,10 @@ export default function PropertyLookup({
             {development && (
               <>
                 <div className="independent-note">
-                  <strong>{copy.projectTitle}</strong>
-                  <span>{copy.independent}</span>
+                  <strong>{development.title || copy.projectTitle}</strong>
+                  <span>{development.authoritativeStatus === "independent public-data project" ? copy.independent : development.authoritativeStatus === "official city GIS records" ? copy.official : development.authoritativeStatus}</span>
                   <SourceLink url={development.sourceUrl}>
-                    {copy.methodology}
+                    {development.authoritativeStatus === "independent public-data project" ? copy.methodology : copy.sourceDetails}
                   </SourceLink>
                 </div>
                 <p>{development.message}</p>
@@ -398,8 +404,7 @@ export default function PropertyLookup({
                   </p>
                 )}
                 <p className="small muted">
-                  {copy.snapshotLabel}:{" "}
-                  {dateLabel(development.sourceSnapshotDate)} ·{" "}
+                  {development.sourceSnapshotDate ? <>{copy.snapshotLabel}: {dateLabel(development.sourceSnapshotDate)} · </> : <>{copy.liveLabel} · </>}
                   {copy.retrievedLabel}: {dateLabel(development.retrievedAt)}
                 </p>
                 {development.warnings.length > 0 && (
@@ -409,6 +414,11 @@ export default function PropertyLookup({
                       <ChevronDown size={15} aria-hidden="true" />
                     </summary>
                     <p>{development.coverage}</p>
+                    {development.services?.map((service) => (
+                      <p key={service.sourceId}>
+                        <SourceLink url={service.url}>{service.title}</SourceLink>: {service.status}. {service.coverage}
+                      </p>
+                    ))}
                     <ul>
                       {development.warnings.map((w) => (
                         <li key={w}>{w}</li>
@@ -425,6 +435,7 @@ export default function PropertyLookup({
                         development.radiusMeters,
                       )}
                     </p>
+                    {development.totalMatchesExact === false && <p className="small">{copy.partialCount}</p>}
                     <ol className="development-records">
                       {development.records.map((record) => (
                         <li key={record.id}>
@@ -435,7 +446,7 @@ export default function PropertyLookup({
                                 record.recordId}
                             </strong>
                             <span>
-                              {copy.distanceAway(record.distanceMeters)}
+                              {record.distanceMeters === null ? copy.areaMatch : copy.distanceAway(record.distanceMeters)}
                             </span>
                           </div>
                           <p>

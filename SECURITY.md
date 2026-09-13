@@ -19,13 +19,13 @@ The deterministic test suites cover malformed requests, byte limits, origins, co
 
 ## Data flow and privacy
 
-The app does not save questions, conversation histories, resident profiles or addresses to a database or browser storage. That does not control upstream services, hosting/proxy logs or transient caches.
+The app does not save questions, conversation histories, resident profiles or addresses to a database or browser storage. Follow-up context is a bounded topic/program/jurisdiction object in page memory, cleared on reset or reload; it contains no prior freeform question text. Each follow-up is validated again and cannot authorize a source or override geographic checks. That does not control upstream services, hosting/proxy logs or transient caches.
 
 | Action | Information leaving the application server/browser |
 | --- | --- |
 | Question with `LLM_PROVIDER=none` | No language-model transfer; the server uses its local evidence corpus |
 | Eligible answer with a model enabled | The current question and bounded public-source excerpts go to the operator-configured provider; no conversation history, complete corpus or tool definitions are supplied |
-| Address/property lookup | Address text goes to the configured Hillsborough and Pinellas locators; selected coordinates go to connected Tampa, Pinellas, St. Petersburg, Clearwater and Plan Hillsborough services for jurisdiction and property checks |
+| Address/property lookup | Address text goes to the configured Hillsborough, Pinellas and Pasco locators; selected coordinates go to connected Tampa, Pinellas, St. Petersburg, Clearwater and Plan Hillsborough services for jurisdiction and property checks |
 | Nearby development lookup | Coordinates go to the configured Tampa and Pinellas municipal-boundary services; after Tampa coverage is verified the server retrieves a pinned public CSV and filters distances locally |
 | Explicitly opening the map | Selected coordinates go to OpenStreetMap; the interface discloses this before loading the frame |
 

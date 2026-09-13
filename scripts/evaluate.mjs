@@ -6,10 +6,10 @@ import { isAuthoritative, sourceIsStale } from '../src/lib/retrieval/search.mjs'
 import { benchmarks } from '../evaluation/benchmarks.mjs';
 import { prepareScenario, EVALUATION_DATE } from '../evaluation/scenarios.mjs';
 import { scoreNavigationAnswer } from '../evaluation/suite/scoring.mjs';
+import { readCorpus } from '../src/lib/ingestion/generation.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const sources = JSON.parse(await fs.readFile(path.join(root, 'data/sources.json'), 'utf8'));
-const chunks = JSON.parse(await fs.readFile(path.join(root, 'data/chunks.json'), 'utf8'));
+const { sources, chunks } = await readCorpus(root);
 const results = [];
 const ratio = values => values.length ? { passed: values.filter(Boolean).length, total: values.length, rate: Number((values.filter(Boolean).length / values.length).toFixed(4)) } : { passed: 0, total: 0, rate: null };
 

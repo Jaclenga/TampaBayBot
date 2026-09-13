@@ -1,4 +1,5 @@
 import { resolveJurisdiction } from '../coverage.mjs';
+import { intentAliases } from '../i18n/intent.mjs';
 
 const TYPO = new Map(Object.entries({
   assitance: 'assistance', assistence: 'assistance', asistance: 'assistance',
@@ -15,12 +16,16 @@ const TYPO = new Map(Object.entries({
 export function normalizeQuestion(value) {
   return String(value ?? '').normalize('NFKC').toLowerCase()
     .replace(/[’']/g, '')
-    .replace(/[^a-z0-9$.-]+/g, ' ')
+    .replace(/[^\p{L}\p{N}\p{M}$.-]+/gu, ' ')
     .trim().split(/\s+/).map(word => TYPO.get(word) ?? word).join(' ');
 }
 
+export function intentText(value) {
+  return intentAliases(normalizeQuestion(value));
+}
+
 export function routeQuestion(question, { jurisdictionId = 'tampa-bay' } = {}) {
-  const text = normalizeQuestion(question);
+  const text = intentText(question);
   const streetSuffix = '(?:st(?!\\.?\\s+pete(?:rsburg)?\\b)|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|ct|court|way|ter|terrace|pkwy|parkway)\\b\\.?';
   const streetName = '(?:[a-z0-9.-]+\\s+){0,6}?' + streetSuffix;
   const addressPattern = new RegExp('\\b\\d{1,6}\\s+' + streetName, 'g');

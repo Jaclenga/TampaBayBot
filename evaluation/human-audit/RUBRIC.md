@@ -1,6 +1,6 @@
 # Human review of TampaBayBot answers
 
-**Status: not performed.** Thirty representative responses are saved in `responses.json` for a named human reviewer. Every score and reviewer field is null. Four benchmark scenarios use clearly labeled synthetic data to exercise failure handling; these are not government facts.
+**Status: not performed.** The populated development evaluation prepares 30 representative responses in `responses.json` for a named human reviewer. The public source package contains an empty array until its operator evaluates a reviewed corpus. Prepared packets have null scores and reviewer fields. Four benchmark scenarios use clearly labeled synthetic data to exercise failure handling; these are not government facts.
 
 The user requested approximately 25–50 manually audited responses. Preparing artifacts and running automated checks does not complete that requirement. An agent may review code or outputs, but must label that work as an agent review and must not fill human review fields.
 

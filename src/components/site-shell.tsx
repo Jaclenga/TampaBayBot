@@ -1,14 +1,22 @@
+"use client";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { en } from "@/lib/i18n/en";
+import { useLocale } from "@/lib/i18n/locale";
+import { useSyncExternalStore } from 'react';
+
+const subscribeToReady = () => () => {};
+const clientReady = () => true;
+const serverReady = () => false;
 
 export function Header() {
+  const { locale, setLocale, copy: en } = useLocale();
+  const ready = useSyncExternalStore(subscribeToReady, clientReady, serverReady);
   return (
     <>
       <a className="skip-link" href="#main">
         {en.common.skip}
       </a>
-      <header className="site-header">
+      <header className="site-header" lang={locale}>
         <Link className="brand" href="/" aria-label={en.labels.home}>
           {en.brand}
         </Link>
@@ -17,13 +25,21 @@ export function Header() {
           <Link href="/sources">{en.nav.sources}</Link>
           <Link href="/about">{en.nav.about}</Link>
         </nav>
+        <label className="small" htmlFor="interface-language">
+          {en.language.label}
+          <select id="interface-language" disabled={!ready} value={locale} onChange={(event) => setLocale(event.target.value as 'en' | 'es')}>
+            <option value="en" lang="en">English</option>
+            <option value="es" lang="es">Español</option>
+          </select>
+        </label>
       </header>
     </>
   );
 }
 export function Footer() {
+  const { locale, copy: en } = useLocale();
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" lang={locale}>
       <p>{en.footer.statement}</p>
       <nav className="footer-bottom" aria-label={en.footer.navigation}>
         <Link href="/about#accessibility">{en.footer.access}</Link>
@@ -43,6 +59,7 @@ export function SourceLink({
   children: React.ReactNode;
   className?: string;
 }) {
+  const { copy: en } = useLocale();
   if (!/^https:\/\//i.test(url)) return <span>{children}</span>;
   return (
     <a
