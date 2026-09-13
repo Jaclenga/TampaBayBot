@@ -14,6 +14,10 @@ test.afterEach(async ({ page }) => {
   expect(browserErrors.get(page), 'Rendering must not silently recover from React runtime errors').toEqual([]);
 });
 test('fresh source demo supports a keyboard question with cited fictional evidence', async ({ page }) => {
+  let documentNavigations = 0;
+  page.on('request', request => {
+    if (request.isNavigationRequest() && request.frame() === page.mainFrame()) documentNavigations++;
+  });
   await page.goto('/');
   await expect(page.getByRole('note')).toContainText('Fictional demonstration');
   await page.getByLabel('Your city or county', { exact: true }).selectOption('tampa');
@@ -25,6 +29,7 @@ test('fresh source demo supports a keyboard question with cited fictional eviden
   await page.locator('.citation-link').first().click();
   await expect(page.locator('details[open]').first()).toContainText(/fictional/i);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  expect(documentNavigations, 'Cold startup must not reload the page and discard the answer').toBe(1);
   if (process.env.TAMPABAYBOT_CAPTURE_DEMO === '1') {
     await page.setViewportSize({ width: 1280, height: 1100 });
     await page.evaluate(() => window.scrollTo(0, 0));

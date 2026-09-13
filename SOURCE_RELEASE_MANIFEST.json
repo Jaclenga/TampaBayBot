@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "17020354e8a1ec3809e9638c20e7c566a79853d2e96e03c2397fbafcc0ab8eaa",
+  "content_sha256": "c8cfa3325d49c552619c4821d3a221adda12ff4562060e5e971723430e321114",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -407,8 +407,8 @@
     },
     {
       "path": "scripts/demo.mjs",
-      "bytes": 3496,
-      "sha256": "af2ebbbeb289e50c0d51d063f9708382050d67b522db613d6bfe420c6802f65b"
+      "bytes": 3696,
+      "sha256": "62cef231f527038c6fc079d4df29790ecd9ef93059d2605eb7c31cad909e435f"
     },
     {
       "path": "scripts/eval-suite.mjs",
@@ -997,8 +997,8 @@
     },
     {
       "path": "tests/source-e2e/demo.spec.ts",
-      "bytes": 4305,
-      "sha256": "f3024955dd06233c3cdb8d4ecaa91f7ecb591a92e10a457a3b41176e19db5ee2"
+      "bytes": 4581,
+      "sha256": "b93988b2e96dfc9dd6cf7ba85ee9b988d3fcc450b7eaa762741409717da7b754"
     },
     {
       "path": "tests/source-fixtures.test.mjs",

@@ -21,10 +21,12 @@ export async function prepareDemo(root, { output = `work/releases/demo-${Date.no
   // Shared dependencies must not share optimized React modules across Vite roots.
   // vinext excludes its link shim by package name, but the app's next/link alias
   // can still be prebundled into the client React graph and reused during SSR.
-  // Keep that ESM shim in each environment's own module graph instead.
+  // Keep that ESM shim and its lazy router import in each environment's graph.
+  // Include the icon library up front: late RSC imports otherwise
+  // trigger a second optimization pass that reloads the first resident answer.
   const configPath = join(directory, 'vite.config.ts');
   const config = await readFile(configPath, 'utf8');
-  const isolated = config.replace(/return\s*\{\s*\n\s*server:/, "return {\n    cacheDir: '.demo-cache/node_modules/.vite',\n    optimizeDeps: { exclude: ['next/link'] },\n    server:");
+  const isolated = config.replace(/return\s*\{\s*\n\s*server:/, "return {\n    cacheDir: '.demo-cache/node_modules/.vite',\n    optimizeDeps: { exclude: ['next/link', 'next/router.js'], include: ['lucide-react'] },\n    server:");
   assert.notEqual(isolated, config, 'Update demo cache isolation if the Vite config shape changes');
   await writeFile(configPath, isolated);
   return directory;
