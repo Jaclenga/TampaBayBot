@@ -318,63 +318,6 @@ input::placeholder {
 .example-prompts button:hover {
   text-decoration-thickness: 2px;
 }
-.services {
-  padding-top: 30px;
-  padding-bottom: 56px;
-}
-.section-heading {
-  margin-bottom: 24px;
-}
-.section-heading h2 {
-  font-size: 1.5625rem;
-  margin-bottom: 7px;
-}
-.section-heading p {
-  font-size: 0.9375rem;
-  color: var(--muted);
-  margin: 0;
-}
-.service-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 32px;
-}
-.service-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 22px;
-  column-gap: 12px;
-  align-content: start;
-  min-height: 122px;
-  padding: 21px 10px 21px 0;
-  border: 0;
-  border-top: 1px solid var(--line);
-  border-radius: 0;
-  background: white;
-  text-align: left;
-}
-.service-card:hover {
-  background: var(--panel);
-}
-.service-card h3 {
-  margin: 0 0 7px;
-  font-size: 1.125rem;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.service-card p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.875rem;
-  line-height: 1.6;
-}
-.service-arrow {
-  display: flex;
-  grid-column: 2;
-  grid-row: 1 / 3;
-  align-self: start;
-  padding-top: 4px;
-  color: var(--heading);
-}
 .text-link,
 .back-link {
   display: inline-flex;
@@ -1114,9 +1057,6 @@ input::placeholder {
     grid-template-columns: minmax(0, 1fr) 260px;
     gap: 30px;
   }
-  .service-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .next-steps {
     padding: 20px;
   }
@@ -1172,23 +1112,6 @@ input::placeholder {
   .example-prompts button {
     font-size: 0.875rem;
     line-height: 1.6;
-  }
-  .services {
-    padding-top: 26px;
-    padding-bottom: 36px;
-  }
-  .section-heading {
-    margin-bottom: 22px;
-  }
-  .service-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .service-card {
-    min-height: 100px;
-    padding: 20px 0;
-  }
-  .service-card p {
-    font-size: 0.9375rem;
   }
   .site-footer {
     padding: 22px 24px;
@@ -1337,7 +1260,6 @@ input::placeholder {
   .site-footer,
   .question-form,
   .example-prompts,
-  .service-grid,
   .map-consent,
   .location-map,
   .text-button {

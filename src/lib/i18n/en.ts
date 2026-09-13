@@ -41,40 +41,6 @@ export const en = {
     "What zoning applies to this address?",
     "Are there development records near me?",
   ],
-  servicesTitle: "Browse by topic",
-  servicesIntro: "Choose a topic to get started.",
-  services: [
-    {
-      id: "housing",
-      label: "Housing assistance",
-      text: "Explore help for renters and homeowners.",
-      prompt: "Where can I find help paying for housing?",
-    },
-    {
-      id: "zoning",
-      label: "Zoning & land use",
-      text: "Find official maps and property information.",
-      prompt: "How do I find the zoning and future land use for a property?",
-    },
-    {
-      id: "permitting",
-      label: "Permits & projects",
-      text: "Find the right permit information.",
-      prompt: "Who handles permits for a home renovation?",
-    },
-    {
-      id: "development",
-      label: "Development nearby",
-      text: "Explore what public records show.",
-      prompt: "Are there recent development records near me?",
-    },
-    {
-      id: "navigation",
-      label: "Agency contacts",
-      text: "Reach the right office, form, or resource.",
-      prompt: "Which agency should I contact about a housing question?",
-    },
-  ],
   answer: {
     title: "Answer",
     area: "Source coverage",

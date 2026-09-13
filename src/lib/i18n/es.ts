@@ -19,14 +19,6 @@ export const es: typeof en = {
     enabled: 'La ayuda del modelo está activada. Su pregunta y los fragmentos de fuentes públicas seleccionados se envían al servicio de modelo configurado para este sitio, que puede procesarlos o conservarlos.',
   },
   examples: ['¿Dónde encuentro ayuda para pagar el alquiler?', '¿Qué zonificación tiene esta propiedad?', '¿Hay registros de desarrollo cerca de mí?'],
-  servicesTitle: 'Buscar por tema', servicesIntro: 'Elija un tema para empezar.',
-  services: [
-    { id: 'housing', label: 'Ayuda para la vivienda', text: 'Recursos para inquilinos y propietarios.', prompt: '¿Dónde encuentro ayuda para pagar el alquiler?' },
-    { id: 'zoning', label: 'Zonificación y uso del suelo', text: 'Mapas oficiales e información sobre propiedades.', prompt: '¿Cómo encuentro la zonificación y el uso del suelo de una propiedad?' },
-    { id: 'permitting', label: 'Permisos y proyectos', text: 'Encuentre la información adecuada sobre permisos.', prompt: '¿Qué agencia tramita los permisos para reparar una casa?' },
-    { id: 'development', label: 'Desarrollo cercano', text: 'Consulte lo que muestran los registros públicos.', prompt: '¿Hay registros de desarrollo recientes cerca de mí?' },
-    { id: 'navigation', label: 'Contactos de agencias', text: 'Encuentre la oficina, el formulario o el recurso indicado.', prompt: '¿Qué agencia responde preguntas sobre vivienda?' },
-  ],
   answer: {
     title: 'Respuesta', area: 'Cobertura de las fuentes',
     modelUsed: 'Un modelo de lenguaje seleccionó estos fragmentos. Se comprobó que su texto coincide con las fuentes guardadas.',

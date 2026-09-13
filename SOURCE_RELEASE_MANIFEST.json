@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "14d2a60d3bdc92b5a289d3f67093e3ac4c29bf1af69c2e09fff3c4a9eaed6ad6",
+  "content_sha256": "259ba79dbd795d57c20c9a4c6227cd1ef0338f5e4743afbe7a5cb25902d4a4d1",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -592,8 +592,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "bytes": 24550,
-      "sha256": "c2ee0b0ead78164ec258ed3ce79847a2ce4bd16abdc80bc26be88bd8da66f12e"
+      "bytes": 23097,
+      "sha256": "420c8f7b74afa1ffaf7179c1a07f6c70f2549ff80014a1578db8a0364c563065"
     },
     {
       "path": "src/app/layout.tsx",
@@ -627,8 +627,8 @@
     },
     {
       "path": "src/components/resident-app.tsx",
-      "bytes": 16312,
-      "sha256": "b1ddebf42d302def76838ba3c10586d3f3937cb1d482d9d4d0cc06908b9649f7"
+      "bytes": 15231,
+      "sha256": "735ce813c385f2e145a67f76db8bed7ce245186bddb3d47740192a6417205acb"
     },
     {
       "path": "src/components/site-shell.tsx",
@@ -802,13 +802,13 @@
     },
     {
       "path": "src/lib/i18n/en.ts",
-      "bytes": 10258,
-      "sha256": "835625fff000ee2acfadd2c4dc8233ee5c6451b690c4c08e5846c821909c393c"
+      "bytes": 9196,
+      "sha256": "39119b8f9d7c46850edaf581b59e4702c4f40661b0d3fabbbfa7106c64fed6dd"
     },
     {
       "path": "src/lib/i18n/es.ts",
-      "bytes": 11055,
-      "sha256": "dadaee08fa0cb67fc4fbd2a48a7ef66c7af97ef8d7a85a0c5f61ca7b90d7cdb8"
+      "bytes": 10030,
+      "sha256": "6cae8c6c5a2efff6d7ce242b7fd05d1b512319cf2dd4c5553e4ad0cc49a6061b"
     },
     {
       "path": "src/lib/i18n/evaluation-en.ts",

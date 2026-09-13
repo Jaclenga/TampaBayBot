@@ -221,7 +221,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
           </p>
         </div>
       </section>
-      {answer ? (
+      {answer && (
         <section
           className={`answer-layout content-width ${answer.nextSteps.length ? "" : "answer-only"}`}
           aria-labelledby="answer-title"
@@ -381,38 +381,6 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
             </aside>
           )}
         </section>
-      ) : (
-        <>
-          <section
-            className="services content-width"
-            aria-labelledby="services-title"
-          >
-            <div className="section-heading">
-              <div>
-                <h2 id="services-title">{en.servicesTitle}</h2>
-                <p>{en.servicesIntro}</p>
-              </div>
-            </div>
-            <div className="service-grid">
-              {en.services.map((service) => {
-                return (
-                  <button
-                    className={`service-card service-${service.id}`}
-                    key={service.id}
-                    onClick={() => void ask(service.prompt)}
-                    disabled={!ready || busy}
-                  >
-                    <h3>{service.label}</h3>
-                    <p>{service.text}</p>
-                    <span className="service-arrow">
-                      <ArrowRight size={18} aria-hidden="true" />
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-        </>
       )}
     </main>
   );
