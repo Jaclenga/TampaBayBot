@@ -72,7 +72,7 @@ export function omitUnavailableMarkdownLinks(markdown, filename, availableFiles)
   });
 }
 
-const RELEASE_README = "# ParcelPrivateer\n\n" + NOTICE + "\n\nSee [distribution and source setup](docs/DISTRIBUTION.md).\n";
+const RELEASE_README = "# TampaBayBot\n\n" + NOTICE + "\n\nSee [distribution and source setup](docs/DISTRIBUTION.md).\n";
 
 export async function createSourceRelease({ root = ROOT, output }) {
   root = await realpath(root);

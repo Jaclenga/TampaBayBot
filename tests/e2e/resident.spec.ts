@@ -60,7 +60,7 @@ test("evaluation page exposes the published offline cases and exact failure coun
   const response = await request.get("/api/evaluation?artifact=suite");
   expect(response.ok()).toBeTruthy();
   expect(response.headers()["content-disposition"]).toContain(
-    'filename="parcelprivateer-suite.json"',
+    'filename="tampabaybot-suite.json"',
   );
   const report = await response.json();
   expect(report.mode).toBe("offline");

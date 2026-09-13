@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readInput, inputText, inputPoint, inputJurisdiction, json, inputErrorJson, RequestInputError, REQUEST_BODY_TIMEOUT_MS, REJECTED_BODY_DRAIN_LIMIT_BYTES } from '../src/lib/http.ts';
 
-const site = 'https://parcelprivateer.example';
+const site = 'https://tampabaybot.example';
 
 test('API input errors preserve status, safe codes, fallback text, and no-store headers', async () => {
   for (const [error, status, body] of [
@@ -38,7 +38,7 @@ test('HTTP input accepts only the JSON media type, including valid media-type pa
 test('HTTP input accepts same-origin browser calls and direct clients while rejecting foreign or malformed origins', async () => {
   assert.deepEqual(await readInput(request('{}', { Origin: site })), {});
   assert.deepEqual(await readInput(request('{}')), {});
-  for (const origin of ['https://evil.example', 'http://parcelprivateer.example', 'https://parcelprivateer.example.evil.example', `${site}/path`, `${site}/`, `${site}?query`, 'null', 'not a URL', 'https://user:password@parcelprivateer.example']) {
+  for (const origin of ['https://evil.example', 'http://tampabaybot.example', 'https://tampabaybot.example.evil.example', `${site}/path`, `${site}/`, `${site}?query`, 'null', 'not a URL', 'https://user:password@tampabaybot.example']) {
     await assert.rejects(readInput(request('{}', { Origin: origin })));
   }
 });

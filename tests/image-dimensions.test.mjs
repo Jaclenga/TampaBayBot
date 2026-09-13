@@ -21,7 +21,7 @@ test("Vinext resolves the local adapter and both used export forms work", () => 
 test("the lockfile installs the original local package without an upstream parser tarball", () => {
   const lock = JSON.parse(readFileSync(new URL("../package-lock.json", import.meta.url), "utf8"));
   assert.equal(lock.packages["node_modules/image-size"].resolved, "vendor/image-dimensions");
-  assert.equal(lock.packages["vendor/image-dimensions"].name, "@parcelprivateer/image-dimensions");
+  assert.equal(lock.packages["vendor/image-dimensions"].name, "@tampabaybot/image-dimensions");
   assert.equal(lock.packages["node_modules/vinext/node_modules/image-size"], undefined);
   for (const metadata of Object.values(lock.packages)) {
     assert.doesNotMatch(metadata.resolved ?? "", /registry\.npmjs\.org\/image-size\//);

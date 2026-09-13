@@ -1,6 +1,6 @@
 # Security and privacy
 
-This document defines the application's trust boundaries, data flow, operator responsibilities and private vulnerability-reporting route. ParcelPrivateer has no resident account, application-document or payment workflow. It is an independent public-information alpha, not a service for processing sensitive applications. Dated security checks and open findings belong in [release readiness](docs/RELEASE_READINESS.md); this policy is not a penetration-test report.
+This document defines the application's trust boundaries, data flow, operator responsibilities and private vulnerability-reporting route. TampaBayBot has no resident account, application-document or payment workflow. It is an independent public-information alpha, not a service for processing sensitive applications. Dated security checks and open findings belong in [release readiness](docs/RELEASE_READINESS.md); this policy is not a penetration-test report.
 
 ## Implemented boundaries
 
@@ -65,8 +65,8 @@ The UI address-selection step prevents accidental selection during ordinary use;
 
 ## Reporting a problem
 
-Report vulnerabilities privately to the ParcelPrivateer maintainers through [GitHub private vulnerability reporting](https://github.com/Jaclenga/ParcelPrivateer/security/advisories/new). Sign in to GitHub, choose **Report a vulnerability**, and submit the report to the maintainers. Do not open a public issue for an undisclosed vulnerability or post credentials, resident details, or exploit details there.
+Report vulnerabilities privately to the TampaBayBot maintainers through [GitHub private vulnerability reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new). Sign in to GitHub, choose **Report a vulnerability**, and submit the report to the maintainers. Do not open a public issue for an undisclosed vulnerability or post credentials, resident details, or exploit details there.
 
-Include the affected release/commit, route or file, observed impact, and a minimal reproduction using public or synthetic data. Describe the expected behavior and any workaround. Maintainer handling is best effort; no staffed response-time guarantee is made. If the reporting form is unavailable, check the [canonical security policy](https://github.com/Jaclenga/ParcelPrivateer/security/policy) for the current private route before sharing details.
+Include the affected release/commit, route or file, observed impact, and a minimal reproduction using public or synthetic data. Describe the expected behavior and any workaround. Maintainer handling is best effort; no staffed response-time guarantee is made. If the reporting form is unavailable, check the [canonical security policy](https://github.com/Jaclenga/TampaBayBot/security/policy) for the current private route before sharing details.
 
 The alpha source is published separately from the private development archive. The reporting URL above belongs to that public source project; it does not grant access to archived third-party evidence or user data. Only the current alpha line is maintained. After a fix is available, maintainers can coordinate a public advisory through the same GitHub workflow.

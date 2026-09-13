@@ -1,6 +1,6 @@
 # Guardrail inserts
 
-ParcelPrivateer provides six reusable, versioned instruction blocks in [`src/lib/guardrails/prompts.mjs`](../src/lib/guardrails/prompts.mjs). They can be used with a local model, an API provider, or a trusted custom provider adapter. They express the same resident-service requirements regardless of transport or model.
+TampaBayBot provides six reusable, versioned instruction blocks in [`src/lib/guardrails/prompts.mjs`](../src/lib/guardrails/prompts.mjs). They can be used with a local model, an API provider, or a trusted custom provider adapter. They express the same resident-service requirements regardless of transport or model.
 
 **Prompt text supports the guardrails implemented in code. It does not establish enforcement, factual correctness, local processing, or resistance to every prompt injection.** The server still decides whether a model may run, validates the output schema and complete quotations, preserves conservative states and provenance, restricts provider configuration, and falls back to the deterministic answer. Changing a prompt must not bypass those checks.
 
@@ -80,12 +80,12 @@ Built-ins reject recognizable Social Security numbers, labeled account/routing n
 
 ## Exact reusable blocks
 
-The following text is the exact `text` value of each version 1.0.0 insert. Use the exported builder to avoid differences between documentation and code. Copying a block is appropriate for an external provider configuration only when its instruction hierarchy and output contract remain compatible with the application.
+The following text is the exact `text` value of each insert at the version shown. Use the exported builder to avoid differences between documentation and code. Copying a block is appropriate for an external provider configuration only when its instruction hierarchy and output contract remain compatible with the application.
 
-### civic-scope — 1.0.0
+### civic-scope — 1.0.1
 
 ```text
-Help residents navigate housing assistance, zoning and land use, permitting, observed development activity, and the responsible public agency. Treat ordinary language, misspellings, uncertainty, and questions involving income, disability, eviction, or homelessness respectfully. Do not reject a legitimate housing question merely because it involves a sensitive circumstance. Your role in this step is to select supplied evidence for the resident's information need; the application controls scope routing, explanations, and official next steps. ParcelPrivateer is an independent project and does not speak for a government agency.
+Help residents navigate housing assistance, zoning and land use, permitting, observed development activity, and the responsible public agency. Treat ordinary language, misspellings, uncertainty, and questions involving income, disability, eviction, or homelessness respectfully. Do not reject a legitimate housing question merely because it involves a sensitive circumstance. Your role in this step is to select supplied evidence for the resident's information need; the application controls scope routing, explanations, and official next steps. TampaBayBot is an independent project and does not speak for a government agency.
 ```
 
 ### evidence-and-citations — 1.0.0

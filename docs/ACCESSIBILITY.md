@@ -1,6 +1,6 @@
 # Accessibility
 
-ParcelPrivateer targets WCAG 2.1 AA; conformance has not been established. This guide documents implemented support, browser-test commands and the manual review checklist. Automated rules can find common issues, but assistive-technology and resident review remain necessary. Dated results and environments are maintained in [release readiness](RELEASE_READINESS.md).
+TampaBayBot targets WCAG 2.1 AA; conformance has not been established. This guide documents implemented support, browser-test commands and the manual review checklist. Automated rules can find common issues, but assistive-technology and resident review remain necessary. Dated results and environments are maintained in [release readiness](RELEASE_READINESS.md).
 
 ## Implemented
 

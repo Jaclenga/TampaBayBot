@@ -64,7 +64,7 @@ const mock = createServer(async (request, response) => {
     assertNoSecrets(JSON.stringify(body), 'model request body');
     const trustedInstructions = body.messages.filter(item => ['system', 'developer'].includes(item.role)).map(item => item.content).join('\n');
     for (const id of promptGuardrailIds) {
-      assert.ok(trustedInstructions.includes(`[guardrail:${id}@1.0.0]`), `Missing trusted prompt insert: ${id}.`);
+      assert.ok(trustedInstructions.includes(`[guardrail:${id}@${id === "civic-scope" ? "1.0.1" : "1.0.0"}]`), `Missing trusted prompt insert: ${id}.`);
     }
     const message = body.messages.findLast(item => item.role === 'user');
     const user = JSON.parse(message.content);

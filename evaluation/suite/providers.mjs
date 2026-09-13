@@ -182,7 +182,7 @@ function fakeTransport(provider, scenario, state, abortController) {
       .map((message) => message.content)
       .join("\n");
     state.promptInsertCount = PROMPT_IDS.filter((id) =>
-      trusted.includes(`[guardrail:${id}@1.0.0]`),
+      trusted.includes(`[guardrail:${id}@${id === "civic-scope" ? "1.0.1" : "1.0.0"}]`),
     ).length;
     const evidence = user.evidence;
     if (!Array.isArray(evidence) || evidence.length < 2)

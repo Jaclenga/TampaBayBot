@@ -3,7 +3,7 @@ export async function GET() {
   return Response.json(sources, {
     headers: {
       "Content-Disposition":
-        'attachment; filename="parcelprivateer-sources.json"',
+        'attachment; filename="tampabaybot-sources.json"',
       "X-Content-Type-Options": "nosniff",
     },
   });

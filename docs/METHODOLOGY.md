@@ -1,6 +1,6 @@
-# ParcelPrivateer methodology
+# TampaBayBot methodology
 
-This document explains how ParcelPrivateer constructs answers and preserves their evidence. The default path combines deterministic routing, lexical retrieval, literal excerpts and official next-step links. A language model is optional. Geographic queries and independent development records provide additional context when a question needs location.
+This document explains how TampaBayBot constructs answers and preserves their evidence. The default path combines deterministic routing, lexical retrieval, literal excerpts and official next-step links. A language model is optional. Geographic queries and independent development records provide additional context when a question needs location.
 
 The public source-only alpha starts without evidence. An operator loads and reviews sources using the [distribution guide](DISTRIBUTION.md); until then, the app reports that source information is unavailable. The methodology below describes a populated installation. Source coverage belongs in [DATA_SOURCES.md](DATA_SOURCES.md), and dated results belong in [release readiness](RELEASE_READINESS.md).
 

@@ -2,7 +2,7 @@
 
 This is the dated real-model test record and reproduction guide. It does not describe every current provider or corpus, and it was not rerun for source-packaging changes. [Release readiness](RELEASE_READINESS.md) separates these results from synthetic provider checks and later release verification.
 
-ParcelPrivateer was tested with real local inference using **Ollama 0.24.0 and Meta `llama3:8b`**, an already installed 8B Q4_0 model. The tests used CPU inference on Windows, with cloud features disabled in the daemon started for the run. No model download, paid API call, user `.env` change or hosted provider change was needed.
+TampaBayBot was tested with real local inference using **Ollama 0.24.0 and Meta `llama3:8b`**, an already installed 8B Q4_0 model. The tests used CPU inference on Windows, with cloud features disabled in the daemon started for the run. No model download, paid API call, user `.env` change or hosted provider change was needed.
 
 The model digest was `365c0bd3c000a25d28ddbf732fe1c6add414de7275464c4e4d1c3b5fcb5d8ad1`. This records the exact installed weights; the `llama3:8b` tag alone can change independently of these results.
 

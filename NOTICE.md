@@ -1,12 +1,12 @@
 # Notices and attribution
 
-ParcelPrivateer is an independent open-source project using public information. It is not endorsed by or an official service of Tampa, St. Petersburg, Clearwater, Hillsborough County, Pinellas County, Pasco County, Plan Hillsborough / Hillsborough County City-County Planning Commission, Florida Housing Finance Corporation, or the State of Florida.
+TampaBayBot is an independent open-source project using public information. It is not endorsed by or an official service of Tampa, St. Petersburg, Clearwater, Hillsborough County, Pinellas County, Pasco County, Plan Hillsborough / Hillsborough County City-County Planning Commission, Florida Housing Finance Corporation, or the State of Florida.
 
 It provides informational navigation, not legal advice, official eligibility/zoning determinations, permit approval, or guarantees of funding, construction, completeness or source availability. Verify important decisions with the responsible agency.
 
 ## Original software
 
-Original ParcelPrivateer software is licensed under [MIT](LICENSE), copyright 2026 ParcelPrivateer contributors. Dependencies retain their own licenses; versions are recorded in `package-lock.json`.
+Original TampaBayBot software is licensed under [MIT](LICENSE), copyright 2026 TampaBayBot contributors. Dependencies retain their own licenses; versions are recorded in `package-lock.json`.
 
 ## Public sources and external data
 
@@ -20,7 +20,7 @@ Tampa-served parcel data is attributed to the Hillsborough County Property Appra
 
 [Tampa Development Records](https://github.com/Jaclenga/Tampa-Development-Records) is a separate independent public-data project. [Development configuration](data/development-config.json) records the pinned commit, path, source snapshot date and SHA-256. Original City links are retained where supplied upstream.
 
-Read its [DATA_LICENSE.md](https://github.com/Jaclenga/Tampa-Development-Records/blob/b1ac7fc705fe667ff046be11f76dcb8aa3b3d872/DATA_LICENSE.md) and repository notices before redistributing data. A local archive retains those external terms; it does not become ParcelPrivateer-owned data.
+Read its [DATA_LICENSE.md](https://github.com/Jaclenga/Tampa-Development-Records/blob/b1ac7fc705fe667ff046be11f76dcb8aa3b3d872/DATA_LICENSE.md) and repository notices before redistributing data. A local archive retains those external terms; it does not become TampaBayBot-owned data.
 
 ## Corrections
 

@@ -234,7 +234,7 @@ const markdown = (value) =>
 
 export function reportMarkdown(report) {
   const lines = [
-    `# ParcelPrivateer evaluation — ${report.status}`,
+    `# TampaBayBot evaluation — ${report.status}`,
     "",
     `${report.summary.passed}/${report.summary.cases} cases passed in ${report.mode} mode. Suite ${report.suiteVersion}.`,
     "",
@@ -297,7 +297,7 @@ export function reportJUnit(report) {
   );
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    `<testsuite name="ParcelPrivateer ${xml(report.mode)}" tests="${report.summary.cases}" failures="${report.summary.failed}" time="${totalTime.toFixed(3)}">`,
+    `<testsuite name="TampaBayBot ${xml(report.mode)}" tests="${report.summary.cases}" failures="${report.summary.failed}" time="${totalTime.toFixed(3)}">`,
     ...report.cases.map((row) => {
       const failures = row.checks
         .filter((check) => check.passed === false)

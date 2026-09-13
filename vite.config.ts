@@ -9,7 +9,10 @@ const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
 
 // A source release or independent build needs no Sites project or account.
 const hostingPath = resolve(process.cwd(), ".openai/hosting.json");
-const standalone = process.env.PARCELPRIVATEER_STANDALONE === "1" || !existsSync(hostingPath);
+// Retain the pre-rename variable for existing operator scripts.
+const standalone =
+  (process.env.TAMPABAYBOT_STANDALONE ?? process.env.PARCELPRIVATEER_STANDALONE) === "1" ||
+  !existsSync(hostingPath);
 const { d1, r2 } = standalone
   ? { d1: null, r2: null }
   : JSON.parse(readFileSync(hostingPath, "utf8"));

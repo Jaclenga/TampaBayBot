@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-Consolidated the application, components, runtime libraries and Worker under `src/`, and moved the Sites build adapter under `scripts/build/`. Added a documented root layout plus canonical package, contribution and maintainer references to the public no-hyphen repository, `Jaclenga/ParcelPrivateer`.
+Renamed the project to TampaBayBot, aligning application branding, package names, deployment examples, repository links and project-specific environment variables with `Jaclenga/TampaBayBot`. Previous environment variable names remain supported as compatibility aliases; historical deployment and audit records retain their original identifiers.
+
+Consolidated the application, components, runtime libraries and Worker under `src/`, and moved the Sites build adapter under `scripts/build/`. Added a documented root layout plus canonical package, contribution and maintainer references to the public repository, `Jaclenga/TampaBayBot`.
 
 Added the published alpha.4 factual-accuracy, citation-correctness and citation-completeness results to the project README and evaluation documentation, together with their benchmark scope and interpretation limits.
 
@@ -36,7 +38,7 @@ The focused production browser sequence passed six checks and failed the next pa
 
 ## v0.1.0-alpha.1 — 2026-09-12
 
-Initial source-only alpha for contributors, local use and supervised testing. ParcelPrivateer is an independent Tampa housing-information navigator, not a government service or an official decision system.
+Initial source-only alpha for contributors, local use and supervised testing. TampaBayBot is an independent Tampa housing-information navigator, not a government service or an official decision system.
 
 - Added evidence retrieval and literal citation validation for housing, zoning/land use, permitting and agency navigation, with GIS and independent development-record adapters.
 - Added optional native Ollama and OpenAI-compatible model adapters, disabled by default, plus six guardrail prompt inserts and five runtime guard stages.
@@ -48,4 +50,4 @@ The public tree excludes downloaded third-party snapshots, extracted evidence, h
 
 The public source-release CI passed. The complete development browser suite retains one rejected-upload transport failure on both Windows and Linux local runtimes; hosted impact remains unverified. Independent human review, manual accessibility review and deployment operations remain pending. [Current release status and verification](docs/RELEASE_READINESS.md) distinguishes these scopes, including the recorded real Ollama tests and own-account deployment limits.
 
-The later [Linux browser follow-up](https://github.com/Jaclenga/ParcelPrivateer/releases/download/v0.1.0-alpha.1/linux-browser-followup.json) adds evidence without changing the original alpha source tag. Detailed correction history remains in the [dated bug-fix record](docs/BUG_FIX_FOLLOWUP_2026-09-12.md).
+The later [Linux browser follow-up](https://github.com/Jaclenga/TampaBayBot/releases/download/v0.1.0-alpha.1/linux-browser-followup.json) adds evidence without changing the original alpha source tag. Detailed correction history remains in the [dated bug-fix record](docs/BUG_FIX_FOLLOWUP_2026-09-12.md).

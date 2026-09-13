@@ -2,7 +2,7 @@
 
 Contributions should make a resident's next step clearer and the evidence easier to inspect. Start with the [development guide](docs/DEVELOPMENT.md) for setup, code layout, commands and browser testing, then read the [methodology](docs/METHODOLOGY.md), [source notes](docs/DATA_SOURCES.md) and [limitations](docs/LIMITATIONS.md).
 
-The canonical contribution repository is [`Jaclenga/ParcelPrivateer`](https://github.com/Jaclenga/ParcelPrivateer). Clone and open pull requests against that exact no-hyphen repository name.
+The canonical contribution repository is [`Jaclenga/TampaBayBot`](https://github.com/Jaclenga/TampaBayBot). Clone and open pull requests against this repository.
 
 ## Before opening a pull request
 
@@ -16,7 +16,7 @@ Never commit credentials, local environment files, real resident questions, appl
 
 Describe the resident task, expected behavior, observed behavior and steps to reproduce. For an evidence problem, include the relevant source URL and retrieval date. Remove unnecessary personal information from examples and attachments.
 
-Use [GitHub private vulnerability reporting](https://github.com/Jaclenga/ParcelPrivateer/security/advisories/new) for sensitive security or privacy reports. Follow [SECURITY.md](SECURITY.md) for scope and required details; do not put resident data or undisclosed exploit details in public issues.
+Use [GitHub private vulnerability reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new) for sensitive security or privacy reports. Follow [SECURITY.md](SECURITY.md) for scope and required details; do not put resident data or undisclosed exploit details in public issues.
 
 ## Adding or refreshing sources
 

@@ -1,4 +1,4 @@
-# Human review of ParcelPrivateer answers
+# Human review of TampaBayBot answers
 
 **Status: not performed.** Thirty representative responses are saved in `responses.json` for a named human reviewer. Every score and reviewer field is null. Four benchmark scenarios use clearly labeled synthetic data to exercise failure handling; these are not government facts.
 

@@ -5,7 +5,7 @@ import sources from "@/data/sources.json";
 import { en } from "@/lib/i18n/en";
 import { dateLabel } from "@/lib/i18n/format";
 import { SourceLink } from "@/components/site-shell";
-export const metadata: Metadata = { title: "Public sources | ParcelPrivateer" };
+export const metadata: Metadata = { title: "Public sources | TampaBayBot" };
 export default function Sources() {
   return (
     <main id="main" className="document-page content-width">

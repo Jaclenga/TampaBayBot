@@ -1,6 +1,6 @@
 # Optional language-model providers
 
-ParcelPrivateer can use an operator-selected model through **Ollama** or an **OpenAI-compatible Chat Completions endpoint**. `LLM_PROVIDER=none` is the default: the existing deterministic, cited answer path runs without a model. The adapter uses HTTP directly; a paid service or provider SDK is not required.
+TampaBayBot can use an operator-selected model through **Ollama** or an **OpenAI-compatible Chat Completions endpoint**. `LLM_PROVIDER=none` is the default: the existing deterministic, cited answer path runs without a model. The adapter uses HTTP directly; a paid service or provider SDK is not required.
 
 The model selects from already-retrieved evidence and returns evidence IDs with full literal excerpts. It cannot add free-form facts, new citations, eligibility decisions or project approvals. The contract below applies to both local and remote providers.
 
@@ -41,7 +41,7 @@ Public remote endpoints require HTTPS. Private-IP HTTPS is allowed; the private-
 
 ## Local Ollama
 
-Install and run Ollama separately, choose a model that fits the machine and its license, and ensure that model is available before starting a model-assisted question. ParcelPrivateer does not install Ollama, download model weights, start a model daemon or choose a model for you. Check the installed model name with `ollama list`.
+Install and run Ollama separately, choose a model that fits the machine and its license, and ensure that model is available before starting a model-assisted question. TampaBayBot does not install Ollama, download model weights, start a model daemon or choose a model for you. Check the installed model name with `ollama list`.
 
 In `.env`, replace the model placeholder with that exact local identifier:
 
@@ -76,13 +76,13 @@ LLM_MODEL=your-installed-local-model
 LLM_API_KEY=
 ```
 
-The `/v1` part belongs in this base URL; `/chat/completions` is appended by ParcelPrivateer. Native `ollama` mode instead uses the root without `/v1`. Ollama implements a subset of the OpenAI interface, so compatibility should be tested against the actual server/version. Its local interface does not need a real paid API key. [Ollama compatibility documentation](https://docs.ollama.com/api/openai-compatibility)
+The `/v1` part belongs in this base URL; `/chat/completions` is appended by TampaBayBot. Native `ollama` mode instead uses the root without `/v1`. Ollama implements a subset of the OpenAI interface, so compatibility should be tested against the actual server/version. Its local interface does not need a real paid API key. [Ollama compatibility documentation](https://docs.ollama.com/api/openai-compatibility)
 
 For a remote service, use the actual HTTPS API root documented by that provider, its exact model name and its required credential in the server-side secret store. Do not paste a full `/chat/completions` URL into `LLM_BASE_URL` unless the adapter contract is deliberately changed. Do not assume every service advertising compatibility supports the same fields or response behavior; invalid responses fall back to the cited baseline.
 
 ## Local computer, LAN and hosted deployment
 
-| Where ParcelPrivateer runs | Model address | Practical meaning |
+| Where TampaBayBot runs | Model address | Practical meaning |
 | --- | --- | --- |
 | On the same computer as Ollama | `http://127.0.0.1:11434` | The application server can reach that computer's local Ollama process |
 | On a computer/container with a separate LAN model server | Operator-selected private address | Connectivity, authentication and firewall policy must be configured; private-IP plain HTTP needs the explicit flag; unqualified Docker service names are not accepted |

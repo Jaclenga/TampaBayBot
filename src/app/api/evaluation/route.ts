@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     );
   return Response.json(artifacts[name as keyof typeof artifacts], {
     headers: {
-      "Content-Disposition": `attachment; filename="parcelprivateer-${name}.json"`,
+      "Content-Disposition": `attachment; filename="tampabaybot-${name}.json"`,
       "X-Content-Type-Options": "nosniff",
     },
   });

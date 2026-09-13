@@ -1,6 +1,6 @@
 # Design and assets
 
-The interface uses a plain text wordmark, system sans-serif type, white backgrounds, blue `#006AAF`, dark blue `#004572`, and charcoal `#292929`. Its palette and straightforward navigation take inspiration from [Tampa.gov](https://www.tampa.gov/), inspected on September 12, 2026. No City seal, logo, or photograph is used in the application; ParcelPrivateer remains an independent project.
+The interface uses a plain text wordmark, system sans-serif type, white backgrounds, blue `#006AAF`, dark blue `#004572`, and charcoal `#292929`. Its palette and straightforward navigation take inspiration from [Tampa.gov](https://www.tampa.gov/), inspected on September 12, 2026. No City seal, logo, or photograph is used in the application; TampaBayBot remains an independent project.
 
 Lucide icons serve functional roles such as search, navigation, disclosure controls, and map locations. The icon library retains its ISC license.
 

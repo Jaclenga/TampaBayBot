@@ -140,7 +140,7 @@ try {
   await check('production_html_and_security_headers', async () => {
     const response = await fetch(base, { signal: AbortSignal.timeout(10000) });
     assert.equal(response.status, 200); html = await response.text();
-    assert.match(html, /ParcelPrivateer/i);
+    assert.match(html, /TampaBayBot/i);
     const csp = response.headers.get('content-security-policy');
     assert.match(csp, /'nonce-[^']+'/); assert.match(csp, /frame-ancestors 'self'/);
     assert.doesNotMatch(csp.split(';').find(value => value.trim().startsWith('script-src ')), /unsafe-inline/);

@@ -41,7 +41,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: node --test --test-isolation=none tests/source-release.test.mjs
-      - run: npm run build:standalone -- --name parcelprivateer-source-alpha --outdir work/standalone/ci-alpha
+      - run: npm run build:standalone -- --name tampabaybot-source-alpha --outdir work/standalone/ci-alpha
       - run: npm run test:standalone -- --directory work/standalone/ci-alpha
       - uses: actions/upload-artifact@v4
         if: always()

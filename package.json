@@ -1,14 +1,14 @@
 {
-  "name": "parcelprivateer",
+  "name": "tampabaybot",
   "version": "0.1.0-alpha.4",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jaclenga/ParcelPrivateer.git"
+    "url": "https://github.com/Jaclenga/TampaBayBot.git"
   },
-  "homepage": "https://github.com/Jaclenga/ParcelPrivateer#readme",
+  "homepage": "https://github.com/Jaclenga/TampaBayBot#readme",
   "bugs": {
-    "url": "https://github.com/Jaclenga/ParcelPrivateer/issues"
+    "url": "https://github.com/Jaclenga/TampaBayBot/issues"
   },
   "engines": {
     "node": ">=22.19.0"

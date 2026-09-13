@@ -15,7 +15,7 @@ The source-only alpha runs with no downloaded evidence. Its health endpoint repo
 Choose a Worker name for your own account. Replace the example if that name already serves another application:
 
 ```sh
-npm run build:standalone -- --name parcelprivateer-independent-alpha --outdir work/standalone/independent-alpha
+npm run build:standalone -- --name tampabaybot-independent-alpha --outdir work/standalone/independent-alpha
 npm run test:standalone -- --directory work/standalone/independent-alpha
 ```
 

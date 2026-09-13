@@ -1,5 +1,5 @@
 export const en = {
-  brand: "ParcelPrivateer",
+  brand: "TampaBayBot",
   nav: {
     ask: "Ask a question",
     sources: "Public sources",
@@ -141,7 +141,7 @@ export const en = {
   sourcePage: {
     title: "Public sources",
     description:
-      "Government sources and public datasets used by ParcelPrivateer, with coverage, dates, and original links.",
+      "Government sources and public datasets used by TampaBayBot, with coverage, dates, and original links.",
     official: "First-party public source",
     independent: "Independent public-data project",
     view: "Visit source",
@@ -157,9 +157,9 @@ export const en = {
       "Location searches query public GIS layers for the confirmed jurisdiction. Nearby development records currently come from the Tampa-only Tampa Development Records snapshot; it does not cover St. Petersburg or Clearwater. Sources can be incomplete, unavailable, or outdated.",
   },
   about: {
-    title: "About ParcelPrivateer",
+    title: "About TampaBayBot",
     intro:
-      "ParcelPrivateer brings housing resources, property context, and public development records into one place to help Tampa Bay residents find an understandable next step. Source coverage is shown for each jurisdiction.",
+      "TampaBayBot brings housing resources, property context, and public development records into one place to help Tampa Bay residents find an understandable next step. Source coverage is shown for each jurisdiction.",
     approachTitle: "How answers work",
     approach:
       "Each answer keeps its evidence close. We show the source, explain uncertainty, and route important decisions to the responsible agency. This first release offers source-backed navigation, not personalized legal or eligibility decisions.",
@@ -178,7 +178,7 @@ export const en = {
   },
   footer: {
     statement:
-      "ParcelPrivateer is an independent open-source project, not affiliated with any city or county government. Verify important decisions with the responsible agency.",
+      "TampaBayBot is an independent open-source project, not affiliated with any city or county government. Verify important decisions with the responsible agency.",
     access: "Accessibility",
     privacy: "Privacy",
     navigation: "Footer navigation",
@@ -190,7 +190,7 @@ export const en = {
     retry: "Try again",
   },
   labels: {
-    home: "ParcelPrivateer home",
+    home: "TampaBayBot home",
     navigation: "Main navigation",
     section: "Section",
     page: "Page",

@@ -45,7 +45,7 @@ for (const name of ['package.json', 'next.config.ts', 'tsconfig.json', 'vite.con
   await cp(join(project, name), join(fixture, name));
 }
 await symlink(join(project, 'node_modules'), join(fixture, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
-const childEnv = { ...process.env, PARCELPRIVATEER_STANDALONE: '1', LLM_PROVIDER: 'none',
+const childEnv = { ...process.env, TAMPABAYBOT_STANDALONE: '1', LLM_PROVIDER: 'none',
   WRANGLER_SEND_METRICS: 'false', WRANGLER_WRITE_LOGS: 'false',
   WRANGLER_LOG_PATH: join(fixture, '.wrangler/logs'), MINIFLARE_REGISTRY_PATH: join(fixture, '.wrangler/registry') };
 for (const key of Object.keys(childEnv)) {

@@ -2,7 +2,7 @@
 
 Start with the [project overview](../README.md) for capabilities, a screenshot and quick start. Use the guides below for the details behind each topic.
 
-## Using ParcelPrivateer
+## Using TampaBayBot
 
 | Task | Main guide |
 | --- | --- |

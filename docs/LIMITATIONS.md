@@ -1,6 +1,6 @@
 # Known limitations
 
-ParcelPrivateer is an independent source-only alpha for housing-information navigation. It cannot make an eligibility decision, give an official zoning determination or approve a permit. This guide summarizes the boundaries a resident or operator needs to understand; [release readiness](RELEASE_READINESS.md) records the current evidence and remaining launch work.
+TampaBayBot is an independent source-only alpha for housing-information navigation. It cannot make an eligibility decision, give an official zoning determination or approve a permit. This guide summarizes the boundaries a resident or operator needs to understand; [release readiness](RELEASE_READINESS.md) records the current evidence and remaining launch work.
 
 The public source package starts with no evidence and cannot answer factual questions until its operator [loads and reviews sources](DISTRIBUTION.md). Results from the populated development checkout do not establish the quality of a newly acquired corpus.
 

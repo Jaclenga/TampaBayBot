@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
-const base = process.env.PARCELPRIVATEER_SMOKE_URL || "http://localhost:3001";
+// Legacy aliases keep existing operator scripts working after the rename.
+const base = process.env.TAMPABAYBOT_SMOKE_URL || process.env.PARCELPRIVATEER_SMOKE_URL || "http://localhost:3001";
 const output =
-  process.env.PARCELPRIVATEER_SMOKE_OUTPUT || "docs/local-api-validation.json";
+  process.env.TAMPABAYBOT_SMOKE_OUTPUT || process.env.PARCELPRIVATEER_SMOKE_OUTPUT || "docs/local-api-validation.json";
 async function request(path, body) {
   const response = await fetch(new URL(path, base), {
     method: body ? "POST" : "GET",

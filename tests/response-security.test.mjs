@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { withResponseSecurity } from '../src/lib/response-security.ts';
 
-const site = 'https://parcelprivateer.example';
+const site = 'https://tampabaybot.example';
 test('server-issued CSP replaces hostile request policy, varies per response and preserves the body', async () => {
   const nonces = new Set();
   for (let i = 0; i < 2; i++) {

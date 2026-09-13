@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { en } from "@/lib/i18n/en";
 import { getModelNotice } from "@/lib/llm-settings";
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "About | ParcelPrivateer" };
+export const metadata: Metadata = { title: "About | TampaBayBot" };
 export default function About() {
   return (
     <main id="main" className="document-page about-page content-width">

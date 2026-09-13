@@ -19,7 +19,7 @@ type AutomatedQuality = {
   citationCompleteness: QualityMetric;
 };
 
-export const metadata: Metadata = { title: "Evaluation results | ParcelPrivateer" };
+export const metadata: Metadata = { title: "Evaluation results | TampaBayBot" };
 export default function Evaluation() {
   if (result.benchmark_count === 0) return (
     <main id="main" className="document-page content-width">

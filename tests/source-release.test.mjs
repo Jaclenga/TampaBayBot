@@ -38,12 +38,12 @@ test("packaged Markdown keeps working and external links while labeling omitted 
   assert.doesNotMatch(result, /screenshots\/old.png|responses-old.json/);
 });
 
-test("package metadata uses the canonical no-hyphen public repository", async () => {
+test("package metadata uses the canonical TampaBayBot repository", async () => {
   const packageJson = JSON.parse(await readFile("package.json", "utf8"));
-  assert.equal(packageJson.repository.url, "https://github.com/Jaclenga/ParcelPrivateer.git");
-  assert.equal(packageJson.homepage, "https://github.com/Jaclenga/ParcelPrivateer#readme");
-  assert.equal(packageJson.bugs.url, "https://github.com/Jaclenga/ParcelPrivateer/issues");
-  assert.doesNotMatch(JSON.stringify(packageJson), /Jaclenga\/Parcel-Privateer/);
+  assert.equal(packageJson.name, "tampabaybot");
+  assert.equal(packageJson.repository.url, "https://github.com/Jaclenga/TampaBayBot.git");
+  assert.equal(packageJson.homepage, "https://github.com/Jaclenga/TampaBayBot#readme");
+  assert.equal(packageJson.bugs.url, "https://github.com/Jaclenga/TampaBayBot/issues");
 });
 
 test("source packaging excludes snapshots, history and secrets, and refuses replacement or escaped output", async () => {

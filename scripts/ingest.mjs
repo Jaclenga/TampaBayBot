@@ -30,7 +30,7 @@ for (const source of sources) {
     } else {
       const url = new URL(source.fetch_url ?? source.canonical_url);
       if (url.protocol !== 'https:') throw new Error('Source must use HTTPS');
-      const response = await fetch(url, { signal: AbortSignal.timeout(45000), headers: { 'User-Agent': 'ParcelPrivateer/0.1 (public-source research; github.com/ParcelPrivateer)', Accept: source.source_type === 'html' ? 'text/html' : '*/*' } });
+      const response = await fetch(url, { signal: AbortSignal.timeout(45000), headers: { 'User-Agent': 'TampaBayBot/0.1 (public-source research; github.com/Jaclenga/TampaBayBot)', Accept: source.source_type === 'html' ? 'text/html' : '*/*' } });
       if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
       const length = Number(response.headers.get('content-length'));
       if (length > 30 * 1024 * 1024) throw new Error('Source exceeds 30 MiB ingestion limit');

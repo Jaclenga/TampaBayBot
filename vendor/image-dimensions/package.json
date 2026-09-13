@@ -1,8 +1,8 @@
 {
-  "name": "@parcelprivateer/image-dimensions",
+  "name": "@tampabaybot/image-dimensions",
   "version": "1.0.0",
   "private": true,
-  "description": "Bounded PNG/GIF header dimensions for ParcelPrivateer's Vinext build",
+  "description": "Bounded PNG/GIF header dimensions for TampaBayBot's Vinext build",
   "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",

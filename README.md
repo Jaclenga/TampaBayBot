@@ -1,8 +1,8 @@
-# ParcelPrivateer
+# TampaBayBot
 
 Find Tampa Bay housing resources, property information and official next steps, with the public sources behind each answer.
 
-ParcelPrivateer is an independent, open-source civic-tech project for people asking about housing assistance, zoning, permits and development near an address. You can start with a question instead of knowing which agency, map or document to search.
+TampaBayBot is an independent, open-source civic-tech project for people asking about housing assistance, zoning, permits and development near an address. You can start with a question instead of knowing which agency, map or document to search.
 
 It brings together information scattered across government pages, PDFs and GIS services, and keeps the supporting evidence visible. The default answer engine works without a language model; local or API-based model assistance is optional.
 
@@ -10,7 +10,7 @@ Choose Tampa, St. Petersburg, Clearwater, or county resources for Hillsborough, 
 
 > **Alpha: for contributors and supervised testing.** The downloadable source release starts without loaded evidence. Fetch and review sources before expecting cited answers. Independent human review and production-readiness work remain open. See [quick start](#quick-start) and [release status](docs/RELEASE_READINESS.md).
 
-**Project links:** [Code](https://github.com/Jaclenga/ParcelPrivateer) · [Releases](https://github.com/Jaclenga/ParcelPrivateer/releases) · [Issues](https://github.com/Jaclenga/ParcelPrivateer/issues) · [Private security reporting](https://github.com/Jaclenga/ParcelPrivateer/security/advisories/new)
+**Project links:** [Code](https://github.com/Jaclenga/TampaBayBot) · [Releases](https://github.com/Jaclenga/TampaBayBot/releases) · [Issues](https://github.com/Jaclenga/TampaBayBot/issues) · [Private security reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new)
 
 ## What it does
 
@@ -25,9 +25,9 @@ Government guidance and mapped designations are distinct from observed developme
 
 ## Demo
 
-ParcelPrivateer Tampa Bay home page with a city or county selector, housing question field and topic links (development artifact omitted from source-only release)
+TampaBayBot Tampa Bay home page with a city or county selector, housing question field and topic links (development artifact omitted from source-only release)
 
-The screenshot shows the regional interface with sources loaded. Select your city or county, or name it in your question. Try questions such as:
+The historical screenshot predates the TampaBayBot rename and shows the regional interface with sources loaded. Select your city or county, or name it in your question. Try questions such as:
 
 - “Where can I find help paying for housing?”
 - “What zoning applies to this address?”
@@ -114,7 +114,7 @@ Read [limitations](docs/LIMITATIONS.md) for the full scope and [security](SECURI
 
 ## Documentation
 
-**Using ParcelPrivateer:** [Data sources](docs/DATA_SOURCES.md) · [Models](docs/LLM.md) · [Geospatial behavior](docs/GEOSPATIAL.md)
+**Using TampaBayBot:** [Data sources](docs/DATA_SOURCES.md) · [Models](docs/LLM.md) · [Geospatial behavior](docs/GEOSPATIAL.md)
 
 **Trust and evaluation:** [Methodology](docs/METHODOLOGY.md) · [Evaluation](docs/EVALUATION.md) · [Accessibility](docs/ACCESSIBILITY.md) · [Limitations](docs/LIMITATIONS.md) · [Security](SECURITY.md)
 
@@ -141,4 +141,4 @@ The root keeps only project entry points, open-source governance files, package 
 
 Original software is available under the [MIT License](LICENSE). Government content, GIS layers, upstream datasets, dependencies and model weights retain their respective terms; see [notices](NOTICE.md).
 
-ParcelPrivateer is an independent project, not an official city, county, Plan Hillsborough or State of Florida service. Confirm consequential housing, zoning, permitting and eligibility decisions with the responsible agency.
+TampaBayBot is an independent project, not an official city, county, Plan Hillsborough or State of Florida service. Confirm consequential housing, zoning, permitting and eligibility decisions with the responsible agency.

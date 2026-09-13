@@ -1,6 +1,6 @@
 # Evaluation and review
 
-This guide explains what ParcelPrivateer's evaluations measure and how human review complements them. [EVAL_SUITE.md](EVAL_SUITE.md) is the command and report-format reference. [Release readiness](RELEASE_READINESS.md) is the canonical record of dated results, environments and unresolved checks; the published result below summarizes that record for readers evaluating the project.
+This guide explains what TampaBayBot's evaluations measure and how human review complements them. [EVAL_SUITE.md](EVAL_SUITE.md) is the command and report-format reference. [Release readiness](RELEASE_READINESS.md) is the canonical record of dated results, environments and unresolved checks; the published result below summarizes that record for readers evaluating the project.
 
 The source-only distribution initially contains no evidence or completed evaluation. Its empty reports mean `not_run`, not zero-error success. Load and review a corpus before running the complete evaluations. The [distribution guide](DISTRIBUTION.md) explains why a fresh download can differ from the historical development snapshots.
 

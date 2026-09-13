@@ -52,7 +52,7 @@ Source URLs, selectors and refresh policies live in `data/sources.json`. GIS con
 
 ## Canonical repository
 
-The public project, issue tracker, security workflow and releases use [`https://github.com/Jaclenga/ParcelPrivateer`](https://github.com/Jaclenga/ParcelPrivateer). The package metadata uses the same no-hyphen URL. Maintainer development checkouts may contain downloaded evidence and private run artifacts, so publishing always goes through the sanitized source-release builder rather than pushing a development branch directly.
+The public project, issue tracker, security workflow and releases use [`Jaclenga/TampaBayBot`](https://github.com/Jaclenga/TampaBayBot). The package metadata uses the same canonical URL. Maintainer development checkouts may contain downloaded evidence and private run artifacts, so publishing always goes through the sanitized source-release builder rather than pushing a development branch directly.
 
 ## Commands and evidence prerequisites
 
@@ -94,13 +94,13 @@ The default target is `http://localhost:3001`, and the default output overwrites
 
 ```powershell
 New-Item -ItemType Directory -Force work/smoke | Out-Null
-$env:PARCELPRIVATEER_SMOKE_URL = 'http://localhost:3001'
-$env:PARCELPRIVATEER_SMOKE_OUTPUT = 'work/smoke/local-api.json'
+$env:TAMPABAYBOT_SMOKE_URL = 'http://localhost:3001'
+$env:TAMPABAYBOT_SMOKE_OUTPUT = 'work/smoke/local-api.json'
 node scripts/smoke.mjs
-Remove-Item Env:PARCELPRIVATEER_SMOKE_URL, Env:PARCELPRIVATEER_SMOKE_OUTPUT
+Remove-Item Env:TAMPABAYBOT_SMOKE_URL, Env:TAMPABAYBOT_SMOKE_OUTPUT
 ```
 
-For POSIX shells, create the directory with `mkdir -p work/smoke`, then run `PARCELPRIVATEER_SMOKE_URL=http://localhost:3001 PARCELPRIVATEER_SMOKE_OUTPUT=work/smoke/local-api.json node scripts/smoke.mjs`. The script neither starts a server nor authenticates through a hosting sign-in gate. A failed request or incomplete evidence stops the check; inspect the result and its scope before claiming hosted verification. It is separate from the standalone artifact smoke and does not complete human geographic or accessibility review.
+For POSIX shells, create the directory with `mkdir -p work/smoke`, then run `TAMPABAYBOT_SMOKE_URL=http://localhost:3001 TAMPABAYBOT_SMOKE_OUTPUT=work/smoke/local-api.json node scripts/smoke.mjs`. The script neither starts a server nor authenticates through a hosting sign-in gate. A failed request or incomplete evidence stops the check; inspect the result and its scope before claiming hosted verification. It is separate from the standalone artifact smoke and does not complete human geographic or accessibility review.
 
 ## HTTP API
 

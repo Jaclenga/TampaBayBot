@@ -20,7 +20,7 @@ import {
   LIVE_CASE_IDS,
 } from "../evaluation/suite/live.mjs";
 
-const HELP = `ParcelPrivateer evaluation\n\nOffline (no model/network):\n  npm run eval:suite\n  npm run eval:suite -- --suite guardrails,providers --output work/evals/targeted\n\nExplicit live provider evaluation (uses local .env / process LLM_* settings):\n  npm run eval:live -- --allow-provider-call --limit 10 --repeats 1 --budget-ms 60000\n  Reports stay under ignored work/evals/live. No credentials, endpoints or raw responses are recorded.\n\nCompare two reports:\n  npm run eval:compare -- --baseline work/evals/before/latest.json --candidate work/evals/after/latest.json\n\nExit 0: all applicable checks pass. Exit 1: failed cases/regression. Exit 2: invalid configuration/report.\n`;
+const HELP = `TampaBayBot evaluation\n\nOffline (no model/network):\n  npm run eval:suite\n  npm run eval:suite -- --suite guardrails,providers --output work/evals/targeted\n\nExplicit live provider evaluation (uses local .env / process LLM_* settings):\n  npm run eval:live -- --allow-provider-call --limit 10 --repeats 1 --budget-ms 60000\n  Reports stay under ignored work/evals/live. No credentials, endpoints or raw responses are recorded.\n\nCompare two reports:\n  npm run eval:compare -- --baseline work/evals/before/latest.json --candidate work/evals/after/latest.json\n\nExit 0: all applicable checks pass. Exit 1: failed cases/regression. Exit 2: invalid configuration/report.\n`;
 
 export function parseArguments(args) {
   const flags = {

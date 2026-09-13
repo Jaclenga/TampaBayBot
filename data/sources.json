@@ -549,7 +549,7 @@
     "description": "Independent normalization of observed public development records, used for nearby activity and temporal context.",
     "expected_refresh_frequency": "weekly check for newer upstream snapshot",
     "ingestion_method": "live-query-only",
-    "license_or_terms_status": "Independent repository terms and underlying City record terms are separate from ParcelPrivateer software licensing; consult upstream LICENSE/NOTICE.",
+    "license_or_terms_status": "Independent repository terms and underlying City record terms are separate from TampaBayBot software licensing; consult upstream LICENSE/NOTICE.",
     "geographic_coverage": "Coverage of eight selected City development activity layers; not all permits or projects.",
     "temporal_coverage": "Core normalized CSV snapshot 2026-08-23; pinned repository commit b1ac7fc705fe667ff046be11f76dcb8aa3b3d872.",
     "notes": "Record activity does not establish construction, completion, zoning permission or approval. Original source_url/source_endpoint retained where available. The geospatial ingestion script owns the normalized observation snapshot.",
