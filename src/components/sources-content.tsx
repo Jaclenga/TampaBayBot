@@ -1,6 +1,7 @@
 "use client";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import type { Source } from "@/lib/core/answer.mjs";
 import { JURISDICTIONS } from "@/lib/coverage.mjs";
 import { jurisdictionLabel } from "@/lib/i18n/public-text.mjs";
@@ -8,8 +9,15 @@ import { useLocale, usePageTitle } from "@/lib/i18n/locale";
 import { dateLabel } from "@/lib/i18n/format";
 import { SourceLink } from "@/components/site-shell";
 import { isAuthoritative } from "@/lib/retrieval/search.mjs";
+
+const INITIAL_SOURCE_COUNT = 6;
+
 export default function SourcesContent({ sources }: { sources: Source[] }) {
   const { locale, copy: en } = useLocale();
+  const [expanded, setExpanded] = useState(false);
+  const toggle = useRef<HTMLButtonElement>(null);
+  const hasMore = sources.length > INITIAL_SOURCE_COUNT;
+  const visibleSources = expanded ? sources : sources.slice(0, INITIAL_SOURCE_COUNT);
   usePageTitle(`${en.sourcePage.title} | ${en.brand}`);
   return (
     <main id="main" lang={locale} className="document-page content-width">
@@ -22,8 +30,26 @@ export default function SourcesContent({ sources }: { sources: Source[] }) {
         <p>{en.sourcePage.description}</p>
         <p className="small muted">{en.sourcePage.original}</p>
       </div>
-      <div className="source-grid">
-        {sources.map((source) => (
+      <div className="source-list-controls">
+        <p className="small muted" role="status">
+          {en.sourcePage.showing(visibleSources.length, sources.length)}
+        </p>
+        {hasMore && (
+          <button
+            ref={toggle}
+            className="secondary-button"
+            type="button"
+            aria-expanded={expanded}
+            aria-controls="public-source-list"
+            onClick={() => setExpanded(current => !current)}
+          >
+            {expanded ? en.sourcePage.seeLess : en.sourcePage.seeMore}
+            {expanded ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}
+          </button>
+        )}
+      </div>
+      <div className="source-grid" id="public-source-list">
+        {visibleSources.map((source) => (
           <article className="source-card" key={source.source_id}>
             <div className="source-meta">
               <span>
@@ -68,6 +94,23 @@ export default function SourcesContent({ sources }: { sources: Source[] }) {
           </article>
         ))}
       </div>
+      {hasMore && expanded && (
+        <div className="source-list-collapse">
+          <button
+            className="secondary-button"
+            type="button"
+            aria-expanded={expanded}
+            aria-controls="public-source-list"
+            onClick={() => {
+              toggle.current?.focus();
+              setExpanded(false);
+            }}
+          >
+            {en.sourcePage.seeLess}
+            <ChevronUp size={18} aria-hidden="true" />
+          </button>
+        </div>
+      )}
       <section className="method-callout">
         <div>
           <h2>{en.sourcePage.method}</h2>

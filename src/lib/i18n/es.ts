@@ -60,6 +60,8 @@ export const es: typeof en = {
     frequency: 'Actualización prevista', retrieved: 'Última consulta', terms: 'Condiciones de la fuente', unavailable: 'Aún no consultada',
     original: 'Las descripciones y condiciones originales de las fuentes se muestran en el idioma registrado.',
     coverage: 'Zonas cubiertas', refreshDays: 'días', back: 'Volver a su pregunta', method: 'Cómo se elaboran las respuestas',
+    seeMore: 'Ver más', seeLess: 'Ver menos',
+    showing: (visible: number, total: number) => `Mostrando ${visible} de ${total} fuentes`,
     methodText: 'La aplicación busca pasajes en un índice de fuentes públicas con versiones y muestra citas exactas. Un modelo de lenguaje opcional, local o por API, puede seleccionar fragmentos; la aplicación comprueba su texto y sus citas antes de mostrarlos. No puede emitir decisiones oficiales. Los documentos son datos, nunca instrucciones.',
     method2: 'Las búsquedas de ubicaciones usan capas GIS públicas de la jurisdicción confirmada, incluidas direcciones y parcelas de Pasco. No se asigna zonificación ni uso futuro del suelo del condado dentro de municipios de Pasco. Los registros cercanos utilizan una copia fijada de Tampa, determinados proyectos de distritos de St. Petersburg, casos de planificación de Clearwater y casos de zonificación y del plan integral de Pasco en revisión. Son registros publicados de alcance limitado, no un inventario completo de permisos u obras. Cada fuente tiene sus propios límites de cobertura y vigencia.',
   },
