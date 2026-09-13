@@ -2,8 +2,6 @@
 
 Contributions should make a resident's next step clearer and the evidence easier to inspect. Start with the [development guide](docs/DEVELOPMENT.md) for setup, code layout, commands and browser testing, then read the [methodology](docs/METHODOLOGY.md), [source notes](docs/DATA_SOURCES.md) and [limitations](docs/LIMITATIONS.md).
 
-The canonical contribution repository is [`Jaclenga/TampaBayBot`](https://github.com/Jaclenga/TampaBayBot). Clone and open pull requests against this repository.
-
 ## Before opening a pull request
 
 Run `npm ci`, `npm test`, `npm run typecheck`, and `npm run lint`. These source regressions use original synthetic fixtures and do not require downloaded evidence. Use `npm run demo` to exercise the interface. After `npx playwright install chromium`, run `npm run test:source:browser` for interface changes. Historical populated-corpus checks are separate: `npm run test:corpus`.

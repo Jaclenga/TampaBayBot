@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "35b274035377dd74e09f64650ad92481c0ac05580504cc7c2689da15215b810a",
+  "content_sha256": "df9bc43c0133a6c2bb33fc02733d1dd9dbc10d01114643667c23c9e0571d74d1",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -67,13 +67,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 9737,
-      "sha256": "cc206317cde8ef9b59173edefd982742d5d382bbbe2f404b61388838547c0647"
+      "bytes": 9621,
+      "sha256": "6981d5e3b273085c04f582c82ee9ace448789b462ba2e3670c8f4d02c34a7daf"
     },
     {
       "path": "CONTRIBUTING.md",
-      "bytes": 6573,
-      "sha256": "fd2d7530ac76b827735786d426e53b48753a55247129e208f4943ac5473280d2"
+      "bytes": 6410,
+      "sha256": "6ae767042271355965ec4a6da72cc654390bdd960ed1ea040d4dc33285b6038c"
     },
     {
       "path": "data/chunks.json",
@@ -157,13 +157,13 @@
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "bytes": 11691,
-      "sha256": "ae350cdecd3e1ab0925eb4c7b13d8a9a291006bf1d6a8e8c086d11f0df4d15f4"
+      "bytes": 11264,
+      "sha256": "037b90315f9fa63ace9dbff012fa612ec2c593e2d614aba3b7bfb80578209d96"
     },
     {
       "path": "docs/DISTRIBUTION.md",
-      "bytes": 10276,
-      "sha256": "dc1bf6f204c7bbd1f23a487b74b1693b1320cac7b318bf0e6d6513be0d29f053"
+      "bytes": 9351,
+      "sha256": "299e32c1b9b5aa4e902b4ee5cb652676b261f00cd661aac80b8bee4c06f4dd98"
     },
     {
       "path": "docs/EVAL_SUITE.md",
@@ -224,6 +224,11 @@
       "path": "docs/RELEASE_READINESS.md",
       "bytes": 20252,
       "sha256": "57e61a6f257bc7231efefd75aa07dc13b428cea99396a71397bda91e9335b5f0"
+    },
+    {
+      "path": "docs/RISK_ENUMERATION.md",
+      "bytes": 2471,
+      "sha256": "ed44631f102a2ee1cdc7f3b2f550a3b0f96d0829137c837aa2c3f098da132c9a"
     },
     {
       "path": "docs/SOURCE_UPDATES.md",
@@ -297,8 +302,8 @@
     },
     {
       "path": "evaluation/security/SECRET_SCAN.md",
-      "bytes": 3650,
-      "sha256": "c41846588e42fa0f3aa72532e5a33216ac87ac2926a920caa2ec61665b68f0d4"
+      "bytes": 3447,
+      "sha256": "e301059b926639d99b1003c1e32318da4569b84bb7e8fe19860b24daaecf5bac"
     },
     {
       "path": "evaluation/suite/guardrails.mjs",
@@ -372,8 +377,8 @@
     },
     {
       "path": "NOTICE.md",
-      "bytes": 3164,
-      "sha256": "7aedcd9c2ee4b69abbeedc4fdea1d0e08d4d8fd545b78a7d92eddd353c30453d"
+      "bytes": 3082,
+      "sha256": "a682c727a2390969203f51526054b72315cc17c1b661223bb46195df51d7ec6f"
     },
     {
       "path": "package-lock.json",
@@ -457,8 +462,8 @@
     },
     {
       "path": "scripts/package-release.mjs",
-      "bytes": 12915,
-      "sha256": "ac63229f1b233ee52f2dc3cf764e39a7151a88003240f39475c367d079993975"
+      "bytes": 12938,
+      "sha256": "7dff36db2480db040fd57dae2eac560443a639840b869562f3c90dcc88811b83"
     },
     {
       "path": "scripts/reproduce-runtime-transport.mjs",
@@ -532,8 +537,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 15062,
-      "sha256": "0c208ec4e3756ee6b5c77f56b91a737974222f47e25dd2974cb1ca6a5ea54c55"
+      "bytes": 14848,
+      "sha256": "3ba1d5d0644431ee7da30960d1c77d177f0e88cb3e561d5528702ef2e79b26ed"
     },
     {
       "path": "src/app/about/page.tsx",

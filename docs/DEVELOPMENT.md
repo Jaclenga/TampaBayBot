@@ -50,10 +50,6 @@ The JSON registry and corpus are the initial index store; retrieval builds an in
 
 Source URLs, selectors and refresh policies live in `data/sources.json`. GIS configuration is in `data/gis-config.json`; independent development-record version, digest and bounds are in `data/development-config.json`. Downloaded snapshots and completed reports are operator-generated material, not part of the source-only alpha.
 
-## Canonical repository
-
-The public project, issue tracker, security workflow and releases use [`Jaclenga/TampaBayBot`](https://github.com/Jaclenga/TampaBayBot). The package metadata uses the same canonical URL. Maintainer development checkouts may contain downloaded evidence and private run artifacts, so publishing always goes through the sanitized source-release builder rather than pushing a development branch directly.
-
 ## Commands and evidence prerequisites
 
 Run commands from the project root. Use the checks appropriate to the change and record what actually ran.

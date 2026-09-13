@@ -2,7 +2,7 @@
 
 Public alpha packages distribute the original software, test and benchmark definitions, publisher links and fetch configuration. They do **not** distribute downloaded source snapshots, extracted evidence, historical response packets or historical screenshots. Original fictional demo fixtures and their labeled screenshot are included. The ordinary app starts with an empty corpus. `npm run demo` creates a separate fictional example installation; real evidence requires a staged source refresh and review.
 
-This guide is the canonical packaging, regeneration and publication-history policy. [Release readiness](RELEASE_READINESS.md) records which checks have actually run; [deployment](DEPLOYMENT.md) covers operating a built instance.
+This guide covers packaging and source regeneration. [Release readiness](RELEASE_READINESS.md) records which checks have actually run; [deployment](DEPLOYMENT.md) covers operating a built instance.
 
 This choice resolves the release-package uncertainty by omitting the material. It does not declare that all agency content is restricted, grant new rights, or establish that every intended later use is permitted. MIT covers the original software; dependencies, model weights and external information retain their respective terms.
 
@@ -79,11 +79,9 @@ npm run release:verify
 
 Inspect and commit the manifest diff with your changes. The command validates the actual empty registry, corpus and response reports before updating hashes, and refuses downloaded snapshots or private paths. Generated build directories are excluded. A missing manifest fails public CI. If you have locally acquired evidence, build a new source-only tree using the packager instead; it preserves your populated working tree.
 
-## History and report hygiene
+## Report hygiene
 
-A source-only archive or a new root release branch does not sanitize the development branch's history. Keep the existing review repository private if it contains unreviewed snapshots. Publish only the prepared code-only tree/history to a public source repository; do not mirror all development refs or attach an archive of the private default branch. This packaging step does not change GitHub visibility or access settings.
-
-The manifest includes the required empty JSON placeholders even though generated-data paths are ignored by Git. When creating the initial root release commit, stage the reviewed manifest-listed files explicitly, including those placeholders; a plain `git add .` can omit them. After they are tracked, ignore rules cannot prevent local ingestion from modifying them. Build subsequent public releases with the packager again rather than publishing a populated working tree. Git history scans require an actual Git checkout; initialize the reviewed release tree or run them in the published source repository, and never report an unscanned archive as a clean history.
+The manifest includes the required empty JSON placeholders. Local ingestion replaces those placeholders with acquired evidence; use the packager to prepare a source-only release from a populated installation.
 
 Before committing a local JSON report, remove machine prefixes with:
 

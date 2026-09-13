@@ -69,4 +69,4 @@ Report vulnerabilities privately to the TampaBayBot maintainers through [GitHub 
 
 Include the affected release/commit, route or file, observed impact, and a minimal reproduction using public or synthetic data. Describe the expected behavior and any workaround. Maintainer handling is best effort; no staffed response-time guarantee is made. If the reporting form is unavailable, check the [canonical security policy](https://github.com/Jaclenga/TampaBayBot/security/policy) for the current private route before sharing details.
 
-The alpha source is published separately from the private development archive. The reporting URL above belongs to that public source project; it does not grant access to archived third-party evidence or user data. Only the current alpha line is maintained. After a fix is available, maintainers can coordinate a public advisory through the same GitHub workflow.
+Only the current alpha line is maintained. After a fix is available, maintainers can coordinate a public advisory through the same GitHub workflow.

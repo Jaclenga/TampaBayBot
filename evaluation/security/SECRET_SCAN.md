@@ -8,12 +8,12 @@ The custom report template emits only rule IDs, relative paths, line numbers, an
 
 The current private development history and raw public-page archive have **11 tokenlike findings**, recorded in `release-secret-scan.json`. They are third-party strings embedded in imported public HTML, not application-provider credentials; their validity and permissions are not asserted. They are unallowlisted, and the private-history scan is **not clean**. Raw provenance bytes are preserved.
 
-The separately prepared, parentless public code release must be scanned independently after its Git initialization and commit. For a candidate under this workspace, run:
+For a release candidate checkout under this workspace, run:
 
 ```text
 node --use-env-proxy --use-system-ca scripts/scan-secrets.mjs --root work/public-release --report evaluation/security/public-release-secret-scan.json
 ```
 
-Replace the candidate path with the actual release directory. This scans that release's new Git history and working directory without importing the private development history. A public release requires zero findings in both scopes, a passed scanner self-test, and no candidate changes during scanning. Scan again after further release-source edits. A clean scan does not guarantee the absence of secrets.
+Replace the candidate path with the actual release directory. A public release requires zero findings in its history and working directory, a passed scanner self-test, and no candidate changes during scanning. Scan again after further release-source edits. A clean scan does not guarantee the absence of secrets.
 
 For CI, use Node 24, a checkout with `fetch-depth: 0`, and run the same script. Add the sanitized scan JSON to retained check artifacts. The initial tool download requires network access; scanning itself is offline. The script exits nonzero for findings, incomplete scans, failed checksum/self-tests, shallow history, or a changing candidate. See the [Gitleaks usage documentation](https://github.com/gitleaks/gitleaks/blob/v8.30.1/README.md) for the underlying modes and flags.

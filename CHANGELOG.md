@@ -18,7 +18,7 @@ Renamed the project to TampaBayBot, aligning application branding, package names
 - Retry approved source deployments with verified artifact copies, preserve changed-source provenance and publisher dates honestly, and reject private deployment receipts during manifest preparation.
 - Correct Pasco agency-navigation provenance and prevent cold demo startup from reloading away a successful answer.
 
-Consolidated the application, components, runtime libraries and Worker under `src/`, and moved the Sites build adapter under `scripts/build/`. Added a documented root layout plus canonical package, contribution and maintainer references to the public repository, `Jaclenga/TampaBayBot`.
+Consolidated the application, components, runtime libraries and Worker under `src/`, moved the Sites build adapter under `scripts/build/`, and documented the root layout.
 
 Added the published alpha.4 factual-accuracy, citation-correctness and citation-completeness results to the project README and evaluation documentation, together with their benchmark scope and interpretation limits.
 
