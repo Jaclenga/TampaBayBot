@@ -13,22 +13,23 @@ export const en = {
   hero: {
     title: "Tampa Bay housing information",
     description:
-      "Find housing assistance, property information, permits, and public records for your community.",
+      "Find housing help, property details, permits, and public records.",
   },
   form: {
-    label: "Ask a question or enter an address",
-    area: "Your city or county",
-    areaHint: "Choose an area or name it in your question. A mailing address alone does not establish city jurisdiction.",
+    label: "Question or address",
+    area: "Your area",
+    region: "Tampa Bay region",
+    areaHint: "Choose a city or county for local details. Use Tampa Bay region if you’re unsure or need regional resources.",
     placeholder: "How can I get help with housing?",
     submit: "Search",
     busy: "Searching...",
     privacy:
-      "Skip names, account numbers, and other private details. Questions are not saved by this app.",
+      "Leave out names, account numbers, and private details. This app does not save questions.",
     empty: "Enter a housing question or a Tampa Bay street address.",
     error: "We couldn’t complete that search. Please try again.",
     max: "Keep your question under 1,000 characters.",
   },
-  examplesLabel: "Popular questions",
+  examplesLabel: "Try a question",
   modelPrivacy: {
     disabled:
       "Model assistance is off. Your question is not sent to a language model.",
@@ -82,11 +83,11 @@ export const en = {
     modelFallback:
       "Model assistance could not provide a verified result. This answer uses the standard source search.",
     meaning: "What this means",
-    evidence: "Evidence you can inspect",
-    next: "What you can do next",
+    evidence: "Sources",
+    next: "Next steps",
     verify: "Requirements to verify",
-    clear: "Start a new question",
-    followup: "You can ask a follow-up. This temporary topic context clears when you start a new question or reload the page.",
+    clear: "New question",
+    followup: "Ask a follow-up. Topic context clears with a new question or page reload.",
     continuing: "Using the topic from your previous question.",
     sourceLanguage: "Source language",
     languageUnknown: "Not recorded",
@@ -107,6 +108,7 @@ export const en = {
     busy: "Looking up the address…",
     disclosure:
       "Address searches are sent to public GIS services in Hillsborough, Pinellas, and Pasco counties. No address history is saved by this app.",
+    jurisdictionHint: "A mailing address does not confirm city boundaries.",
     select: "Confirm the matching address",
     choose: "Use this address",
     loading: "Checking public property layers…",
@@ -160,7 +162,7 @@ export const en = {
     terms: "Source terms",
     unavailable: "Not yet retrieved",
     original: "Original source descriptions and terms are shown in their recorded language.",
-    coverage: "Jurisdictions covered",
+    coverage: "Areas covered",
     refreshDays: "days",
     back: "Back to your question",
     method: "How answers are made",

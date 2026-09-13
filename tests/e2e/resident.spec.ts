@@ -4,9 +4,9 @@ import AxeBuilder from "@axe-core/playwright";
 test("regional questions require an area and city changes keep evidence in the selected jurisdiction", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Tampa Bay housing information" })).toBeVisible();
-  const area = page.getByLabel("Your city or county");
+  const area = page.getByLabel("Your area");
   await expect(area).toHaveValue("tampa-bay");
-  await page.getByLabel("Ask a question or enter an address").fill("Where can I find housing assistance?");
+  await page.getByLabel("Question or address").fill("Where can I find housing assistance?");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.locator(".status-label")).toHaveText("Choose a city or county");
 
@@ -169,10 +169,10 @@ test("model selection and fallback remain labeled with accessible source citatio
     }),
   );
   await page.goto("/");
-  await page.getByLabel("Your city or county").selectOption("tampa");
+  await page.getByLabel("Your area").selectOption("tampa");
   for (const current of ["used", "fallback"]) {
     status = current;
-    const question = page.getByLabel("Ask a question or enter an address");
+    const question = page.getByLabel("Question or address");
     await expect(question).toBeEnabled();
     await question.fill("Where can I find help paying for housing?");
     await page.getByRole("button", { name: "Search", exact: true }).click();
@@ -199,7 +199,7 @@ test("model selection and fallback remain labeled with accessible source citatio
     });
     expect(results.violations).toEqual([]);
     if (current === "used")
-      await page.getByRole("button", { name: "Start a new question" }).click();
+      await page.getByRole("button", { name: "New question" }).click();
   }
 });
 
@@ -212,8 +212,8 @@ test("keyboard search produces inspectable citations and actionable next steps",
     page.getByRole("link", { name: "Skip to main content" }),
   ).toBeFocused();
   await page.keyboard.press("Enter");
-  await page.getByLabel("Your city or county").selectOption("tampa");
-  const question = page.getByLabel("Ask a question or enter an address");
+  await page.getByLabel("Your area").selectOption("tampa");
+  const question = page.getByLabel("Question or address");
   await expect(question).toBeEnabled();
   await question.focus();
   await page.keyboard.type("Where can I find help paying for housing?");
@@ -224,10 +224,10 @@ test("keyboard search produces inspectable citations and actionable next steps",
     page.getByRole("heading", { name: "Answer", exact: true }),
   ).toBeFocused();
   await expect(
-    page.getByRole("heading", { name: "Evidence you can inspect" }),
+    page.getByRole("heading", { name: "Sources" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "What you can do next" }),
+    page.getByRole("heading", { name: "Next steps" }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: /Read original source/ }).first(),
@@ -257,16 +257,16 @@ test("empty questions show an accessible error and unsupported programs remain u
   page,
 }) => {
   await page.goto("/");
-  await page.getByLabel("Your city or county").selectOption("tampa");
+  await page.getByLabel("Your area").selectOption("tampa");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText(
     "Enter a housing question",
   );
   await expect(
-    page.getByLabel("Ask a question or enter an address"),
+    page.getByLabel("Question or address"),
   ).toHaveAttribute("aria-invalid", "true");
   await page
-    .getByLabel("Ask a question or enter an address")
+    .getByLabel("Question or address")
     .fill('Where do I apply for the "Magic Free Mansion" grant?');
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.locator(".answer-lead")).toContainText("could not verify");
@@ -281,7 +281,7 @@ test("small screens, enlarged text and reduced motion retain all primary control
   await page.setViewportSize({ width: 375, height: 812 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await page.getByLabel("Your city or county").selectOption("tampa");
+  await page.getByLabel("Your area").selectOption("tampa");
   await expect(page.getByRole("button", { name: "Search", exact: true })).toBeEnabled();
   expect(
     await page.evaluate(
@@ -296,7 +296,7 @@ test("small screens, enlarged text and reduced motion retain all primary control
   await page.addStyleTag({ content: "html { zoom: 2; }" });
   await expect(page.getByRole("button", { name: "Search", exact: true })).toBeVisible();
   await expect(
-    page.getByLabel("Ask a question or enter an address"),
+    page.getByLabel("Question or address"),
   ).toBeVisible();
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
@@ -317,8 +317,8 @@ test("an address entered as the question opens a prefilled property lookup witho
     return route.fulfill({ json: { candidates: [], message: "Synthetic lookup" } });
   });
   await page.goto("/");
-  await page.getByLabel("Your city or county").selectOption("tampa");
-  const question = page.getByLabel("Ask a question or enter an address");
+  await page.getByLabel("Your area").selectOption("tampa");
+  const question = page.getByLabel("Question or address");
   await expect(question).toBeEnabled();
   await question.fill("315 E Kennedy Blvd, Tampa");
   await page.getByRole("button", { name: "Search", exact: true }).click();
@@ -409,7 +409,7 @@ test("property workflow requires address confirmation and handles GIS failures w
     }),
   );
   await page.goto("/");
-  await page.getByLabel("Your city or county").selectOption("tampa");
+  await page.getByLabel("Your area").selectOption("tampa");
   await page
     .getByRole("button", { name: "What zoning applies to this address?" })
     .click();
@@ -465,8 +465,8 @@ test("private identifiers show an accessible error and residents can correct the
   page,
 }, testInfo) => {
   await page.goto("/");
-  await page.getByLabel("Your city or county").selectOption("tampa");
-  const input = page.getByLabel("Ask a question or enter an address");
+  await page.getByLabel("Your area").selectOption("tampa");
+  const input = page.getByLabel("Question or address");
   await expect(input).toBeEnabled();
   await input.fill("My SSN is 000-00-0000. Where can I find housing help?");
   const blocked = page.waitForResponse(

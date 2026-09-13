@@ -31,8 +31,8 @@ async function expectReflow(page: Page, label: string) {
 }
 
 async function answer(page: Page) {
-  await page.getByLabel('Your city or county', { exact: true }).selectOption('tampa');
-  await page.getByLabel('Ask a question or enter an address', { exact: true }).fill('Where can I find rental assistance?');
+  await page.getByLabel('Your area', { exact: true }).selectOption('tampa');
+  await page.getByLabel('Question or address', { exact: true }).fill('Where can I find rental assistance?');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
   await page.locator('.citation-link').first().click();
@@ -46,13 +46,13 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
   await page.keyboard.press('Enter');
   await page.keyboard.press('Tab');
-  const area = page.getByLabel('Your city or county', { exact: true });
+  const area = page.getByLabel('Your area', { exact: true });
   await expect(area, 'Skip link must bypass the header controls').toBeFocused();
   await page.keyboard.press('Home');
   await page.keyboard.press('ArrowDown');
   await expect(area).toHaveValue('tampa');
   await page.keyboard.press('Tab');
-  const input = page.getByLabel('Ask a question or enter an address', { exact: true });
+  const input = page.getByLabel('Question or address', { exact: true });
   await expect(input).toBeFocused();
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
@@ -77,7 +77,7 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   expect(tree).toContain('Fictional rental assistance');
   await testInfo.attach('keyboard-accessibility-tree', { body: tree, contentType: 'text/plain' });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
-  await tabTo(page, page.getByRole('button', { name: 'Start a new question', exact: true }));
+  await tabTo(page, page.getByRole('button', { name: 'New question', exact: true }));
   await page.keyboard.press('Enter');
   await expect(input).toBeFocused();
   await expect(input).toHaveValue('');

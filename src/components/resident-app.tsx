@@ -157,7 +157,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                 }}
               >
                 {JURISDICTIONS.map((area) => (
-                  <option key={area.id} value={area.id}>{jurisdictionLabel(area.label, locale)}</option>
+                  <option key={area.id} value={area.id}>{area.id === "tampa-bay" ? en.form.region : jurisdictionLabel(area.label, locale)}</option>
                 ))}
               </select>
               <p className="small muted" id="jurisdiction-hint">{en.form.areaHint}</p>

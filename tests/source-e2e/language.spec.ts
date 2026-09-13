@@ -9,7 +9,7 @@ test('Spanish remains selected across reference pages and their accessible title
   await expect(page.getByRole('heading', { name: 'Fuentes públicas', exact: true })).toBeVisible();
   await expect(page).toHaveTitle('Fuentes públicas | TampaBayBot');
   await expect(page.locator('.source-card').first()).toContainText('Última consulta');
-  await expect(page.locator('.source-card').first()).toContainText('Jurisdicciones incluidas');
+  await expect(page.locator('.source-card').first()).toContainText('Zonas cubiertas');
   await expect(page.locator('.source-card h2').first()).toHaveText('Fictional rental assistance');
   await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Acerca del proyecto' }).click();
   await expect(page.getByRole('heading', { name: 'Acerca de TampaBayBot', exact: true })).toBeVisible();
@@ -35,8 +35,8 @@ test('Spanish property workflow translates cautions and controls while preservin
   await page.route('**/api/development', route => route.fulfill({ json: { status: 'unavailable', message: 'Official development layers could not be retrieved. Open the source to verify records.', sourceId: 'fictional-development', sourceUrl: 'https://example.invalid/development', title: 'Fictional Development Records', authoritativeStatus: 'official county GIS planning records', sourceSnapshotDate: null, retrievedAt: null, warnings: [], records: [], totalMatches: 0, radiusMeters: 1000, activityByYear: [] } }));
   await page.goto('/');
   await page.locator('#interface-language').selectOption('es');
-  await page.getByLabel('Su ciudad o condado', { exact: true }).selectOption('tampa');
-  await page.getByLabel('Haga una pregunta o escriba una dirección', { exact: true }).fill('¿Qué permiso necesito para mi propiedad?');
+  await page.getByLabel('Su zona', { exact: true }).selectOption('tampa');
+  await page.getByLabel('Pregunta o dirección', { exact: true }).fill('¿Qué permiso necesito para mi propiedad?');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
   await page.getByLabel('Dirección de una propiedad en Tampa Bay', { exact: true }).fill(candidate.address);
   await page.getByRole('button', { name: 'Buscar dirección', exact: true }).click();
@@ -65,8 +65,8 @@ test('Spanish property workflow translates cautions and controls while preservin
 test('inline source quotations retain their language when Spanish navigation surrounds them', async ({ page }) => {
   await page.goto('/');
   await page.locator('#interface-language').selectOption('es');
-  await page.getByLabel('Su ciudad o condado', { exact: true }).selectOption('tampa');
-  await page.getByLabel('Haga una pregunta o escriba una dirección', { exact: true }).fill('¿Cuál es el monto máximo de ayuda para el alquiler?');
+  await page.getByLabel('Su zona', { exact: true }).selectOption('tampa');
+  await page.getByLabel('Pregunta o dirección', { exact: true }).fill('¿Cuál es el monto máximo de ayuda para el alquiler?');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
   await expect(page.locator('.answer-lead [lang="en"]').filter({ hasText: '$1,234' })).toHaveText('Maximum demo assistance: $1,234.');
   await expect(page.locator('.answer-lead')).toContainText('Empiece por');
