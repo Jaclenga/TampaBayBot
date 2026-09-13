@@ -8,8 +8,10 @@ import type {
   PropertyContext,
 } from "@/lib/geospatial/index.mjs";
 import type { NearbyDevelopment } from "@/lib/development/index.mjs";
-import { en } from "@/lib/i18n/en";
-import { propertyEn as copy } from "@/lib/i18n/property-en";
+import { useLocale } from "@/lib/i18n/locale";
+import { propertyEn } from "@/lib/i18n/property-en";
+import { propertyEs } from "@/lib/i18n/property-es";
+import { publicText, jurisdictionLabel } from "@/lib/i18n/public-text.mjs";
 import { SourceLink } from "./site-shell";
 import { dateLabel } from "@/lib/i18n/format";
 
@@ -25,10 +27,18 @@ async function post<T>(
     signal,
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || copy.geoError);
+  if (!res.ok) throw new Error(data.error || propertyEn.geoError);
   return data;
 }
+function PublicMessage({ value }: { value: string | null | undefined }) {
+  const { locale } = useLocale();
+  const text = publicText(value, locale);
+  return <span lang={locale === "es" && text === value ? "en" : locale}>{text}</span>;
+}
+
 function Layer({ layer, title }: { layer?: LayerResult; title: string }) {
+  const { locale } = useLocale();
+  const copy = locale === "es" ? propertyEs : propertyEn;
   if (!layer) return null;
   return (
     <section className="property-layer">
@@ -39,8 +49,8 @@ function Layer({ layer, title }: { layer?: LayerResult; title: string }) {
       {layer.records.length ? (
         layer.records.map((record) => (
           <div key={record.id} className="property-record">
-            <strong>{record.label}</strong>
-            <p>{record.description}</p>
+            <strong lang="en">{record.label}</strong>
+            <p lang="en">{record.description}</p>
             {record.pin && (
               <p className="small">
                 {copy.pinLabel}: {record.pin}
@@ -48,24 +58,24 @@ function Layer({ layer, title }: { layer?: LayerResult; title: string }) {
             )}
             <SourceLink url={record.sourceUrl}>{copy.source}</SourceLink>
             <small>
-              {layer.agency} · {dateLabel(record.retrievedAt)} ·{" "}
+              <span lang="en">{layer.agency}</span> · {dateLabel(record.retrievedAt, locale)} ·{" "}
               {copy.recordNumber(record.id)}
             </small>
             {record.sourceUpdatedAt && (
               <small>
-                {copy.featureUpdated}: {dateLabel(record.sourceUpdatedAt)}
+                {copy.featureUpdated}: {dateLabel(record.sourceUpdatedAt, locale)}
               </small>
             )}
           </div>
         ))
       ) : (
-        <p>{layer.message || copy.unknown}</p>
+        <p>{layer.message ? <PublicMessage value={layer.message} /> : copy.unknown}</p>
       )}
       {!layer.records.length && layer.sourceUrl && (
         <SourceLink url={layer.sourceUrl}>{copy.source}</SourceLink>
       )}
       {layer.message && layer.records.length > 0 && (
-        <p className="small muted">{layer.message}</p>
+        <p className="small muted">{<PublicMessage value={layer.message} />}</p>
       )}
     </section>
   );
@@ -75,6 +85,9 @@ export default function PropertyLookup({
 }: {
   initialAddress?: string;
 }) {
+  const { locale, copy: en } = useLocale();
+  const copy = locale === "es" ? propertyEs : propertyEn;
+  const numberLocale = locale === "es" ? "es-US" : "en-US";
   const [address, setAddress] = useState(initialAddress);
   const [lookup, setLookup] = useState<AddressLookup | null>(null);
   const [point, setPoint] = useState<AddressCandidate | null>(null);
@@ -187,12 +200,13 @@ export default function PropertyLookup({
     }
   }
   return (
-    <section className="property-panel" aria-labelledby="property-search-title">
+    <section className="property-panel" lang={locale} aria-labelledby="property-search-title">
       <h3 id="property-search-title">
         <MapPin size={21} aria-hidden="true" />
         {copy.title}
       </h3>
       <p className="small muted">{copy.optional}</p>
+      <p className="small muted">{copy.originalRecords}</p>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -223,7 +237,7 @@ export default function PropertyLookup({
       </form>
       {error && (
         <p role="alert" id="address-error" className="error-text">
-          {error}
+          {locale === "es" && publicText(error, locale) === error ? copy.geoError : publicText(error, locale)}
         </p>
       )}
       <p role="status" className="small">
@@ -234,10 +248,10 @@ export default function PropertyLookup({
           <h4 ref={matchesRef} tabIndex={-1}>
             {copy.select}
           </h4>
-          <p>{lookup.message}</p>
+          <p>{<PublicMessage value={lookup.message} />}</p>
           {!!lookup.warnings?.length && (
             <ul className="warning-list">
-              {lookup.warnings.map((warning) => <li key={warning}>{warning}</li>)}
+              {lookup.warnings.map((warning) => <li key={warning}><PublicMessage value={warning} /></li>)}
             </ul>
           )}
           {lookup.candidates.map((candidate) => (
@@ -264,7 +278,7 @@ export default function PropertyLookup({
               <SourceLink url={lookup.candidates[0].sourceUrl}>
                 {copy.matchSource}
               </SourceLink>{" "}
-              · {copy.retrievedLabel}: {dateLabel(lookup.retrievedAt)}
+              · {copy.retrievedLabel}: {dateLabel(lookup.retrievedAt, locale)}
             </p>
           )}
         </div>
@@ -280,7 +294,7 @@ export default function PropertyLookup({
           </p>
           <p className="small muted">
             {point.latitude.toFixed(5)}, {point.longitude.toFixed(5)}
-            {property?.jurisdiction && ` · ${property.jurisdiction}`}
+            {property?.jurisdiction && ` · ${jurisdictionLabel(publicText(property.jurisdiction, locale), locale)}`}
           </p>
           {property?.boundary && (
             <p className="small">
@@ -304,7 +318,7 @@ export default function PropertyLookup({
           )}
           {property && (
             <>
-              <p>{property.message}</p>
+              <p>{<PublicMessage value={property.message} />}</p>
               {property.parcelAnalysis && (
                 <p className="small"><strong>{copy.parcelAnalysis}:</strong> {copy.parcelScopes[property.parcelAnalysis.scope]}</p>
               )}
@@ -322,7 +336,7 @@ export default function PropertyLookup({
               {property.warnings.length > 0 && (
                 <ul className="warning-list">
                   {property.warnings.map((w) => (
-                    <li key={w}>{w}</li>
+                    <li key={w}><PublicMessage value={w} /></li>
                   ))}
                 </ul>
               )}
@@ -371,7 +385,7 @@ export default function PropertyLookup({
                 >
                   {[250, 500, 1000, 2000].map((m) => (
                     <option key={m} value={m}>
-                      {m.toLocaleString("en-US")} {copy.meters}
+                      {m.toLocaleString(numberLocale)} {copy.meters}
                     </option>
                   ))}
                 </select>
@@ -385,21 +399,21 @@ export default function PropertyLookup({
             </p>
             {activityError && (
               <p className="error-text" role="alert">
-                {activityError}
+                {locale === "es" && publicText(activityError, locale) === activityError ? copy.geoError : publicText(activityError, locale)}
               </p>
             )}
             {development && (
               <>
                 <div className="independent-note">
-                  <strong>{development.title || copy.projectTitle}</strong>
-                  <span>{development.authoritativeStatus === "independent public-data project" ? copy.independent : development.authoritativeStatus === "official city GIS records" ? copy.official : development.authoritativeStatus}</span>
+                  <strong lang="en">{development.title || copy.projectTitle}</strong>
+                  <span>{development.authoritativeStatus === "independent public-data project" ? copy.independent : development.authoritativeStatus === "official city GIS records" ? copy.official : development.authoritativeStatus === "official county GIS planning records" ? copy.officialCounty : development.authoritativeStatus === "official agency navigation" ? copy.officialNavigation : development.authoritativeStatus === "no configured dataset" ? copy.noDataset : development.authoritativeStatus}</span>
                   {development.sourceUrl && (
                     <SourceLink url={development.sourceUrl}>
                       {development.authoritativeStatus === "independent public-data project" ? copy.methodology : copy.sourceDetails}
                     </SourceLink>
                   )}
                 </div>
-                <p>{development.message}</p>
+                <p>{<PublicMessage value={development.message} />}</p>
                 {development.status === "potentially_outdated" && (
                   <p className="error-text" role="status">
                     {copy.staleAlert}
@@ -408,8 +422,8 @@ export default function PropertyLookup({
                 <p className="small muted">
                   {development.status === "missing_coverage" ? copy.noDevelopmentQuery : (
                     <>
-                      {development.sourceSnapshotDate ? <>{copy.snapshotLabel}: {dateLabel(development.sourceSnapshotDate)} · </> : <>{copy.liveLabel} · </>}
-                      {copy.retrievedLabel}: {dateLabel(development.retrievedAt)}
+                      {development.sourceSnapshotDate ? <>{copy.snapshotLabel}: {dateLabel(development.sourceSnapshotDate, locale)} · </> : <>{copy.liveLabel} · </>}
+                      {copy.retrievedLabel}: {dateLabel(development.retrievedAt, locale)}
                     </>
                   )}
                 </p>
@@ -419,15 +433,15 @@ export default function PropertyLookup({
                       {copy.coverageLimits}
                       <ChevronDown size={15} aria-hidden="true" />
                     </summary>
-                    <p>{development.coverage}</p>
+                    <p>{<PublicMessage value={development.coverage} />}</p>
                     {development.services?.map((service) => (
                       <p key={service.sourceId}>
-                        <SourceLink url={service.url}>{service.title}</SourceLink>: {service.status}. {service.coverage}
+                        <SourceLink url={service.url}>{service.title}</SourceLink>: {<PublicMessage value={service.status} />}. {<PublicMessage value={service.coverage} />}
                       </p>
                     ))}
                     <ul>
                       {development.warnings.map((w) => (
-                        <li key={w}>{w}</li>
+                        <li key={w}><PublicMessage value={w} /></li>
                       ))}
                     </ul>
                   </details>
@@ -446,7 +460,7 @@ export default function PropertyLookup({
                       {development.records.map((record) => (
                         <li key={record.id}>
                           <div className="record-heading">
-                            <strong>
+                            <strong lang="en">
                               {record.address ||
                                 record.projectName ||
                                 record.recordId}
@@ -456,18 +470,18 @@ export default function PropertyLookup({
                             </span>
                           </div>
                           <p>
-                            {record.recordType} ·{" "}
-                            {record.status || copy.unknown}
+                            <span lang={record.recordType === 'Type not supplied' ? locale : 'en'}>{record.recordType === 'Type not supplied' ? publicText(record.recordType, locale) : record.recordType}</span> ·{" "}
+                            <span lang={record.status === 'Status not supplied' || !record.status ? locale : 'en'}>{record.status === 'Status not supplied' ? publicText(record.status, locale) : record.status || copy.unknown}</span>
                           </p>
                           {record.description && (
                             <details>
                               <summary>{copy.recordDescription}</summary>
-                              <p>{record.description}</p>
+                              <p lang="en">{record.description}</p>
                             </details>
                           )}
                           <p className="small muted">
-                            {record.recordId} · {dateLabel(record.date)} (
-                            {record.dateType.replaceAll("_", " ")})
+                            {record.recordId} · {dateLabel(record.date, locale)} (
+                            {publicText(record.dateType.replaceAll("_", " "), locale)})
                           </p>
                           {record.futureDated && (
                             <p className="small">{copy.futureDateAlert}</p>
@@ -507,7 +521,7 @@ export default function PropertyLookup({
                         {development.activityByYear.map((item) => (
                           <tr key={`${item.year}-${item.dateType}`}>
                             <th scope="row">{item.year}</th>
-                            <td>{item.dateType.replaceAll("_", " ")}</td>
+                            <td>{publicText(item.dateType.replaceAll("_", " "), locale)}</td>
                             <td>{item.count}</td>
                           </tr>
                         ))}

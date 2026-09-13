@@ -37,11 +37,11 @@ Use the official maps and planners for whole-property decisions. See [GIS method
 
 The independent source is a pinned normalized core snapshot dated August 23, 2026, not a complete current inventory. Search excludes rows without accepted coordinates/identifiers and does not query every location of a multi-location activity.
 
-The pinned development snapshot covers Tampa only. Clearwater has a separate official planning-case adapter. St. Petersburg district-project queries currently fail at the upstream service and return `unavailable`. Pasco development is unconfigured. Every adapter verifies geography and labels its scope; absence or outage never means no development occurred.
+The pinned development snapshot covers Tampa only. Separate official adapters query Clearwater planning cases, St. Petersburg district projects, and Pasco in-review zoning/comprehensive-plan cases. St. Petersburg and Pasco live checks passed on September 13, 2026; availability can change. Pasco layers include older entries, and St. Petersburg supplies no source update dates. These are limited published cases, not complete permit inventories. Every adapter verifies geography and labels its scope; absence or outage never means no development occurred.
 
-Distance is straight-line great-circle point distance, not walking distance, parcel-edge distance or a legal relationship. The nearest 30 records are returned with total matches/truncation. Source dates have different meanings; temporal groups are not measured construction-start trends.
+The Tampa snapshot uses straight-line great-circle point distance and displays the nearest 30 records with total matches/truncation. Official city and county adapters return up to 30 project/case polygons intersecting the requested radius; they assign no numeric polygon distance. Neither method establishes walking distance, parcel-edge distance or a legal relationship. Source dates retain their different meanings, including Pasco GIS record edit dates; temporal groups are not measured construction-start trends.
 
-A permit-like name or status does not demonstrate physical work started or finished. No match does not establish inactivity. Refreshing requires reviewing a newer normalized dataset, updating the pinned commit/hash/snapshot metadata and rerunning integrity/geographic checks.
+A permit-like name or status does not demonstrate physical work started or finished. No match does not establish inactivity. Refreshing the pinned Tampa snapshot requires reviewing a newer normalized dataset, updating its commit/hash/snapshot metadata and rerunning integrity/geographic checks. A fresh official query does not establish that the publisher has updated each case's status.
 
 ## Accessibility, language and human review
 

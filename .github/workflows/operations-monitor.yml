@@ -1,0 +1,28 @@
+name: Service operations monitor
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: operations-monitor
+  cancel-in-progress: false
+jobs:
+  probe:
+    if: ${{ vars.TAMPABAYBOT_MONITOR_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check readiness and private aggregate metrics
+        env:
+          TAMPABAYBOT_MONITOR_URL: ${{ secrets.TAMPABAYBOT_MONITOR_URL }}
+          TAMPABAYBOT_SITE_TOKEN: ${{ secrets.TAMPABAYBOT_SITE_TOKEN }}
+          TAMPABAYBOT_MONITOR_TOKEN: ${{ secrets.TAMPABAYBOT_MONITOR_TOKEN }}
+        run: node scripts/monitor-operations.mjs
+      # Failed runs are the alert signal. Use GitHub Actions notifications for
+      # this repository; no resident inputs, URLs or credentials enter output.

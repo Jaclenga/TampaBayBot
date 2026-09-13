@@ -2,7 +2,7 @@ export const en = {
   brand: "TampaBayBot",
   language: {
     label: "Language / Idioma",
-    scope: "Questions and navigation are available in English and Spanish. Property tools and reference pages are currently in English.",
+    scope: "Questions, property tools, and reference pages are available in English and Spanish. Source quotations and official record text remain in their original language.",
   },
   nav: {
     ask: "Ask a question",
@@ -152,18 +152,22 @@ export const en = {
     description:
       "Government sources and public datasets used by TampaBayBot, with coverage, dates, and original links.",
     official: "First-party public source",
+    synthetic: "Fictional demonstration source",
     independent: "Independent public-data project",
     view: "Visit source",
     frequency: "Expected refresh",
     retrieved: "Last retrieved",
     terms: "Source terms",
     unavailable: "Not yet retrieved",
+    original: "Original source descriptions and terms are shown in their recorded language.",
+    coverage: "Jurisdictions covered",
+    refreshDays: "days",
     back: "Back to your question",
     method: "How answers are made",
     methodText:
       "The app retrieves passages from a versioned public-source index and shows exact excerpts. An optional local or API language model can select excerpts; the app checks their wording and citations before displaying them. It cannot make official determinations. Source documents are data, never instructions.",
     method2:
-      "Location searches use public GIS layers for the confirmed jurisdiction, including Pasco addresses and parcels. Pasco county zoning and future land use are withheld inside incorporated areas. Nearby records use a pinned Tampa snapshot and separate official city GIS adapters. Clearwater planning cases are queried live; St. Petersburg district-project adapters are configured but currently unavailable. Each source has its own coverage and currency limits.",
+      "Location searches use public GIS layers for the confirmed jurisdiction, including Pasco addresses and parcels. Pasco county zoning and future land use are withheld inside incorporated areas. Nearby records use a pinned Tampa snapshot, selected St. Petersburg district projects, Clearwater planning cases, and Pasco zoning and comprehensive-plan cases under review. These are limited published records, not a complete permit or construction inventory. Each source has its own coverage and currency limits.",
   },
   about: {
     title: "About TampaBayBot",
@@ -177,7 +181,7 @@ export const en = {
       "The app does not save questions, addresses, conversations, or personal profiles. Requests pass through the hosting provider. Address lookups go to public GIS services; an optional map goes to OpenStreetMap. Avoid entering sensitive personal information.",
     languageTitle: "Language",
     language:
-      "Questions and navigation support English and Spanish. Property tools and reference pages currently use English. Source quotations remain in their original language, with the recorded source language shown when available.",
+      "Questions, property tools, and reference pages support English and Spanish. Source quotations, official names, record descriptions, and source notes remain in their original language, with the recorded source language shown when available.",
     limitsTitle: "What this release can and cannot do",
     limits:
       "This is a v0.1 review build. It uses saved source snapshots and live property lookups, which can fail or return multiple matches. It cannot guarantee complete development records or decide what is legally permitted. Human audits and assistive-technology testing are still required before a public release.",

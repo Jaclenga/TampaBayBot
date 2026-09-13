@@ -20,7 +20,7 @@
   "snapshot_stale_after_days": 30,
   "coverage": "City of Tampa only. Core normalized activities from eight named City GIS layers observed on August 23, 2026. The expanded Accela dataset and later raw-only observations are not included.",
   "limitations": [
-    "This pinned independent snapshot covers Tampa. Separate official GIS adapters cover selected St. Petersburg district projects and Clearwater planning cases; source scopes are shown separately.",
+    "This pinned independent snapshot covers Tampa. Separate official GIS adapters cover selected St. Petersburg district projects, Clearwater planning cases, and Pasco County in-review zoning and comprehensive-plan cases; source scopes are shown separately.",
     "Public records describe reported activity and status; they do not prove physical construction started or finished.",
     "This is an independent source-bounded snapshot, not a complete or current inventory of all Tampa development.",
     "Distance is straight-line great-circle distance to the normalized record point, not walking distance, parcel-boundary distance, or a legal relationship.",
@@ -60,8 +60,11 @@
         "description": "BUILDING"
       },
       "coverage": "Published Downtown project areas only; not a citywide permit inventory. Source update date is not supplied.",
-      "verified_at": "2026-09-12",
-      "query_verification": "metadata fields verified on 2026-09-12 America/New_York; live query returned ArcGIS 400 errors, no records verified"
+      "verified_at": "2026-09-13",
+      "query_verification": "Live server-side jurisdiction and all three configured spatial queries succeeded on 2026-09-13 America/New_York; 21 district-project polygons intersected a 1,000-meter radius around City Hall. Source update dates remain unknown.",
+      "limitations": [
+        "St. Petersburg publishes selected district projects without source update dates. Displayed statuses may be older; verify current status with Development Services."
+      ]
     },
     {
       "source_id": "st-petersburg-development-1",
@@ -88,8 +91,11 @@
         "description": "BUILDING"
       },
       "coverage": "Published Grand Central project areas only; not a citywide permit inventory. Source update date is not supplied.",
-      "verified_at": "2026-09-12",
-      "query_verification": "metadata fields verified on 2026-09-12 America/New_York; live query returned ArcGIS 400 errors, no records verified"
+      "verified_at": "2026-09-13",
+      "query_verification": "Live server-side jurisdiction and all three configured spatial queries succeeded on 2026-09-13 America/New_York; 21 district-project polygons intersected a 1,000-meter radius around City Hall. Source update dates remain unknown.",
+      "limitations": [
+        "St. Petersburg publishes selected district projects without source update dates. Displayed statuses may be older; verify current status with Development Services."
+      ]
     },
     {
       "source_id": "st-petersburg-development-2",
@@ -116,8 +122,11 @@
         "description": "BUILDING"
       },
       "coverage": "Published Skyway Marina project areas only; not a citywide permit inventory. Source update date is not supplied.",
-      "verified_at": "2026-09-12",
-      "query_verification": "metadata fields verified on 2026-09-12 America/New_York; live query returned ArcGIS 400 errors, no records verified"
+      "verified_at": "2026-09-13",
+      "query_verification": "Live server-side jurisdiction and all three configured spatial queries succeeded on 2026-09-13 America/New_York; 21 district-project polygons intersected a 1,000-meter radius around City Hall. Source update dates remain unknown.",
+      "limitations": [
+        "St. Petersburg publishes selected district projects without source update dates. Displayed statuses may be older; verify current status with Development Services."
+      ]
     },
     {
       "source_id": "clearwater-planning-cases",
@@ -146,6 +155,68 @@
       "coverage": "Published planning-case polygons, including zoning and ordinance cases; not a building-permit inventory. An ordinance date does not establish construction activity.",
       "verified_at": "2026-09-12",
       "query_verification": "live query returned planning-case records on 2026-09-12 America/New_York"
+    },
+    {
+      "source_id": "pasco-zoning-in-review",
+      "jurisdiction_id": "pasco",
+      "title": "Pasco County Zoning In Review",
+      "agency": "Pasco County GIS / Planning and Development",
+      "authoritative_status": "official county GIS planning records",
+      "url": "https://pascogis.pascocountyfl.net/giswebeserver/rest/services/Zoning_Landuse_ProjectPipeline_MIL1/MapServer/15",
+      "geometry_type": "esriGeometryPolygon",
+      "fields": [
+        "OBJECTID",
+        "PROJECT_NUMBER",
+        "STATUS",
+        "TypeOfApplication",
+        "last_edited_date"
+      ],
+      "record": {
+        "id": "PROJECT_NUMBER",
+        "type": "TypeOfApplication",
+        "status": "STATUS",
+        "date": "last_edited_date",
+        "date_type": "GIS record edit date"
+      },
+      "coverage": "Published County GIS Zoning In Review case polygons only, including older entries. Not a complete development or building-permit inventory; in-review layer membership does not verify current approval status.",
+      "limitations": [
+        "GIS record edit dates are editing timestamps, not application, approval, or construction dates. County planning records do not establish municipal building-permit authority."
+      ],
+      "verified_at": "2026-09-13",
+      "query_verification": "Metadata and allowlisted record queries verified on 2026-09-13 America/New_York; bounded spatial verification recorded in docs/COVERAGE_EXPANSION.md."
+    },
+    {
+      "source_id": "pasco-comprehensive-plan-in-review",
+      "jurisdiction_id": "pasco",
+      "title": "Pasco County Comprehensive Plan Amendments In Review",
+      "agency": "Pasco County GIS / Planning and Development",
+      "authoritative_status": "official county GIS planning records",
+      "url": "https://pascogis.pascocountyfl.net/giswebeserver/rest/services/Zoning_Landuse_ProjectPipeline_MIL1/MapServer/13",
+      "geometry_type": "esriGeometryPolygon",
+      "fields": [
+        "OBJECTID",
+        "PROJECT",
+        "PROJ_NAME",
+        "STATUS",
+        "TypeOfApplication",
+        "FLU_DESCRIPTION",
+        "last_edited_date"
+      ],
+      "record": {
+        "id": "PROJECT",
+        "name": "PROJ_NAME",
+        "type": "TypeOfApplication",
+        "status": "STATUS",
+        "description": "FLU_DESCRIPTION",
+        "date": "last_edited_date",
+        "date_type": "GIS record edit date"
+      },
+      "coverage": "Published County GIS CPA In Review comprehensive-plan amendment polygons only, including older entries. Proposed land-use descriptions are case information, not adopted parcel designations or proof of construction.",
+      "limitations": [
+        "GIS record edit dates are editing timestamps, not application, approval, or construction dates. County planning records do not establish municipal building-permit authority."
+      ],
+      "verified_at": "2026-09-13",
+      "query_verification": "Metadata and allowlisted record queries verified on 2026-09-13 America/New_York; bounded spatial verification recorded in docs/COVERAGE_EXPANSION.md."
     }
   ],
   "official_query": {
@@ -156,11 +227,10 @@
     "max_cache_entries": 64
   },
   "official_limitations": [
-    "These are current queries of published city GIS layers, whose underlying records may be older. Retrieval time is not an assurance of source currency.",
+    "These are current queries of published city and county GIS layers, whose underlying records may be older. Retrieval time is not an assurance of source currency.",
     "The official GIS service selects project polygons intersecting the search radius. No representative-point or parcel-boundary distance is invented.",
     "Published projects and planning cases do not prove construction started, finished, or received final approval.",
-    "A missing result does not prove that no development or permit activity exists.",
-    "Pasco County development records are not configured; use the official permitting portal."
+    "A missing result does not prove that no development or permit activity exists."
   ],
   "official_fallbacks": {
     "pasco": {

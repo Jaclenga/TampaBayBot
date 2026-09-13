@@ -138,9 +138,10 @@ test('unverified jurisdictions cannot query an official adapter or trust caller-
   assert.equal(calls, 0);
 });
 
-test('Pasco development navigation retains its own provenance without implying a searched Tampa snapshot', async () => {
+test('Pasco development navigation retains its own provenance when its optional adapters are absent', async () => {
   let calls = 0;
   const client = createDevelopmentClient({
+    settings: { ...development, official_sources: development.official_sources.filter(source => source.jurisdiction_id !== 'pasco') },
     locateJurisdiction: async () => ({ status: 'verified', jurisdictionId: 'pasco', jurisdiction: 'Pasco County', boundaryChecks: [] }),
     fetcher: async () => { calls++; throw new Error('No development dataset is configured for Pasco.'); },
   });
@@ -158,6 +159,91 @@ test('Pasco development navigation retains its own provenance without implying a
   assert.doesNotMatch(JSON.stringify(result), /Tampa|Haversine|independent snapshot/);
   assert.deepEqual(result.records, []);
   assert.equal(calls, 0);
+});
+
+test('Pasco planning cases use minimal public field mappings and identify edit dates without claiming permit or construction dates', async () => {
+  const sources = development.official_sources.filter(source => source.jurisdiction_id === 'pasco');
+  assert.equal(sources.length, 2);
+  const calls = [];
+  const client = createDevelopmentClient({
+    locateJurisdiction: async () => ({ status: 'verified', jurisdictionId: 'pasco', jurisdiction: 'Pasco County', boundaryChecks: [] }),
+    now: () => new Date('2026-09-13'),
+    fetcher: async url => {
+      const parsed = new URL(url);
+      const source = sources.find(item => `${item.url}/query` === parsed.origin + parsed.pathname);
+      assert.ok(source);
+      calls.push(url);
+      const requested = parsed.searchParams.get('outFields').split(',');
+      assert.deepEqual(requested, source.fields);
+      assert.doesNotMatch(requested.join(','), /owner|mail|planner|applicant|user|notes|url|adoptiondate/i);
+      assert.equal(parsed.searchParams.get('geometry'), `${point.longitude},${point.latitude}`);
+      assert.equal(parsed.searchParams.get('distance'), '1000');
+      assert.equal(parsed.searchParams.get('returnGeometry'), 'false');
+      const attributes = Object.fromEntries(source.fields.map(field => [field, null]));
+      Object.assign(attributes, { OBJECTID: 10, STATUS: 'SYNTHETIC PROPOSED', TypeOfApplication: 'Synthetic planning review',
+        [source.record.id]: 'SYNTHETIC-PLAN-10', Planner: 'SYNTHETIC PRIVATE STAFF', Applicant_Email: 'private@example.invalid', last_edited_user: 'PRIVATE_USER',
+        last_edited_date: source.record.name ? null : Date.UTC(2026, 5, 17) });
+      if (source.record.name) attributes[source.record.name] = 'SYNTHETIC PLAN NAME';
+      if (source.record.description) attributes[source.record.description] = 'Synthetic proposed future land-use category';
+      return json({ features: [{ attributes }] });
+    },
+  });
+  const result = await client.getNearbyDevelopment(point, 1000);
+  assert.equal(result.status, 'found');
+  assert.equal(result.authoritativeStatus, 'official county GIS planning records');
+  assert.equal(result.totalMatches, 2);
+  assert.equal(result.totalMatchesExact, true);
+  assert.equal(result.records[0].dateType, 'GIS record edit date');
+  assert.equal(result.records[1].date, null);
+  assert.equal(result.records[1].dateType, 'date not supplied');
+  assert.equal(result.records[1].projectName, 'SYNTHETIC PLAN NAME');
+  assert.equal(result.activityByYear[0].dateType, 'GIS record edit date');
+  assert.equal(result.activityByYear[0].count, 1);
+  assert.ok(result.records.every(record => record.distanceMeters === null));
+  assert.match(result.coverage, /Not a complete development or building-permit inventory/);
+  assert.match(result.coverage, /not adopted parcel designations/);
+  assert.match(result.warnings.join(' '), /not application, approval, or construction dates/);
+  assert.doesNotMatch(JSON.stringify(result), /PRIVATE|private@example|Tampa|not configured/);
+  assert.equal(calls.length, 2);
+});
+
+test('a Pasco service failure remains partial or unavailable rather than reporting no development', async () => {
+  const sources = development.official_sources.filter(source => source.jurisdiction_id === 'pasco');
+  for (const available of [true, false]) {
+    const client = createDevelopmentClient({
+      locateJurisdiction: async () => ({ status: 'verified', jurisdictionId: 'pasco', jurisdiction: 'Pasco County', boundaryChecks: [] }),
+      fetcher: async url => available && String(url).startsWith(sources[0].url + '/query?')
+        ? json({ features: [] }) : json({ error: { code: 503, message: 'Synthetic outage' } }),
+    });
+    const result = await client.getNearbyDevelopment(point);
+    assert.equal(result.status, available ? 'partial' : 'unavailable');
+    assert.equal(result.totalMatchesExact, false);
+    assert.equal(result.services.filter(source => source.status === 'unavailable').length, available ? 1 : 2);
+    assert.deepEqual(result.records, []);
+  }
+});
+
+test('restored St Petersburg project queries return source statuses without inventing source dates', async () => {
+  const sources = development.official_sources.filter(source => source.jurisdiction_id === 'st-petersburg');
+  const client = createDevelopmentClient({
+    locateJurisdiction: async () => ({ status: 'verified', jurisdictionId: 'st-petersburg', jurisdiction: 'City of St. Petersburg', boundaryChecks: [] }),
+    fetcher: async url => {
+      const source = sources.find(item => String(url).startsWith(`${item.url}/query?`));
+      assert.ok(source);
+      const attributes = Object.fromEntries(source.fields.map(field => [field, null]));
+      Object.assign(attributes, { OBJECTID: 5, NAME: 'SYNTHETIC DISTRICT PROJECT', STATUS_1: 'SYNTHETIC PERMIT REVIEW', OWNER: 'SYNTHETIC PRIVATE OWNER' });
+      return json({ features: [{ attributes }] });
+    },
+  });
+  const result = await client.getNearbyDevelopment({ latitude: 27.7732, longitude: -82.6398 });
+  assert.equal(result.status, 'found');
+  assert.equal(result.totalMatches, 3);
+  assert.equal(result.totalMatchesExact, true);
+  assert.ok(result.services.every(service => service.status === 'available'));
+  assert.ok(result.records.every(record => record.date === null && record.status === 'SYNTHETIC PERMIT REVIEW'));
+  assert.deepEqual(result.activityByYear, []);
+  assert.match(result.warnings.join(' '), /without source update dates/);
+  assert.doesNotMatch(JSON.stringify(result), /PRIVATE OWNER/);
 });
 
 test('St Petersburg distinguishes one available district from complete service outages', async () => {

@@ -1,0 +1,33 @@
+import type { evaluationEn } from './evaluation-en.ts';
+
+export const evaluationEs: typeof evaluationEn = {
+  title: 'Resultados de evaluación',
+  noEvaluation: 'No se ha realizado ninguna evaluación de esta instalación. Los resultados de otra instalación no demuestran la calidad de esta.',
+  noEvaluationNext: 'Es necesario cargar y revisar las fuentes antes de evaluar las respuestas. Siguen siendo necesarias las revisiones humanas independientes y de accesibilidad.',
+  notScored: 'Sin puntuación', intro: 'Comprobaciones publicadas de respuestas, fuentes y funcionamiento del servicio. La revisión humana independiente sigue pendiente.',
+  benchmark: 'preguntas de referencia de desarrollo', inspected: 'respuestas revisadas por un agente', human: 'revisiones humanas completadas',
+  explanation: 'Estos casos de desarrollo, redactados manualmente, comprueban el tema, la selección de fuentes, las citas exactas, la incertidumbre y un conjunto limitado de afirmaciones. No son un conjunto de pruebas independiente ni establecen la precisión general o la utilidad para los residentes.',
+  tableCaption: 'Comprobaciones automáticas seleccionadas de las preguntas de referencia publicadas', check: 'Comprobación', result: 'Aprobadas / comprobadas',
+  labels: {
+    retrieval_expected_source_hit: 'Aparece la fuente esperada', citation_exact_quotation: 'La cita coincide con la fuente conservada',
+    citation_provenance_integrity: 'La cita tiene procedencia coincidente', stale_scenario_uncertainty: 'Los casos desactualizados expresan incertidumbre',
+    appropriate_uncertainty: 'Estado de incertidumbre esperado', government_next_step_routing: 'Enlace oficial esperado para el siguiente paso',
+  },
+  suiteTitle: 'Comprobaciones técnicas sin conexión',
+  suiteExplanation: 'Esta ejecución comprueba la navegación, las jurisdicciones, las protecciones, los proveedores, las variaciones de preguntas y fuentes y las afirmaciones exactas redactadas. Las respuestas de proveedores son sintéticas y no evalúan un modelo real. Los casos limitados de calidad no establecen la precisión de un modelo en preguntas abiertas. La revisión humana independiente sigue pendiente.',
+  suitePublished: 'Ejecución finalizada', suiteCaption: 'Casos técnicos publicados sin conexión', suiteName: 'Conjunto de pruebas', suiteCases: 'Casos',
+  suitePassed: 'Aprobados', suiteFailed: 'Fallidos', suiteTotal: 'Todos los conjuntos sin conexión',
+  suiteFailures: 'Algunos casos fallaron. Revise el informe antes de confiar en estas comprobaciones.', suiteNoFailures: 'No se registraron casos fallidos en esta ejecución.',
+  qualityTitle: 'Métricas limitadas de calidad de respuestas',
+  qualityExplanation: 'Estas puntuaciones comparan respuestas extractivas fijas con 12 hashes de afirmaciones redactadas y sus pares de fuentes y pasajes. Solo miden los casos con fecha; todavía se necesita revisión humana independiente.',
+  qualityCaption: 'Comprobaciones de afirmaciones con copias públicas conservadas', qualityAccuracy: 'Precisión factual',
+  qualityCitationCorrectness: 'Corrección de las citas', qualityCitationCompleteness: 'Integridad de las citas', qualityNotApplicable: 'No corresponde',
+  suiteLabels: { navigation: 'Navegación', guardrails: 'Protecciones', providers: 'Adaptadores de proveedores (sintéticos)', metamorphic: 'Variaciones de preguntas y fuentes', jurisdiction: 'Cobertura regional y jurisdicción', quality: 'Calidad de respuestas y citas' },
+  humanTitle: 'Revisión humana',
+  humanText: 'Todavía se requiere revisión humana independiente. Hay treinta paquetes de respuestas preparados para revisión, con las puntuaciones humanas vacías. Una revisión anterior de un agente registra notas individuales; no sustituye la revisión de expertos en vivienda, residentes o evaluadores de accesibilidad.',
+  unknownTitle: 'Qué no se ha medido',
+  unknownText: 'No se asignan puntuaciones generales a la corrección semántica abierta, la veracidad de fuentes después de la fecha de referencia, la utilidad para residentes, el uso con lectores de pantalla ni la precisión geográfica de cada propiedad. Revise el método y los casos individuales antes de sacar conclusiones.',
+  downloads: 'Descargar informes', summary: 'Resumen de evaluación (JSON)', suiteDownload: 'Informe técnico de pruebas sin conexión (JSON)',
+  responses: 'Todas las respuestas de referencia (JSON)', registry: 'Registro de fuentes (JSON)', agent: 'Revisión de 30 respuestas por un agente (JSON)',
+  humanPackets: 'Paquetes de auditoría humana pendientes (JSON)', back: 'Volver a su pregunta',
+};

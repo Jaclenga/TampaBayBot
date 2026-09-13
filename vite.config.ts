@@ -24,6 +24,7 @@ const localBindingConfig = {
   main: "./src/worker/index.ts",
   compatibility_date: "2026-09-11",
   compatibility_flags: ["nodejs_compat"],
+  observability: { enabled: false },
   d1_databases: d1
     ? [
         {

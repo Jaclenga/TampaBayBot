@@ -1,6 +1,7 @@
 import handler from "vinext/server/app-router-entry";
 import { withRuntimeEnv } from "../lib/runtime-env.mjs";
 import { withResponseSecurity } from "../lib/response-security";
+import { withOperations, operationalMetrics } from "../lib/operations/control.mjs";
 const worker = {
   async fetch(
     request: Request,
@@ -10,11 +11,16 @@ const worker = {
       passThroughOnException(): void;
     },
   ): Promise<Response> {
+    const runtime = process.env.NODE_ENV !== 'production' && env.TAMPABAYBOT_OPERATIONS_MODE === undefined
+      ? { ...env, TAMPABAYBOT_OPERATIONS_MODE: 'local' } : env;
     return withResponseSecurity(
       request,
-      (securedRequest) => withRuntimeEnv(env, () =>
-        handler.fetch(securedRequest, env, ctx),
-      ),
+      (securedRequest) => withRuntimeEnv(runtime, () => {
+        if (new URL(securedRequest.url).pathname === '/api/operations')
+          return operationalMetrics(securedRequest, runtime);
+        return withOperations(securedRequest, runtime, ctx,
+          (boundedRequest: Request) => handler.fetch(boundedRequest, env, ctx));
+      }),
       process.env.NODE_ENV !== "production",
     );
   },

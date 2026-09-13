@@ -1,0 +1,33 @@
+import { es } from './es.ts';
+import type { propertyEn } from './property-en.ts';
+
+export const propertyEs: typeof propertyEn = {
+  ...es.property,
+  disclosure: 'La dirección se envía a los servicios oficiales de Hillsborough, Pinellas y Pasco. La búsqueda comprueba los límites de Tampa, St. Petersburg, Clearwater y Pasco County. Las capas de uso del suelo del condado cubren solo las áreas no incorporadas de Pasco.',
+  sourceTitle: 'Registros de desarrollo', official: 'Registros GIS municipales oficiales', sourceDetails: 'Detalles de la fuente',
+  officialCounty: 'Registros GIS oficiales de planificación del condado',
+  areaMatch: 'El área del proyecto en el mapa intersecta el radio de búsqueda', liveLabel: 'Consulta en directo',
+  noDevelopmentQuery: 'No se consultaron registros de desarrollo para esta ubicación.',
+  originalRecords: 'Los nombres oficiales, las descripciones y los estados de registros se conservan en su idioma original.',
+  officialNavigation: 'Orientación de una agencia oficial', noDataset: 'Sin conjunto de datos configurado',
+  parcelAnalysis: 'Comprobación del mapa de toda la parcela',
+  parcelScopes: { whole_parcel: 'Polígono completo de la parcela', address_point: 'Solo el punto de la dirección; no se comprobó toda la parcela' },
+  partialCount: 'Este total incluye solo los registros recibidos. Puede haber más coincidencias.',
+  activityNote: 'La cobertura depende de la fuente: una copia guardada de Tampa, determinados proyectos de St. Petersburg, casos de planificación de Clearwater y casos de zonificación y del plan integral de Pasco en revisión. Compruebe el estado y la cobertura de cada fuente.',
+  distance: 'Los registros de Tampa usan distancia en línea recta; las capas municipales oficiales usan intersecciones de áreas de proyectos',
+  chooseDifferent: 'Elegir otra coincidencia', loadingActivity: 'Cargando registros cercanos…', projectTitle: 'Tampa Development Records',
+  independent: 'Proyecto independiente de datos públicos', methodology: 'Proyecto y metodología', coverageLimits: 'Cobertura y límites de los datos',
+  recordDescription: 'Descripción del registro', dataEndpoint: 'Servicio de datos original', provenance: 'Procedencia del conjunto de datos',
+  history: 'Actividad a lo largo del tiempo en esta zona de búsqueda',
+  historyExplanation: 'Los totales usan el campo de fecha indicado en cada fila. Describen registros de la copia guardada, no obras terminadas.',
+  historyCaption: 'Registros cercanos por año y tipo de fecha registrada', year: 'Año', dateType: 'Tipo de fecha', historyRecords: 'Registros',
+  matchSource: 'Fuente de la coincidencia de dirección', jurisdictionSource: 'Verificar el límite de la jurisdicción',
+  boundaryChecks: 'Consultar los resultados de las fuentes de jurisdicción', pinLabel: 'Número de identificación de la propiedad',
+  featureUpdated: 'Fecha de actualización del elemento en la fuente', snapshotLabel: 'Copia guardada', retrievedLabel: 'Fecha de consulta',
+  staleAlert: 'Esta copia guardada podría estar desactualizada. Confirme el estado actual con la agencia original.',
+  futureDateAlert: 'La fecha de la fuente está en el futuro. Verifique su significado con la agencia original.',
+  layerStates: { ambiguous: 'Hay más de una coincidencia en el mapa. Confirme con la agencia qué designación corresponde.', incomplete: 'La fuente limitó esta respuesta. Puede haber más coincidencias en el mapa.' },
+  recordNumber: (id: string) => `Registro ${id}`,
+  resultsCount: (shown: number, total: number, meters: number) => `Se muestran ${shown.toLocaleString('es-US')} de ${total.toLocaleString('es-US')} registros coincidentes dentro de ${meters.toLocaleString('es-US')} metros.`,
+  distanceAway: (meters: number) => `A ${Math.round(meters).toLocaleString('es-US')} m`,
+};

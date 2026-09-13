@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, ChevronRight, Search, Undo2 } from "lucide-react";
 import type { ResidentAnswer } from "@/lib/core/answer.mjs";
 import { en as english } from "@/lib/i18n/en";
-import { useLocale } from "@/lib/i18n/locale";
+import { useLocale, usePageTitle } from "@/lib/i18n/locale";
 import { localizeAnswer } from "@/lib/i18n/answer.mjs";
 import type { ConversationContext } from "@/lib/core/conversation.mjs";
 import { SourceLink } from "./site-shell";
@@ -12,6 +12,7 @@ import PropertyLookup from "./property-lookup";
 import { dateLabel } from "@/lib/i18n/format";
 import { JURISDICTIONS } from "@/lib/coverage.mjs";
 import type { JurisdictionId } from "@/lib/coverage.mjs";
+import { publicText, jurisdictionLabel, quotedSegments } from "@/lib/i18n/public-text.mjs";
 
 const subscribeToReady = () => () => {};
 const clientReady = () => true;
@@ -40,7 +41,9 @@ function CitedText({ answer }: { answer: ResidentAnswer }) {
             {text}
           </a>
         ) : (
-          text
+          quotedSegments(text, answer.evidence).map((segment, part) => segment.language
+            ? <span key={`${index}-${part}`} lang={segment.language}>{segment.text}</span>
+            : segment.text)
         );
       })}
     </>
@@ -49,6 +52,7 @@ function CitedText({ answer }: { answer: ResidentAnswer }) {
 
 export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
   const { locale, copy: en } = useLocale();
+  usePageTitle(`${en.hero.title} | ${en.brand}`);
   const privacyNotice = modelNotice === english.modelPrivacy.disabled ? en.modelPrivacy.disabled
     : modelNotice === english.modelPrivacy.enabled ? en.modelPrivacy.enabled : modelNotice;
   const ready = useSyncExternalStore(
@@ -68,8 +72,8 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
   const controller = useRef<AbortController | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => {
-    if (answer) answerTitle.current?.focus();
-  }, [answer]);
+    if (rawAnswer) answerTitle.current?.focus();
+  }, [rawAnswer]);
   async function ask(text = question) {
     if (!text.trim()) {
       setError(en.form.empty);
@@ -153,7 +157,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                 }}
               >
                 {JURISDICTIONS.map((area) => (
-                  <option key={area.id} value={area.id}>{area.label}</option>
+                  <option key={area.id} value={area.id}>{jurisdictionLabel(area.label, locale)}</option>
                 ))}
               </select>
               <p className="small muted" id="jurisdiction-hint">{en.form.areaHint}</p>
@@ -242,7 +246,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
             </p>
             {answer.conversationUsed && <p className="small muted">{en.answer.continuing}</p>}
             {answer.jurisdictionLabel && (
-              <p className="small muted">{en.answer.area}: {answer.jurisdictionLabel}</p>
+              <p className="small muted">{en.answer.area}: {jurisdictionLabel(answer.jurisdictionLabel, locale)}</p>
             )}
             {answer.generation?.status === "used" && (
               <p className="muted small">{en.answer.modelUsed}</p>
@@ -306,16 +310,16 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                           </div>
                           <div>
                             <dt>{en.answer.retrieved}</dt>
-                            <dd>{dateLabel(item.retrieved_at)}</dd>
+                            <dd>{dateLabel(item.retrieved_at, locale)}</dd>
                           </div>
                           <div>
                             <dt>{en.answer.updated}</dt>
-                            <dd>{dateLabel(item.source_updated_date)}</dd>
+                            <dd>{dateLabel(item.source_updated_date, locale)}</dd>
                           </div>
                           {item.section && (
                             <div>
                               <dt>{en.labels.section}</dt>
-                              <dd>{item.section}</dd>
+                              <dd lang={item.language ?? 'und'}>{item.section}</dd>
                             </div>
                           )}
                           {item.page && (
@@ -365,8 +369,8 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
               <ol>
                 {answer.nextSteps.map((step) => (
                   <li key={step.url}>
-                    <SourceLink url={step.url}>{step.label}</SourceLink>
-                    <small>{step.agency}</small>
+                    <SourceLink url={step.url}>{publicText(step.label, locale)}</SourceLink>
+                    <small lang="en">{step.agency}</small>
                   </li>
                 ))}
               </ol>

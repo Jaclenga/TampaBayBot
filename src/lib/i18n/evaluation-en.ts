@@ -1,5 +1,8 @@
 export const evaluationEn = {
   title: "Evaluation results",
+  noEvaluation: 'No evaluation has been run for this installation. Results from another installation do not establish the quality of this one.',
+  noEvaluationNext: 'Source information must be loaded and reviewed before evaluating answers. Independent human and accessibility reviews remain necessary.',
+  notScored: 'Not scored',
   intro:
     "Published checks for answers, sources, and service behavior. Independent human review remains pending.",
   benchmark: "development benchmark questions",

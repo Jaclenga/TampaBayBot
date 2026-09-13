@@ -49,7 +49,7 @@ Optional model assistance can select among evidence already retrieved by the app
 
 Sources include Tampa, St. Petersburg, Clearwater, Hillsborough County, Pinellas County, Pasco County, Plan Hillsborough and Florida Housing Finance Corporation. Each source declares its service area; county resources do not automatically apply inside every city.
 
-Nearby activity combines the pinned [Tampa Development Records](https://github.com/Jaclenga/Tampa-Development-Records) snapshot with official Clearwater planning cases. A St. Petersburg district-project adapter reports unavailable while its official record queries fail. Sources retain distinct coverage, dates and attribution; planning cases are not proof of construction. [Expanded services and live verification](docs/COVERAGE_EXPANSION.md).
+Nearby activity combines the pinned [Tampa Development Records](https://github.com/Jaclenga/Tampa-Development-Records) snapshot with official Clearwater planning cases, St. Petersburg district projects, and Pasco in-review zoning and comprehensive-plan cases. St. Petersburg and Pasco live queries passed on September 13, 2026. Sources retain distinct coverage, dates and attribution; published cases are not a complete permit inventory or proof of construction. [Expanded services and live verification](docs/COVERAGE_EXPANSION.md).
 
 Coverage is bounded, and public information can change or become unavailable. The app distinguishes when a source was retrieved from when its publisher updated it. See [data sources](docs/DATA_SOURCES.md) and [geospatial methods](docs/GEOSPATIAL.md).
 

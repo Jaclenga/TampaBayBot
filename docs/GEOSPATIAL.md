@@ -6,15 +6,15 @@ The public source package includes query/fetch configuration but no downloaded G
 
 ## Services and fields
 
-Resource navigation includes selected sources for Hillsborough, Pinellas and Pasco. Direct live property queries cover Tampa, St. Petersburg, Clearwater and Pasco County. [Coverage expansion](COVERAGE_EXPANSION.md) records the new exact endpoints, working live checks and upstream outages. County resource selection does not prove that a property is unincorporated or served by that county department.
+Resource navigation includes selected sources for Hillsborough, Pinellas and Pasco. Direct live property queries cover Tampa, St. Petersburg, Clearwater and Pasco County. [Coverage expansion](COVERAGE_EXPANSION.md) records exact endpoints, dated live checks and the September 13 restoration of St. Petersburg development queries. County resource selection does not prove that a property is unincorporated or served by that county department.
 
 | Area | Address search | Parcel / zoning / future land use | Nearby development source |
 | --- | --- | --- | --- |
 | Tampa | Hillsborough address locator | City boundary verified; HCPA parcel and Tampa-specific layers | Tampa-only snapshot after boundary verification |
-| St. Petersburg | Pinellas address locator | County city-boundary/parcel layers and St. Petersburg zoning/land use | Official district-project adapter; live record queries currently unavailable |
+| St. Petersburg | Pinellas address locator | County city-boundary/parcel layers and St. Petersburg zoning/land use | Official Downtown, Grand Central and Skyway Marina district projects; queries verified September 13, 2026 |
 | Clearwater | Pinellas address locator | County city-boundary/parcel layers and Clearwater zoning/land use | Official Planning Cases polygon queries; not a building-permit inventory |
 | Other Hillsborough / Pinellas municipalities and unincorporated areas | Candidates may be returned | Outside the configured municipal layers; use the responsible agency | Explicitly not covered |
-| Pasco | Official County address locator | County parcels; zoning/FLU only after municipal exclusion | No configured development adapter; official permit link |
+| Pasco | Official County address locator | County parcels; zoning/FLU only after municipal exclusion | Official in-review zoning/comprehensive-plan cases; limited planning coverage, not a complete permit inventory |
 
 The endpoint inventory below matches [`data/gis-config.json`](../data/gis-config.json). The recorded September 12, 2026 observation queried these services; it does not guarantee their current availability. Every result carries a registry source ID and an exact feature query URL.
 
@@ -56,7 +56,7 @@ Only selected public parcel identification fields are requested. Owner names, ow
 
 The independent [Tampa Development Records project](https://github.com/Jaclenga/Tampa-Development-Records) is an activity source, **not** a regulations source.
 
-This source covers Tampa only. Separate official adapters now query Clearwater planning cases and St. Petersburg district projects after jurisdiction verification. St. Petersburg record queries were unavailable during live verification; Pasco has no configured development source. See [expanded coverage](COVERAGE_EXPANSION.md) for exact boundaries and source semantics.
+This source covers Tampa only. Separate official adapters query Clearwater planning cases, St. Petersburg district projects, and Pasco in-review zoning/comprehensive-plan cases after jurisdiction verification. St. Petersburg and Pasco live queries passed on September 13, 2026. These official results use polygon/radius intersections without numeric distance, preserve source-specific date meanings, and report partial or unavailable services explicitly. See [expanded coverage](COVERAGE_EXPANSION.md) for exact boundaries, dated observations and source semantics.
 
 `data/development-config.json` pins the actual normalized core CSV to commit `b1ac7fc705fe667ff046be11f76dcb8aa3b3d872`:
 

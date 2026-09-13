@@ -1,4 +1,5 @@
 import { isParsedLlmConfig } from './config.mjs';
+import { reserveOutbound, operationalSignal } from '../operations/control.mjs';
 
 export class LlmFailure extends Error {
   constructor(reason) { super(reason); this.name = 'LlmFailure'; this.reason = reason; }
@@ -60,6 +61,8 @@ export function createHttpProvider(config, fetchImpl = globalThis.fetch) {
       const body = config.provider === 'ollama'
         ? { model, messages, stream: false, format: schema, options: { temperature: 0, num_predict: 1024 } }
         : { model, messages, stream: false, response_format: { type: 'json_object' } };
+      await reserveOutbound('model');
+      signal = operationalSignal(signal);
       const response = await fetchImpl(config.endpoint, {
         method: 'POST', headers, body: JSON.stringify(body), signal, redirect: 'manual',
         credentials: 'omit', cache: 'no-store',

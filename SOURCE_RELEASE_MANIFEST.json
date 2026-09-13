@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "291bf87cf8503afeb1e8eb34f92e0c8434aaeded402580c554f86a33b85fdae9",
+  "content_sha256": "4e022b773800fa2ea0fee8ef819a86217e5342a4ddba1bb15cdb561126f660d2",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -22,8 +22,8 @@
   "files": [
     {
       "path": ".env.example",
-      "bytes": 1791,
-      "sha256": "ab45ca8ce1aac5edd5eb2770aefcfa461cd150930683a6276b91fd5efe2f2006"
+      "bytes": 2035,
+      "sha256": "03c22ed87ef75a8ee057be37033b32d7e51e200f2599aa65a9c1a1f1155e30fa"
     },
     {
       "path": ".gitattributes",
@@ -39,6 +39,11 @@
       "path": ".github/PULL_REQUEST_TEMPLATE.md",
       "bytes": 747,
       "sha256": "dbc6fc5ff139addfdeb5638b74a66d5cd9f49480c694b28b8b9ad9301f2dae52"
+    },
+    {
+      "path": ".github/workflows/operations-monitor.yml",
+      "bytes": 953,
+      "sha256": "211630314a4a1eba3953535d5584e66621dc18eadfa64bab6f5d0c4caebc61ee"
     },
     {
       "path": ".github/workflows/source-refresh.yml",
@@ -62,8 +67,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 9023,
-      "sha256": "a7d738e65102ea48d9684ab14b3c62cd5cd10fa552fec1cb861b655dd2a06844"
+      "bytes": 9737,
+      "sha256": "cc206317cde8ef9b59173edefd982742d5d382bbbe2f404b61388838547c0647"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -82,8 +87,8 @@
     },
     {
       "path": "data/development-config.json",
-      "bytes": 7394,
-      "sha256": "90cb18e72f89eef194920a77b9de1f4d1147496065be87f8440ba1fb4952970d"
+      "bytes": 11387,
+      "sha256": "d46a88d42bf37b03d28887786576fb478e3864e3f35b39a1a661c447c9735e8a"
     },
     {
       "path": "data/gis-config.json",
@@ -106,9 +111,14 @@
       "sha256": "fc1a37471b698b2c2562c4f406774882b87c6ef0137024fa8e8a0c4214468c5c"
     },
     {
+      "path": "db/schema.ts",
+      "bytes": 230,
+      "sha256": "8e51b000774d5ee48cbd81a2287cbddf9dcb1e286fd597356fc485b171a18503"
+    },
+    {
       "path": "docs/ACCESSIBILITY.md",
-      "bytes": 9288,
-      "sha256": "5a349abce7c51ea19d6fce68bcd2d57025b087019e12cb2790fc937f75c94c22"
+      "bytes": 12879,
+      "sha256": "20662970d6917a2fe45c6df6d420995a59b81aec88daaa04bc0e47c909cbed57"
     },
     {
       "path": "docs/ALPHA_VERIFICATION.json",
@@ -127,8 +137,8 @@
     },
     {
       "path": "docs/COVERAGE_EXPANSION.md",
-      "bytes": 8445,
-      "sha256": "06618d4527f9240c2eede4e3551fb2d5213a45a5589376c05b89d5f7e92f6940"
+      "bytes": 11059,
+      "sha256": "8af9ba36aaf863a0e251fe06859e6e29fee5ade10aa5d320ba6630bd3c10012b"
     },
     {
       "path": "docs/DATA_SOURCES.md",
@@ -142,8 +152,8 @@
     },
     {
       "path": "docs/DEPLOYMENT.md",
-      "bytes": 6947,
-      "sha256": "3ae63395f4219f64571e28c81c1617f14f7a5eba01596650cfae6f746dd94168"
+      "bytes": 7143,
+      "sha256": "e37535802982c56d03fb2a079328ce440885801e1af71f8aff6acd211290bc87"
     },
     {
       "path": "docs/DEVELOPMENT.md",
@@ -167,8 +177,8 @@
     },
     {
       "path": "docs/GEOSPATIAL.md",
-      "bytes": 16183,
-      "sha256": "9f1a12b543614030bad5133f3ba0461513f55f3f794906d91f8bbea1a2f3039b"
+      "bytes": 16501,
+      "sha256": "bc486500155034679a60e9a9a2dae9120eeecd0d2c9906f599c05bf3e9e0b262"
     },
     {
       "path": "docs/GUARDRAIL_INSERTS.md",
@@ -182,8 +192,8 @@
     },
     {
       "path": "docs/LIMITATIONS.md",
-      "bytes": 9156,
-      "sha256": "d7132c41df902df38f739e4a4de79ece3c3840577b3adea89b2a04805a90a52e"
+      "bytes": 9694,
+      "sha256": "b8de33ad98da3125b7c161feac9453592b8fa069bf72a547e369fa0f1fa346b9"
     },
     {
       "path": "docs/LLM.md",
@@ -201,14 +211,19 @@
       "sha256": "d6e34cfa140a41f9ec702079967f7117ca462eb79bf08d032e6ee4757f4ecfbf"
     },
     {
+      "path": "docs/OPERATIONS.md",
+      "bytes": 6580,
+      "sha256": "2dff1708a216a9e6a6418a4e062f7c015d867097ab209825e493465425c7c805"
+    },
+    {
       "path": "docs/README.md",
       "bytes": 4030,
       "sha256": "d315daed141c4e3f59d451bea65e510159995ed6099c588b0b4224c782ecdfd9"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
-      "bytes": 18456,
-      "sha256": "34a27fb965bfbb9fd4f01d40a5bb6a45c40f51456e08bdf6e5935ab2105f16a5"
+      "bytes": 20252,
+      "sha256": "57e61a6f257bc7231efefd75aa07dc13b428cea99396a71397bda91e9335b5f0"
     },
     {
       "path": "docs/SOURCE_UPDATES.md",
@@ -219,6 +234,11 @@
       "path": "docs/TAMPA_BAY_VERIFICATION.json",
       "bytes": 5867,
       "sha256": "ca0a1e480c215cef2adc6e2c40602903928f084f2f6dd06f2a025113be3c0ef0"
+    },
+    {
+      "path": "drizzle/0000_operations.sql",
+      "bytes": 787,
+      "sha256": "2de061b0ba26952049c2e9c656c08f30d76dc7059bb9d0c20c4d6201b77192a9"
     },
     {
       "path": "eslint.config.mjs",
@@ -387,8 +407,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11687,
-      "sha256": "7666f7e71ae627be78569a3b99f5ce053115d47208214382df55ad8cd10fc925"
+      "bytes": 11776,
+      "sha256": "15adacd957d1351219fb7c73bb10de99fcf728f89e73274b35bb525c219d1d9e"
     },
     {
       "path": "scripts/build-source-refresh.mjs",
@@ -421,14 +441,24 @@
       "sha256": "7d4da08de353a5f98f445246b5ea9417d7571fc39743f56211b972042be660a3"
     },
     {
+      "path": "scripts/generate-operations-schema.mjs",
+      "bytes": 440,
+      "sha256": "9d58f902caf2559e35a82a9845941e911a61214af4d375e07d06ebaf7a5b9102"
+    },
+    {
       "path": "scripts/ingest.mjs",
       "bytes": 1158,
       "sha256": "0bd9386be281bb6aa06e4e95d678e71df920dbb1c3a8a8166e075aabc8be686d"
     },
     {
+      "path": "scripts/monitor-operations.mjs",
+      "bytes": 3390,
+      "sha256": "4cb547406bce554e13892eb88a76ff8a6f725faf6fa7b4a1e43a46d5090332bd"
+    },
+    {
       "path": "scripts/package-release.mjs",
-      "bytes": 12746,
-      "sha256": "5e65a7555664c9449a73a8dcc69962b29fcaca7c73f362173eded620a9c90be2"
+      "bytes": 12915,
+      "sha256": "ac63229f1b233ee52f2dc3cf764e39a7151a88003240f39475c367d079993975"
     },
     {
       "path": "scripts/reproduce-runtime-transport.mjs",
@@ -447,8 +477,8 @@
     },
     {
       "path": "scripts/serve-built-worker.mjs",
-      "bytes": 4483,
-      "sha256": "ee22201ea391e9050a6ab63efbb4c74a4d14a05d6be0b5cc403a1f4a54a3aed6"
+      "bytes": 4967,
+      "sha256": "55a99ad6e987c385775ee65f13ebf712c6b65acc49e9711bf44adeb9f44644e1"
     },
     {
       "path": "scripts/setup-gitleaks.mjs",
@@ -462,8 +492,8 @@
     },
     {
       "path": "scripts/source-policy.mjs",
-      "bytes": 8170,
-      "sha256": "b8c28cc95d7247d49c0a144ed5a15cbe250544730b242be8b566e8a5b2e4c666"
+      "bytes": 8174,
+      "sha256": "48ceae3a78a2a1a45ab7b6d4662e78650bc63fd5c0ef262e006b16fea0a8976d"
     },
     {
       "path": "scripts/source-refresh.mjs",
@@ -487,8 +517,8 @@
     },
     {
       "path": "scripts/test-standalone.mjs",
-      "bytes": 11787,
-      "sha256": "11b2ddf4ab1c885413a90e498d62efe6ab5df55bb4a5fcd16f416757460ad686"
+      "bytes": 12057,
+      "sha256": "64f3cb25f36e8b9934953f1accba71d8307a49636035c0be0fef9e764822ac2d"
     },
     {
       "path": "scripts/update-source-manifest.mjs",
@@ -502,13 +532,13 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 14671,
-      "sha256": "920d9d71b614c70eb3347711f5a00acdb0a1e02e8231777040e532e13e74bc52"
+      "bytes": 15062,
+      "sha256": "0c208ec4e3756ee6b5c77f56b91a737974222f47e25dd2974cb1ca6a5ea54c55"
     },
     {
       "path": "src/app/about/page.tsx",
-      "bytes": 1878,
-      "sha256": "4f1ec2f6a953a85afd98ee34828d8386880b523f1ab6950fad3f4fd1c74d8839"
+      "bytes": 346,
+      "sha256": "8cfa83124544af9ec5320c2d068aeb22eeae57ffc59e553414e37104c33ccec7"
     },
     {
       "path": "src/app/api/ask/route.ts",
@@ -527,8 +557,8 @@
     },
     {
       "path": "src/app/api/health/route.ts",
-      "bytes": 304,
-      "sha256": "69f3f049f801a69e1369b97143a5379639ebbc0467edf412fc8f36abad1e3aed"
+      "bytes": 808,
+      "sha256": "77fe6cb651bf469f687d2c9671b4d6ce3c018d1f4de6a8042ac149487f547bea"
     },
     {
       "path": "src/app/api/location/route.ts",
@@ -539,6 +569,11 @@
       "path": "src/app/api/property/route.ts",
       "bytes": 397,
       "sha256": "a0d20fae672b4de1c6694f8aa14aca2df2e3490d4633c0a3001d49ec64d99c22"
+    },
+    {
+      "path": "src/app/api/ready/route.ts",
+      "bytes": 291,
+      "sha256": "185389d6e447736f4c55ab55aa974dac82e2590eaaa99612b924afa4401fd837"
     },
     {
       "path": "src/app/api/sources/route.ts",
@@ -552,13 +587,13 @@
     },
     {
       "path": "src/app/evaluation/page.tsx",
-      "bytes": 7602,
-      "sha256": "b596b824956c326c7def014830091d9408a8e04d8083f17b79db9e1a24e5b576"
+      "bytes": 634,
+      "sha256": "5822fed05f139f9ea5ad66e46ac4cfd9636c79ce9c76f323518148d6071a4036"
     },
     {
       "path": "src/app/globals.css",
-      "bytes": 24105,
-      "sha256": "0c6c10484475e228bf813f48870b30c5eb7af881f5d21952023e02ce26b1c0f5"
+      "bytes": 24550,
+      "sha256": "c2ee0b0ead78164ec258ed3ce79847a2ce4bd16abdc80bc26be88bd8da66f12e"
     },
     {
       "path": "src/app/layout.tsx",
@@ -572,23 +607,38 @@
     },
     {
       "path": "src/app/sources/page.tsx",
-      "bytes": 2761,
-      "sha256": "db8e66d87fa98fb548695765bfe875605eb58a271b36560116f987bf235be334"
+      "bytes": 297,
+      "sha256": "389f41a2d03f450ad1ff1502ecbf16c8d9d523469f008e56cb01e1d3576034b8"
+    },
+    {
+      "path": "src/components/about-content.tsx",
+      "bytes": 2022,
+      "sha256": "e26f95cf0cae9efc302c78ac32a7e0c3a8b1a529849b967ae941e5dedcf9a23b"
+    },
+    {
+      "path": "src/components/evaluation-content.tsx",
+      "bytes": 7696,
+      "sha256": "78b4d29cc616e1836a89fd0975ee5372969082ecd7e5e2c6a083247d1b8eca28"
     },
     {
       "path": "src/components/property-lookup.tsx",
-      "bytes": 19511,
-      "sha256": "60b7985162fee2384a6604fc785c1ac58b58ded68dcc72b161d4437259cbb428"
+      "bytes": 21532,
+      "sha256": "ba4d8b4cdfbf2b0e74a560006982e1aad870c354641eac1eb2b5d0f4bc048633"
     },
     {
       "path": "src/components/resident-app.tsx",
-      "bytes": 15785,
-      "sha256": "cff650961c90f35475dec918fdb8a8e8934d3df90623b3eba9b41b3d970dcd3a"
+      "bytes": 16269,
+      "sha256": "4ff740c88c9acabef20d4c5230581d7483695fb3af4b03d414d858b53fd517a5"
     },
     {
       "path": "src/components/site-shell.tsx",
       "bytes": 2380,
       "sha256": "b10ab7e91f8fcfe168b17e29fc0f85a6b65e44ed96b0c9ae0ff535482c023ebb"
+    },
+    {
+      "path": "src/components/sources-content.tsx",
+      "bytes": 3650,
+      "sha256": "0d2308d9b12735bc3bb1edf34c95ddd5691fcce6124a375f51856b99fe686fce"
     },
     {
       "path": "src/lib/citations/evidence.mjs",
@@ -667,8 +717,8 @@
     },
     {
       "path": "src/lib/development/official.mjs",
-      "bytes": 7445,
-      "sha256": "114f45fbffc4e63536549f1ac2969f38077d6fe133f24813d8b6e613ce80e4df"
+      "bytes": 7614,
+      "sha256": "92d26ec5d4be280d4e5d94836a32564c1fa2c6c2e9c8c8756fee4977230bc8ff"
     },
     {
       "path": "src/lib/geospatial/index.d.mts",
@@ -682,8 +732,8 @@
     },
     {
       "path": "src/lib/geospatial/remote.mjs",
-      "bytes": 3511,
-      "sha256": "b69be9ceb89be3be8f5eefa1f2c4b9c4d8dea3bf99090530efcb6c63cccc21b7"
+      "bytes": 3644,
+      "sha256": "c3e20b53f958b74b1e21724d5d2bf6815351c4411f632cc105fb7e74ed49101f"
     },
     {
       "path": "src/lib/guardrails/index.d.mts",
@@ -752,23 +802,28 @@
     },
     {
       "path": "src/lib/i18n/en.ts",
-      "bytes": 9971,
-      "sha256": "fa79535207c7b69e235f3c3350c82deab5890554773e2352360cb5f2988677e8"
+      "bytes": 10285,
+      "sha256": "7a0c2002ad3704b4d26f753ced15165fcfdcc991700c2e40808d2bc1f3d4c959"
     },
     {
       "path": "src/lib/i18n/es.ts",
-      "bytes": 5404,
-      "sha256": "14047382134840c2b63645292ad455a88c12d71db649978788c942d210baa275"
+      "bytes": 11064,
+      "sha256": "118180bcfe77f8b0a64c80288d67f6891cb213a158a80d6370c0f8507dfe1b74"
     },
     {
       "path": "src/lib/i18n/evaluation-en.ts",
-      "bytes": 3748,
-      "sha256": "0b358e0efcb4d80c6afeb9c1ca43fb5ed91e4d0ecfb0e20e205cff5de8af9cb7"
+      "bytes": 4079,
+      "sha256": "d7a5d94cb0b221c8875ce0a30ca789325c5f44a7143f8ab9a6b2e89028a7028b"
+    },
+    {
+      "path": "src/lib/i18n/evaluation-es.ts",
+      "bytes": 4620,
+      "sha256": "e2caa522d11307dfa008d7d640e59ace7de53540ef2015552378844139006590"
     },
     {
       "path": "src/lib/i18n/format.ts",
-      "bytes": 1160,
-      "sha256": "5face83b1bf32885c7e8d90c8c68a01fce4ebe8351dfb9aa0af999a51cfa24d4"
+      "bytes": 1335,
+      "sha256": "6d56ebd4999053b7663e54d10e7ab27ba2117a827214c0c834d28e7809ce6303"
     },
     {
       "path": "src/lib/i18n/intent.d.mts",
@@ -782,13 +837,28 @@
     },
     {
       "path": "src/lib/i18n/locale.tsx",
-      "bytes": 669,
-      "sha256": "c0edc36c9ccf799f08567f83158e9a07cdb78ad2937d6427b0be61c7b88feb4c"
+      "bytes": 860,
+      "sha256": "e100fa78307b2bbc875ed8904fe5aaa09f9c18cdb57bb5ca6f39e87d3b64bbab"
     },
     {
       "path": "src/lib/i18n/property-en.ts",
-      "bytes": 3077,
-      "sha256": "89bca608ba6342a6145068b8c15af33499e888084e2aec9dad2c1ec6eba195f7"
+      "bytes": 3385,
+      "sha256": "88519203b5c54c4cf3b5d4958765ba1c793d2dbc4c6ded3f419f23445a6c316e"
+    },
+    {
+      "path": "src/lib/i18n/property-es.ts",
+      "bytes": 3833,
+      "sha256": "7937e1f9fa48af82a2eac14f400a2e7e6f90cd4018c758b50b7814dcd5cfecda"
+    },
+    {
+      "path": "src/lib/i18n/public-text.d.mts",
+      "bytes": 328,
+      "sha256": "ee3dee1b70b0bf33ea4712985896a12629d1b18618bd2a0335833e9ff65cdeb2"
+    },
+    {
+      "path": "src/lib/i18n/public-text.mjs",
+      "bytes": 22027,
+      "sha256": "5ef84d8e722fbba42a7f9e567b1f935e53c874665b9389f6e02320a4fe9d2f96"
     },
     {
       "path": "src/lib/ingestion/fetch.mjs",
@@ -862,13 +932,28 @@
     },
     {
       "path": "src/lib/llm/providers.mjs",
-      "bytes": 4058,
-      "sha256": "fcbacef00b075a49419270f054c826c3e0b7ce2c67ef7810bd1a605ee8219c5b"
+      "bytes": 4218,
+      "sha256": "1fd0361717af002ff0b72005019f92e7e242df0496e535b24a3f460ff84b21f9"
     },
     {
       "path": "src/lib/llm/selection.mjs",
       "bytes": 4855,
       "sha256": "36f63cc029da3f7b12d5cc1cd6d88aa8a132f0e2ab41d96359fbf40276bdb5e3"
+    },
+    {
+      "path": "src/lib/operations/control.mjs",
+      "bytes": 13366,
+      "sha256": "7f4cf0cdb113144ccb9e23451ace3ad0d350ed2bd439ca659e1f395bb068ab7b"
+    },
+    {
+      "path": "src/lib/operations/readiness.mjs",
+      "bytes": 2161,
+      "sha256": "731fffd436f090cf9f54ce657d6307fca758a32550ab52115ac0126a8e8bdf75"
+    },
+    {
+      "path": "src/lib/operations/schema.mjs",
+      "bytes": 825,
+      "sha256": "d46e8be85e00073a9af4f2eb71e14cc01fafa433ca1f459c058c99aa238ddc3f"
     },
     {
       "path": "src/lib/response-security.ts",
@@ -897,8 +982,8 @@
     },
     {
       "path": "src/worker/index.ts",
-      "bytes": 637,
-      "sha256": "2993ae290cc4e1a135db879ec42fd93799b3f4656532f6258d1d97e1ae102809"
+      "bytes": 1125,
+      "sha256": "6966217051ae677ed3fdb9877d5fb4d4332bba2670c349569ade093147fd1236"
     },
     {
       "path": "tests/answers.test.mjs",
@@ -952,8 +1037,8 @@
     },
     {
       "path": "tests/geospatial-expansion.test.mjs",
-      "bytes": 13076,
-      "sha256": "84b415de57772fc88ded91854691dd3deab8e3067bdcf98be3f9b2003c8cd3ab"
+      "bytes": 18717,
+      "sha256": "2824a43855e2487a2c3dfffd339f60dfd0c49cf85f2945ac6de1e4d1b1f661de"
     },
     {
       "path": "tests/geospatial.test.mjs",
@@ -981,6 +1066,21 @@
       "sha256": "d7a897a6efd488f55741e4a4772256104199041602b2c328b5efd684e1c9bdcf"
     },
     {
+      "path": "tests/locale.test.mjs",
+      "bytes": 3943,
+      "sha256": "9b66d5483b531281886bcaace726807a4f54ded915cdf3980534b3f36af7000e"
+    },
+    {
+      "path": "tests/operations-monitor.test.mjs",
+      "bytes": 2159,
+      "sha256": "f36946a6692c8785be3b51b4bc63712049e16f279f07a2c29bc7c12695df08d6"
+    },
+    {
+      "path": "tests/operations.test.mjs",
+      "bytes": 10511,
+      "sha256": "9c6a7ebb0e2fcffa8b441779bc92cdc252c340c175ae1990f3145cc83dc1bcc2"
+    },
+    {
       "path": "tests/resident-workflows.test.mjs",
       "bytes": 18316,
       "sha256": "389d1e0ce51131b6888452d763b20ceb71efde69202b1fe9f132d776652bbfda"
@@ -999,6 +1099,16 @@
       "path": "tests/source-e2e/demo.spec.ts",
       "bytes": 4581,
       "sha256": "b93988b2e96dfc9dd6cf7ba85ee9b988d3fcc450b7eaa762741409717da7b754"
+    },
+    {
+      "path": "tests/source-e2e/language.spec.ts",
+      "bytes": 7541,
+      "sha256": "5b6ab5a52b9e56cf50a959f1e7246a04cc79b88b2fb7b67051ad54df81a3f064"
+    },
+    {
+      "path": "tests/source-e2e/ui-accessibility.spec.ts",
+      "bytes": 11977,
+      "sha256": "bc25c46050e88597bbc3d5d4d5e4920daac90e77d04e6ae56825b9079c7e73a5"
     },
     {
       "path": "tests/source-fixtures.test.mjs",
@@ -1052,8 +1162,8 @@
     },
     {
       "path": "vite.config.ts",
-      "bytes": 2494,
-      "sha256": "21e33217a58ea2a593863c8ecad4324d9f9ebee540d42b7c9a8569299a27492d"
+      "bytes": 2531,
+      "sha256": "f8614abe76b86767a0f800a51280460b296478fb720f2adb39513087673e78c2"
     }
   ]
 }

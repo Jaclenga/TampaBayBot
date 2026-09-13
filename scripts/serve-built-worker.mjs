@@ -15,6 +15,7 @@ const { values: options } = parseArgs({
   options: {
     port: { type: 'string', default: '3100' },
     'no-assets': { type: 'boolean', default: false },
+    'shared-operations': { type: 'boolean', default: false },
   },
   strict: true,
 });
@@ -27,7 +28,7 @@ const entrypoint = await realpath(resolve(serverRoot, config.main));
 assert.ok(entrypoint.startsWith(`${serverRoot}${sep}`), 'The built entrypoint must stay in dist/server.');
 const clientRoot = await realpath(resolve(project, 'dist/client'));
 assert.equal(await realpath(resolve(serverRoot, config.assets.directory)), clientRoot, 'The built asset directory must be dist/client.');
-assert.equal(config.d1_databases?.length ?? 0, 0, 'This local fixture does not configure database bindings.');
+assert.ok((config.d1_databases ?? []).every(binding => binding.binding === 'DB'), 'This local fixture supports only the operations DB binding.');
 assert.equal(config.r2_buckets?.length ?? 0, 0, 'This local fixture does not configure storage bindings.');
 const stateRoot = resolve(project, noAssets ? 'work/built-worker-direct-state' : 'work/built-worker-state');
 await mkdir(stateRoot, { recursive: true });
@@ -53,7 +54,12 @@ const runtimeOptions = {
   compatibilityDate: config.compatibility_date,
   compatibilityFlags: config.compatibility_flags,
   // No .env files, resident inputs, provider secrets or host environment are loaded.
-  bindings: { ...config.vars, LLM_PROVIDER: 'none' },
+  bindings: { ...config.vars, LLM_PROVIDER: 'none', TAMPABAYBOT_OPERATIONS_MODE: options['shared-operations'] ? 'shared' : 'local',
+    ...(options['shared-operations'] ? {
+      TAMPABAYBOT_LIMIT_SECRET: 'synthetic-local-operations-limit-secret',
+      TAMPABAYBOT_MONITOR_TOKEN: 'synthetic-local-operations-monitor-token',
+    } : {}) },
+  ...(options['shared-operations'] ? { d1Databases: { DB: 'synthetic-operations-database' } } : {}),
   resourcePersistencePath: resolve(stateRoot, 'resources'),
   isolatedResourcePersistencePath: resolve(stateRoot, 'isolated'),
   resourceTmpPath: resolve(stateRoot, 'tmp'),

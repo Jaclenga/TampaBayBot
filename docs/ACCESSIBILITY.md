@@ -7,21 +7,40 @@ TampaBayBot targets WCAG 2.1 AA; conformance has not been established. This guid
 - Semantic header, navigation, main, footer, sections, labels, lists, disclosure controls and data tables. The interface has one main heading per page.
 - First-tab skip link; visible focus; native keyboard buttons, links, forms and details. Answers and address results receive focus after a requested search, and evidence markers open the matching source excerpt.
 - Associated form errors, live status messages and busy/disabled states. Errors distinguish unavailable data from an empty successful result. Important uncertainty appears in words, not color alone.
-- Responsive layouts with wrapping controls, system fonts, browser zoom, reduced-motion styles and print support.
+- Responsive layouts with wrapping controls, system fonts, browser zoom, reduced-motion styles and print support. Interface font sizes use relative `rem` units so increasing the browser's default font size enlarges text.
 - Property identifiers, land-use labels, jurisdiction, record distances, dates, caveats and source links are available as text. The optional OpenStreetMap frame requires an explicit button press and has a title. It provides location context; it is never the only place to obtain essential information.
-- English UI messages live in `src/lib/i18n/`. Source excerpts stay in their source language. English legal/regulatory text is not silently machine-translated.
+- English and Spanish UI messages live in `src/lib/i18n/`, including property tools and reference pages. Source excerpts stay in their source language, with language attributes on quotations and original record text. English legal/regulatory text is not silently machine-translated.
 
 ## Automated checks
 
-Historical complete production-browser runs on Windows and later Ubuntu Linux failed after an abandoned upload poisoned Miniflare's local static-assets transport. The current Windows run passes all 15 application cases. It uses the built static-assets route for resident, accessibility, asset and response-policy checks and the exact same compiled Worker through a direct route for stalled-upload deadlines. These are local runtime checks, not hosted Cloudflare tests. [Release readiness](RELEASE_READINESS.md) records the current scope, and [the transport follow-up](BUG_FIX_FOLLOWUP_2026-09-12.md) preserves the earlier failure.
+Historical complete production-browser runs on Windows and later Ubuntu Linux failed after an abandoned upload poisoned Miniflare's local static-assets transport. The retained Windows production-browser run passed all 15 application cases. It used the built static-assets route for resident, accessibility, asset and response-policy checks and the exact same compiled Worker through a direct route for stalled-upload deadlines. These are local runtime checks, not hosted Cloudflare tests. [Release readiness](RELEASE_READINESS.md) records the current scope, and [the transport follow-up](BUG_FIX_FOLLOWUP_2026-09-12.md) preserves the earlier failure.
 
-The current and archived axe scans reported no violations or incomplete nodes in the scanned flows. Reflow, the CSS zoom approximation and the production security checks passed. Automation does not replace human accessibility review.
+The retained production and archived axe scans reported no violations or incomplete nodes in the scanned flows. Reflow, the historical CSS zoom approximation and the production security checks passed. The current source-demo checks below add actual browser zoom and font preferences. Automation does not replace human accessibility review.
 
 The desktop, mobile, housing-answer and evaluation images in `docs/screenshots/` retain the earlier redesign captures associated with the 15:17 UTC browser run. An implementation agent visually inspected those earlier images; they were not refreshed or visually reviewed for the final production run. This is not a human usability audit.
 
 ## Public source browser checks
 
 `npm run test:source:browser` starts an isolated fictional demo and verifies citations, keyboard interaction, mobile reflow, jurisdiction follow-ups and Spanish navigation, including axe scans. It needs Chromium (`npx playwright install chromium`) but no downloaded corpus or model. `docs/images/demo.png` is the current original fictional demo capture; historical screenshots remain archived separately.
+
+The added `tests/source-e2e/ui-accessibility.spec.ts` checks these flows:
+
+- Keyboard-only skip navigation, empty-question error correction, question submission, returned-answer focus, citation opening, disclosure closing/reopening and reset. It attaches an accessibility-tree snapshot and checks axe violations.
+- Home, an expanded cited answer, source library, project information and evaluation pages at 320px and 375px, with forced colors and reduced motion enabled. It checks horizontal page overflow and the focused source disclosure's outline.
+- Actual Chromium browser zoom at 200% and 400%, including the complete question and reference-page flows. Tests verify the zoom preference, effective viewport width and device pixel ratio while CSS zoom remains unchanged.
+- Actual browser default-font resizing from 16px to 32px, separately from page zoom, through the same flows. This exposed and fixed the previous fixed-pixel typography, which did not respect the enlarged default font preference.
+
+The zoom and font tests use a temporary extension in a new, isolated Chromium profile inside the ignored test output. It uses Chromium's [`tabs.setZoom`](https://developer.chrome.com/docs/extensions/reference/api/tabs) and [`fontSettings`](https://developer.chrome.com/docs/extensions/reference/api/fontSettings) APIs. The normal bundled Chromium channel supports this headless [Playwright extension test setup](https://playwright.dev/docs/chrome-extensions). It does not change the user's browser profile. JSON attachments retain the measured preferences; screenshots retain rendered viewport evidence. These are local agent-operated browser checks against fictional data, not production, assistive-technology or independent human usability reviews.
+
+Run just these checks with:
+
+```sh
+npx playwright test --config playwright.source.config.ts tests/source-e2e/ui-accessibility.spec.ts
+```
+
+The HTML report and its attachments are written under `work/source-browser-report/`; the temporary browser profiles stay under `test-results/`. These generated files are excluded from the public source package.
+
+On 2026-09-13, the Windows/Chromium 153.0.8010.12 source-browser run passed all 11 cases with no retries: four accessibility cases above, four existing demo cases and three Spanish reference/property/quotation cases. An implementation agent visually inspected the home and open-evidence viewport captures at 200%/400% browser zoom and 200% default-font size. The Spanish property case uses mocked GIS responses and checks 320px reflow, untranslated original record text and axe violations; it does not verify a live GIS service. The public demo image and archived production images were not refreshed by this run.
 
 ## Run the historical corpus browser checks
 
@@ -61,7 +80,7 @@ Sanitize machine paths before publishing the raw JSON with `node scripts/sanitiz
 
 ## Manual review checklist
 
-Record reviewer, date, browser/OS, assistive technology, observed result and issue links for each item. These human checks are **pending**:
+Record reviewer, date, browser/OS, assistive technology, observed result and issue links for each item. Automated coverage above provides regression evidence for parts of this list; these broader human checks are still **pending**:
 
 1. Navigate all links, categories, forms, errors, answer citations, address candidates, distance choices and source disclosures using only Tab, Shift+Tab, Enter, Space and arrow keys.
 2. Read the flows with NVDA/Firefox or NVDA/Chrome on Windows and VoiceOver/Safari on Apple platforms. Confirm announcements, heading order, focus movement, citation context and dynamically returned results.
@@ -73,9 +92,11 @@ Record reviewer, date, browser/OS, assistive technology, observed result and iss
 ## Known limitations
 
 - No human screen-reader audit, accessibility expert sign-off or resident usability study has been completed. The prepared human answer audit contains no fabricated accessibility scores.
-- Automated CSS zoom is an approximation, not a substitute for browser zoom and text-only resizing. Some secondary metadata is small and must be checked with resident users and enlarged text.
+- The historical production suite's CSS zoom remains an approximation. Actual browser zoom and default-font resizing are covered by the separate Chromium fictional-demo suite; Firefox, Safari, mobile assistive technology and resident readability still need review.
 - Original government documents and OpenStreetMap are outside project control and may have their own accessibility problems. The application exposes text evidence and direct alternatives but cannot repair the original source sites.
-- The question interface and site navigation support English and Spanish; property tools and reference pages remain in English. Source quotations retain their original language. Source acronyms and some quoted regulatory wording remain technical; a verified plain-language glossary needs further work.
+- Question, property and reference interfaces support English and Spanish. Official source titles, quotations and record content retain their original language. Spanish wording still needs independent fluent-speaker and resident review. Source acronyms and some quoted regulatory wording remain technical; a verified plain-language glossary needs further work.
 - Screen-reader announcement order, long source-disclosure navigation, mobile assistive technology and forced-color support need human validation.
+
+On 2026-09-13, the local Windows environment had Narrator available but no active screen-reader session or usable speech-output inspection interface; NVDA was absent from its usual installation paths. No screen-reader session, human audit or resident study was performed by these checks.
 
 Report reproducible accessibility issues through [CONTRIBUTING.md](../CONTRIBUTING.md), with the browser, device, assistive technology and task affected. Avoid private resident information; sensitive security/privacy details belong in the [private reporting channel](../SECURITY.md#reporting-a-problem).

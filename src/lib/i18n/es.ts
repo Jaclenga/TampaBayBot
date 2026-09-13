@@ -1,8 +1,8 @@
-import { en } from './en';
+import { en } from './en.ts';
 
 export const es: typeof en = {
   ...en,
-  language: { label: 'Language / Idioma', scope: 'Las preguntas y la navegación están disponibles en inglés y español. Las herramientas de propiedades y las páginas de referencia están actualmente en inglés.' },
+  language: { label: 'Language / Idioma', scope: 'Las preguntas, las herramientas de propiedades y las páginas de referencia están disponibles en inglés y español. Las citas y los registros oficiales se conservan en su idioma original.' },
   nav: { ask: 'Hacer una pregunta', sources: 'Fuentes públicas', about: 'Acerca del proyecto', evaluation: 'Evaluación' },
   hero: { title: 'Información sobre vivienda en Tampa Bay', description: 'Encuentre ayuda para la vivienda, información de propiedades, permisos y registros públicos de su comunidad.' },
   form: {
@@ -45,6 +45,38 @@ export const es: typeof en = {
     needs_location: 'Se necesita una ubicación', needs_jurisdiction: 'Elija una ciudad o condado',
     official_judgment: 'Confirme con la agencia responsable', out_of_scope: 'Fuera del alcance del servicio',
     unavailable_source: 'Fuente no disponible', missing_geographic_coverage: 'Fuera de la cobertura disponible',
+  },
+  property: {
+    title: 'Añada una propiedad a su pregunta', label: 'Dirección de una propiedad en Tampa Bay',
+    placeholder: 'Por ejemplo, 315 E Kennedy Blvd, Tampa', submit: 'Buscar dirección', busy: 'Buscando la dirección…',
+    disclosure: 'Las búsquedas se envían a los servicios GIS públicos de Hillsborough, Pinellas y Pasco. La aplicación no guarda un historial de direcciones.',
+    select: 'Confirme la dirección correcta', choose: 'Usar esta dirección', loading: 'Consultando los mapas públicos de propiedades…',
+    titleResult: 'Información de la propiedad', zoning: 'Reglas de uso de la propiedad', futureLandUse: 'Plan de uso del suelo a largo plazo',
+    parcel: 'Registro de la propiedad', map: 'Mostrar mapa de ubicación', mapDisclosure: 'Al abrir el mapa, se comparten estas coordenadas con OpenStreetMap.',
+    mapTitle: 'Mapa de la ubicación seleccionada', nearby: 'Desarrollo cercano', radius: 'Distancia de búsqueda', meters: 'metros',
+    distance: 'Distancia en línea recta desde el punto seleccionado',
+    activityNote: 'Un registro cercano describe actividad documentada. No establece lo permitido en esta propiedad, una aprobación ni una relación legal.',
+    records: 'Registros públicos', record: 'Ver registro original',
+    noRecords: 'No se recibieron registros dentro de esta distancia. Esto no significa que no haya habido desarrollo.',
+    geoError: 'No se pudo cargar la información pública de la propiedad. Inténtelo de nuevo o consulte los enlaces oficiales.',
+    unknown: 'No determinado', source: 'Ver fuente GIS', optional: 'Añadir una propiedad es opcional. También puede consultar los recursos oficiales anteriores.',
+  },
+  sourcePage: {
+    title: 'Fuentes públicas', description: 'Fuentes gubernamentales y conjuntos de datos públicos utilizados por TampaBayBot, con su cobertura, fechas y enlaces originales.',
+    official: 'Fuente pública original', synthetic: 'Fuente de demostración ficticia', independent: 'Proyecto independiente de datos públicos', view: 'Visitar fuente',
+    frequency: 'Actualización prevista', retrieved: 'Última consulta', terms: 'Condiciones de la fuente', unavailable: 'Aún no consultada',
+    original: 'Las descripciones y condiciones originales de las fuentes se muestran en el idioma registrado.',
+    coverage: 'Jurisdicciones incluidas', refreshDays: 'días', back: 'Volver a su pregunta', method: 'Cómo se elaboran las respuestas',
+    methodText: 'La aplicación busca pasajes en un índice de fuentes públicas con versiones y muestra citas exactas. Un modelo de lenguaje opcional, local o por API, puede seleccionar fragmentos; la aplicación comprueba su texto y sus citas antes de mostrarlos. No puede emitir decisiones oficiales. Los documentos son datos, nunca instrucciones.',
+    method2: 'Las búsquedas de ubicaciones usan capas GIS públicas de la jurisdicción confirmada, incluidas direcciones y parcelas de Pasco. No se asigna zonificación ni uso futuro del suelo del condado dentro de municipios de Pasco. Los registros cercanos utilizan una copia fijada de Tampa, determinados proyectos de distritos de St. Petersburg, casos de planificación de Clearwater y casos de zonificación y del plan integral de Pasco en revisión. Son registros publicados de alcance limitado, no un inventario completo de permisos u obras. Cada fuente tiene sus propios límites de cobertura y vigencia.',
+  },
+  about: {
+    title: 'Acerca de TampaBayBot', intro: 'TampaBayBot reúne recursos de vivienda, información de propiedades y registros públicos de desarrollo para ayudar a los residentes de Tampa Bay a encontrar un siguiente paso comprensible. Se indica la cobertura de las fuentes para cada jurisdicción.',
+    approachTitle: 'Cómo funcionan las respuestas', approach: 'Cada respuesta incluye sus fuentes. Mostramos la información que la respalda, explicamos la incertidumbre y remitimos las decisiones importantes a la agencia responsable. Esta primera versión ofrece orientación con fuentes, sin emitir decisiones legales ni de elegibilidad personalizadas.',
+    privacyTitle: 'Privacidad', privacy: 'La aplicación no guarda preguntas, direcciones, conversaciones ni perfiles personales. Las solicitudes pasan por el proveedor de alojamiento. Las búsquedas de direcciones se envían a servicios GIS públicos; el mapa opcional utiliza OpenStreetMap. Evite introducir información personal sensible.',
+    languageTitle: 'Idioma', language: 'Las preguntas, las herramientas de propiedades y las páginas de referencia están disponibles en inglés y español. Las citas, los nombres oficiales, las descripciones de registros y las notas de fuentes se conservan en su idioma original, que se indica cuando está registrado.',
+    limitsTitle: 'Qué puede y qué no puede hacer esta versión', limits: 'Esta es una versión v0.1 para revisión. Utiliza copias guardadas de fuentes y consultas de propiedades en directo, que pueden fallar o devolver varias coincidencias. No puede garantizar registros completos de desarrollo ni decidir lo permitido legalmente. Todavía se requieren auditorías humanas y pruebas con tecnologías de asistencia antes de una publicación para el público.',
+    accessTitle: 'Accesibilidad', access: 'Puede utilizar el servicio con un teclado. Los resultados de propiedades y actividad incluyen una vista de texto; abrir un mapa es opcional. El diseño admite pantallas pequeñas, foco visible, texto ampliado y movimiento reducido. Las comprobaciones automáticas ayudan a detectar problemas, pero no demuestran el cumplimiento completo de las WCAG.',
   },
   footer: {
     statement: 'TampaBayBot es un proyecto independiente de código abierto, sin afiliación con ningún gobierno municipal o de condado. Verifique las decisiones importantes con la agencia responsable.',

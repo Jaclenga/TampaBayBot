@@ -132,7 +132,10 @@ try {
       await new Promise(resolveDelay => setTimeout(resolveDelay, 500));
     }
     assert.ok(health, 'Worker did not become ready in 90 seconds.');
-    assert.equal(health.status, health.chunks ? 'ready' : 'no_evidence');
+    assert.equal(health.status, health.chunks ? 'degraded' : 'no_evidence');
+    assert.equal(health.ready, false, 'An independent artifact without shared production controls is not ready for public traffic.');
+    assert.equal(health.operations.reason, 'shared_controls_not_configured');
+    assert.equal(health.corpus.chunks, health.chunks);
     assert.equal(health.version, manifest.package_version);
     report.corpus = { sources: health.sources, chunks: health.chunks };
   });

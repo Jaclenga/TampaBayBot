@@ -1,4 +1,5 @@
 /** Bounded Web-API-only readers shared by GIS and development adapters. */
+import { reserveOutbound, operationalSignal } from '../operations/control.mjs';
 export async function fetchBoundedText(url, { fetcher = fetch, timeoutMs = 12000, maxBytes = 1000000, request = {} } = {}) {
   const controller = new AbortController();
   // Timer callbacks can run late; reject overdue data at every read boundary too.
@@ -18,7 +19,8 @@ export async function fetchBoundedText(url, { fetcher = fetch, timeoutMs = 12000
   const read = (async () => {
     // Workers implement manual/follow only. Reject 3xx through the status check;
     // never follow a source redirect to a different host or private network.
-    const response = await fetcher(url, { ...request, signal: controller.signal, redirect: 'manual', headers: { Accept: 'application/json, text/csv, text/plain', ...request.headers } });
+    await reserveOutbound('gis');
+    const response = await fetcher(url, { ...request, signal: operationalSignal(controller.signal), redirect: 'manual', headers: { Accept: 'application/json, text/csv, text/plain', ...request.headers } });
     if (expired()) { cancel(response.body); throw timedOut(); }
     if (!response.ok) { cancel(response.body); throw new Error(`Remote source returned HTTP ${response.status}.`); }
     const length = Number(response.headers.get('content-length'));

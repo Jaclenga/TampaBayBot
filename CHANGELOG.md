@@ -2,13 +2,17 @@
 
 ## Unreleased
 
+- Add shared D1 request/concurrency/outbound budgets, absolute deadlines, protected aggregate metrics, truthful readiness, monitor alerts, maintenance and incident/rollback procedures.
+- Translate property tools and reference pages into Spanish, retain source-language attributes and preserve language-switch focus. Use relative font sizes and verify actual browser zoom/text enlargement, keyboard-only flows and forced colors.
+- Update current versus historical verification, authenticated hosted smoke, coordinate sharing and whole-parcel documentation.
+
 Renamed the project to TampaBayBot, aligning application branding, package names, deployment examples, repository links and project-specific environment variables with `Jaclenga/TampaBayBot`. Previous environment variable names remain supported as compatibility aliases; historical deployment and audit records retain their original identifiers.
 
 - Preserve short evidence facts such as assistance limits and require relevant program-status cautions to survive optional model selection.
 - Add original fictional demo evidence, a demo screenshot, and source-independent unit/browser checks that run on a fresh public checkout. Missing release manifests now fail CI.
 - Stage source updates for digest-bound review, validate and build approved candidates, and publish a single atomic corpus generation with recovery and rollback. Downloads use streaming limits, bounded retries and deadlines. Weekly automation publishes metadata-only review reports.
 - Retain temporary topic and jurisdiction context for follow-up questions, with a reset control and existing privacy boundaries. Add Spanish housing navigation and interface text while preserving original source quotations.
-- Add Pasco parcel and unincorporated zoning/land-use queries, whole-parcel intersections with explicit point fallback, and Clearwater planning-case queries. St. Petersburg development queries report upstream failures; Pasco development remains an explicit coverage gap.
+- Add Pasco parcel and unincorporated zoning/land-use queries, whole-parcel intersections with explicit point fallback, Clearwater planning cases, and Pasco in-review zoning/comprehensive-plan cases. St. Petersburg district-project queries passed again on September 13, 2026 after the earlier upstream outage. Individual source failures remain explicit; planning cases do not establish construction or complete permit coverage.
 - Document contributor manifest updates and strengthen release verification to reject downloaded evidence, populated historical reports, private configuration and unsupported payload paths even when their hashes match.
 - Require matching fresh evidence for explicit factual questions, preserve multiple program restrictions, and handle Spanish application/coverage follow-ups. Missing facts no longer receive a general `answered` response.
 - Retry approved source deployments with verified artifact copies, preserve changed-source provenance and publisher dates honestly, and reject private deployment receipts during manifest preparation.

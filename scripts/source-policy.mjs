@@ -69,7 +69,7 @@ export function isGeneratedReleasePath(name) {
 }
 
 export function isReleaseTextPath(name) {
-  return /\.(?:mjs|js|cjs|ts|tsx|mts|css|md|json|ya?ml|txt|toml|tmpl|html|svg)$/.test(name)
+  return /\.(?:mjs|js|cjs|ts|tsx|mts|css|md|json|ya?ml|txt|toml|tmpl|html|svg|sql)$/.test(name)
     || /(?:^|\/)(?:LICENSE|NOTICE|\.gitignore|\.gitattributes|\.gitleaksignore|\.env\.example)$/.test(name);
 }
 

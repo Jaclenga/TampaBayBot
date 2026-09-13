@@ -19,14 +19,14 @@ The deterministic test suites cover malformed requests, byte limits, origins, co
 
 ## Data flow and privacy
 
-The app does not save questions, conversation histories, resident profiles or addresses to a database or browser storage. Follow-up context is a bounded topic/program/jurisdiction object in page memory, cleared on reset or reload; it contains no prior freeform question text. Each follow-up is validated again and cannot authorize a source or override geographic checks. That does not control upstream services, hosting/proxy logs or transient caches.
+The app does not save questions, conversation histories, resident profiles or addresses to a database or browser storage. Follow-up context is a bounded topic/program/jurisdiction object in page memory, cleared on reset or reload; it contains no prior freeform question text. Each follow-up is validated again and cannot authorize a source or override geographic checks. Shared operations storage adds temporary HMAC client keys, counters, leases and aggregate metrics without raw addresses or freeform input; [retention and cleanup](docs/OPERATIONS.md) document their lifetime. This does not control upstream services, hosting/proxy logs or transient caches.
 
 | Action | Information leaving the application server/browser |
 | --- | --- |
 | Question with `LLM_PROVIDER=none` | No language-model transfer; the server uses its local evidence corpus |
 | Eligible answer with a model enabled | The current question and bounded public-source excerpts go to the operator-configured provider; no conversation history, complete corpus or tool definitions are supplied |
-| Address/property lookup | Address text goes to the configured Hillsborough, Pinellas and Pasco locators; selected coordinates go to connected Tampa, Pinellas, St. Petersburg, Clearwater and Plan Hillsborough services for jurisdiction and property checks |
-| Nearby development lookup | Coordinates go to the configured Tampa and Pinellas municipal-boundary services; after Tampa coverage is verified the server retrieves a pinned public CSV and filters distances locally |
+| Address/property lookup | Address text goes to the configured Hillsborough, Pinellas and Pasco locators; selected coordinates and validated parcel polygons go to connected Hillsborough, Tampa, Pinellas, St. Petersburg, Clearwater, Pasco and Plan Hillsborough services for jurisdiction and property checks |
+| Nearby development lookup | Coordinates go to configured jurisdiction-boundary services and the selected official Clearwater, St. Petersburg or Pasco planning-case services; verified Tampa coverage uses a pinned public CSV with local distance filtering |
 | Explicitly opening the map | Selected coordinates go to OpenStreetMap; the interface discloses this before loading the frame |
 
 GIS caches can retain query URLs/responses for five minutes; the development CSV has a one-hour process-local cache. These expire with the process and are not a saved search history. Operators must separately review hosting, model-provider and upstream logging, retention and downstream forwarding. Do not log request bodies or attach resident questions/addresses to error reports. No anonymity or zero-log claim is made.
@@ -49,7 +49,7 @@ The model receives fixed selection instructions, and its output is untrusted. On
 
 ## Deployment work and limitations
 
-The application does **not** include a shared rate limiter, abuse-detection service, bot challenge, or global outbound request budget. Response caps and process-local caches reduce individual request costs but do not protect a public service from sustained traffic or many fresh worker instances. Configure and verify hosting-level request limits, concurrency/cost limits, alerts, and an upstream request budget before broad public exposure. No particular limits are configured by this repository.
+Shared operations mode now enforces D1-backed client/global request limits, concurrency leases, outbound budgets and an absolute request deadline. Invalid configuration or unavailable storage fails closed. Protected aggregate metrics, readiness probes, scheduled alerts, maintenance and rollback are documented in [operations](docs/OPERATIONS.md). Independent builds default to explicitly unconfigured local mode. Platform connection handling, network floods and hosting/provider billing ceilings remain hosting responsibilities.
 
 Use HTTPS on the final domain and verify the deployment's actual response headers after any hosting-proxy changes. The application's response policy does not configure a hosting sign-in page or errors generated before the Worker runs. Embedding this service in another origin is intentionally blocked by its frame-ancestor policy. Production browser tests exercise hydration, evidence search and rejection of untrusted inline scripts using the built Worker; they do not establish immunity to every script-injection technique.
 
@@ -61,7 +61,7 @@ Review access controls, backups and incident contacts, and keep credentials in t
 
 Keep the lockfile and review dependencies when preparing a release. Use the [dedicated secret scanner](evaluation/security/SECRET_SCAN.md) for the candidate's source and Git history; its scope is separate from dependency review. Exact audit/scan results are recorded with [release readiness](docs/RELEASE_READINESS.md), and a clean result in either tool does not establish universal security or a completed penetration test.
 
-The UI address-selection step prevents accidental selection during ordinary use; it is not a signed server-issued location token. A direct API client can submit a different valid coordinate/address label. Source queries use the supplied coordinate, and official boundary layers establish jurisdiction. The question's selected resource area cannot override those polygons. Property information is approximate point context, not proof of identity, ownership, official approval, or an official legal determination.
+The UI address-selection step prevents accidental selection during ordinary use; it is not a signed server-issued location token. A direct API client can submit a different valid coordinate/address label. Source queries use the supplied coordinate, and official boundary layers establish jurisdiction. The question's selected resource area cannot override those polygons. Property results use a bounded whole-parcel polygon where verified, with an explicit address-point fallback otherwise. Neither establishes ownership, permission to build or an official determination.
 
 ## Reporting a problem
 

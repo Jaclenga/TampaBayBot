@@ -1,0 +1,74 @@
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test('Spanish remains selected across reference pages and their accessible titles', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#interface-language').selectOption('es');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Fuentes públicas' }).click();
+  await expect(page.getByRole('heading', { name: 'Fuentes públicas', exact: true })).toBeVisible();
+  await expect(page).toHaveTitle('Fuentes públicas | TampaBayBot');
+  await expect(page.locator('.source-card').first()).toContainText('Última consulta');
+  await expect(page.locator('.source-card').first()).toContainText('Jurisdicciones incluidas');
+  await expect(page.locator('.source-card h2').first()).toHaveText('Fictional rental assistance');
+  await page.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: 'Acerca del proyecto' }).click();
+  await expect(page.getByRole('heading', { name: 'Acerca de TampaBayBot', exact: true })).toBeVisible();
+  await expect(page.locator('#privacy')).toContainText('La ayuda del modelo está desactivada');
+  await expect(page.locator('#language')).toContainText('las herramientas de propiedades');
+  await page.getByRole('navigation', { name: 'Navegación del pie de página' }).getByRole('link', { name: 'Evaluación' }).click();
+  await expect(page.getByRole('heading', { name: 'Resultados de evaluación' })).toBeVisible();
+  await expect(page.getByText('No se ha realizado ninguna evaluación de esta instalación.', { exact: false })).toBeVisible();
+  await expect(page.locator('main')).toHaveAttribute('lang', 'es');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.locator('#interface-language').selectOption('en');
+  await expect(page.getByRole('heading', { name: 'Evaluation results' })).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+});
+
+test('Spanish property workflow translates cautions and controls while preserving official record text', async ({ page }) => {
+  const retrievedAt = '2026-09-12T12:00:00Z';
+  const candidate = { id: 'fictional-address', address: '123 Fictional Street, Tampa', latitude: 27.95, longitude: -82.46, sourceUrl: 'https://example.invalid/address', sourceId: 'fictional-address', retrievedAt };
+  const layer = { status: 'found', records: [{ id: '1', label: 'FICTIONAL-RS', description: 'Original fictional designation text.', pin: 'DEMO-PIN', sourceUrl: 'https://example.invalid/record', retrievedAt }], agency: 'Fictional GIS Agency', title: 'Fictional parcel source', sourceUrl: 'https://example.invalid/layer', sourceId: 'fictional-layer', retrievedAt, message: null };
+  const warnings = ['Whole-parcel geometry could not be verified. Zoning and future land use describe the selected address point only; split zoning elsewhere on the parcel has not been checked.'];
+  await page.route('**/api/location', route => route.fulfill({ json: { status: 'selection_required', candidates: [candidate], warnings: [], retrievedAt, message: 'Check the matched address, then select it to look up this location.' } }));
+  await page.route('**/api/property', route => route.fulfill({ json: { status: 'partial', address: candidate.address, jurisdiction: 'Tampa', jurisdictionId: 'tampa', message: 'Some property information needs verification. Review the individual source results.', warnings, parcel: layer, zoning: layer, futureLandUse: layer, parcelAnalysis: { scope: 'address_point', status: 'not_checked' } } }));
+  await page.route('**/api/development', route => route.fulfill({ json: { status: 'unavailable', message: 'Official development layers could not be retrieved. Open the source to verify records.', sourceId: 'fictional-development', sourceUrl: 'https://example.invalid/development', title: 'Fictional Development Records', authoritativeStatus: 'official county GIS planning records', sourceSnapshotDate: null, retrievedAt: null, warnings: [], records: [], totalMatches: 0, radiusMeters: 1000, activityByYear: [] } }));
+  await page.goto('/');
+  await page.locator('#interface-language').selectOption('es');
+  await page.getByLabel('Su ciudad o condado', { exact: true }).selectOption('tampa');
+  await page.getByLabel('Haga una pregunta o escriba una dirección', { exact: true }).fill('¿Qué permiso necesito para mi propiedad?');
+  await page.getByRole('button', { name: 'Buscar', exact: true }).click();
+  await page.getByLabel('Dirección de una propiedad en Tampa Bay', { exact: true }).fill(candidate.address);
+  await page.getByRole('button', { name: 'Buscar dirección', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Confirme la dirección correcta' })).toBeFocused();
+  await expect(page.locator('.address-matches')).toContainText('Compruebe la dirección encontrada');
+  await page.getByRole('button', { name: /Usar esta dirección/ }).click();
+  await expect(page.getByRole('heading', { name: 'Información de la propiedad', exact: true })).toBeFocused();
+  await expect(page.locator('.selected-property')).toContainText('No se pudo verificar la geometría de toda la parcela');
+  await expect(page.locator('.selected-property')).toContainText('No se pudieron consultar las capas oficiales de desarrollo');
+  await expect(page.locator('.selected-property')).toContainText('Registros GIS oficiales de planificación del condado');
+  await expect(page.locator('.property-record strong').first()).toHaveText('FICTIONAL-RS');
+  await expect(page.locator('.property-record p[lang="en"]').first()).toHaveText('Original fictional designation text.');
+  await expect(page.getByRole('button', { name: 'Mostrar mapa de ubicación', exact: true })).toBeVisible();
+  await expect(page.locator('iframe')).toHaveCount(0);
+  await page.setViewportSize({ width: 320, height: 812 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.locator('#interface-language').focus();
+  await page.locator('#interface-language').selectOption('en');
+  await expect(page.locator('#interface-language')).toBeFocused();
+  await expect(page.getByRole('heading', { name: 'Property context', exact: true })).toBeVisible();
+  await expect(page.locator('.selected-property')).toContainText('Whole-parcel geometry could not be verified');
+  await expect(page.locator('.property-record p[lang="en"]').first()).toHaveText('Original fictional designation text.');
+});
+
+test('inline source quotations retain their language when Spanish navigation surrounds them', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#interface-language').selectOption('es');
+  await page.getByLabel('Su ciudad o condado', { exact: true }).selectOption('tampa');
+  await page.getByLabel('Haga una pregunta o escriba una dirección', { exact: true }).fill('¿Cuál es el monto máximo de ayuda para el alquiler?');
+  await page.getByRole('button', { name: 'Buscar', exact: true }).click();
+  await expect(page.locator('.answer-lead [lang="en"]').filter({ hasText: '$1,234' })).toHaveText('Maximum demo assistance: $1,234.');
+  await expect(page.locator('.answer-lead')).toContainText('Empiece por');
+  await expect(page.locator('.evidence-list blockquote').first()).toHaveAttribute('lang', 'en');
+});

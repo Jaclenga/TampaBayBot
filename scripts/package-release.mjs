@@ -105,6 +105,10 @@ export async function createSourceRelease({ root = ROOT, output }) {
   // The release gets its own source-only CI workflow, if supplied by the maintainer.
   inputs.add(".github/workflows/source-release.yml");
   inputs.add(".github/workflows/source-refresh.yml");
+  inputs.add(".github/workflows/operations-monitor.yml");
+  inputs.add("docs/OPERATIONS.md");
+  inputs.add("db/schema.ts");
+  inputs.add("drizzle/0000_operations.sql");
   inputs.add(".github/PULL_REQUEST_TEMPLATE.md");
   inputs.add(".github/ISSUE_TEMPLATE/bug.yml");
   inputs.add("docs/images/demo.png");
