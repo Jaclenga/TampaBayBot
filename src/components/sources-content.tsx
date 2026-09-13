@@ -1,7 +1,7 @@
 "use client";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import type { Source } from "@/lib/core/answer.mjs";
 import { JURISDICTIONS } from "@/lib/coverage.mjs";
 import { jurisdictionLabel } from "@/lib/i18n/public-text.mjs";
@@ -9,16 +9,22 @@ import { useLocale, usePageTitle } from "@/lib/i18n/locale";
 import { dateLabel } from "@/lib/i18n/format";
 import { SourceLink } from "@/components/site-shell";
 import { isAuthoritative } from "@/lib/retrieval/search.mjs";
-
-const INITIAL_SOURCE_COUNT = 6;
+import { paginateSources } from "@/lib/source-list.mjs";
 
 export default function SourcesContent({ sources }: { sources: Source[] }) {
   const { locale, copy: en } = useLocale();
-  const [expanded, setExpanded] = useState(false);
-  const toggle = useRef<HTMLButtonElement>(null);
-  const hasMore = sources.length > INITIAL_SOURCE_COUNT;
-  const visibleSources = expanded ? sources : sources.slice(0, INITIAL_SOURCE_COUNT);
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const searchInput = useRef<HTMLInputElement>(null);
+  const resultsSummary = useRef<HTMLParagraphElement>(null);
+  const results = useMemo(() => paginateSources(sources, query, page, 6, locale), [sources, query, page, locale]);
   usePageTitle(`${en.sourcePage.title} | ${en.brand}`);
+
+  function goToPage(nextPage: number) {
+    if (nextPage === results.page) return;
+    setPage(nextPage);
+    requestAnimationFrame(() => resultsSummary.current?.focus());
+  }
   return (
     <main id="main" lang={locale} className="document-page content-width">
       <Link href="/" className="back-link">
@@ -30,26 +36,38 @@ export default function SourcesContent({ sources }: { sources: Source[] }) {
         <p>{en.sourcePage.description}</p>
         <p className="small muted">{en.sourcePage.original}</p>
       </div>
-      <div className="source-list-controls">
-        <p className="small muted" role="status">
-          {en.sourcePage.showing(visibleSources.length, sources.length)}
-        </p>
-        {hasMore && (
-          <button
-            ref={toggle}
-            className="secondary-button"
-            type="button"
-            aria-expanded={expanded}
+      <div className="source-search" role="search" aria-label={en.sourcePage.search}>
+        <label htmlFor="source-search">{en.sourcePage.search}</label>
+        <div className="source-search-input">
+          <Search size={18} aria-hidden="true" />
+          <input
+            ref={searchInput}
+            id="source-search"
+            type="search"
+            value={query}
+            placeholder={en.sourcePage.searchPlaceholder}
             aria-controls="public-source-list"
-            onClick={() => setExpanded(current => !current)}
-          >
-            {expanded ? en.sourcePage.seeLess : en.sourcePage.seeMore}
-            {expanded ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}
-          </button>
-        )}
+            onChange={event => {
+              setQuery(event.target.value);
+              setPage(1);
+            }}
+          />
+          {query && (
+            <button className="text-button" type="button" onClick={() => {
+              setQuery("");
+              setPage(1);
+              searchInput.current?.focus();
+            }}>
+              {en.sourcePage.clearSearch}
+            </button>
+          )}
+        </div>
       </div>
+      <p ref={resultsSummary} className="source-results-summary small muted" role="status" tabIndex={-1}>
+        {en.sourcePage.showing(results.start, results.end, results.total)}
+      </p>
       <div className="source-grid" id="public-source-list">
-        {visibleSources.map((source) => (
+        {results.items.map((source) => (
           <article className="source-card" key={source.source_id}>
             <div className="source-meta">
               <span>
@@ -94,22 +112,20 @@ export default function SourcesContent({ sources }: { sources: Source[] }) {
           </article>
         ))}
       </div>
-      {hasMore && expanded && (
-        <div className="source-list-collapse">
-          <button
-            className="secondary-button"
-            type="button"
-            aria-expanded={expanded}
-            aria-controls="public-source-list"
-            onClick={() => {
-              toggle.current?.focus();
-              setExpanded(false);
-            }}
-          >
-            {en.sourcePage.seeLess}
-            <ChevronUp size={18} aria-hidden="true" />
-          </button>
-        </div>
+      {results.total === 0 && <p className="source-empty">{en.sourcePage.noResults}</p>}
+      {results.totalPages > 1 && (
+        <nav className="source-pagination" aria-label={en.sourcePage.pagination}>
+          <p className="small muted">{en.sourcePage.pageStatus(results.page, results.totalPages)}</p>
+          <div className="source-page-buttons">
+            <button type="button" disabled={results.page === 1} aria-controls="public-source-list" onClick={() => goToPage(1)}>{en.sourcePage.first}</button>
+            <button type="button" disabled={results.page === 1} aria-controls="public-source-list" onClick={() => goToPage(results.page - 1)}>{en.sourcePage.previous}</button>
+            {results.pageNumbers.map(number => (
+              <button key={number} type="button" aria-label={en.sourcePage.pageLabel(number)} aria-current={number === results.page ? "page" : undefined} aria-controls="public-source-list" onClick={() => goToPage(number)}>{number}</button>
+            ))}
+            <button type="button" disabled={results.page === results.totalPages} aria-controls="public-source-list" onClick={() => goToPage(results.page + 1)}>{en.sourcePage.next}</button>
+            <button type="button" disabled={results.page === results.totalPages} aria-controls="public-source-list" onClick={() => goToPage(results.totalPages)}>{en.sourcePage.last}</button>
+          </div>
+        </nav>
       )}
       <section className="method-callout">
         <div>

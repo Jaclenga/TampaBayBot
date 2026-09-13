@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "b29cadfb7b6ae0cf8f77467f8fb4a47948307710a6ec1872c1ba95fb9c5c261e",
+  "content_sha256": "35b274035377dd74e09f64650ad92481c0ac05580504cc7c2689da15215b810a",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -592,8 +592,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "bytes": 22769,
-      "sha256": "1ad886cfcf0a264347fa3d2293af28bc13ab9e81f70b1de429f8c5f1263b3137"
+      "bytes": 23678,
+      "sha256": "e9f13d61d9d3b829a1639bcbbc9eb6c655a93d918db98291ad1d91d4ab8b77a2"
     },
     {
       "path": "src/app/layout.tsx",
@@ -637,8 +637,8 @@
     },
     {
       "path": "src/components/sources-content.tsx",
-      "bytes": 5237,
-      "sha256": "358259fe43303ba0c1790494dc4eca8711db88c0bb775caabdce59a42a312980"
+      "bytes": 6827,
+      "sha256": "771ea00338ae971ccbe35bf592e6d00a0d631b955c9dd16c40215c9b022659fa"
     },
     {
       "path": "src/lib/citations/evidence.mjs",
@@ -802,13 +802,13 @@
     },
     {
       "path": "src/lib/i18n/en.ts",
-      "bytes": 9144,
-      "sha256": "e0b4d998297b04d872fe3893eb1c79ce7eb0fa6875478e8b54c2ca58db20b326"
+      "bytes": 9541,
+      "sha256": "8e2861053aa03fcb8fea98e585f321baa4b671b7c35910cc18d4aadc5d5dbda7"
     },
     {
       "path": "src/lib/i18n/es.ts",
-      "bytes": 9971,
-      "sha256": "73dfe10f1f709954611cce0fdde3191184acbcc20ab924a5f82a7b55068fed7a"
+      "bytes": 10386,
+      "sha256": "b1a70e0e05b25b324f6e22eec2273f518993faa2b99634974ed22a120ded7648"
     },
     {
       "path": "src/lib/i18n/evaluation-en.ts",
@@ -981,6 +981,16 @@
       "sha256": "9ce8b96f883f00aa23e7073247606d951a8b03cf130d10f145e5abad5086a61b"
     },
     {
+      "path": "src/lib/source-list.d.mts",
+      "bytes": 408,
+      "sha256": "3086e3ca49db0a5a9c6da37f7482c10072927e463af10ba8ac8e6644d4ddb14d"
+    },
+    {
+      "path": "src/lib/source-list.mjs",
+      "bytes": 1737,
+      "sha256": "b6e814fc701660d2195e8bd1168dc531a74c75c171b46339411a011e431f3be9"
+    },
+    {
       "path": "src/worker/index.ts",
       "bytes": 1125,
       "sha256": "6966217051ae677ed3fdb9877d5fb4d4332bba2670c349569ade093147fd1236"
@@ -1114,6 +1124,11 @@
       "path": "tests/source-fixtures.test.mjs",
       "bytes": 2507,
       "sha256": "f414e3e77216bb39ef3f34730a750ce4150d190a0a0d6ccb3c95aa01c0fd08ce"
+    },
+    {
+      "path": "tests/source-list.test.mjs",
+      "bytes": 3835,
+      "sha256": "19506c4bc56fdc8f8b481a2bca81d1af2675595ef79bdb25295aabe68eb7d0f8"
     },
     {
       "path": "tests/source-policy.test.mjs",

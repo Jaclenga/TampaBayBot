@@ -863,25 +863,72 @@ input::placeholder {
   max-width: 800px;
   line-height: 1.7;
 }
-.source-list-controls {
+.source-search {
+  max-width: 640px;
+  margin-bottom: 20px;
+}
+.source-search label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.source-search-input {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px 24px;
+  gap: 8px 12px;
+}
+.source-search-input input {
+  flex: 1 1 180px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid #839aab;
+  border-radius: 2px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+.source-results-summary {
   margin-bottom: 16px;
+  scroll-margin-top: 24px;
 }
-.source-list-controls p {
-  margin: 0;
+.source-empty {
+  padding: 24px 0;
 }
-.source-list-collapse {
+.source-pagination {
+  margin: 24px 0;
+}
+.source-page-buttons {
   display: flex;
-  justify-content: flex-end;
-  margin: 12px 0 24px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.source-page-buttons button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #839aab;
+  border-radius: 2px;
+  background: white;
+  color: var(--heading);
+  font: inherit;
+}
+.source-page-buttons button:hover:not(:disabled) {
+  background: var(--panel);
+}
+.source-page-buttons button[aria-current="page"] {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: white;
+  font-weight: 600;
+}
+.source-page-buttons button:disabled {
+  cursor: default;
 }
 .source-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 40px;
 }
 .source-card {
