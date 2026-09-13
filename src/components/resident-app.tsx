@@ -200,22 +200,6 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
             </p>
             {conversation && <p className="small muted">{en.answer.followup}</p>}
           </form>
-          {!answer && (
-            <div className="example-prompts">
-              <span>{en.examplesLabel}</span>
-              <div>
-                {en.examples.map((example) => (
-                  <button
-                    key={example}
-                    onClick={() => void ask(example)}
-                    disabled={!ready || busy}
-                  >
-                    {example}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
           <p className="sr-only" role="status">
             {busy ? en.form.busy : ""}
           </p>

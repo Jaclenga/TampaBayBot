@@ -29,18 +29,12 @@ export const en = {
     error: "We couldn’t complete that search. Please try again.",
     max: "Keep your question under 1,000 characters.",
   },
-  examplesLabel: "Try a question",
   modelPrivacy: {
     disabled:
       "Model assistance is off. Your question is not sent to a language model.",
     enabled:
       "Model assistance is on. Your question and selected public-source passages are sent to this site's configured model service, which may process or retain them.",
   },
-  examples: [
-    "Where can I find help paying for housing?",
-    "What zoning applies to this address?",
-    "Are there development records near me?",
-  ],
   answer: {
     title: "Answer",
     area: "Source coverage",

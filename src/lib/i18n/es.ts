@@ -13,12 +13,10 @@ export const es: typeof en = {
     empty: 'Escriba una pregunta sobre vivienda o una dirección de Tampa Bay.',
     error: 'No pudimos completar la búsqueda. Inténtelo de nuevo.', max: 'Limite su pregunta a 1.000 caracteres.',
   },
-  examplesLabel: 'Pruebe una pregunta',
   modelPrivacy: {
     disabled: 'La ayuda del modelo está desactivada. Su pregunta no se envía a un modelo de lenguaje.',
     enabled: 'La ayuda del modelo está activada. Su pregunta y los fragmentos de fuentes públicas seleccionados se envían al servicio de modelo configurado para este sitio, que puede procesarlos o conservarlos.',
   },
-  examples: ['¿Dónde encuentro ayuda para pagar el alquiler?', '¿Qué zonificación tiene esta propiedad?', '¿Hay registros de desarrollo cerca de mí?'],
   answer: {
     title: 'Respuesta', area: 'Cobertura de las fuentes',
     modelUsed: 'Un modelo de lenguaje seleccionó estos fragmentos. Se comprobó que su texto coincide con las fuentes guardadas.',

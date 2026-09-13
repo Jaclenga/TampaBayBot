@@ -410,9 +410,8 @@ test("property workflow requires address confirmation and handles GIS failures w
   );
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
-  await page
-    .getByRole("button", { name: "What zoning applies to this address?" })
-    .click();
+  await page.getByLabel("Question or address").fill("What zoning applies to this address?");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.getByLabel("Tampa Bay street address")).toBeVisible();
   await page
     .getByLabel("Tampa Bay street address")

@@ -294,30 +294,6 @@ input::placeholder {
   font-size: 0.8125rem;
   line-height: 1.6;
 }
-.example-prompts > span {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-.example-prompts > div {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 28px;
-  margin-top: 4px;
-}
-.example-prompts button {
-  min-height: 44px;
-  border: 0;
-  background: transparent;
-  color: var(--heading);
-  padding: 7px 0;
-  font-size: 0.875rem;
-  text-align: left;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.example-prompts button:hover {
-  text-decoration-thickness: 2px;
-}
 .text-link,
 .back-link {
   display: inline-flex;
@@ -1122,13 +1098,6 @@ input::placeholder {
     font-size: 0.8125rem;
     margin-bottom: 22px;
   }
-  .example-prompts > div {
-    display: grid;
-  }
-  .example-prompts button {
-    font-size: 0.875rem;
-    line-height: 1.6;
-  }
   .site-footer {
     padding: 22px 24px;
   }
@@ -1275,7 +1244,6 @@ input::placeholder {
   .site-header,
   .site-footer,
   .question-form,
-  .example-prompts,
   .map-consent,
   .location-map,
   .text-button {
