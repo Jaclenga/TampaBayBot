@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "df9bc43c0133a6c2bb33fc02733d1dd9dbc10d01114643667c23c9e0571d74d1",
+  "content_sha256": "0dd085f3881d51392ab8146c4d43848ed95fd9b85cf82de14461d73c0debf52d",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -57,8 +57,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 961,
-      "sha256": "fa6c97fa39dc120c52ca57f7142c3fc5c140ae023b5019edb4dc06cdf07fa2ba"
+      "bytes": 1067,
+      "sha256": "243ecc10ee17a1f11be689c8163ebab23f048f90745c85999ddf00a2811a2c06"
     },
     {
       "path": ".gitleaks.toml",
@@ -67,8 +67,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 9621,
-      "sha256": "6981d5e3b273085c04f582c82ee9ace448789b462ba2e3670c8f4d02c34a7daf"
+      "bytes": 9626,
+      "sha256": "370741b2f96b5202e63c4e8e44f811c712d947fd1b2728aca567c89812299035"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -127,8 +127,8 @@
     },
     {
       "path": "docs/ASSETS.md",
-      "bytes": 1154,
-      "sha256": "11e391ebcc0df740da127f90ad9dec2092aafa80d3af597d6302709302e36075"
+      "bytes": 1100,
+      "sha256": "4c96a0a9b7c3b6c7b08b812810699f0472e8ab5d1aaff404c3f81a9159522e9a"
     },
     {
       "path": "docs/BUG_FIX_FOLLOWUP_2026-09-12.md",
@@ -137,8 +137,8 @@
     },
     {
       "path": "docs/COVERAGE_EXPANSION.md",
-      "bytes": 11059,
-      "sha256": "8af9ba36aaf863a0e251fe06859e6e29fee5ade10aa5d320ba6630bd3c10012b"
+      "bytes": 11060,
+      "sha256": "1efda27d3e998b0ac6e76e43c7ab07aec6a175e0eb92cbb03a36566db504ee9d"
     },
     {
       "path": "docs/DATA_SOURCES.md",
@@ -152,18 +152,18 @@
     },
     {
       "path": "docs/DEPLOYMENT.md",
-      "bytes": 7143,
-      "sha256": "e37535802982c56d03fb2a079328ce440885801e1af71f8aff6acd211290bc87"
+      "bytes": 6335,
+      "sha256": "09ec53891f9447112f5082f63a0e20f14a7b06e458f8ecf09533548b60813d9a"
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "bytes": 11264,
-      "sha256": "037b90315f9fa63ace9dbff012fa612ec2c593e2d614aba3b7bfb80578209d96"
+      "bytes": 11051,
+      "sha256": "151a05d0989f0e84a1add5e5948a755c9eeeabde6777439b871f2197c0737828"
     },
     {
       "path": "docs/DISTRIBUTION.md",
-      "bytes": 9351,
-      "sha256": "299e32c1b9b5aa4e902b4ee5cb652676b261f00cd661aac80b8bee4c06f4dd98"
+      "bytes": 9311,
+      "sha256": "d1ea5cf7614013c250b82c19f74235ddd16d9adca07270dd7d52c1bed12bdca2"
     },
     {
       "path": "docs/EVAL_SUITE.md",
@@ -192,18 +192,18 @@
     },
     {
       "path": "docs/LIMITATIONS.md",
-      "bytes": 9694,
-      "sha256": "b8de33ad98da3125b7c161feac9453592b8fa069bf72a547e369fa0f1fa346b9"
+      "bytes": 9748,
+      "sha256": "f306aef6c60bf9bc521783940ad8c879fbcf0b7651767c28fd2510a3fb6cfefc"
     },
     {
       "path": "docs/LLM.md",
-      "bytes": 15905,
-      "sha256": "75c4c92f48b9bd7bf3e1df487919e7d712b9a66581c9cfbad38074efcec110be"
+      "bytes": 15893,
+      "sha256": "8577711916fdfed7c7d83d733f75acc6e1d07cf0367999e24199fc6f49e7aaeb"
     },
     {
       "path": "docs/METHODOLOGY.md",
-      "bytes": 11303,
-      "sha256": "ed03228b6a5467d15f255de83f01803ddb6dc30c8850b95dc49fd00f8c5611d5"
+      "bytes": 11381,
+      "sha256": "2209498e37b62f295026a3a27593f8cadbbfd32724e7aecfee28c0bcc7fe1f76"
     },
     {
       "path": "docs/OLLAMA_TESTING.md",
@@ -212,13 +212,13 @@
     },
     {
       "path": "docs/OPERATIONS.md",
-      "bytes": 6580,
-      "sha256": "2dff1708a216a9e6a6418a4e062f7c015d867097ab209825e493465425c7c805"
+      "bytes": 6546,
+      "sha256": "ac31caee53e585ad76b7e9f487f9a829c1a9200351cae813755727b2e94e7958"
     },
     {
       "path": "docs/README.md",
-      "bytes": 4030,
-      "sha256": "d315daed141c4e3f59d451bea65e510159995ed6099c588b0b4224c782ecdfd9"
+      "bytes": 4131,
+      "sha256": "739a2bede56421991e405d9ae47ede79b38393bdfcaa0f3178fa93fcf3a50d13"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -232,8 +232,8 @@
     },
     {
       "path": "docs/SOURCE_UPDATES.md",
-      "bytes": 10771,
-      "sha256": "83a405f245edd31ab11fe6f7cd6081afbbbe0ddf5c77de775346b015193d5a46"
+      "bytes": 10757,
+      "sha256": "41d0f492e33e743f20da8bf1c37971d42d6251bd07ce84a85027ed0e216c9f2c"
     },
     {
       "path": "docs/TAMPA_BAY_VERIFICATION.json",
@@ -302,8 +302,8 @@
     },
     {
       "path": "evaluation/security/SECRET_SCAN.md",
-      "bytes": 3447,
-      "sha256": "e301059b926639d99b1003c1e32318da4569b84bb7e8fe19860b24daaecf5bac"
+      "bytes": 3028,
+      "sha256": "284b17b5ba15f1ddcc4f9dfd6df1eb4a1608d01381de2c61890f8762c2985888"
     },
     {
       "path": "evaluation/suite/guardrails.mjs",
@@ -537,8 +537,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 14848,
-      "sha256": "3ba1d5d0644431ee7da30960d1c77d177f0e88cb3e561d5528702ef2e79b26ed"
+      "bytes": 3447,
+      "sha256": "e72c899f977a1c36c508dcefb14b82d2b57574e3861c6397cc23140efb5d0c40"
     },
     {
       "path": "src/app/about/page.tsx",

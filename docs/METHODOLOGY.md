@@ -15,7 +15,7 @@ The public source-only alpha starts without evidence. An operator loads and revi
 
 Optional model assistance selects evidence for an otherwise `answered` result. Its IDs and full literal excerpts must validate, the primary evidence stays first, and conservative states and official next steps remain application-controlled. Invalid output returns the deterministic baseline. The [provider contract](LLM.md) defines the exact selection format, configuration and transfer of eligible questions/public excerpts to a provider.
 
-The question API applies built-in checks and additive operator [guardrails](GUARDRAIL_INSERTS.md) around the flow. They can reject input or suppress model use but cannot authorize unsupported evidence or rewrite the answer contract. The limits of identifier detection, trusted extensions and provider disclosure are documented in [SECURITY.md](../SECURITY.md).
+The question API applies built-in checks and additive operator [guardrails](GUARDRAIL_INSERTS.md) around the flow. They can reject input or suppress model use but cannot authorize unsupported evidence or rewrite the answer contract. The guardrail guide describes identifier detection and trusted-extension limits; [model configuration](LLM.md) explains provider disclosure, and [security](../SECURITY.md) summarizes privacy and reporting.
 
 This implementation supports selected Tampa Bay jurisdictions. Resource scope is configured separately from the official polygons used for live property context, so adding a source or selecting a city does not establish GIS coverage. The [architecture and code layout](DEVELOPMENT.md#architecture-and-code-layout) identifies the core modules, JSON/in-memory index and separation between ingestion and the resident interface.
 

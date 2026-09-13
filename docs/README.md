@@ -23,7 +23,7 @@ Start with the [project overview](../README.md) for capabilities, a screenshot a
 | Run the offline suite, compare regressions or evaluate a model | [Evaluation suite](EVAL_SUITE.md) |
 | Accessibility support and the manual review checklist | [Accessibility](ACCESSIBILITY.md) |
 | Product coverage and decision boundaries | [Limitations](LIMITATIONS.md) |
-| Security controls, data flow, operator responsibilities and reporting | [Security](../SECURITY.md) |
+| Supported versions, privacy, safe configuration and vulnerability reporting | [Security](../SECURITY.md) |
 | Add trusted guardrail checks | [Guardrail extension guide](GUARDRAIL_INSERTS.md) |
 | Software, external information and model licensing | [Notices](../NOTICE.md) |
 
@@ -46,6 +46,7 @@ These are exact-claim results from 12 hand-authored Tampa Bay cases against the 
 | Set up a checkout, understand the architecture, run checks or use the APIs | [Developer guide](DEVELOPMENT.md) |
 | Propose code, source, documentation or review contributions | [Contributing](../CONTRIBUTING.md) |
 | Build and deploy with your own hosting account | [Independent deployment](DEPLOYMENT.md) |
+| Configure service controls, monitoring and incident response | [Operations](OPERATIONS.md) |
 | Package source without redistributing archived evidence | [Distribution policy](DISTRIBUTION.md) |
 | Review current release evidence and unfinished launch work | [Release readiness](RELEASE_READINESS.md) |
 | See changes by release | [Changelog](../CHANGELOG.md) |

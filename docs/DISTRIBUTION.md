@@ -20,13 +20,13 @@ The review establishes a conservative packaging policy and records the limits of
 
 ## Build a release tree
 
-From a maintainer checkout:
+From the project directory:
 
 ```sh
 node scripts/package-release.mjs --output work/releases/v0.1.0-alpha.4-source
 ```
 
-The output path must be a new directory under `work/releases/`; existing output is never deleted or replaced. The script uses an explicit source-file policy, rejects symlinked inputs and redirected output ancestors, and never copies `.git`, installed dependencies, secrets, owner `.openai` metadata, ignored work or deployment artifacts. It does not change the working corpus or rewrite repository history.
+The output path must be a new directory under `work/releases/`; existing output is never deleted or replaced. The script uses an explicit source-file policy, rejects symlinked inputs and redirected output ancestors, and preserves the working corpus. Runtime state, credentials and private deployment artifacts are excluded from the source distribution.
 
 `SOURCE_RELEASE_MANIFEST.json` records every included file's SHA-256, a digest of the ordered file list and explicit exclusions. Included text is normalized to LF before hashing, and the generated `.gitattributes` preserves those bytes across operating systems. Packaging itself makes no network request and does not run or invent tests. The manifest excludes its own self-referential hash. A new package must be built after source changes; an older manifest does not verify a later tree.
 
@@ -35,7 +35,7 @@ The omitted content is:
 - `data/raw/**`, `data/normalized/**` and the historical `data/chunks.json` corpus;
 - historical ingestion/verification reports and quote-bearing response, agent-review, human-review and suite-result artifacts;
 - historical accessibility, security, Ollama and local/hosted deployment reports;
-- historical screenshots, external data archives, owner hosting configuration and Git history. The original fictional demo image under `docs/images/` is included.
+- historical screenshots, external data archives, deployment-specific hosting configuration and Git history. The original fictional demo image under `docs/images/` is included.
 
 Required JSON import paths are replaced with honest placeholders: zero chunks, unset retrieval dates, unavailable sources, empty response/review arrays and reports marked `not_run`. Packaging reuses the project README overview, whose alpha notice explains this initial state. Relative links to omitted artifacts, including screenshots, become explanatory text rather than broken links. The source registry retains publisher URLs, operator-authored descriptions, fetch settings and next-step links. Historical agent review scripts/ratings are omitted so bootstrap cannot attach old judgments to new answers.
 
@@ -63,7 +63,7 @@ npm run typecheck
 npm run build
 ```
 
-The complete tests and dated navigation expectations require evidence. Fresh publisher content may differ from the private development snapshot; these commands preserve and report failures instead of claiming historical reproducibility. `evaluate` writes fresh response packets and pending human-review packets before returning failure on mismatched expectations. `eval:suite` writes its own results and also fails on unmet expectations. The empty historical agent-review list remains empty until a new review is actually performed. Future corpus updates need reviewed expectations and independent human assessment.
+The complete tests and dated navigation expectations require evidence. Fresh publisher content may differ from the recorded evaluation snapshot; these commands preserve and report failures instead of claiming historical reproducibility. `evaluate` writes fresh response packets and pending human-review packets before returning failure on mismatched expectations. `eval:suite` writes its own results and also fails on unmet expectations. The empty historical agent-review list remains empty until a new review is actually performed. Future corpus updates need reviewed expectations and independent human assessment.
 
 For inference and hosting, see [model setup](LLM.md) and [independent deployment](DEPLOYMENT.md). Model downloads/licenses and inference-provider retention remain separate from software distribution.
 

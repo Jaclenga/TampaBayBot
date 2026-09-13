@@ -60,7 +60,7 @@ Initial source-only alpha for contributors, local use and supervised testing. Ta
 - Added a minimalist blue-and-white interface inspired by Tampa.gov, with functional icons and text-only sharing metadata.
 - Added a build for deployment into an operator's own Cloudflare account, source-only packaging and a [private vulnerability-reporting route](SECURITY.md#reporting-a-problem).
 
-The public tree excludes downloaded third-party snapshots, extracted evidence, historical answer/review packets, screenshots, owner hosting metadata and private development history. It starts with empty evidence and evaluation states; operators acquire and review sources directly. [Distribution policy](docs/DISTRIBUTION.md).
+The public tree excludes downloaded third-party snapshots, extracted evidence, historical answer/review packets, screenshots, runtime state, credentials and private deployment artifacts. It starts with empty evidence and evaluation states; operators acquire and review sources directly. [Distribution policy](docs/DISTRIBUTION.md).
 
 The public source-release CI passed. The complete development browser suite retains one rejected-upload transport failure on both Windows and Linux local runtimes; hosted impact remains unverified. Independent human review, manual accessibility review and deployment operations remain pending. [Current release status and verification](docs/RELEASE_READINESS.md) distinguishes these scopes, including the recorded real Ollama tests and own-account deployment limits.
 

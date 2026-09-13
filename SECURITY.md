@@ -1,72 +1,32 @@
 # Security and privacy
 
-This document defines the application's trust boundaries, data flow, operator responsibilities and private vulnerability-reporting route. TampaBayBot has no resident account, application-document or payment workflow. It is an independent public-information alpha, not a service for processing sensitive applications. Dated security checks and open findings belong in [release readiness](docs/RELEASE_READINESS.md); this policy is not a penetration-test report.
+TampaBayBot is an independent public-information alpha. It does not provide resident accounts, accept application documents, or process payments. Avoid submitting credentials, financial identifiers, or other sensitive personal information.
 
-## Implemented boundaries
+## Supported versions
 
-- API endpoints accept bounded JSON objects. Request bodies are counted while streaming and capped at 8,192 bytes even when Content-Length is absent or incorrect. A truthfully declared oversized body of at most 64 KiB is consumed without retaining its excess bytes before rejection so ordinary pooled connections remain reusable; larger, undeclared and deceptive uploads are cancelled at the 8,192-byte boundary. A ten-second whole-upload deadline returns `408/request_timeout`; receiving another chunk does not restart it. Timeout, abort and size rejection cancel the reader without waiting for an uncooperative cancellation callback. Questions, addresses, coordinates, and supported distance choices have additional validation. Coordinates must be numeric and finite; string/array coercion does not select a radius.
-- A supplied browser Origin must exactly match the request origin. The service does not enable cross-origin API access. Origin checks are browser misuse protection, not authentication: direct clients can omit or forge Origin and the API is intentionally public.
-- API JSON responses use `Cache-Control: no-store` and `X-Content-Type-Options: nosniff`.
-- GIS and development endpoints are fixed in reviewed configuration. Resident input changes query parameters, not the remote host. GIS requests select only the fields required for property identification and mapped context. Owner names, mailing addresses, and financial parcel fields are not requested.
-- Remote GIS/development readers enforce response-size limits, deadlines and explicit failure states, and reject redirects. Development retrieval is pinned to a reviewed Git commit and SHA-256 before parsing. Record links are restricted to approved government/Tampa Accela hosts and HTTPS. [Geospatial behavior](docs/GEOSPATIAL.md) defines exact query, parser, cache and retrieval bounds.
-- Retrieved passages, record descriptions, and user questions are data. The default extractive answer system does not execute source instructions. An optional provider can select from retrieved evidence; output must contain valid IDs and full literal excerpts before it is used. Sources cannot choose endpoints, call tools, add arbitrary facts/citations or change conservative answer states. React renders descriptions as text; the property UI does not insert source HTML. External source links use `noopener noreferrer`.
-- An OpenStreetMap iframe is created only after the resident activates the map button. The UI discloses that this sends the selected coordinates to OpenStreetMap; the iframe uses `referrerPolicy="no-referrer"`. Property and activity evidence is available as text without opening the map.
-- The production Worker supplies a fresh 192-bit script nonce to Vinext and emits a Content Security Policy that permits those scripts, same-origin assets/connections and the optional OpenStreetMap frame. It blocks inline event handlers, objects, base-URL changes and external framing. HTML and API responses are not cached. HSTS applies on HTTPS responses, without preload or a subdomain-wide policy. Response policies also cover error responses; client-supplied nonce/policy headers are replaced before rendering. Local development permits Vite's inline scripts and WebSocket connections; production builds use the stricter policy. Inline styles remain permitted for framework compatibility.
-- The unused `/_vinext/image` and `/_next/image` processing routes, including decoded aliases, return 404 before framework dispatch. The build dependency on the vulnerable upstream `image-size` parsers is replaced by an original bounded PNG/GIF-only header reader. Other image formats require separate review; see the dependency remediation (development artifact omitted from source-only release).
-- Interrupted address/activity requests are aborted in the browser. Old responses cannot replace a newer selection, and switching address matches clears old errors and location-specific results. Client aborts do not guarantee that a request already received by the server stops its upstream work.
-
-The deterministic test suites cover malformed requests, byte limits, origins, coordinate coercion, ambiguous geography, source outages, hostile document text/links, stale evidence, schema drift, and content integrity. Passing these checks does not establish complete application security or data accuracy.
-
-## Data flow and privacy
-
-The app does not save questions, conversation histories, resident profiles or addresses to a database or browser storage. Follow-up context is a bounded topic/program/jurisdiction object in page memory, cleared on reset or reload; it contains no prior freeform question text. Each follow-up is validated again and cannot authorize a source or override geographic checks. Shared operations storage adds temporary HMAC client keys, counters, leases and aggregate metrics without raw addresses or freeform input; [retention and cleanup](docs/OPERATIONS.md) document their lifetime. This does not control upstream services, hosting/proxy logs or transient caches.
-
-| Action | Information leaving the application server/browser |
-| --- | --- |
-| Question with `LLM_PROVIDER=none` | No language-model transfer; the server uses its local evidence corpus |
-| Eligible answer with a model enabled | The current question and bounded public-source excerpts go to the operator-configured provider; no conversation history, complete corpus or tool definitions are supplied |
-| Address/property lookup | Address text goes to the configured Hillsborough, Pinellas and Pasco locators; selected coordinates and validated parcel polygons go to connected Hillsborough, Tampa, Pinellas, St. Petersburg, Clearwater, Pasco and Plan Hillsborough services for jurisdiction and property checks |
-| Nearby development lookup | Coordinates go to configured jurisdiction-boundary services and the selected official Clearwater, St. Petersburg or Pasco planning-case services; verified Tampa coverage uses a pinned public CSV with local distance filtering |
-| Explicitly opening the map | Selected coordinates go to OpenStreetMap; the interface discloses this before loading the frame |
-
-GIS caches can retain query URLs/responses for five minutes; the development CSV has a one-hour process-local cache. These expire with the process and are not a saved search history. Operators must separately review hosting, model-provider and upstream logging, retention and downstream forwarding. Do not log request bodies or attach resident questions/addresses to error reports. No anonymity or zero-log claim is made.
-
-Questions can contain sensitive details even when narrow identifier checks allow them. Enabled-provider disclosure is therefore necessary. Localhost also does not prove local inference: Ollama cloud models may forward requests, and a hosted server's localhost cannot reach a resident's PC. [Model setup](docs/LLM.md) explains local weights, provider configuration and endpoint rules.
-
-## Guardrail extension boundary
-
-The question API uses built-in checks plus optional trusted guards at `question`, `evidence`, `before_model`, `after_model` and `response`. Selected Social Security/account/payment-card/access-key patterns reject input before routing, and recognizable question/evidence instruction attacks suppress model use while retaining deterministic navigation. Output screening covers answer prose, explanation and evidence text. These patterns can miss personal details or match unrelated numbers; they are not complete data-loss prevention or redaction. Ordinary income, disability, eviction and other legitimate housing questions remain supported.
-
-Operator checks in `src/lib/guardrails/site.mjs` are additive and cannot disable built-ins, rewrite context or authorize unsupported answers. Errors, invalid decisions and timeouts stop the request with a generic service-unavailable response. Checks receive isolated frozen data and deadlines but execute trusted server code with normal process privileges. They are not sandboxed, and cancellation cannot stop code that ignores its signal or blocks the event loop. An external policy service creates another disclosure boundary. Registration, stage order and failure semantics are defined in [guardrail inserts and runtime hooks](docs/GUARDRAIL_INSERTS.md).
-
-## Optional model-provider boundary
-
-Only the operator can configure the provider URL/model and optional bearer credential. Keys are server-side runtime secrets; base URLs, keys and raw provider error details are not returned to the browser. Do not put them in `NEXT_PUBLIC_*`, Vite build variables or `.openai/hosting.json`. Local `.env` configuration does not configure an already-deployed worker.
-
-Provider requests have deadlines and bounded response bodies and reject redirects. Public endpoints require HTTPS; the [model guide](docs/LLM.md) specifies local/private-address exceptions. These transport rules do not authenticate a model server or establish that DNS/network infrastructure is trustworthy. Keep endpoint configuration operator-controlled and protect LAN/remote services.
-
-The model receives fixed selection instructions, and its output is untrusted. Only supplied evidence IDs and full unchanged excerpts are accepted; malformed selections, unknown IDs, rewritten facts, provider failures or timeouts return the original deterministic answer with fallback metadata. Non-answer/conservative statuses bypass the provider. These checks limit accepted output; they do not prove relevance, completeness, non-exploitability or a model's resistance to every instruction attack.
-
-## Deployment work and limitations
-
-Shared operations mode now enforces D1-backed client/global request limits, concurrency leases, outbound budgets and an absolute request deadline. Invalid configuration or unavailable storage fails closed. Protected aggregate metrics, readiness probes, scheduled alerts, maintenance and rollback are documented in [operations](docs/OPERATIONS.md). Independent builds default to explicitly unconfigured local mode. Platform connection handling, network floods and hosting/provider billing ceilings remain hosting responsibilities.
-
-Use HTTPS on the final domain and verify the deployment's actual response headers after any hosting-proxy changes. The application's response policy does not configure a hosting sign-in page or errors generated before the Worker runs. Embedding this service in another origin is intentionally blocked by its frame-ancestor policy. Production browser tests exercise hydration, evidence search and rejection of untrusted inline scripts using the built Worker; they do not establish immunity to every script-injection technique.
-
-The application upload deadline bounds body reads once an API route is executing. The hosting edge must still enforce connection/header timeouts and concurrent-request budgets before that boundary. User-supplied URLs are not accepted by the resident APIs, but source-registry ingestion is an operator operation: review source-host changes, redirects, terms, and raw content before accepting refreshed evidence.
-
-A local-runtime defect remains open on Windows and Linux: after a rejected unread or incomplete upload, Miniflare's static-assets transport can fail a following request. The Windows minimal Worker reproduction and later Linux application run have different scopes, preserved in [the follow-up findings](docs/BUG_FIX_FOLLOWUP_2026-09-12.md). Current production browser verification runs stalled-upload assertions against the exact compiled Worker without that local proxy, while resident, asset, CSP and response-policy checks use the static-assets route. All 15 application cases pass with this documented separation. Hosted impact and behavior through the defective local proxy remain unverified.
-
-Review access controls, backups and incident contacts, and keep credentials in the hosting secret store or ignored local environment files. Public source availability does not require resident accounts; privileged configuration and any future private-account data require appropriate operator access controls. [Deployment](docs/DEPLOYMENT.md) covers setup, [distribution](docs/DISTRIBUTION.md) covers publishing source without private archives, and [NOTICE.md](NOTICE.md) separates software licensing from external records.
-
-Keep the lockfile and review dependencies when preparing a release. Use the [dedicated secret scanner](evaluation/security/SECRET_SCAN.md) for the candidate's source and Git history; its scope is separate from dependency review. Exact audit/scan results are recorded with [release readiness](docs/RELEASE_READINESS.md), and a clean result in either tool does not establish universal security or a completed penetration test.
-
-The UI address-selection step prevents accidental selection during ordinary use; it is not a signed server-issued location token. A direct API client can submit a different valid coordinate/address label. Source queries use the supplied coordinate, and official boundary layers establish jurisdiction. The question's selected resource area cannot override those polygons. Property results use a bounded whole-parcel polygon where verified, with an explicit address-point fallback otherwise. Neither establishes ownership, permission to build or an official determination.
+Only the current alpha release line is maintained. Keep deployments and dependencies up to date, and review [release readiness](docs/RELEASE_READINESS.md) for known limitations before operating a public instance.
 
 ## Reporting a problem
 
-Report vulnerabilities privately to the TampaBayBot maintainers through [GitHub private vulnerability reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new). Sign in to GitHub, choose **Report a vulnerability**, and submit the report to the maintainers. Do not open a public issue for an undisclosed vulnerability or post credentials, resident details, or exploit details there.
+Use [GitHub private vulnerability reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new). Include the affected version or commit, expected and observed behavior, impact, and a minimal reproduction using synthetic or public data. Do not include credentials, resident questions or addresses, production logs, or private deployment details in public issues.
 
-Include the affected release/commit, route or file, observed impact, and a minimal reproduction using public or synthetic data. Describe the expected behavior and any workaround. Maintainer handling is best effort; no staffed response-time guarantee is made. If the reporting form is unavailable, check the [canonical security policy](https://github.com/Jaclenga/TampaBayBot/security/policy) for the current private route before sharing details.
+Reports are handled on a best-effort basis, without a guaranteed response time. After a fix is available, maintainers can coordinate a public advisory through GitHub. If the reporting form is unavailable, check the repository's [security policy](https://github.com/Jaclenga/TampaBayBot/security/policy) for the current reporting route.
 
-Only the current alpha line is maintained. After a fix is available, maintainers can coordinate a public advisory through the same GitHub workflow.
+## Data flow and privacy
+
+The application does not persist resident questions, conversation histories, or addresses in its database or browser storage. Operational storage holds temporary client identifiers and aggregate service metrics. Hosting logs, transient caches, upstream services, and model providers have separate retention policies; operators must review them and avoid logging resident input.
+
+- Answers use a local public-source evidence corpus by default. An enabled model provider receives the current question and selected evidence; operators must disclose that transfer and review the provider's privacy settings.
+- Address and property searches send address text or selected location information to the configured government and GIS services.
+- Opening the optional map sends selected coordinates to OpenStreetMap after the interface's disclosure.
+
+Retrieved content and model responses are treated as untrusted input. Input validation, access controls, browser protections, and resource limits support the service's security; they do not guarantee complete protection or the accuracy of external information.
+
+## Safe deployment
+
+- Use HTTPS, restrict administrative access, and configure the shared production controls and monitoring described in [operations](docs/OPERATIONS.md).
+- Keep credentials and private service endpoints in server-side runtime configuration. Never put secrets in source files or public build variables; review [deployment](docs/DEPLOYMENT.md) and [model configuration](docs/LLM.md).
+- Review hosting and provider access, logging, retention, and spending policies. Keep backups and incident contacts current, and rotate credentials after suspected disclosure.
+- Keep real environment files, runtime state, database dumps, production logs, request traces, resident data, and private deployment artifacts out of the source distribution.
+
+Public data configuration, tests, evaluation material, and the release manifest remain available for inspection and reproducibility. Dated verification results and open runtime investigations are maintained in [release readiness](docs/RELEASE_READINESS.md) and the [engineering follow-up](docs/BUG_FIX_FOLLOWUP_2026-09-12.md).

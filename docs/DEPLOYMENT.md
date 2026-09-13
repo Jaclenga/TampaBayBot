@@ -70,12 +70,6 @@ npx wrangler deployments list --config work/standalone/independent-alpha/server/
 npx wrangler rollback <previous-version-id> --config work/standalone/independent-alpha/server/wrangler.json
 ```
 
-[SECURITY.md](../SECURITY.md) owns access, rate/concurrency limits, monitoring and retention boundaries. [Release readiness](RELEASE_READINESS.md) owns source-refresh responsibilities, manual reviews and remaining launch checks.
+[Operations](OPERATIONS.md) covers access controls, request limits, monitoring, retention and incident response. [Release readiness](RELEASE_READINESS.md) records source-refresh responsibilities, manual reviews and remaining launch checks.
 
 The rejected-upload transport failure remains reproducible in Windows and Linux local production runs; hosted impact is unverified. The standalone smoke uses complete bounded inputs and does not replace the full browser suite. See the [investigation](BUG_FIX_FOLLOWUP_2026-09-12.md) for evidence and the [accessibility guide](ACCESSIBILITY.md) for browser-test commands.
-
-## Maintainer's Sites workflow
-
-The private Sites preview belongs to the maintainer and is not a public demo or a prerequisite for contributors. Its access gate and publication record do not verify an independent Cloudflare deployment.
-
-The maintainer checkout retains `.openai/hosting.json` and the Sites build workflow. Without it, builds use account-independent defaults; `build:standalone` always excludes Sites identity. September 13 authenticated Sites checks passed the home page, health, factual question, temporary follow-up and Spanish routes while anonymous access remained blocked. They did not test the interrupted-upload edge case or establish independent Cloudflare deployment. Shared D1 controls, runtime configuration, protected monitoring and the rollback runbook are in [operations](OPERATIONS.md).

@@ -6,9 +6,7 @@ The scan covers every commit reachable from local refs and HEAD using `--all --f
 
 The custom report template emits only rule IDs, relative paths, line numbers, and commit IDs. It never emits match text, values, author details, or commit messages. Gitleaks also runs with full redaction. Each invocation verifies detection and report redaction with an unissued random token generated only in memory. Output paths are validated against the canonical workspace and existing ancestors before writes or extraction. The working-source snapshot uses hard links and is retained under ignored `work/secret-scan`; it is never a publication artifact. The script checks whether source files, the file list, HEAD, or Git refs changed during the run and fails if the candidate changed.
 
-The current private development history and raw public-page archive have **11 tokenlike findings**, recorded in `release-secret-scan.json`. They are third-party strings embedded in imported public HTML, not application-provider credentials; their validity and permissions are not asserted. They are unallowlisted, and the private-history scan is **not clean**. Raw provenance bytes are preserved.
-
-For a release candidate checkout under this workspace, run:
+For a release candidate checkout, run:
 
 ```text
 node --use-env-proxy --use-system-ca scripts/scan-secrets.mjs --root work/public-release --report evaluation/security/public-release-secret-scan.json

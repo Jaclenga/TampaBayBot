@@ -46,7 +46,7 @@ public/                 Static browser assets
 vendor/                 Reviewed local dependency replacements and licenses
 ```
 
-The JSON registry and corpus are the initial index store; retrieval builds an in-memory lexical index. There is no database migration or external vector-index setup, and independent builds configure no D1 or R2 binding. The optional `.openai/hosting.json` belongs to the maintainer's Sites workflow. Local development and ordinary builds work without it.
+The JSON registry and corpus are the initial index store; retrieval builds an in-memory lexical index. There is no database migration or external vector-index setup, and independent builds configure no D1 or R2 binding.
 
 Source URLs, selectors and refresh policies live in `data/sources.json`. GIS configuration is in `data/gis-config.json`; independent development-record version, digest and bounds are in `data/development-config.json`. Downloaded snapshots and completed reports are operator-generated material, not part of the source-only alpha.
 
@@ -76,7 +76,7 @@ Run commands from the project root. Use the checks appropriate to the change and
 
 `npm run check` combines typecheck, lint, source regressions and build. `npm run check:corpus` additionally runs the complete corpus regressions, legacy evaluation and offline suite. It does not run source regeneration checks, browser checks or real-model tests. Source-only release checks cover its manifest, packaging and standalone smoke; their success does not imply that the full corpus or browser suite passed.
 
-Failed source refreshes preserve previous evidence with its original dates and an unavailable state, then exit unsuccessfully. Review changed text, metadata, terms and evaluation results before using refreshed material. See [data sources](DATA_SOURCES.md) and [distribution](DISTRIBUTION.md) for acquisition and licensing, [evaluation suite](EVAL_SUITE.md) for focused runs/comparisons, and [LLM.md](LLM.md#reproduce-integration-checks) for real Ollama testing. Release preparation and secret scanning are documented in [distribution](DISTRIBUTION.md) and [security](../SECURITY.md).
+Failed source refreshes preserve previous evidence with its original dates and an unavailable state, then exit unsuccessfully. Review changed text, metadata, terms and evaluation results before using refreshed material. See [data sources](DATA_SOURCES.md) and [distribution](DISTRIBUTION.md) for acquisition and licensing, [evaluation suite](EVAL_SUITE.md) for focused runs/comparisons, and [LLM.md](LLM.md#reproduce-integration-checks) for real Ollama testing. Release preparation and secret scanning are documented in [distribution](DISTRIBUTION.md) and the [secret-scan guide](../evaluation/security/SECRET_SCAN.md).
 
 ## Browser and accessibility checks
 
@@ -120,12 +120,12 @@ POST routes accept JSON. Property and development lookups use a selected, confir
 | `GET /api/evaluation?artifact=human` | Human-review packets and recorded review states |
 | `GET /api/evaluation?artifact=suite` | Offline suite report; unavailable unless its mode is `offline` |
 
-An unknown evaluation artifact returns 404. Downloads expose the files bundled with that build; the source-only release contains empty/pending placeholders. Input bodies, text and coordinates are bounded and resident-input responses disable caching. These checks do not provide shared rate limiting; see [security](../SECURITY.md) for the implemented boundaries.
+An unknown evaluation artifact returns 404. Downloads expose the files bundled with that build; the source-only release contains empty/pending placeholders. Input bodies, text and coordinates are bounded and resident-input responses disable caching. Shared rate limiting requires the configuration described in [operations](OPERATIONS.md).
 
 Resource IDs are `tampa-bay`, `tampa`, `st-petersburg`, `clearwater`, `hillsborough-county`, `pinellas-county`, and `pasco-county`. Unsupported IDs return 400. A conflicting city selection/question yields `needs_jurisdiction`; the response includes `jurisdictionId`, `jurisdictionLabel` and `needsJurisdiction`. These fields describe source selection, never a property-boundary finding. Legacy Tampa benchmark calls explicitly select `tampa`.
 
 ## Deployment and verification records
 
-[Independent deployment](DEPLOYMENT.md) covers building an isolated Worker artifact, local production smoke, your own Cloudflare account, runtime secrets and rollback. The maintainer's private Sites preview is not required to develop or deploy your own copy.
+[Independent deployment](DEPLOYMENT.md) covers building an isolated Worker artifact, local production smoke, your own Cloudflare account, runtime secrets and rollback.
 
 For dated results and remaining work, use [release readiness](RELEASE_READINESS.md) and [release notes](../CHANGELOG.md). Keep those observations separate from this guide's repeatable commands.
