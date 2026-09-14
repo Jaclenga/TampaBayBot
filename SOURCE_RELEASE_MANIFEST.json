@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "0dd085f3881d51392ab8146c4d43848ed95fd9b85cf82de14461d73c0debf52d",
+  "content_sha256": "dca6e294edd1496dad946ba4e3916f48114a38aeaf5707551cd83e2da940f879",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -167,13 +167,13 @@
     },
     {
       "path": "docs/EVAL_SUITE.md",
-      "bytes": 15809,
-      "sha256": "56c337eab948d12387098e356469a47f1f2910525a6cbdb556b384b79b323ed8"
+      "bytes": 16212,
+      "sha256": "d9a1e3031ba48ed8087c391d463ab9364c73d90d4f5b7df353b3a57668a3fce1"
     },
     {
       "path": "docs/EVALUATION.md",
-      "bytes": 10747,
-      "sha256": "5629f7627f8ce72c39e23b1f7594b9f08e6536fed43a56d9d059f3c0bef6b605"
+      "bytes": 11125,
+      "sha256": "d4a80ed0df78c8c4335d61b485b71b4495507b07cc2d7730e68be618502a52f9"
     },
     {
       "path": "docs/GEOSPATIAL.md",
@@ -216,9 +216,14 @@
       "sha256": "ac31caee53e585ad76b7e9f487f9a829c1a9200351cae813755727b2e94e7958"
     },
     {
+      "path": "docs/PROGRAM_RECALL.md",
+      "bytes": 13110,
+      "sha256": "001fee8c6e5fb7bdc0cbf71f9d34fcad06bcce394fa0a226119d9043d859b90d"
+    },
+    {
       "path": "docs/README.md",
-      "bytes": 4131,
-      "sha256": "739a2bede56421991e405d9ae47ede79b38393bdfcaa0f3178fa93fcf3a50d13"
+      "bytes": 4242,
+      "sha256": "7abc92aeb4d300c5ba268c48cde474c57ac7ce752cc846ab87024282c79bba51"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -276,9 +281,19 @@
       "sha256": "882b078f9c0d747cb135fc4e26f06f34155229f0555ccd204ccce54f00e98708"
     },
     {
+      "path": "evaluation/program-recall-benchmark.json",
+      "bytes": 58837,
+      "sha256": "b3c8b593e61520325a6ff4f5e6aa668a22fa238a3e46e8b2773c6109d5d81f52"
+    },
+    {
       "path": "evaluation/quality-benchmark.json",
       "bytes": 6341,
       "sha256": "109c41d48e9d8bd052858047c84611c29618a99b67338a89ad18bcfebed2b6a9"
+    },
+    {
+      "path": "evaluation/recall.mjs",
+      "bytes": 15921,
+      "sha256": "ba1f06077a61f02a79c8bb753934cb66bdd1ea5a370073b2cb425025fdc52c9f"
     },
     {
       "path": "evaluation/results/latest.json",
@@ -387,8 +402,8 @@
     },
     {
       "path": "package.json",
-      "bytes": 3381,
-      "sha256": "1f98920a4a7e46f0ceddb57e7afaf7b0cdda647e5fd41835c957493871969878"
+      "bytes": 3432,
+      "sha256": "547ee959e56a52832d7bd9bdeaffab82504f2d275be8d5d43619c61f0a88b763"
     },
     {
       "path": "playwright.config.ts",
@@ -412,8 +427,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11776,
-      "sha256": "15adacd957d1351219fb7c73bb10de99fcf728f89e73274b35bb525c219d1d9e"
+      "bytes": 12313,
+      "sha256": "6d87accb41388428b8292a25da560d931b49458b7cb49dd97ff077b0c08aafc8"
     },
     {
       "path": "scripts/build-source-refresh.mjs",
@@ -434,6 +449,11 @@
       "path": "scripts/demo.mjs",
       "bytes": 3696,
       "sha256": "62cef231f527038c6fc079d4df29790ecd9ef93059d2605eb7c31cad909e435f"
+    },
+    {
+      "path": "scripts/eval-recall.mjs",
+      "bytes": 5175,
+      "sha256": "5cb61d0b2efdc8d60ee3cf043ac887cc97f0fc665eeecc22f8045bef94980170"
     },
     {
       "path": "scripts/eval-suite.mjs",
@@ -462,8 +482,8 @@
     },
     {
       "path": "scripts/package-release.mjs",
-      "bytes": 12938,
-      "sha256": "7dff36db2480db040fd57dae2eac560443a639840b869562f3c90dcc88811b83"
+      "bytes": 13028,
+      "sha256": "d83ca2aab770e955bfcfc86a0c95e68282ecc3212826af3f243ee02a69be18a0"
     },
     {
       "path": "scripts/reproduce-runtime-transport.mjs",
@@ -497,8 +517,8 @@
     },
     {
       "path": "scripts/source-policy.mjs",
-      "bytes": 8174,
-      "sha256": "48ceae3a78a2a1a45ab7b6d4662e78650bc63fd5c0ef262e006b16fea0a8976d"
+      "bytes": 8218,
+      "sha256": "0a8bf07ff513981a01273d493a566af2e1798591fc7d39503d0bf74951c84dad"
     },
     {
       "path": "scripts/source-refresh.mjs",
@@ -647,8 +667,8 @@
     },
     {
       "path": "src/lib/citations/evidence.mjs",
-      "bytes": 4099,
-      "sha256": "e23d20cd321f80cb2a3ea5156016811672b256afc17a8532e6882b3dc369e661"
+      "bytes": 4614,
+      "sha256": "1c1f0e33ebde449b3beb712247b5c4eb786c4ff3568a76cf6afce4a8f3641fe3"
     },
     {
       "path": "src/lib/core/answer.d.mts",
@@ -657,8 +677,8 @@
     },
     {
       "path": "src/lib/core/answer.mjs",
-      "bytes": 26525,
-      "sha256": "13706f7a886a36437de9ae8c28ed707c99a148ac8b72116a97fe2425bdf9100f"
+      "bytes": 27292,
+      "sha256": "fa9d0619b75b3586deea479b78963409a037d29bf3cb80ea2f952a34a5987f45"
     },
     {
       "path": "src/lib/core/conversation.d.mts",
@@ -687,8 +707,8 @@
     },
     {
       "path": "src/lib/core/router.mjs",
-      "bytes": 6469,
-      "sha256": "fa9f856c1310a9bcf2b3c12f39c8cc5b2c3405803cc3dfbf8a1f9c2a0e4400fe"
+      "bytes": 6668,
+      "sha256": "e0bb1158c772498e8227beb8a03cca3072653e97c50d364ac1224487bd6c7677"
     },
     {
       "path": "src/lib/corpus.ts",
@@ -787,8 +807,18 @@
     },
     {
       "path": "src/lib/housing/navigation.mjs",
-      "bytes": 3987,
-      "sha256": "05ddfce12a21ffcf54dd4941a0810f34fc831ddb0d66c36579d78dcbea328507"
+      "bytes": 4252,
+      "sha256": "f2df99288997cf9af12bdd99b24896ff008a3d4b2eb4c722f25c1e92b5d6d573"
+    },
+    {
+      "path": "src/lib/housing/needs.mjs",
+      "bytes": 4636,
+      "sha256": "a748da3fb5cefb82184436f5688bf7e87948aa24ab869e7b76f611a7567482d9"
+    },
+    {
+      "path": "src/lib/housing/programs.mjs",
+      "bytes": 14049,
+      "sha256": "5eb4846de80bbcd62c2d9a6ab10cb292ba92ac4183999bc854ed034a37a6de73"
     },
     {
       "path": "src/lib/http.ts",
@@ -837,8 +867,8 @@
     },
     {
       "path": "src/lib/i18n/intent.mjs",
-      "bytes": 5800,
-      "sha256": "30c5ecb5ed78beac50a2bac1ed4a8ff55e04c15cef92b1e57d5f1a5333046fb8"
+      "bytes": 6690,
+      "sha256": "61bc3f1d91b7dc914d3e02f459714ec446e488a5c70bf74179699779cd764a31"
     },
     {
       "path": "src/lib/i18n/locale.tsx",
@@ -967,13 +997,13 @@
     },
     {
       "path": "src/lib/retrieval/search.d.mts",
-      "bytes": 887,
-      "sha256": "52872f39c2777a3515ff64c9c8f361753aab3adcf17018ecffb3642abffd5827"
+      "bytes": 928,
+      "sha256": "df07a580e41fe57db179774803a675dd9170c11048cf35edf4e3e1d97d6a3852"
     },
     {
       "path": "src/lib/retrieval/search.mjs",
-      "bytes": 9712,
-      "sha256": "dbe47478dbd0f988748ce42ea7bbcd70174cc79769ecc25c6c7ae7d70cd81cee"
+      "bytes": 9815,
+      "sha256": "7fad4729c631060b0908e400630fb4a4aac64e9b34fa5a2e6f7b927aac6d369a"
     },
     {
       "path": "src/lib/runtime-env.d.mts",
@@ -1036,6 +1066,11 @@
       "sha256": "8f866bbaa6d7a60d62359fb6c32fe5248846d844b2e97aad80ed4f3b80958487"
     },
     {
+      "path": "tests/evaluation-recall.test.mjs",
+      "bytes": 18811,
+      "sha256": "8628053b29b1060cf4e7e69ac742d61ab32f8d0991c2b948e82c4cdf007a8c46"
+    },
+    {
       "path": "tests/evaluation-runner.test.mjs",
       "bytes": 26890,
       "sha256": "60f2cd884381b6daae8bf6d76c156a67698ed985c0fde6fe866f21df77feb689"
@@ -1066,6 +1101,16 @@
       "sha256": "32a334fd56b54b4d75ed1ae477a326e23d1e79a3a23444b9937dd3d30a624107"
     },
     {
+      "path": "tests/housing-needs.test.mjs",
+      "bytes": 5576,
+      "sha256": "e2998d2769f803a7f67de79c1415f08d8fe01140d39413a9c5cd93d536b3d414"
+    },
+    {
+      "path": "tests/housing-programs.test.mjs",
+      "bytes": 9662,
+      "sha256": "640922368aaae746b760c1576aa2daf8147d1013ad498aeb300900b63784d115"
+    },
+    {
       "path": "tests/http.test.mjs",
       "bytes": 16115,
       "sha256": "e4fcd282dcd5b3edb0035c04095be1a2d27f426768f1b1859f7ab94e0d0ef7b1"
@@ -1094,6 +1139,11 @@
       "path": "tests/operations.test.mjs",
       "bytes": 10511,
       "sha256": "9c6a7ebb0e2fcffa8b441779bc92cdc252c340c175ae1990f3145cc83dc1bcc2"
+    },
+    {
+      "path": "tests/program-discovery.test.mjs",
+      "bytes": 15967,
+      "sha256": "cbeb0b3c7b2ace286ea327485b45f3db5348676df6f8e887f8fe0b5d5e7c10a9"
     },
     {
       "path": "tests/resident-workflows.test.mjs",
@@ -1147,8 +1197,8 @@
     },
     {
       "path": "tests/source-release.test.mjs",
-      "bytes": 8046,
-      "sha256": "78600c07a5ca797790f0c87b2240cdc0773d3efef12fc52cae9aaebe8bdd375e"
+      "bytes": 9370,
+      "sha256": "ed7e1877f5f281e4a60620ef0f7b618f9bc1948f1b724539809ab2fbdf997730"
     },
     {
       "path": "tsconfig.json",

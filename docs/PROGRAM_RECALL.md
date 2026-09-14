@@ -21,7 +21,7 @@ The runtime uses source text and headings to recognize mechanisms; it does not l
 
 This improvement measures the evidence cards available to the resident. The deterministic answer body still leads with one primary quotation; optional model selection can use up to three quotations while retaining the evidence cards. More evidence is not itself proof of a complete recommendation or correct eligibility filtering. Long passages still permit only one contiguous quotation per chunk, and a generic utility program's provider scope cannot be inferred from its name alone.
 
-Validation after the final change: **135/135 targeted source tests**, **236/236 offline evaluation cases and 4,370/4,370 applicable checks**, including all 12 authored claim-quality cases; changed JavaScript passed ESLint. The active checkout's incomplete dependencies still prevent the normal full build/typecheck workflow, and its existing symbolic link prevents source-manifest refresh. No live model or resident-usability result is claimed.
+Validation after the final change: **135/135 targeted source tests**, **236/236 offline evaluation cases and 4,370/4,370 applicable checks**, including all 12 authored claim-quality cases; changed JavaScript passed ESLint. The active checkout's incomplete dependencies still prevent the normal full build/typecheck workflow. The source manifest was subsequently refreshed and verified in a clean copy of the tracked files, excluding local downloaded data. No live model or resident-usability result is claimed.
 
 The final detailed report is `work/evals/recall-improvement/final/latest.json` with `latest.md`; the preserved initial report remains `work/evals/recall-baseline/latest.json`. Reproduce the candidate separately:
 
@@ -52,7 +52,7 @@ The complete local report is `work/evals/recall-baseline/latest.json` with a rea
 
 A second agent reran all 34 answers and reviewed the 15 distinct evidence quotations appearing in cases with omissions. It found no unannotated alternative passage or overly strict recognition span that would change the final-evidence score. This is an agent audit; independent human adjudication remains pending, especially for conditional participation requirements and potentially overlapping homebuyer program identities.
 
-Validation: all 75 targeted evaluator, resident-workflow, citation-scoring and source-release tests passed, including 21 recall tests. Changed JavaScript passed ESLint using the retained local dependency installation. The full source suite and normal typecheck could not complete with the active checkout's missing dependencies. The source-release manifest refresh separately stopped at the existing `.env.example` symbolic link; this measurement does not certify a refreshed release package. `--strict` correctly exited 1 on omissions; the empty active corpus exited 2.
+Baseline validation: all 75 targeted evaluator, resident-workflow, citation-scoring and source-release tests passed, including 21 recall tests. Changed JavaScript passed ESLint using the retained local dependency installation. The full source suite and normal typecheck could not complete with the active checkout's missing dependencies. At that time, source-manifest refresh stopped because directory listings reported `.env.example` as a symbolic link, so the baseline measurement did not certify a refreshed release package. `--strict` correctly exited 1 on omissions; the empty active corpus exited 2.
 
 ## Run the measurement
 
