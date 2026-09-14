@@ -5,6 +5,37 @@ export class LlmFailure extends Error {
   constructor(reason) { super(reason); this.name = 'LlmFailure'; this.reason = reason; }
 }
 
+const tokenCount = value => Number.isSafeInteger(value) && value >= 0 ? value : null;
+const unknownUsage = () => ({ inputTokens: null, outputTokens: null, cachedInputTokens: null, totalTokens: null });
+
+function tokenUsage(value, protocol) {
+  const reported = protocol === 'ollama' ? value : value?.usage;
+  if (!reported || typeof reported !== 'object' || Array.isArray(reported)) return unknownUsage();
+  const inputTokens = tokenCount(protocol === 'ollama' ? reported.prompt_eval_count : reported.prompt_tokens);
+  const outputTokens = tokenCount(protocol === 'ollama' ? reported.eval_count : reported.completion_tokens);
+  const cachedInputTokens = tokenCount(protocol === 'ollama' ? reported.prompt_eval_cached_count : reported.prompt_tokens_details?.cached_tokens);
+  const sum = inputTokens !== null && outputTokens !== null ? inputTokens + outputTokens : null;
+  const totalTokens = protocol === 'ollama' ? tokenCount(sum) : tokenCount(reported.total_tokens);
+  // Conflicting counters cannot safely support a cost estimate. Missing counters
+  // remain unknown; compatible providers do not all report the same usage fields.
+  if ((sum !== null && !Number.isSafeInteger(sum))
+    || (cachedInputTokens !== null && inputTokens !== null && cachedInputTokens > inputTokens)
+    || (cachedInputTokens !== null && totalTokens !== null && cachedInputTokens + (outputTokens ?? 0) > totalTokens)
+    || (totalTokens !== null && inputTokens !== null && totalTokens < inputTokens)
+    || (totalTokens !== null && outputTokens !== null && totalTokens < outputTokens)
+    || (totalTokens !== null && sum !== null && totalTokens !== sum)) return unknownUsage();
+  return { inputTokens, outputTokens, cachedInputTokens, totalTokens };
+}
+
+function observeUsage(onUsage, value, protocol) {
+  if (typeof onUsage !== 'function') return;
+  try {
+    // Observers receive only allowlisted counts, never provider metadata or text.
+    // A rejected asynchronous observer must not turn a valid answer into failure.
+    Promise.resolve(onUsage(Object.freeze(tokenUsage(value, protocol)))).catch(() => {});
+  } catch { /* Metrics must not affect answer handling. */ }
+}
+
 async function boundedJson(response, maximumBytes, signal) {
   if (!response || !response.ok || response.redirected || response.status < 200 || response.status >= 300) {
     await response?.body?.cancel?.().catch(() => {});
@@ -51,7 +82,7 @@ async function boundedJson(response, maximumBytes, signal) {
 
 /** Provider-neutral interface: complete({messages,model,signal,schema}) -> JSON text.
  * Built-ins follow official /api/chat and /chat/completions HTTP contracts. */
-export function createHttpProvider(config, fetchImpl = globalThis.fetch) {
+export function createHttpProvider(config, fetchImpl = globalThis.fetch, { onUsage } = {}) {
   return {
     async complete({ messages, model, signal, schema }) {
       if (!isParsedLlmConfig(config) || !config.valid || !config.enabled) throw new LlmFailure('provider_failure');
@@ -68,6 +99,7 @@ export function createHttpProvider(config, fetchImpl = globalThis.fetch) {
         credentials: 'omit', cache: 'no-store',
       });
       const value = await boundedJson(response, config.maxResponseBytes, signal);
+      observeUsage(onUsage, value, config.provider);
       if (value?.error) throw new LlmFailure('provider_failure');
       let message;
       if (config.provider === 'ollama') {

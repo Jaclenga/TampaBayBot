@@ -5,6 +5,8 @@ import { isJurisdictionId } from '../src/lib/coverage.mjs';
 import { retrieve, ANSWER_RETRIEVAL_LIMIT } from '../src/lib/retrieval/search.mjs';
 import { answerWithGuardrails } from '../src/lib/guardrails/navigator.mjs';
 import { parseLlmConfig } from '../src/lib/llm/index.mjs';
+import { summarizeModelUsage } from './suite/usage.mjs';
+import { modelUsageMarkdown } from './suite/report.mjs';
 
 const digest = text => createHash('sha256').update(text).digest('hex');
 const unique = values => [...new Set(values)];
@@ -122,7 +124,7 @@ export async function evaluateProgramRecall({ benchmark, sources = [], chunks = 
     const unanticipated = stages.answer_evidence.retrieved.filter(id => !reference.expected_program_ids.includes(id));
     cases.push({ id: reference.id, question: reference.question, jurisdiction_id: reference.jurisdiction_id, language: reference.language,
       tags: reference.tags, rationale: reference.rationale, expected_program_ids: reference.expected_program_ids,
-      execution, answerStatus: output.status, expectedStatus: reference.expected_status ?? null,
+      execution, modelUsage: summarizeModelUsage([]), answerStatus: output.status, expectedStatus: reference.expected_status ?? null,
       controlPassed: reference.expected_status || !reference.expected_program_ids.length ?
         execution === 'completed' && (!reference.expected_status || output.status === reference.expected_status) &&
         (reference.expected_program_ids.length > 0 || unanticipated.every(id => (reference.allowed_reference_program_ids ?? []).includes(id))) : null,
@@ -143,7 +145,7 @@ export async function evaluateProgramRecall({ benchmark, sources = [], chunks = 
     productionRetrievalLimit: ANSWER_RETRIEVAL_LIMIT, summary: { programs: benchmark.programs.length, cases: cases.length,
       positiveCases: cases.filter(row => row.expected_program_ids.length).length, controls: controls.length,
       controlsPassed: controls.filter(row => row.controlPassed).length, programsWithEvidence: available.length,
-      executionFailures: cases.filter(row => row.execution === 'failed').length },
+      executionFailures: cases.filter(row => row.execution === 'failed').length, modelUsage: summarizeModelUsage([]) },
     stages, byJurisdiction: grouped('jurisdiction_id'), byLanguage: grouped('language'),
     byTag: Object.fromEntries(unique(cases.flatMap(row => row.tags)).map(tag => [tag, metrics(cases.filter(row => row.tags.includes(tag)))])),
     byProgram: Object.fromEntries(benchmark.programs.map(program => [program.program_id, { title: program.title,
@@ -169,6 +171,7 @@ export function recallMarkdown(report) {
     '', `${report.summary.programs} programs; ${report.summary.positiveCases} positive queries; ${report.summary.controls} controls (${report.summary.controlsPassed} passed).`,
     '', '| Stage | Found / expected program-query pairs | Micro recall | Macro recall | Queries with all programs |', '| --- | ---: | ---: | ---: | ---: |'];
   for (const [stage, metric] of Object.entries(report.stages)) lines.push(`| ${stage} | ${metric.matched} / ${metric.expected} | ${percent(metric.microRecall)} | ${percent(metric.macroRecall)} | ${metric.completeCases} / ${metric.applicableCases} |`);
+  lines.push('', ...modelUsageMarkdown(report.summary.modelUsage));
   lines.push('', '## Final evidence recall by jurisdiction', '', '| Jurisdiction | Found / expected | Recall |', '| --- | ---: | ---: |');
   for (const [key, value] of Object.entries(report.byJurisdiction)) lines.push(`| ${key} | ${value.answer_evidence.matched} / ${value.answer_evidence.expected} | ${percent(value.answer_evidence.microRecall)} |`);
   lines.push('', '## Omitted programs', '', '| Query | Program | First retrieval rank | Failure location |', '| --- | --- | ---: | --- |');

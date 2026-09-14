@@ -142,6 +142,14 @@ This separate runner creates an isolated local app fixture, requires an installe
 
 For broader real-model cases and repeated runs, see the [live evaluation instructions](EVAL_SUITE.md#evaluate-an-explicitly-configured-model). Use the [recorded Ollama results](OLLAMA_TESTING.md) for model identity, timings, outcomes and their limits. Human assessment of evidence usefulness remains separate.
 
+### Token and cost reporting
+
+The adapter retains only validated numeric usage fields from provider responses. For compatible Chat Completions responses, these come from `usage.prompt_tokens`, `usage.completion_tokens`, `usage.total_tokens` and optional `usage.prompt_tokens_details.cached_tokens`. See the [OpenAI Chat Completions response reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create). Native Ollama uses `prompt_eval_count`, `eval_count` and optional `prompt_eval_cached_count`, with total tokens computed from input plus output. See the [Ollama chat response reference](https://docs.ollama.com/api/chat).
+
+Usage can be reported even when the model's evidence selection is rejected and the application falls back. Missing, malformed or unreadable usage remains unknown; it does not invalidate an otherwise acceptable answer or imply free inference. Cached tokens are already included in input tokens. Raw usage objects, request text and provider errors are not copied into token metrics.
+
+The [live evaluation report](EVAL_SUITE.md#token-usage-and-estimated-cost) aggregates per-call usage and estimates USD cost from operator-supplied rates. There are no built-in prices, and local Ollama is not automatically treated as free. A cost estimate is separate from answer correctness and excludes infrastructure and other billing adjustments. The application does not use these metrics to decide eligibility or evidence relevance.
+
 ## Privacy, security and evaluation limits
 
 With `none`, questions are not sent to a model. With an enabled provider, eligible questions and the selected public evidence are sent to that provider. A question can contain an address or personal information the resident typed; source selection does not redact that text. Provider retention, logs, routing, subprocesses and cloud forwarding depend on the chosen service. Local mode has the strongest geographic meaning when both app and weights run on the same controlled machine.

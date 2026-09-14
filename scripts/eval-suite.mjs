@@ -14,6 +14,7 @@ import {
   OFFLINE_SUITES,
 } from "../evaluation/suite/runner.mjs";
 import { makeReport, compareReports } from "../evaluation/suite/report.mjs";
+import { normalizePricing } from "../evaluation/suite/usage.mjs";
 import {
   runLiveSuite,
   liveConfigurationFingerprint,
@@ -40,6 +41,9 @@ export function parseArguments(args) {
     "--limit": "limit",
     "--repeats": "repeats",
     "--budget-ms": "budgetMs",
+    "--input-usd-per-million": "inputUsdPerMillion",
+    "--output-usd-per-million": "outputUsdPerMillion",
+    "--cached-input-usd-per-million": "cachedInputUsdPerMillion",
   };
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -72,7 +76,10 @@ export function parseArguments(args) {
     (flags.authorized ||
       seen.has("--limit") ||
       seen.has("--repeats") ||
-      seen.has("--budget-ms"))
+      seen.has("--budget-ms") ||
+      seen.has("--input-usd-per-million") ||
+      seen.has("--output-usd-per-million") ||
+      seen.has("--cached-input-usd-per-million"))
   )
     throw new Error("Provider options are only valid in live mode.");
   if (
@@ -95,6 +102,15 @@ export function parseArguments(args) {
     )
       throw new Error("Invalid live evaluation limits.");
     flags[key] = Number(flags[key]);
+  }
+  try {
+    flags.pricing = normalizePricing({
+      inputUsdPerMillion: flags.inputUsdPerMillion,
+      outputUsdPerMillion: flags.outputUsdPerMillion,
+      cachedInputUsdPerMillion: flags.cachedInputUsdPerMillion,
+    });
+  } catch {
+    throw new Error("Invalid token pricing. Supply both input and output USD rates per million tokens as finite, nonnegative numbers; the cached-input rate is optional.");
   }
   return flags;
 }
@@ -124,7 +140,7 @@ async function localLlmEnvironment(root) {
 export async function main(args = process.argv.slice(2)) {
   const flags = parseArguments(args);
   if (flags.help) {
-    console.log(HELP);
+    console.log(HELP + "\nOptional live cost estimates (operator-supplied USD per million tokens):\n  --input-usd-per-million <rate> --output-usd-per-million <rate>\n  --cached-input-usd-per-million <rate>  Optional; defaults to the input rate.\nMissing usage or pricing stays unknown. No model calls means zero API cost.\n");
     return 0;
   }
   if (flags.mode === "compare") {
@@ -201,14 +217,16 @@ export async function main(args = process.argv.slice(2)) {
       ...limits,
       config,
       authorized: true,
+      pricing: flags.pricing,
     });
     report = makeReport(cases, {
       mode: "live",
+      pricing: flags.pricing,
       startedAt,
       completedAt: new Date().toISOString(),
       provenance: {
         ...context.provenance,
-        live: liveConfigurationFingerprint(config, limits),
+        live: liveConfigurationFingerprint(config, { ...limits, pricing: flags.pricing }),
       },
     });
   } else {

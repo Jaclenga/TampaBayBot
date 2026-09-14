@@ -66,6 +66,8 @@ The first command uses the active corpus. The second selects the locally retaine
 
 The command disables network access and model inference. It writes `latest.json` and `latest.md` beneath ignored `work/evals/recall/` by default. A successful measurement exits 0 even when it discovers omissions. `--strict` exits 1 for any missed expected program at the production retrieval cutoff or in final evidence, or a failed control. An incomplete corpus, execution failure or invalid input exits 2.
 
+New reports include `summary.modelUsage` in JSON and a token/cost summary in Markdown. Because this measurement disables inference, provider calls, model tokens and model API cost are zero, with status `no_calls`. This describes model usage only; it does not measure local compute cost or make an empty corpus evaluable. Use [live evaluation](EVAL_SUITE.md#token-usage-and-estimated-cost) to measure provider-reported tokens and estimate cost for a configured model. Historical reports and dated recall scores are not retroactively changed.
+
 ## Labels and denominator
 
 [`program-recall-benchmark.json`](../evaluation/program-recall-benchmark.json) contains a finite inventory, independently authored questions, expected program sets and a rationale for each applicability label. Here, **applicable** means worth considering for the stated need and place under the dated source information. It does not mean a household qualifies or that applications are open. The inventory includes relevant closed programs so that their limitations can be surfaced. General directories, housing listings and navigation services outside the declared scope do not enter the denominator.

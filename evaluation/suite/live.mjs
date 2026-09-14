@@ -4,8 +4,9 @@ import { EVALUATION_DATE } from "../scenarios.mjs";
 import { answerQuestion } from "../../src/lib/core/answer.mjs";
 import { answerWithGuardrails } from "../../src/lib/guardrails/navigator.mjs";
 import { siteGuards } from "../../src/lib/guardrails/site.mjs";
-import { publicLlmInfo } from "../../src/lib/llm/index.mjs";
+import { publicLlmInfo, createHttpProvider } from "../../src/lib/llm/index.mjs";
 import { scoreNavigationAnswer } from "./scoring.mjs";
+import { normalizePricing, summarizeModelUsage } from "./usage.mjs";
 
 export const LIVE_CASE_IDS = Object.freeze([
   "h01",
@@ -67,6 +68,7 @@ export async function runLiveSuite({
   budgetMs = 60000,
   fetchImpl,
   signal,
+  pricing = null,
 } = {}) {
   if (authorized !== true)
     throw new Error("Live evaluation requires --allow-provider-call.");
@@ -74,6 +76,7 @@ export async function runLiveSuite({
     throw new Error(
       "Live evaluation requires a valid enabled LLM provider configuration.",
     );
+  pricing = normalizePricing(pricing);
   if (
     !Number.isInteger(limit) ||
     limit < 1 ||
@@ -110,7 +113,7 @@ export async function runLiveSuite({
           fixture: "public_snapshot",
           checks: [],
           durationMs: 0,
-          details: { category: benchmark.category, scenario: "baseline" },
+          details: { category: benchmark.category, scenario: "baseline", providerCalls: 0, modelCalls: [], modelUsage: summarizeModelUsage([], pricing) },
         };
         if (combined.aborted) {
           row.checks.push({
@@ -124,6 +127,17 @@ export async function runLiveSuite({
           continue;
         }
         let providerCalls = 0;
+        const modelCalls = [];
+        let collecting = true;
+        const provider = createHttpProvider(config, (...args) => {
+          // A timed-out case must not begin a late request or mutate its report.
+          if (!collecting) throw new Error("Evaluation case completed.");
+          providerCalls++;
+          modelCalls.push(null);
+          return (fetchImpl ?? globalThis.fetch)(...args);
+        }, { onUsage: usage => {
+          if (collecting && modelCalls.length) modelCalls[modelCalls.length - 1] = usage;
+        } });
         try {
           const baseline = answerQuestion(benchmark.question, {
             sources,
@@ -137,10 +151,7 @@ export async function runLiveSuite({
             jurisdictionId: benchmark.jurisdictionId ?? "tampa",
             now,
             config,
-            fetchImpl: (...args) => {
-              providerCalls++;
-              return (fetchImpl ?? globalThis.fetch)(...args);
-            },
+            provider,
             signal: combined,
             extraGuards: siteGuards,
           });
@@ -199,7 +210,10 @@ export async function runLiveSuite({
             observed: "failed_or_cancelled",
           });
         }
+        collecting = false;
         row.details.providerCalls = providerCalls;
+        row.details.modelCalls = modelCalls;
+        row.details.modelUsage = summarizeModelUsage(modelCalls, pricing);
         row.durationMs = Math.round((performance.now() - start) * 100) / 100;
         rows.push(row);
       }

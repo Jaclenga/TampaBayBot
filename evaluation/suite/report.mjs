@@ -1,4 +1,6 @@
-export const SUITE_VERSION = "1.2.0";
+import { normalizePricing, summarizeModelUsage } from "./usage.mjs";
+
+export const SUITE_VERSION = "1.3.0";
 const kinds = new Set([
   "behavior",
   "integrity",
@@ -127,18 +129,36 @@ function latency(cases) {
   };
 }
 
+function usageForRows(rows, mode, pricing) {
+  if (mode === "offline") return summarizeModelUsage([], pricing);
+  const calls = [];
+  for (const row of rows) {
+    const count = row.details?.providerCalls;
+    // Older or externally authored rows may not have measured calls at all.
+    if (!Number.isSafeInteger(count) || count < 0) return null;
+    const recorded = row.details?.modelCalls;
+    if (recorded !== undefined && (!Array.isArray(recorded) || recorded.length !== count))
+      throw new Error("Invalid evaluation model usage.");
+    if (recorded) calls.push(...recorded);
+    else for (let i = 0; i < count; i++) calls.push(null);
+  }
+  return summarizeModelUsage(calls, pricing);
+}
+
 export function makeReport(
   cases,
-  { mode = "offline", startedAt, completedAt, provenance = {} } = {},
+  { mode = "offline", startedAt, completedAt, provenance = {}, pricing = null } = {},
 ) {
   validateCases(cases);
   if (!["offline", "live"].includes(mode))
     throw new Error("Unknown evaluation mode.");
+  pricing = normalizePricing(pricing);
   const snapshots = structuredClone(cases);
   validateCases(snapshots);
   const rows = snapshots.map((row) => ({
     ...row,
     passed: row.checks.every((check) => check.passed !== false),
+    details: { ...row.details, modelUsage: usageForRows([row], mode, pricing) },
   }));
   const grouped = Object.fromEntries(
     [...new Set(rows.map((row) => row.suite))].map((name) => {
@@ -151,6 +171,7 @@ export function makeReport(
           failed: selected.filter((row) => !row.passed).length,
           checks: counts(selected.flatMap((row) => row.checks)),
           latency: latency(selected),
+          modelUsage: usageForRows(selected, mode, pricing),
         },
       ];
     }),
@@ -174,6 +195,7 @@ export function makeReport(
     startedAt,
     completedAt,
     provenance: structuredClone(provenance),
+    pricing,
     status: rows.every((row) => row.passed) ? "passed" : "failed",
     summary: {
       cases: rows.length,
@@ -181,6 +203,7 @@ export function makeReport(
       failed: rows.filter((row) => !row.passed).length,
       checks: counts(allChecks),
       suites: grouped,
+      modelUsage: usageForRows(rows, mode, pricing),
     },
     metrics: Object.fromEntries(
       Object.entries(metrics).map(([key, value]) => [
@@ -206,6 +229,7 @@ export function makeReport(
       "Hand-authored development cases and seeded variants are not an independent holdout.",
       "Automated accuracy and citation scores cover exact authored claims in fixed extractive answers; they do not measure open-ended semantic correctness or whether a source remains true today.",
       "Offline provider responses are synthetic. Live results apply only to the tested model and configuration.",
+      "Token counts come from provider usage metadata. Cost estimates use the recorded operator-supplied USD rates; unknown usage or pricing is not zero. Estimates exclude infrastructure, taxes and other provider charges.",
       "These reports do not score geographic accuracy or replace the separate GIS, browser, accessibility or human audits.",
       "Prompt and identifier-pattern checks do not establish universal attack resistance or complete personal-data detection.",
     ],
@@ -232,6 +256,29 @@ const markdown = (value) =>
     .replaceAll("|", "\\|")
     .replace(/[\r\n]+/g, " ");
 
+const metricValue = value => value == null ? "Unknown" : String(value);
+const dollars = value => value == null ? "Unknown" : `$${Number(value.toPrecision(10))}`;
+
+export function modelUsageMarkdown(usage, pricing = null) {
+  if (!usage) return ["## Model tokens and estimated cost", "", "Usage was not measured in this report."];
+  const { tokens, cost } = usage;
+  const lines = ["## Model tokens and estimated cost", "",
+    "| Metric | Value |", "| --- | ---: |",
+    `| Provider calls | ${usage.providerCalls} |`,
+    `| Input tokens | ${metricValue(tokens.inputTokens)} |`,
+    `| Cached input tokens (subset of input) | ${metricValue(tokens.cachedInputTokens)} |`,
+    `| Output tokens | ${metricValue(tokens.outputTokens)} |`,
+    `| Total tokens | ${metricValue(tokens.totalTokens)} |`,
+    `| Estimated API cost (USD) | ${dollars(cost.estimatedUsd)} |`,
+    "", `Token usage: ${tokens.status}; ${tokens.reportedCalls}/${usage.providerCalls} calls supplied usable counts. Cost: ${cost.status}; ${cost.pricedCalls}/${usage.providerCalls} calls could be priced.`];
+  if (tokens.status === "partial" || cost.status === "partial") lines.push("",
+    `Known subtotals only: ${metricValue(tokens.known.inputTokens)} input tokens, ${metricValue(tokens.known.outputTokens)} output tokens and ${dollars(cost.knownEstimatedUsd)}. Missing calls are excluded from these subtotals.`);
+  if (pricing) lines.push("", `Operator-supplied USD per million tokens: input ${pricing.inputUsdPerMillion}, output ${pricing.outputUsdPerMillion}, cached input ${pricing.cachedInputUsdPerMillion ?? pricing.inputUsdPerMillion}.`);
+  else if (usage.providerCalls) lines.push("", "No pricing supplied; provider cost is unknown.");
+  lines.push("", "Without a separate cached-input rate, the input rate applies to all input tokens. Zero-call runs use no model tokens and incur no model API cost; infrastructure and other charges are excluded.");
+  return lines;
+}
+
 export function reportMarkdown(report) {
   const lines = [
     `# TampaBayBot evaluation — ${report.status}`,
@@ -245,6 +292,16 @@ export function reportMarkdown(report) {
     lines.push(
       `| ${markdown(name)} | ${value.passed} | ${value.failed} | ${value.checks.applicable} |`,
     );
+  lines.push("", ...modelUsageMarkdown(report.summary.modelUsage, report.pricing));
+  if (report.mode === "live") {
+    lines.push("", "### Per-case model usage", "",
+      "| Case | Calls | Input tokens | Output tokens | Total tokens | Estimated USD | Usage status | Cost status |",
+      "| --- | ---: | ---: | ---: | ---: | ---: | --- | --- |");
+    for (const row of report.cases) {
+      const usage = row.details?.modelUsage;
+      lines.push(`| ${markdown(row.id)} | ${metricValue(usage?.providerCalls)} | ${metricValue(usage?.tokens.inputTokens)} | ${metricValue(usage?.tokens.outputTokens)} | ${metricValue(usage?.tokens.totalTokens)} | ${dollars(usage?.cost.estimatedUsd)} | ${usage?.tokens.status ?? "unknown"} | ${usage?.cost.status ?? "unknown"} |`);
+    }
+  }
   if (report.automatedQuality) {
     lines.push(
       "",
@@ -295,9 +352,24 @@ export function reportJUnit(report) {
     (sum, row) => sum + row.durationMs / 1000,
     0,
   );
+  const usage = report.summary.modelUsage;
+  const properties = {
+    "model.provider_calls": usage?.providerCalls,
+    "model.input_tokens": usage?.tokens.inputTokens,
+    "model.output_tokens": usage?.tokens.outputTokens,
+    "model.cached_input_tokens": usage?.tokens.cachedInputTokens,
+    "model.total_tokens": usage?.tokens.totalTokens,
+    "model.usage_status": usage?.tokens.status,
+    "model.estimated_cost_usd": usage?.cost.estimatedUsd,
+    "model.known_estimated_cost_usd": usage?.cost.knownEstimatedUsd,
+    "model.cost_status": usage?.cost.status,
+  };
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     `<testsuite name="TampaBayBot ${xml(report.mode)}" tests="${report.summary.cases}" failures="${report.summary.failed}" time="${totalTime.toFixed(3)}">`,
+    "  <properties>",
+    ...Object.entries(properties).map(([name, value]) => `    <property name="${name}" value="${xml(value ?? "unknown")}"/>`),
+    "  </properties>",
     ...report.cases.map((row) => {
       const failures = row.checks
         .filter((check) => check.passed === false)

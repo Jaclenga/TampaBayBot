@@ -96,10 +96,44 @@ npm run eval:live -- --allow-provider-call --limit 10 --repeats 1 --budget-ms 60
 | `--limit` | 10 | First 1–12 selected public cases from `LIVE_CASE_IDS` |
 | `--repeats` | 1 | 1–5 repetitions of each selected case |
 | `--budget-ms` | 60000 | 1000–600000 ms shared wall-time budget |
+| `--input-usd-per-million` | Unset | Nonnegative input-token rate; requires the output rate |
+| `--output-usd-per-million` | Unset | Nonnegative output-token rate; requires the input rate |
+| `--cached-input-usd-per-million` | Unset | Optional separate rate for reported cached input tokens; requires both other rates |
 
 Only baseline `answered` cases are eligible for inference; conservative cases must bypass it. A fallback still preserves the safe application response, but fails the live `model_output_accepted` check for an eligible case. Budget exhaustion leaves the remaining cases explicitly failed. The wall-time budget is not a monetary spending limit or a guarantee of equal model latency across machines.
 
 Each executed live case records an allowlisted generation status/reason and a provider-call count. Non-answered cases must explicitly report `skipped` with zero provider calls. With all 12 public cases selected, six are eligible for model selection and six exercise conservative bypass behavior per repetition.
+
+### Token usage and estimated cost
+
+Live evaluation records provider-reported input, output, total and cached-input tokens for each attempted call. Cached tokens are a subset of input tokens, so they are not added to the total again. Token counts come from the provider response, not a character-count approximation. A response rejected by the answer validator still contributes its reported usage: a safe fallback does not undo inference. Calls that time out or fail without readable usage remain unknown.
+
+Pass the rates that apply to your endpoint and model when you want a USD estimate. The following rates are **synthetic examples**, not current provider prices:
+
+```sh
+npm run eval:live -- --allow-provider-call --input-usd-per-million 1 --output-usd-per-million 4 --cached-input-usd-per-million 0.25
+```
+
+All three pricing options apply only to live mode. No provider/model rates are built in. Without a separate cached rate, the input rate applies to all input tokens. With one, the estimate is `((input - cached) * inputRate + cached * cachedRate + output * outputRate) / 1_000_000`; missing cache counts can therefore prevent a complete estimate. Explicit zero rates are accepted. A localhost endpoint or Ollama provider does not automatically imply a zero rate.
+
+`latest.json` stores the normalized rates under `pricing`. Each case has `details.modelCalls` (one sanitized token record or null per actual request) and `details.modelUsage`; totals appear in `summary.modelUsage` and `summary.suites.<suite>.modelUsage`. Usage summaries include:
+
+| Field | Interpretation |
+| --- | --- |
+| `providerCalls` | Actual provider requests, including unsuccessful attempts |
+| `tokens.status` | `no_calls`, `complete` (input/output/total known), `partial` or `unavailable`; optional cache counts can remain null when core counts are complete |
+| `tokens.inputTokens`, `outputTokens`, `totalTokens`, `cachedInputTokens` | Full-run totals when known; unknown totals remain null |
+| `tokens.known` | Subtotals from the counts that were reported; these are not complete totals when coverage is partial |
+| `tokens.reportedCalls`, `unreportedCalls` | Calls with at least one usable token count, and calls with none; reported does not guarantee all fields are present |
+| `cost.status` | `no_calls`, `estimated`, `partial` or `unavailable` |
+| `cost.estimatedUsd` | Complete estimate, or null when any call cannot be priced |
+| `cost.knownEstimatedUsd`, `pricedCalls`, `unpricedCalls` | Estimate and coverage of the calls that can be priced |
+
+Markdown shows usage and cost with their coverage. JUnit includes suite properties named `model.provider_calls`, `model.input_tokens`, `model.output_tokens`, `model.cached_input_tokens`, `model.total_tokens`, `model.usage_status`, `model.estimated_cost_usd`, `model.known_estimated_cost_usd` and `model.cost_status`; unknown values use the literal `unknown`. Legacy live cases without provider-call measurements retain null usage instead of being assigned zero.
+
+No-call cases, offline evaluation and program-recall evaluation report zero model tokens and zero model API cost. Synthetic provider responses in offline tests do not count as paid inference. Those zeros do not measure application compute, and an empty recall corpus still has its normal `not_evaluable` status. These reporting fields do not establish that any real model evaluation has been run.
+
+The cost estimate covers the supplied token rates only. It excludes infrastructure, tax and other provider billing adjustments; it is neither a provider invoice nor a spending cap. Missing usage or rates are never converted into a zero-cost claim. Prompts, completions, credentials and arbitrary provider usage fields are excluded from these metrics.
 
 For a running local Ollama daemon with Meta `llama3:8b` installed, this PowerShell example sets only the current shell's test configuration and runs two repetitions across all five categories:
 

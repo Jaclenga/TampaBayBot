@@ -19,9 +19,14 @@ export interface LlmProviderRequest {
   model: string; signal: AbortSignal; schema: Record<string, unknown>;
 }
 export interface LlmProvider { complete(request: LlmProviderRequest): Promise<string>; }
+export interface LlmTokenUsage {
+  readonly inputTokens: number | null; readonly outputTokens: number | null;
+  readonly cachedInputTokens: number | null; readonly totalTokens: number | null;
+}
+export interface HttpProviderOptions { onUsage?: (usage: LlmTokenUsage) => void | Promise<void>; }
 export function parseLlmConfig(env?: Record<string, unknown>): LlmConfig;
 export function publicLlmInfo(config: LlmConfig): PublicLlmInfo;
-export function createHttpProvider(config: LlmConfig, fetchImpl?: typeof fetch): LlmProvider;
+export function createHttpProvider(config: LlmConfig, fetchImpl?: typeof fetch, options?: HttpProviderOptions): LlmProvider;
 export function synthesizeAnswer<T extends ResidentAnswer>(baseline: T, options?: {
   config?: LlmConfig; fetchImpl?: typeof fetch; provider?: LlmProvider; signal?: AbortSignal;
 }): Promise<T & {generation: GenerationInfo}>;
