@@ -1,6 +1,9 @@
 import { intentText } from '../core/router.mjs';
 import { sourceCoversJurisdiction } from '../coverage.mjs';
 
+// Shared by the answer path and program-recall evaluation.
+export const ANSWER_RETRIEVAL_LIMIT = 15;
+
 const STOP_WORDS = new Set('a an the my me i in is it be to of on at do does this that for and or can could would what which how where who are with have has from about want need please tell help get find show near by as if there any use may your you'.split(' '));
 const SYNONYMS = {
   rent: ['rental', 'renter', 'tenant', 'rmap'], housing: ['housing', 'homeowner', 'affordable'],

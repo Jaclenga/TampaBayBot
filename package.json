@@ -23,6 +23,7 @@
     "ingest": "node --use-system-ca scripts/ingest.mjs",
     "evaluate": "node scripts/evaluate.mjs --strict",
     "eval:suite": "node scripts/eval-suite.mjs",
+    "eval:recall": "node scripts/eval-recall.mjs",
     "eval:live": "node scripts/eval-suite.mjs --mode live",
     "eval:compare": "node scripts/eval-suite.mjs --mode compare",
     "test:a11y": "playwright test",

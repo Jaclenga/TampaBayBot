@@ -1,7 +1,8 @@
 import { routeQuestion, normalizeQuestion, intentText } from './router.mjs';
-import { retrieve, isInstructionText, isAuthoritative, requestedDetailScore, requestedDetails } from '../retrieval/search.mjs';
+import { retrieve, isInstructionText, isAuthoritative, requestedDetailScore, requestedDetails, ANSWER_RETRIEVAL_LIMIT } from '../retrieval/search.mjs';
 import { makeEvidence, safeSourceUrl, findApplicationConflicts } from '../citations/evidence.mjs';
 import { housingSituation, verificationQuestions } from '../housing/navigation.mjs';
+import { programCandidates } from '../housing/programs.mjs';
 import { sourceCoversJurisdiction } from '../coverage.mjs';
 
 function unknownSpecificClaim(question, sources, chunks) {
@@ -219,7 +220,7 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
     answer.meaning = 'Use the government serving that property to confirm local information.';
     return answer;
   }
-  const retrieval = retrieve(query, { sources, chunks, route, now: date, limit: 15 });
+  const retrieval = retrieve(query, { sources, chunks, route, now: date, limit: ANSWER_RETRIEVAL_LIMIT });
   if (retrieval.quarantined.length) answer.warnings.push('Some source text was excluded because it contained instructions aimed at an assistant or executable markup.');
   let selected = selectHits(retrieval.hits, query, route, sources, chunks, date);
   const additionalPassages = [];
@@ -233,6 +234,16 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
     if (source && chunk && !selected.some(hit => hit.chunk.id === chunk.id)) selected.push({ source, chunk, score: 1 });
   }
   const unsupported = unknownSpecificClaim(query, sources, chunks);
+  // Reviewed source anchors keep their qualifications and primary answer.
+  // Discovery also retains distinct relevant programs from the retrieved
+  // passages, including programs sharing a page or outside the preferred list.
+  // Eight evidence cards fit the optional model's existing input budget.
+  if (route.subjectCategory === 'housing' && !route.needsJurisdiction && !unsupported && !requestedDetails(query).length) {
+    for (const hit of programCandidates(query, retrieval.hits, { limit: retrieval.hits.length })) {
+      if (selected.length >= 8) break;
+      if (!selected.some(item => item.chunk.id === hit.chunk.id)) selected.push(hit);
+    }
+  }
   if (!selected.length) {
     const relevantSources = sources.filter(source => source.categories?.includes(route.subjectCategory));
     answer.nextSteps = nextSteps(relevantSources);

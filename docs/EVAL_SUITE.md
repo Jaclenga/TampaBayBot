@@ -6,6 +6,8 @@ The default offline suite has 236 hand-authored cases using preserved public evi
 
 ## Run offline
 
+For program omission measurement, use `npm run eval:recall`. It reports program-level recall at ranked retrieval cutoffs and in final evidence, with a fixed authored applicability denominator and per-program misses. See [applicable-program recall](PROGRAM_RECALL.md) for corpus selection, labels, results and limitations. This separate measurement is not included in the historical suite totals below.
+
 Use Node.js 24 LTS and the committed lockfile:
 
 ```sh

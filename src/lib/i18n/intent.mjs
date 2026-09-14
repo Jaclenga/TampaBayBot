@@ -26,6 +26,10 @@ const SPANISH_INTENTS = [
   [/\b(?:reparar (?:mi |la )?casa|reparaciones de (?:la )?vivienda)\b/g, 'home repair'],
   [/\b(?:costos de mudanza|gastos de mudanza)\b/g, 'moving costs'],
   [/\b(?:deposito de seguridad|deposito del alquiler)\b/g, 'security deposit'],
+  [/\bservicios publicos\b/g, 'utilities'],
+  [/\b(?:facturas?|recibos?) de (?:la |el )?(?:luz|electricidad)\b/g, 'electric bills'],
+  [/\b(?:facturas?|recibos?) de (?:la |el )?agua\b/g, 'water bills'],
+  [/\bsilla de ruedas\b/g, 'wheelchair'],
   [/\b(?:uso del suelo|uso de suelo)\b/g, 'land use'],
   [/\b(?:que significa|que quiere decir)\b/g, 'what does'],
   [/\bcuantas unidades\b/g, 'how many units'],
@@ -65,6 +69,10 @@ const WORDS = {
   monto: 'amount', cantidad: 'amount', hogar: 'household', familia: 'household',
   cuota: 'fee', cuotas: 'fees', costo: 'cost', costos: 'costs', documentos: 'documents',
   requisitos: 'requirements', discapacidad: 'disability', adaptacion: 'accommodation',
+  accesibilidad: 'accessibility', accesible: 'accessible', rampa: 'ramp', rampas: 'ramps',
+  programas: 'programs', subvenciones: 'grants', dueno: 'homeowner', duena: 'homeowner',
+  factura: 'bill', facturas: 'bills', electricidad: 'electricity', agua: 'water',
+  huracan: 'hurricane', danado: 'damaged', danada: 'damaged', goteras: 'leaks',
   zonificacion: 'zoning', densidad: 'density', altura: 'height', retranqueo: 'setback',
   permiso: 'permit', permisos: 'permits', inspeccion: 'inspection', cerca: 'nearby',
   construccion: 'construction', desarrollo: 'development', registros: 'records',
@@ -82,5 +90,11 @@ export function intentAliases(normalized) {
   // every quotation retain their Unicode text for display and safety checks.
   let text = normalized.normalize('NFD').replace(/\p{M}/gu, '');
   for (const [pattern, replacement] of SPANISH_INTENTS) text = text.replace(pattern, replacement);
-  return text.split(/\s+/).map(word => WORDS[word] ?? word).join(' ');
+  return text.split(/\s+/).map(word => {
+    if (WORDS[word]) return WORDS[word];
+    // Normalization retains periods for street names and identifiers. A final
+    // sentence period must not stop a vocabulary word from matching.
+    const ending = word.match(/^([a-z]+)(\.+)$/);
+    return ending && WORDS[ending[1]] ? WORDS[ending[1]] + ending[2] : word;
+  }).join(' ');
 }

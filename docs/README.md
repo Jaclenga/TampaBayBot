@@ -21,6 +21,7 @@ Start with the [project overview](../README.md) for capabilities, a screenshot a
 | Ingestion, retrieval, citations, provenance and uncertainty | [Methodology](METHODOLOGY.md) |
 | What evaluation measures and how people review answers | [Evaluation and review](EVALUATION.md) |
 | Run the offline suite, compare regressions or evaluate a model | [Evaluation suite](EVAL_SUITE.md) |
+| Measure applicable-program omissions in retrieval and final evidence | [Program recall](PROGRAM_RECALL.md) |
 | Accessibility support and the manual review checklist | [Accessibility](ACCESSIBILITY.md) |
 | Product coverage and decision boundaries | [Limitations](LIMITATIONS.md) |
 | Supported versions, privacy, safe configuration and vulnerability reporting | [Security](../SECURITY.md) |

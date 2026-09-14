@@ -1,5 +1,6 @@
 import type { Source, Chunk } from '../core/answer.mjs';
 import type { QuestionRoute } from '../core/router.mjs';
+export const ANSWER_RETRIEVAL_LIMIT: 15;
 export interface RetrievalHit { source: Source; chunk: Chunk; score: number; matches: number; stale: boolean; detailScore: number }
 export function requestedDetailScore(question: string, text: string): number;
 export function requestedDetails(question: string, text?: string): string[];

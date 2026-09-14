@@ -42,6 +42,8 @@ There are **77 hand-authored questions**, spanning housing (28), zoning (16), pe
 
 ## Reading the metrics
 
+[Applicable-program recall](PROGRAM_RECALL.md) measures omissions separately: how many programs in an authored applicability set appear in ranked retrieval and final evidence. It counts programs rather than expected-source hits and preserves missed programs in the denominator. Its dated development inventory does not establish completeness outside the reviewed source pages.
+
 | Reported metric | What it measures | What it does not establish |
 | --- | --- | --- |
 | Expected-source hit | At least one reviewer-specified source ID appears | Relevant excerpt, complete answer, or a useful first result |

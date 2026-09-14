@@ -27,10 +27,16 @@ export function makeEvidence(hit, question, index, now = new Date()) {
   const { source, chunk } = hit;
   const url = safeSourceUrl(chunk.url, source.canonical_url);
   if (!url) return null;
+  // Program discovery may select a literal window in a long multi-program
+  // passage. Verify its bounds here; never assemble a quote from separate text.
+  const focus = hit.programQuote;
+  const focusedQuote = chunk.text.length > 720 && focus && Number.isSafeInteger(focus.start) && Number.isSafeInteger(focus.end) &&
+    focus.start >= 0 && focus.end > focus.start && focus.end <= chunk.text.length && focus.end - focus.start <= 720
+    ? chunk.text.slice(focus.start, focus.end).trim() : null;
   return {
     id: `E${index + 1}`, chunk_id: chunk.id, source_id: source.source_id,
     title: source.title, agency: source.agency,
-    quote: selectQuote(chunk.text, question), section: chunk.section ?? null,
+    quote: focusedQuote || selectQuote(chunk.text, question), section: chunk.section ?? null,
     page: chunk.page ?? null, record_id: chunk.record_id ?? null,
     layer: chunk.layer ?? null, url,
     retrieved_at: chunk.retrieved_at ?? source.retrieval_date ?? null,

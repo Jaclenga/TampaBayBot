@@ -45,7 +45,9 @@ export function routeQuestion(question, { jurisdictionId = 'tampa-bay' } = {}) {
   }
   if (/\b(help|assistance)\b/.test(text) && /\b(pay|paying|money|home|bill|bills)\b/.test(text)) scores.housing += 5;
   if (/\b(application|apply)\b/.test(text) && /\b(house|housing|rent|grant|assistance|program)\b/.test(text)) scores.housing += 4;
-  if (/\b(grant|program|deposit|fund)\b/.test(text)) scores.housing += 2;
+  if (/\b(grants?|programs?|deposits?|funds?)\b/.test(text)) scores.housing += 2;
+  if (/\b(accessibility|accessible|wheelchair|ramps?|utilities|electricity|water)\b/.test(text) &&
+      /\b(help|assistance|programs?|grants?|pay|bills?)\b/.test(text)) scores.housing += 4;
   if (/\b(permit records|permit history|development records|past permits|approved.*last year)\b/.test(text)) scores.development += 8;
   if (/\b(land use|zoning)\b/.test(text)) scores.zoning += 4;
   if (/\b(new construction)\b/.test(text) && /\b(permit|permits|application|requirements)\b/.test(text)) scores.permitting += 4;

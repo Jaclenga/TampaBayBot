@@ -1,0 +1,1416 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "applicable-program-recall-v1",
+  "reference_date": "2026-09-13T12:00:00.000Z",
+  "scope": {
+    "kind": "bounded_program_inventory",
+    "description": "Recall for potentially applicable named financial, rehabilitation, homebuyer and targeted shelter mechanisms evidenced by the retained September 12, 2026 housing corpus. This 18-program inventory is a finite first measurement, not all real-world benefits or every resource on the pages.",
+    "jurisdiction_ids": [
+      "tampa",
+      "hillsborough-county",
+      "st-petersburg",
+      "clearwater",
+      "pinellas-county",
+      "pasco-county"
+    ],
+    "excluded_resource_classes": [
+      {
+        "resource_class": "Generic directories, department overviews, contact lines, housing locators and individual apartment listings",
+        "reason": "Navigation/resources are not separately identified assistance mechanisms. A directory alone earns no program credit."
+      },
+      {
+        "resource_class": "Legal aid, tenant-rights, form-builder and procedural court resources",
+        "reason": "This first scope measures financial/housing provision mechanisms. Legal-navigation recall requires a separate inventory."
+      },
+      {
+        "resource_class": "Clearwater purchase-assistance links, Pasco generic homebuyer activities and Tampa Community Land Trust link",
+        "reason": "Retained chunks link or name these resources without enough mechanism detail to independently distinguish and label applicability. They remain inventory expansion candidates."
+      },
+      {
+        "resource_class": "EHEAP during transition",
+        "reason": "The passage describes transition and referrals rather than an active EHEAP application route. LIHEAP is inventoried as the named alternative."
+      }
+    ],
+    "program_count": 18,
+    "source_ids": [
+      "tampa-rmap",
+      "tampa-housing",
+      "tampa-hrrp",
+      "hillsborough-help",
+      "florida-housing",
+      "st-petersburg-rehab",
+      "clearwater-rehab",
+      "clearwater-housing",
+      "pinellas-family-housing",
+      "pinellas-housing-directory",
+      "pasco-rehab",
+      "pasco-help",
+      "st-petersburg-renters"
+    ],
+    "source_snapshot": {
+      "source_count": 33,
+      "chunk_count": 1044,
+      "chunks_file_sha256": "6c14614e74b7185d61f42c24ff50dc1b4f6700bd9caeeaa7f5b1f6ef5acb2644",
+      "sources_file_sha256": "50efd99c875eaa60b31502bf484dd9dc7be27373d83c607ce5e3c8b28c0c8025",
+      "retrieved_at_min": "2026-09-12T04:24:22.299Z",
+      "retrieved_at_max": "2026-09-12T18:51:00.869Z"
+    }
+  },
+  "label_policy": {
+    "author": "Agent manual annotation of raw retained evidence before observing retrieval or answer outputs",
+    "independent_human_review": false,
+    "label_origin": "Direct reading of all 14 housing-category sources, with hand-authored program identities, applicable query sets and exclusions. No retrieve(), preferredSourceIds, rankings or generated answers used to derive labels.",
+    "applicable_definition": "A program is applicable to consider when it addresses an explicitly stated need and known household/location facts do not exclude it. Unstated income, property, participating-provider, referral, funding and waitlist conditions remain unresolved; labels do not determine eligibility. Closed/paused programs are included when the query explicitly asks to check their status or options with paused intake.",
+    "identity": "Named mechanisms are counted once across duplicate evidence. Home Repair Loans and Accessibility Assistance are separate St. Petersburg programs. Clearwater ADA assistance is a component of Home Preservation. HCV and SHIP are each one program family rather than one count per administrator.",
+    "expected_set_completeness": "Each expected set is complete only against the 18 inventoried programs and stated query intent. Programs outside this inventory and corpus acquisition omissions remain unmeasured. Empty expected sets are controls excluded from positive recall denominators.",
+    "recognition": "Exact source/chunk/text hashes bind allowed passages. recognition_span offsets and hash identify substantive program text within multi-program or long chunks. Generic unrelated passages from the same source earn no credit. Recognition measures discovery, not a correctly qualified recommendation.",
+    "non_applicable_retrieval": "A negative or ineligible case may correctly retrieve an exclusion passage. Such retrieval must not be called an applicability false positive without checking whether the answer actually recommended the program.",
+    "availability": "States describe the retained snapshot only; no current-source audit. Program relevance and open intake are separate concepts.",
+    "case_sampling": "Purposive development diagnostic covering specific, broad, multi-program, Spanish and exclusion/geography cases. No random sample, prevalence weighting, blind holdout or population accuracy claim.",
+    "control_scoring": "Named-program exclusion controls explicitly allow references to the excluded program. Unanticipated recognized programs are diagnostics, not a semantic precision or recommendation-polarity metric."
+  },
+  "programs": [
+    {
+      "program_id": "tampa-rmap",
+      "title": "Tampa Rental and Move-In Assistance Program (RMAP)",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "availability_state": "snapshot_describes_move_in_phase_verify_capacity",
+      "applicability_rationale": "New unit within Tampa city limits, approved move-in within 45 days, stable income and no prior RMAP assistance. Existing occupied units and leases are outside this phase. Voucher households can receive approved deposit assistance but not first or last month rent.",
+      "evidence": [
+        {
+          "source_id": "tampa-rmap",
+          "chunk_id": "tampa-rmap-f672a22597f4a8",
+          "text_sha256": "08cee6992a0b756df614777bcec0d276d5035e481ce5d15dd09f126a8c02466d",
+          "recognition_span": {
+            "start": 0,
+            "end": 104,
+            "text_sha256": "08cee6992a0b756df614777bcec0d276d5035e481ce5d15dd09f126a8c02466d"
+          }
+        },
+        {
+          "source_id": "tampa-rmap",
+          "chunk_id": "tampa-rmap-1de4aa9b9442cb",
+          "text_sha256": "9d4cccef36ce09bcde4d29eaee906d273f473f8f7030c92924cdd28c432b2ba3",
+          "recognition_span": {
+            "start": 0,
+            "end": 104,
+            "text_sha256": "9d4cccef36ce09bcde4d29eaee906d273f473f8f7030c92924cdd28c432b2ba3"
+          }
+        },
+        {
+          "source_id": "tampa-rmap",
+          "chunk_id": "tampa-rmap-07ad46aa1da57b",
+          "text_sha256": "eaf49cee53e62d44cdd1350a967b9c3f8a4088c82998e0932b14debfaf2b14ab",
+          "recognition_span": {
+            "start": 0,
+            "end": 136,
+            "text_sha256": "eaf49cee53e62d44cdd1350a967b9c3f8a4088c82998e0932b14debfaf2b14ab"
+          }
+        },
+        {
+          "source_id": "tampa-rmap",
+          "chunk_id": "tampa-rmap-6bd32690d30636",
+          "text_sha256": "44247f6184ea9645cbf169219757fa7201c40e87b8d480a757a8cd646e4c6614",
+          "recognition_span": {
+            "start": 0,
+            "end": 107,
+            "text_sha256": "44247f6184ea9645cbf169219757fa7201c40e87b8d480a757a8cd646e4c6614"
+          }
+        },
+        {
+          "source_id": "tampa-rmap",
+          "chunk_id": "tampa-rmap-2462057581d239",
+          "text_sha256": "74b260372a33fe31bd50437bde7c8ee1bbcdf68095466341e5000188c9871f96",
+          "recognition_span": {
+            "start": 0,
+            "end": 122,
+            "text_sha256": "74b260372a33fe31bd50437bde7c8ee1bbcdf68095466341e5000188c9871f96"
+          }
+        },
+        {
+          "source_id": "tampa-rmap",
+          "chunk_id": "tampa-rmap-93a9b3866e931f",
+          "text_sha256": "f5d752abe414c45fcd1be2fb2098b36940a64e4eb6d1648d856f5ed6844feb80",
+          "recognition_span": {
+            "start": 0,
+            "end": 271,
+            "text_sha256": "f5d752abe414c45fcd1be2fb2098b36940a64e4eb6d1648d856f5ed6844feb80"
+          }
+        },
+        {
+          "source_id": "tampa-rmap",
+          "chunk_id": "tampa-rmap-58160bdfb836d2",
+          "text_sha256": "231c4fad4d0ca5093005b1f67f35c1400f7f65f96ea0774f90166bc6a4d73185",
+          "recognition_span": {
+            "start": 0,
+            "end": 157,
+            "text_sha256": "231c4fad4d0ca5093005b1f67f35c1400f7f65f96ea0774f90166bc6a4d73185"
+          }
+        },
+        {
+          "source_id": "tampa-housing",
+          "chunk_id": "tampa-housing-1947468dffeac4",
+          "text_sha256": "2b4969d896be952ff30515e2fa2ff7e14840213ef5e56a80f7359248311b2748",
+          "recognition_span": {
+            "start": 0,
+            "end": 105,
+            "text_sha256": "2b4969d896be952ff30515e2fa2ff7e14840213ef5e56a80f7359248311b2748"
+          }
+        },
+        {
+          "source_id": "tampa-housing",
+          "chunk_id": "tampa-housing-5f691b198641f6",
+          "text_sha256": "9d4cccef36ce09bcde4d29eaee906d273f473f8f7030c92924cdd28c432b2ba3",
+          "recognition_span": {
+            "start": 0,
+            "end": 104,
+            "text_sha256": "9d4cccef36ce09bcde4d29eaee906d273f473f8f7030c92924cdd28c432b2ba3"
+          }
+        }
+      ],
+      "source_ids": [
+        "tampa-rmap",
+        "tampa-housing"
+      ]
+    },
+    {
+      "program_id": "tampa-hrrp",
+      "title": "Tampa Housing Rehabilitation and Renovation Program (HRRP)",
+      "jurisdiction_ids": [
+        "tampa"
+      ],
+      "availability_state": "not_accepting_new_applications_at_snapshot",
+      "applicability_rationale": "City rehabilitation program is relevant to a Tampa homeowner investigating repair options with paused intake. Count discovery with its status; the projected summer reopening is not evidence of availability.",
+      "evidence": [
+        {
+          "source_id": "tampa-hrrp",
+          "chunk_id": "tampa-hrrp-525346d0f445cb",
+          "text_sha256": "95f782ee975be0c21d2a5544c4578d2e6ceec4b5658d50c9c7d2fd34c5cd4f19",
+          "recognition_span": {
+            "start": 0,
+            "end": 254,
+            "text_sha256": "95f782ee975be0c21d2a5544c4578d2e6ceec4b5658d50c9c7d2fd34c5cd4f19"
+          }
+        },
+        {
+          "source_id": "tampa-hrrp",
+          "chunk_id": "tampa-hrrp-9d13ce3cb8e0af",
+          "text_sha256": "90e91cb3c116cb1abcf2e7f07a2ecfdccdc550a2867ebf5ae50bb38ec3f69bad",
+          "recognition_span": {
+            "start": 0,
+            "end": 236,
+            "text_sha256": "90e91cb3c116cb1abcf2e7f07a2ecfdccdc550a2867ebf5ae50bb38ec3f69bad"
+          }
+        }
+      ],
+      "source_ids": [
+        "tampa-hrrp"
+      ]
+    },
+    {
+      "program_id": "hillsborough-rebuilding-tomorrow",
+      "title": "Rebuilding for Tomorrow Homeowner Repair and Reconstruction Program",
+      "jurisdiction_ids": [
+        "tampa",
+        "hillsborough-county"
+      ],
+      "availability_state": "verify_current_intake",
+      "applicability_rationale": "Repairs, reconstruction, eligible past repair reimbursement and safety work for homeowners affected by Hurricanes Helene and/or Milton anywhere in Hillsborough County, explicitly including Tampa. Cases state hurricane damage.",
+      "evidence": [
+        {
+          "source_id": "hillsborough-help",
+          "chunk_id": "hillsborough-help-bce3f5cd016c74",
+          "text_sha256": "dbd89df1333a0df2e825cf79ac554d6945e130612300704cef0c08a3a9813f2e",
+          "recognition_span": {
+            "start": 0,
+            "end": 199,
+            "text_sha256": "dbd89df1333a0df2e825cf79ac554d6945e130612300704cef0c08a3a9813f2e"
+          }
+        },
+        {
+          "source_id": "hillsborough-help",
+          "chunk_id": "hillsborough-help-03ce3bfa33a156",
+          "text_sha256": "7943f4a039131e5848280e2d2540df4802664037baca721d679fd6eb55cc426a",
+          "recognition_span": {
+            "start": 0,
+            "end": 332,
+            "text_sha256": "7943f4a039131e5848280e2d2540df4802664037baca721d679fd6eb55cc426a"
+          }
+        }
+      ],
+      "source_ids": [
+        "hillsborough-help"
+      ]
+    },
+    {
+      "program_id": "florida-homebuyer-loan",
+      "title": "Florida Housing Homebuyer Loan Program",
+      "jurisdiction_ids": [
+        "tampa",
+        "hillsborough-county",
+        "st-petersburg",
+        "clearwater",
+        "pinellas-county",
+        "pasco-county"
+      ],
+      "availability_state": "verify_lender_program_requirements",
+      "applicability_rationale": "Low-to-moderate income homebuyers may consider fixed low-interest first mortgages and associated down-payment/closing-cost assistance. Borrower and lender requirements remain to be checked.",
+      "evidence": [
+        {
+          "source_id": "florida-housing",
+          "chunk_id": "florida-housing-f3432f5cd47601",
+          "text_sha256": "a3bfdfe348246105675aabb0d3f37628047aca6ff34e12eb1fe291ff3eab9cce",
+          "recognition_span": {
+            "start": 0,
+            "end": 342,
+            "text_sha256": "a3bfdfe348246105675aabb0d3f37628047aca6ff34e12eb1fe291ff3eab9cce"
+          }
+        }
+      ],
+      "source_ids": [
+        "florida-housing"
+      ]
+    },
+    {
+      "program_id": "florida-ship-homebuyer",
+      "title": "Local SHIP homebuyer assistance",
+      "jurisdiction_ids": [
+        "tampa",
+        "hillsborough-county",
+        "st-petersburg",
+        "clearwater",
+        "pinellas-county",
+        "pasco-county"
+      ],
+      "availability_state": "local_program_and_funding_confirmation_required",
+      "applicability_rationale": "Local SHIP down-payment and closing-cost financing for low-to-moderate income purchasers. Count this family once; do not infer identical municipality rules or an open intake.",
+      "evidence": [
+        {
+          "source_id": "florida-housing",
+          "chunk_id": "florida-housing-de0518a80c6eed",
+          "text_sha256": "bfaae3ca196c459ea7fdad4d042ea3a6881a69a1c96cc560336d8fb7a1f8d9fc",
+          "recognition_span": {
+            "start": 0,
+            "end": 346,
+            "text_sha256": "bfaae3ca196c459ea7fdad4d042ea3a6881a69a1c96cc560336d8fb7a1f8d9fc"
+          }
+        }
+      ],
+      "source_ids": [
+        "florida-housing"
+      ]
+    },
+    {
+      "program_id": "florida-hop",
+      "title": "Florida Housing Homeownership Pool (HOP) Program",
+      "jurisdiction_ids": [
+        "tampa",
+        "hillsborough-county",
+        "st-petersburg",
+        "clearwater",
+        "pinellas-county",
+        "pasco-county"
+      ],
+      "availability_state": "participating_developer_and_income_confirmation_required",
+      "applicability_rationale": "Buyers at or below 80% AMI can investigate a deferred second mortgage through a HOP Pool Member. Broad homebuyer questions with no property chosen leave participation unresolved; a known nonparticipating seller would exclude HOP.",
+      "evidence": [
+        {
+          "source_id": "florida-housing",
+          "chunk_id": "florida-housing-90608655127bea",
+          "text_sha256": "901f7da92c71ee74e6557a937c3f37cac47785e9736011f8e8eebc33919dac73",
+          "recognition_span": {
+            "start": 0,
+            "end": 500,
+            "text_sha256": "901f7da92c71ee74e6557a937c3f37cac47785e9736011f8e8eebc33919dac73"
+          }
+        }
+      ],
+      "source_ids": [
+        "florida-housing"
+      ]
+    },
+    {
+      "program_id": "st-petersburg-home-repair-loans",
+      "title": "St. Petersburg Home Repair Loans",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "availability_state": "verify_income_property_and_funding",
+      "applicability_rationale": "Owner-occupied single-family residences in St. Petersburg with health, safety or code problems, including roofs, electrical hazards and lead mitigation. Income and value limits require verification.",
+      "evidence": [
+        {
+          "source_id": "st-petersburg-rehab",
+          "chunk_id": "st-petersburg-rehab-e51db3ae2734f9",
+          "text_sha256": "fd65767305028e50bfd0326996c72a01043dc0a85a23e6a591cb85172cb48f8d",
+          "recognition_span": {
+            "start": 0,
+            "end": 296,
+            "text_sha256": "fd65767305028e50bfd0326996c72a01043dc0a85a23e6a591cb85172cb48f8d"
+          }
+        },
+        {
+          "source_id": "st-petersburg-rehab",
+          "chunk_id": "st-petersburg-rehab-421c67818cacd9",
+          "text_sha256": "dc7387841e900b77d4c36ab2e7bd454e425ab39bde620abac157a4782dce5001",
+          "recognition_span": {
+            "start": 0,
+            "end": 580,
+            "text_sha256": "dc7387841e900b77d4c36ab2e7bd454e425ab39bde620abac157a4782dce5001"
+          }
+        }
+      ],
+      "source_ids": [
+        "st-petersburg-rehab"
+      ]
+    },
+    {
+      "program_id": "st-petersburg-accessibility",
+      "title": "St. Petersburg Accessibility Assistance Program",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "availability_state": "verify_special_needs_and_funding",
+      "applicability_rationale": "Functional accessibility retrofits for eligible owner-occupied homes, condos, townhomes and co-ops for the owner or household member with special needs. A distinct mechanism on the Home Repair Loans page.",
+      "evidence": [
+        {
+          "source_id": "st-petersburg-rehab",
+          "chunk_id": "st-petersburg-rehab-e51db3ae2734f9",
+          "text_sha256": "fd65767305028e50bfd0326996c72a01043dc0a85a23e6a591cb85172cb48f8d",
+          "recognition_span": {
+            "start": 0,
+            "end": 296,
+            "text_sha256": "fd65767305028e50bfd0326996c72a01043dc0a85a23e6a591cb85172cb48f8d"
+          }
+        },
+        {
+          "source_id": "st-petersburg-rehab",
+          "chunk_id": "st-petersburg-rehab-b22268ac585069",
+          "text_sha256": "c3ac57a59615275c172992242a816848029b086ead1287a14ae978bc8fc7a135",
+          "recognition_span": {
+            "start": 0,
+            "end": 250,
+            "text_sha256": "c3ac57a59615275c172992242a816848029b086ead1287a14ae978bc8fc7a135"
+          }
+        }
+      ],
+      "source_ids": [
+        "st-petersburg-rehab"
+      ]
+    },
+    {
+      "program_id": "clearwater-home-preservation",
+      "title": "Clearwater Home Preservation Program",
+      "jurisdiction_ids": [
+        "clearwater"
+      ],
+      "availability_state": "applications_accepted_but_not_advancing_until_funded",
+      "applicability_rationale": "Code rehabilitation and ADA accessibility assistance for qualifying owner-occupied homestead property in incorporated Clearwater. ADA assistance is a program component. Tenants, mobile homes, purely cosmetic work and properties outside city limits are excluded.",
+      "evidence": [
+        {
+          "source_id": "clearwater-rehab",
+          "chunk_id": "clearwater-rehab-a726d83226ba90",
+          "text_sha256": "7d61732d1fef681eb9df64b65869b4d8114e86735ce7860adc6bc5cea0c12b6c",
+          "recognition_span": {
+            "start": 0,
+            "end": 181,
+            "text_sha256": "7d61732d1fef681eb9df64b65869b4d8114e86735ce7860adc6bc5cea0c12b6c"
+          }
+        },
+        {
+          "source_id": "clearwater-rehab",
+          "chunk_id": "clearwater-rehab-609ae7e52fc7d4",
+          "text_sha256": "81c8bbe9946f5a3eeb1599e3e89c3e6737abb50648acded52721d16b8af573df",
+          "recognition_span": {
+            "start": 0,
+            "end": 129,
+            "text_sha256": "81c8bbe9946f5a3eeb1599e3e89c3e6737abb50648acded52721d16b8af573df"
+          }
+        },
+        {
+          "source_id": "clearwater-rehab",
+          "chunk_id": "clearwater-rehab-de159286da2872",
+          "text_sha256": "66ac8b1b98f50e9ae45972f18c314003c1e026d3414c869da095b98c24a3baf7",
+          "recognition_span": {
+            "start": 0,
+            "end": 180,
+            "text_sha256": "66ac8b1b98f50e9ae45972f18c314003c1e026d3414c869da095b98c24a3baf7"
+          }
+        },
+        {
+          "source_id": "clearwater-rehab",
+          "chunk_id": "clearwater-rehab-ca9f050bb4f61b",
+          "text_sha256": "3a02a0c8a9faa5d9ebe3f6c070ca668cd2ef15f22622495b0170be4e6e3645d7",
+          "recognition_span": {
+            "start": 0,
+            "end": 101,
+            "text_sha256": "3a02a0c8a9faa5d9ebe3f6c070ca668cd2ef15f22622495b0170be4e6e3645d7"
+          }
+        },
+        {
+          "source_id": "clearwater-rehab",
+          "chunk_id": "clearwater-rehab-d48f083ec27eb0",
+          "text_sha256": "156f2ba8ee67bb46e3641a4c90b2ba1665be82f740ca84ab7714ed9ba2d87796",
+          "recognition_span": {
+            "start": 0,
+            "end": 475,
+            "text_sha256": "156f2ba8ee67bb46e3641a4c90b2ba1665be82f740ca84ab7714ed9ba2d87796"
+          }
+        },
+        {
+          "source_id": "clearwater-rehab",
+          "chunk_id": "clearwater-rehab-b94c8660716326",
+          "text_sha256": "8060094b76134f238e5464740a1d8c9af1d222b0ae7c6113801a1ec77e15d897",
+          "recognition_span": {
+            "start": 0,
+            "end": 204,
+            "text_sha256": "8060094b76134f238e5464740a1d8c9af1d222b0ae7c6113801a1ec77e15d897"
+          }
+        },
+        {
+          "source_id": "clearwater-rehab",
+          "chunk_id": "clearwater-rehab-10597928b82781",
+          "text_sha256": "422cccada6352d609d0aae5ad0c7fbde53b862a8b0869b1428daa87d23a4ab3e",
+          "recognition_span": {
+            "start": 0,
+            "end": 173,
+            "text_sha256": "422cccada6352d609d0aae5ad0c7fbde53b862a8b0869b1428daa87d23a4ab3e"
+          }
+        },
+        {
+          "source_id": "clearwater-rehab",
+          "chunk_id": "clearwater-rehab-59227f976b2a77",
+          "text_sha256": "cd37365f8a959e5355cd555536b5c9354060b734511bf5890870cade0326d4fc",
+          "recognition_span": {
+            "start": 0,
+            "end": 163,
+            "text_sha256": "cd37365f8a959e5355cd555536b5c9354060b734511bf5890870cade0326d4fc"
+          }
+        },
+        {
+          "source_id": "clearwater-housing",
+          "chunk_id": "clearwater-housing-f1e52cacd27386",
+          "text_sha256": "3ad0db010e2fa7bff29bcbebece42ce3f67b562c546b6afa51f17d5025d079d3",
+          "recognition_span": {
+            "start": 0,
+            "end": 38,
+            "text_sha256": "3ad0db010e2fa7bff29bcbebece42ce3f67b562c546b6afa51f17d5025d079d3"
+          }
+        }
+      ],
+      "source_ids": [
+        "clearwater-rehab",
+        "clearwater-housing"
+      ]
+    },
+    {
+      "program_id": "pinellas-fhap",
+      "title": "Pinellas Family Housing Assistance Program (FHAP)",
+      "jurisdiction_ids": [
+        "st-petersburg",
+        "clearwater",
+        "pinellas-county"
+      ],
+      "availability_state": "coordinated_entry_referral_required",
+      "applicability_rationale": "Families experiencing homelessness may receive partial security/utility deposit and rent payments with services through Coordinated Entry. Applicable for referral before referral is secured; explicitly housed households seeking ordinary arrears are excluded.",
+      "evidence": [
+        {
+          "source_id": "pinellas-family-housing",
+          "chunk_id": "pinellas-family-housing-148ebc1928b889",
+          "text_sha256": "0aa41d10e81f11cce943e0a48e67912db308408086d5c04f5ce6154456f90859",
+          "recognition_span": {
+            "start": 0,
+            "end": 382,
+            "text_sha256": "0aa41d10e81f11cce943e0a48e67912db308408086d5c04f5ce6154456f90859"
+          }
+        },
+        {
+          "source_id": "pinellas-family-housing",
+          "chunk_id": "pinellas-family-housing-f3478ec397dd27",
+          "text_sha256": "429ee074666f2f7a1798fcc0d59bde99246cbedfe296dce8ed7b5121dd165344",
+          "recognition_span": {
+            "start": 0,
+            "end": 64,
+            "text_sha256": "429ee074666f2f7a1798fcc0d59bde99246cbedfe296dce8ed7b5121dd165344"
+          }
+        },
+        {
+          "source_id": "pinellas-family-housing",
+          "chunk_id": "pinellas-family-housing-89a0c28567d02f",
+          "text_sha256": "0a110398ab5d00b88037647860703aaaa7c2d3d481d737799d440f481f31af09",
+          "recognition_span": {
+            "start": 0,
+            "end": 72,
+            "text_sha256": "0a110398ab5d00b88037647860703aaaa7c2d3d481d737799d440f481f31af09"
+          }
+        },
+        {
+          "source_id": "pinellas-family-housing",
+          "chunk_id": "pinellas-family-housing-6868fe3688081e",
+          "text_sha256": "88bbb5e67fc328af86c66ceef9afb9dab96495b4f30857636a26e4b7ea004091",
+          "recognition_span": {
+            "start": 0,
+            "end": 50,
+            "text_sha256": "88bbb5e67fc328af86c66ceef9afb9dab96495b4f30857636a26e4b7ea004091"
+          }
+        }
+      ],
+      "source_ids": [
+        "pinellas-family-housing"
+      ]
+    },
+    {
+      "program_id": "pinellas-hfa-first-time-homebuyer",
+      "title": "Pinellas Housing Finance Authority First-time Homebuyer Program",
+      "jurisdiction_ids": [
+        "st-petersburg",
+        "clearwater",
+        "pinellas-county"
+      ],
+      "availability_state": "verify_first_time_buyer_lender_and_funding",
+      "applicability_rationale": "Named HFA program providing first mortgages and down-payment assistance for new homebuyers. A separate county HFA resource, not an assumed county SHIP intake for cities with separate community-development offices.",
+      "evidence": [
+        {
+          "source_id": "pinellas-housing-directory",
+          "chunk_id": "pinellas-housing-directory-d9e6f71da0c037",
+          "text_sha256": "ff3ab15d68d7e3484cd46a62f883bfe32fab43ecc7126e3442109d9413ef53f4",
+          "recognition_span": {
+            "start": 0,
+            "end": 213,
+            "text_sha256": "ff3ab15d68d7e3484cd46a62f883bfe32fab43ecc7126e3442109d9413ef53f4"
+          }
+        }
+      ],
+      "source_ids": [
+        "pinellas-housing-directory"
+      ]
+    },
+    {
+      "program_id": "pinellas-habitat-homeownership",
+      "title": "Habitat for Humanity of Pinellas County homeownership assistance",
+      "jurisdiction_ids": [
+        "st-petersburg",
+        "clearwater",
+        "pinellas-county"
+      ],
+      "availability_state": "verify_provider_requirements",
+      "applicability_rationale": "Builds and sells homes to households not qualifying for a traditional mortgage. Cases explicitly leave traditional mortgage qualification uncertain. This is a described housing provision mechanism rather than a bare agency listing.",
+      "evidence": [
+        {
+          "source_id": "pinellas-housing-directory",
+          "chunk_id": "pinellas-housing-directory-4111fbe1caa089",
+          "text_sha256": "4ac2bb87f0257774b2e939aaab840780d81d82b36b708fb9e9ae625cac18b719",
+          "recognition_span": {
+            "start": 0,
+            "end": 178,
+            "text_sha256": "4ac2bb87f0257774b2e939aaab840780d81d82b36b708fb9e9ae625cac18b719"
+          }
+        }
+      ],
+      "source_ids": [
+        "pinellas-housing-directory"
+      ]
+    },
+    {
+      "program_id": "pinellas-housing-choice-voucher",
+      "title": "Housing Choice Voucher (Section 8) through Pinellas-area housing authorities",
+      "jurisdiction_ids": [
+        "st-petersburg",
+        "clearwater",
+        "pinellas-county"
+      ],
+      "availability_state": "local_authority_eligibility_and_waitlist_unknown",
+      "applicability_rationale": "Income-based rental support for lower-income families, older adults and disabled residents. One federal identity with several administering authorities. Discovery establishes neither an open waitlist nor immediate placement.",
+      "evidence": [
+        {
+          "source_id": "pinellas-housing-directory",
+          "chunk_id": "pinellas-housing-directory-83ec2622c36765",
+          "text_sha256": "0a9115b561a1288b6e494dab41039ac83d39d00ac510eb0eaa62515957640333",
+          "recognition_span": {
+            "start": 228,
+            "end": 455,
+            "text_sha256": "80e160fb12276285f2f1e6df2d354c3bcdd32e319090a40e2e4560dbfefe24e7"
+          }
+        }
+      ],
+      "source_ids": [
+        "pinellas-housing-directory"
+      ]
+    },
+    {
+      "program_id": "pasco-owner-occupied-rehab",
+      "title": "Pasco Owner Occupied Rehabilitation",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "availability_state": "verify_property_income_and_funding",
+      "applicability_rationale": "Major code, roof, utility-system and accessibility repairs for qualifying homesteaded owner-occupied property countywide, including Pasco cities. At least two years ownership and other restrictions apply. Assistance is a conditional loan.",
+      "evidence": [
+        {
+          "source_id": "pasco-rehab",
+          "chunk_id": "pasco-rehab-da3c3f70b9beb6",
+          "text_sha256": "295cfd2bd9cdf95be04181eeb7c52dfaf029dc68f513b34dce3e06c051eda5a5",
+          "recognition_span": {
+            "start": 0,
+            "end": 529,
+            "text_sha256": "295cfd2bd9cdf95be04181eeb7c52dfaf029dc68f513b34dce3e06c051eda5a5"
+          }
+        },
+        {
+          "source_id": "pasco-rehab",
+          "chunk_id": "pasco-rehab-0a9e9c38b5040d",
+          "text_sha256": "219c81662ecae01886f56b4848f636693536333d9a7c842f996f0b1373a326d5",
+          "recognition_span": {
+            "start": 0,
+            "end": 342,
+            "text_sha256": "219c81662ecae01886f56b4848f636693536333d9a7c842f996f0b1373a326d5"
+          }
+        },
+        {
+          "source_id": "pasco-rehab",
+          "chunk_id": "pasco-rehab-4abdf714a47ab8",
+          "text_sha256": "f9999cceba3b6f0254a201abe8839e2d4be9868f5aca7d5d6e8b689ce76acfeb",
+          "recognition_span": {
+            "start": 0,
+            "end": 500,
+            "text_sha256": "f9999cceba3b6f0254a201abe8839e2d4be9868f5aca7d5d6e8b689ce76acfeb"
+          }
+        },
+        {
+          "source_id": "pasco-rehab",
+          "chunk_id": "pasco-rehab-f335d6f4c8303b",
+          "text_sha256": "6d6d497d86861e2c2cffca072838594ab33ef519ea525e65c11b30fc435f1e08",
+          "recognition_span": {
+            "start": 0,
+            "end": 117,
+            "text_sha256": "6d6d497d86861e2c2cffca072838594ab33ef519ea525e65c11b30fc435f1e08"
+          }
+        },
+        {
+          "source_id": "pasco-rehab",
+          "chunk_id": "pasco-rehab-cbeff5a53dec73",
+          "text_sha256": "64eff6324d84feec2128805e815de58c39bf05077d183c0f3d2a87d289d859f7",
+          "recognition_span": {
+            "start": 0,
+            "end": 504,
+            "text_sha256": "64eff6324d84feec2128805e815de58c39bf05077d183c0f3d2a87d289d859f7"
+          }
+        },
+        {
+          "source_id": "pasco-rehab",
+          "chunk_id": "pasco-rehab-40e912447969e3",
+          "text_sha256": "bfe7f6881172913c9fd68f2364b8f2f9f6e560dd94f889ae04d94bcba1f94b1e",
+          "recognition_span": {
+            "start": 0,
+            "end": 325,
+            "text_sha256": "bfe7f6881172913c9fd68f2364b8f2f9f6e560dd94f889ae04d94bcba1f94b1e"
+          }
+        }
+      ],
+      "source_ids": [
+        "pasco-rehab"
+      ]
+    },
+    {
+      "program_id": "pasco-project-round-up",
+      "title": "Pasco County Project Round-Up",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "availability_state": "county_utilities_customer_qualification_required",
+      "applicability_rationale": "Help paying Pasco County Utilities bills for qualifying customers, not rent or another provider's utility bill.",
+      "evidence": [
+        {
+          "source_id": "pasco-help",
+          "chunk_id": "pasco-help-de725558f639a3",
+          "text_sha256": "33463ffd406c3428685052101e66046c60a458abc6b22c2d634a9629f251725a",
+          "recognition_span": {
+            "start": 12,
+            "end": 144,
+            "text_sha256": "6a137f41519106fa5cb5909e417ed1a2d3d7ee34c97765b2811ce0259a17f5d2"
+          }
+        }
+      ],
+      "source_ids": [
+        "pasco-help"
+      ]
+    },
+    {
+      "program_id": "pasco-liheap",
+      "title": "Low-Income Home Energy Assistance Program (LIHEAP) crisis assistance",
+      "jurisdiction_ids": [
+        "pasco-county"
+      ],
+      "availability_state": "verify_crisis_income_and_intake",
+      "applicability_rationale": "The retained Pasco page offers LIHEAP crisis applications for electric bills for younger adults and seniors. This inventory binds to the Pasco referral; it does not claim the statewide program exists only in Pasco.",
+      "evidence": [
+        {
+          "source_id": "pasco-help",
+          "chunk_id": "pasco-help-3fbc413f4a6362",
+          "text_sha256": "760381b82ae563f7cf72b72ba86c67ad2e959dd5656ddb51130d3a01b23a9907",
+          "recognition_span": {
+            "start": 479,
+            "end": 643,
+            "text_sha256": "47b2ef5014db58996dd043300b3cd08ce6f49b83c8278fa38a7f291b1a3bbc4d"
+          }
+        }
+      ],
+      "source_ids": [
+        "pasco-help"
+      ]
+    },
+    {
+      "program_id": "westcare-mustard-seed-inn",
+      "title": "WestCare Mustard Seed Inn",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "availability_state": "provider_admission_and_bed_availability_unknown",
+      "applicability_rationale": "Transitional housing and recovery supports for adults in recovery, described in the St. Petersburg renter guide. The referral does not establish admission eligibility or a vacant bed.",
+      "evidence": [
+        {
+          "source_id": "st-petersburg-renters",
+          "chunk_id": "st-petersburg-renters-5d41a4393cb71e",
+          "text_sha256": "1c6f359f1edfbd63c53e7ea054e2cd4f6eada5bf785e539cfb26b17d4dd64734",
+          "recognition_span": {
+            "start": 61,
+            "end": 195,
+            "text_sha256": "88e909f6267ae9e995d712dde4e561bcdb28370b19ce9cdf14ec2f610420f362"
+          }
+        }
+      ],
+      "source_ids": [
+        "st-petersburg-renters"
+      ]
+    },
+    {
+      "program_id": "westcare-turning-point",
+      "title": "WestCare Turning Point",
+      "jurisdiction_ids": [
+        "st-petersburg"
+      ],
+      "availability_state": "provider_admission_and_bed_availability_unknown",
+      "applicability_rationale": "Emergency shelter, intervention services and transitional housing for adults with behavioral health conditions. Cases must state this target population.",
+      "evidence": [
+        {
+          "source_id": "st-petersburg-renters",
+          "chunk_id": "st-petersburg-renters-5d41a4393cb71e",
+          "text_sha256": "1c6f359f1edfbd63c53e7ea054e2cd4f6eada5bf785e539cfb26b17d4dd64734",
+          "recognition_span": {
+            "start": 224,
+            "end": 366,
+            "text_sha256": "66e1f70f0fa4397084e8a45490d31828326af19542451552235993107daf0fa0"
+          }
+        }
+      ],
+      "source_ids": [
+        "st-petersburg-renters"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "tampa-move-in",
+      "question": "I have been approved for a new apartment inside Tampa city limits and need help with the security deposit and first month rent. I have steady income and have never used RMAP.",
+      "jurisdiction_id": "tampa",
+      "language": "en",
+      "expected_program_ids": [
+        "tampa-rmap"
+      ],
+      "rationale": "Approved new move-in costs expressly match RMAP. The request is not about purchase or repairs.",
+      "tags": [
+        "move_in",
+        "specific_need"
+      ]
+    },
+    {
+      "id": "tampa-hurricane-repairs",
+      "question": "I own and live in a home inside Tampa city limits. Hurricane Milton damaged the roof. Which repair assistance programs should I check, including programs with paused applications?",
+      "jurisdiction_id": "tampa",
+      "language": "en",
+      "expected_program_ids": [
+        "tampa-hrrp",
+        "hillsborough-rebuilding-tomorrow"
+      ],
+      "status_only_program_ids": [
+        "tampa-hrrp"
+      ],
+      "rationale": "Both city rehabilitation status and countywide disaster repair should be discovered. HRRP is paused.",
+      "tags": [
+        "home_repair",
+        "disaster",
+        "multi_program",
+        "cross_source"
+      ]
+    },
+    {
+      "id": "tampa-homebuyer-options",
+      "question": "I am a low-income first-time homebuyer in Tampa. What mortgage, down payment, and closing cost assistance programs might help? I have not selected a home or lender.",
+      "jurisdiction_id": "tampa",
+      "language": "en",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop"
+      ],
+      "rationale": "Three distinct financing mechanisms. No property selected leaves HOP participation unresolved rather than excluded.",
+      "tags": [
+        "homebuyer",
+        "multi_program",
+        "same_source"
+      ]
+    },
+    {
+      "id": "tampa-displaced-homeowner",
+      "question": "Hurricane Helene damaged the Tampa home I own. I am moving temporarily into a new approved apartment in the city and have steady income. What programs could help with the new deposit and repairs to my damaged home, even if intake is paused?",
+      "jurisdiction_id": "tampa",
+      "language": "en",
+      "expected_program_ids": [
+        "tampa-rmap",
+        "tampa-hrrp",
+        "hillsborough-rebuilding-tomorrow"
+      ],
+      "status_only_program_ids": [
+        "tampa-hrrp"
+      ],
+      "rationale": "A displaced owner can need new rental deposit and disaster repair assistance. Agency review determines eligibility.",
+      "tags": [
+        "move_in",
+        "home_repair",
+        "disaster",
+        "multi_program",
+        "cross_source"
+      ]
+    },
+    {
+      "id": "tampa-move-in-es",
+      "question": "Me aprobaron un apartamento nuevo dentro de los límites de la ciudad de Tampa. Tengo ingresos estables y necesito ayuda con el depósito y el primer mes de renta. Nunca he recibido RMAP.",
+      "jurisdiction_id": "tampa",
+      "language": "es",
+      "expected_program_ids": [
+        "tampa-rmap"
+      ],
+      "rationale": "Spanish approved new move-in need maps to the same RMAP program.",
+      "tags": [
+        "move_in",
+        "spanish"
+      ]
+    },
+    {
+      "id": "tampa-hurricane-repairs-es",
+      "question": "Soy dueño y vivo en una casa dentro de la ciudad de Tampa. El huracán Milton dañó el techo. ¿Qué programas de reparación debo consultar, aunque no estén aceptando solicitudes?",
+      "jurisdiction_id": "tampa",
+      "language": "es",
+      "expected_program_ids": [
+        "tampa-hrrp",
+        "hillsborough-rebuilding-tomorrow"
+      ],
+      "status_only_program_ids": [
+        "tampa-hrrp"
+      ],
+      "rationale": "Language does not remove city rehabilitation status or county disaster repairs from the denominator.",
+      "tags": [
+        "home_repair",
+        "disaster",
+        "multi_program",
+        "spanish"
+      ]
+    },
+    {
+      "id": "hillsborough-hurricane-repairs",
+      "question": "I own my home in unincorporated Hillsborough County and Hurricane Milton damaged it. What repair or reconstruction assistance program should I investigate?",
+      "jurisdiction_id": "hillsborough-county",
+      "language": "en",
+      "expected_program_ids": [
+        "hillsborough-rebuilding-tomorrow"
+      ],
+      "rationale": "Countywide disaster program covers the location. City HRRP does not.",
+      "tags": [
+        "home_repair",
+        "disaster",
+        "county_boundary"
+      ]
+    },
+    {
+      "id": "hillsborough-homebuyer",
+      "question": "I am a low-income first-time homebuyer in unincorporated Hillsborough County and have not chosen a property. Which mortgage and down payment programs could I consider?",
+      "jurisdiction_id": "hillsborough-county",
+      "language": "en",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop"
+      ],
+      "rationale": "Three state-described financing options, subject to local/provider rules.",
+      "tags": [
+        "homebuyer",
+        "multi_program",
+        "same_source"
+      ]
+    },
+    {
+      "id": "hillsborough-repair-or-buy",
+      "question": "We are a low-income household in unincorporated Hillsborough County deciding whether to repair our hurricane-damaged home or buy another home. What repair and homebuyer assistance programs could we investigate?",
+      "jurisdiction_id": "hillsborough-county",
+      "language": "en",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop",
+        "hillsborough-rebuilding-tomorrow"
+      ],
+      "rationale": "Explicit choice between disaster repair and purchase makes four mechanisms relevant. Provider qualification remains uncertain.",
+      "tags": [
+        "broad_need",
+        "homebuyer",
+        "home_repair",
+        "disaster",
+        "multi_program",
+        "cross_source"
+      ]
+    },
+    {
+      "id": "st-petersburg-roof-and-accessibility",
+      "question": "I own and occupy a single-family home inside St. Petersburg. The roof leaks and my disabled spouse needs accessible entrances. What repair and accessibility assistance programs might help?",
+      "jurisdiction_id": "st-petersburg",
+      "language": "en",
+      "expected_program_ids": [
+        "st-petersburg-home-repair-loans",
+        "st-petersburg-accessibility"
+      ],
+      "rationale": "The city page names separate Home Repair Loans and Accessibility Assistance; both stated needs must be represented.",
+      "tags": [
+        "home_repair",
+        "accessibility",
+        "multi_program",
+        "same_source"
+      ]
+    },
+    {
+      "id": "st-petersburg-homebuyer",
+      "question": "I am a low-income first-time homebuyer in St. Petersburg with no property or lender selected. I may not qualify for a traditional mortgage. What purchase and down payment assistance options should I investigate?",
+      "jurisdiction_id": "st-petersburg",
+      "language": "en",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop",
+        "pinellas-hfa-first-time-homebuyer",
+        "pinellas-habitat-homeownership"
+      ],
+      "rationale": "Three Florida mechanisms plus separately named HFA and Habitat mechanisms address the stated financing uncertainty.",
+      "tags": [
+        "homebuyer",
+        "multi_program",
+        "same_source",
+        "cross_source",
+        "broad_need"
+      ]
+    },
+    {
+      "id": "st-petersburg-homeless-family",
+      "question": "My low-income family with children is homeless in St. Petersburg. What programs could help with a rental deposit and rent now, or ongoing rental support? We need a referral if one is required.",
+      "jurisdiction_id": "st-petersburg",
+      "language": "en",
+      "expected_program_ids": [
+        "pinellas-fhap",
+        "pinellas-housing-choice-voucher"
+      ],
+      "rationale": "FHAP referral for homeless families and HCV for ongoing rent support. No adult recovery or behavioral-health need is stated.",
+      "tags": [
+        "homelessness",
+        "rental_support",
+        "multi_program",
+        "cross_source"
+      ]
+    },
+    {
+      "id": "st-petersburg-recovery-housing",
+      "question": "I am an adult in substance-use recovery with a behavioral health condition and no place to stay in St. Petersburg. Which emergency shelter or transitional housing programs should I contact?",
+      "jurisdiction_id": "st-petersburg",
+      "language": "en",
+      "expected_program_ids": [
+        "westcare-mustard-seed-inn",
+        "westcare-turning-point"
+      ],
+      "rationale": "Both named WestCare services explicitly serve the stated adult recovery/behavioral-health needs. The request is for temporary housing, not a long-term voucher.",
+      "tags": [
+        "homelessness",
+        "recovery",
+        "multi_program",
+        "same_source"
+      ]
+    },
+    {
+      "id": "st-petersburg-accessibility-es",
+      "question": "Soy dueño y vivo en una casa unifamiliar dentro de St. Petersburg. El techo tiene goteras y mi esposa con discapacidad necesita una entrada accesible. ¿Qué programas de reparación y accesibilidad pueden ayudar?",
+      "jurisdiction_id": "st-petersburg",
+      "language": "es",
+      "expected_program_ids": [
+        "st-petersburg-home-repair-loans",
+        "st-petersburg-accessibility"
+      ],
+      "rationale": "Spanish compound repair/accessibility need requires two named mechanisms.",
+      "tags": [
+        "home_repair",
+        "accessibility",
+        "multi_program",
+        "spanish"
+      ]
+    },
+    {
+      "id": "clearwater-preservation",
+      "question": "I own and live in a homestead house within Clearwater city limits. It needs a new roof and wheelchair access. What home repair assistance program should I check, even if funding is delayed?",
+      "jurisdiction_id": "clearwater",
+      "language": "en",
+      "expected_program_ids": [
+        "clearwater-home-preservation"
+      ],
+      "rationale": "Code repairs and ADA funding are components of one Home Preservation program. Applications are not advancing until funded.",
+      "tags": [
+        "home_repair",
+        "accessibility",
+        "funding_delayed"
+      ]
+    },
+    {
+      "id": "clearwater-homeless-family",
+      "question": "My low-income family with children is homeless in Clearwater. What programs offer help with deposits and rent, including ongoing rental subsidies? We can start with a referral.",
+      "jurisdiction_id": "clearwater",
+      "language": "en",
+      "expected_program_ids": [
+        "pinellas-fhap",
+        "pinellas-housing-choice-voucher"
+      ],
+      "rationale": "FHAP and locally administered HCV both address explicit needs. A city directory alone is not a retrieved program.",
+      "tags": [
+        "homelessness",
+        "rental_support",
+        "multi_program",
+        "cross_source"
+      ]
+    },
+    {
+      "id": "clearwater-homebuyer",
+      "question": "I am a low-income first-time buyer looking in Clearwater. I have not chosen a home or lender and may not qualify for a traditional mortgage. Which mortgage and purchase assistance programs could I consider?",
+      "jurisdiction_id": "clearwater",
+      "language": "en",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop",
+        "pinellas-hfa-first-time-homebuyer",
+        "pinellas-habitat-homeownership"
+      ],
+      "rationale": "Five inventoried mechanisms. Bare Clearwater purchase-assistance links are outside this denominator because retained excerpts do not distinguish their financing mechanisms.",
+      "tags": [
+        "homebuyer",
+        "multi_program",
+        "cross_source",
+        "broad_need"
+      ]
+    },
+    {
+      "id": "clearwater-homebuyer-es",
+      "question": "Soy comprador de vivienda por primera vez, de bajos ingresos, en Clearwater. Todavía no tengo casa ni prestamista y quizás no califique para una hipoteca tradicional. ¿Qué programas de hipoteca y ayuda para comprar puedo consultar?",
+      "jurisdiction_id": "clearwater",
+      "language": "es",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop",
+        "pinellas-hfa-first-time-homebuyer",
+        "pinellas-habitat-homeownership"
+      ],
+      "rationale": "Spanish financing question preserves five potentially applicable homebuyer mechanisms.",
+      "tags": [
+        "homebuyer",
+        "multi_program",
+        "spanish",
+        "broad_need"
+      ]
+    },
+    {
+      "id": "pinellas-homebuyer",
+      "question": "I am a low-income first-time homebuyer in unincorporated Pinellas County with no home or lender chosen. I may not qualify for a regular mortgage. Which home purchase assistance programs should I check?",
+      "jurisdiction_id": "pinellas-county",
+      "language": "en",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop",
+        "pinellas-hfa-first-time-homebuyer",
+        "pinellas-habitat-homeownership"
+      ],
+      "rationale": "State loan, SHIP and HOP plus HFA and Habitat form the bounded homebuyer denominator.",
+      "tags": [
+        "homebuyer",
+        "multi_program",
+        "cross_source",
+        "county_boundary"
+      ]
+    },
+    {
+      "id": "pinellas-homeless-family",
+      "question": "My low-income family is homeless in unincorporated Pinellas County. Which programs can help us with a housing deposit, rent, or an ongoing rental subsidy? How do we get referred?",
+      "jurisdiction_id": "pinellas-county",
+      "language": "en",
+      "expected_program_ids": [
+        "pinellas-fhap",
+        "pinellas-housing-choice-voucher"
+      ],
+      "rationale": "FHAP meets the homeless family/deposit need via referral; HCV matches ongoing subsidy needs.",
+      "tags": [
+        "homelessness",
+        "rental_support",
+        "multi_program",
+        "cross_source"
+      ]
+    },
+    {
+      "id": "pinellas-housed-rental-support",
+      "question": "We are a low-income family already in a stable rental in unincorporated Pinellas County. We are not homeless. What income-based rental subsidy program could we investigate for the long term?",
+      "jurisdiction_id": "pinellas-county",
+      "language": "en",
+      "expected_program_ids": [
+        "pinellas-housing-choice-voucher"
+      ],
+      "rationale": "HCV is relevant; the explicitly housed household is outside FHAP's homeless-family scope.",
+      "tags": [
+        "rental_support",
+        "negative_eligibility"
+      ],
+      "excluded_relevant_programs": [
+        {
+          "program_id": "pinellas-fhap",
+          "reason": "The household expressly is not homeless."
+        }
+      ],
+      "allowed_reference_program_ids": [
+        "pinellas-fhap"
+      ]
+    },
+    {
+      "id": "pinellas-buy-or-rent",
+      "question": "We are a low-income family in unincorporated Pinellas County comparing our first home purchase with staying in rental housing. We have not chosen a property or lender and may not qualify for a traditional mortgage. Which purchase assistance and ongoing rental subsidy programs should we consider?",
+      "jurisdiction_id": "pinellas-county",
+      "language": "en",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop",
+        "pinellas-hfa-first-time-homebuyer",
+        "pinellas-habitat-homeownership",
+        "pinellas-housing-choice-voucher"
+      ],
+      "rationale": "Explicit buy/rent comparison makes five purchase mechanisms and HCV relevant. No homelessness or emergency shelter need is stated.",
+      "tags": [
+        "broad_need",
+        "homebuyer",
+        "rental_support",
+        "multi_program",
+        "cross_source"
+      ]
+    },
+    {
+      "id": "pasco-repairs-and-utilities",
+      "question": "I have owned and occupied my Pasco County homestead for four years. We have low income, a leaking roof, overdue electric bills with a shutoff risk, and an overdue Pasco County Utilities bill. Which repair and utility assistance programs might help?",
+      "jurisdiction_id": "pasco-county",
+      "language": "en",
+      "expected_program_ids": [
+        "pasco-owner-occupied-rehab",
+        "pasco-project-round-up",
+        "pasco-liheap"
+      ],
+      "rationale": "Owner rehabilitation, County Utilities support and electric LIHEAP address three stated needs. The utility mechanisms share one source.",
+      "tags": [
+        "home_repair",
+        "utilities",
+        "multi_program",
+        "same_source",
+        "cross_source"
+      ]
+    },
+    {
+      "id": "pasco-major-repairs",
+      "question": "I have owned and lived in my homestead house in Pasco County for three years and have low income. I need help paying for a leaking roof and unsafe wiring. Which major home repair program should I check?",
+      "jurisdiction_id": "pasco-county",
+      "language": "en",
+      "expected_program_ids": [
+        "pasco-owner-occupied-rehab"
+      ],
+      "rationale": "Ownership duration and major health/code repairs match owner rehabilitation, subject to other property/income conditions.",
+      "tags": [
+        "home_repair"
+      ]
+    },
+    {
+      "id": "pasco-utility-crisis",
+      "question": "I am a low-income Pasco County Utilities customer. My county water bill is overdue and my electric service may be disconnected. Which assistance programs could help with these two bills?",
+      "jurisdiction_id": "pasco-county",
+      "language": "en",
+      "expected_program_ids": [
+        "pasco-project-round-up",
+        "pasco-liheap"
+      ],
+      "rationale": "County Utilities support and electric crisis assistance are distinct programs on Human Services.",
+      "tags": [
+        "utilities",
+        "multi_program",
+        "same_source"
+      ]
+    },
+    {
+      "id": "pasco-homebuyer",
+      "question": "I am a low-income first-time buyer in Pasco County. I have not chosen a home or lender. What mortgage, down payment and closing cost assistance programs should I investigate?",
+      "jurisdiction_id": "pasco-county",
+      "language": "en",
+      "expected_program_ids": [
+        "florida-homebuyer-loan",
+        "florida-ship-homebuyer",
+        "florida-hop"
+      ],
+      "rationale": "Three state-described mechanisms for investigation. Generic Pasco homebuyer activity headings are not an additional identified program.",
+      "tags": [
+        "homebuyer",
+        "multi_program",
+        "same_source"
+      ]
+    },
+    {
+      "id": "pasco-utilities-es",
+      "question": "Soy cliente de Pasco County Utilities y tengo bajos ingresos. Debo la factura del agua del condado y pueden cortar mi electricidad. ¿Qué programas pueden ayudar con estas dos facturas?",
+      "jurisdiction_id": "pasco-county",
+      "language": "es",
+      "expected_program_ids": [
+        "pasco-project-round-up",
+        "pasco-liheap"
+      ],
+      "rationale": "Spanish query preserves distinct county-utility and electric crisis assistance needs.",
+      "tags": [
+        "utilities",
+        "multi_program",
+        "same_source",
+        "spanish"
+      ]
+    },
+    {
+      "id": "pasco-senior-electric",
+      "question": "I am 68 and live in Pasco County. I need emergency help with a past-due electric bill. The EHEAP program is transitioning; what assistance program can I apply to instead?",
+      "jurisdiction_id": "pasco-county",
+      "language": "en",
+      "expected_program_ids": [
+        "pasco-liheap"
+      ],
+      "rationale": "The retained page directs seniors and younger adults to LIHEAP crisis applications during EHEAP transition.",
+      "tags": [
+        "utilities",
+        "transition",
+        "specific_need"
+      ]
+    },
+    {
+      "id": "negative-tampa-existing-lease",
+      "question": "I already live in my apartment inside Tampa city limits. Can RMAP pay rent arrears on this existing lease? I am only asking about RMAP.",
+      "jurisdiction_id": "tampa",
+      "language": "en",
+      "expected_program_ids": [],
+      "rationale": "RMAP explicitly excludes existing leases. Retrieving that exclusion is useful evidence, not an applicable program.",
+      "tags": [
+        "negative_control",
+        "existing_lease"
+      ],
+      "excluded_relevant_programs": [
+        {
+          "program_id": "tampa-rmap",
+          "reason": "Existing leases and occupied units are ineligible for this phase."
+        }
+      ],
+      "allowed_reference_program_ids": [
+        "tampa-rmap"
+      ]
+    },
+    {
+      "id": "negative-clearwater-rmap",
+      "question": "I am moving into a new apartment inside Clearwater city limits. Is Tampa RMAP available for my Clearwater deposit? I only want to check that program.",
+      "jurisdiction_id": "clearwater",
+      "language": "en",
+      "expected_program_ids": [],
+      "rationale": "RMAP requires a unit within Tampa. No alternative program is requested.",
+      "tags": [
+        "negative_control",
+        "wrong_jurisdiction"
+      ],
+      "excluded_relevant_programs": [
+        {
+          "program_id": "tampa-rmap",
+          "reason": "The new unit is in Clearwater, outside Tampa."
+        }
+      ],
+      "allowed_reference_program_ids": [
+        "tampa-rmap"
+      ]
+    },
+    {
+      "id": "negative-clearwater-tenant-repair",
+      "question": "I rent my Clearwater apartment and do not own it. Can I personally get the Clearwater Home Preservation Program loan to repair my landlord's roof?",
+      "jurisdiction_id": "clearwater",
+      "language": "en",
+      "expected_program_ids": [],
+      "rationale": "The named program requires ownership and occupancy; tenant status expressly excludes this household.",
+      "tags": [
+        "negative_control",
+        "negative_eligibility"
+      ],
+      "excluded_relevant_programs": [
+        {
+          "program_id": "clearwater-home-preservation",
+          "reason": "A tenant does not meet the owner-occupied homestead requirement."
+        }
+      ],
+      "allowed_reference_program_ids": [
+        "clearwater-home-preservation"
+      ]
+    },
+    {
+      "id": "negative-permit-only",
+      "question": "How do I apply for a building permit for an interior renovation? I do not need financial assistance.",
+      "jurisdiction_id": "tampa",
+      "language": "en",
+      "expected_program_ids": [],
+      "rationale": "A permit-only procedure has no applicable housing assistance program in this inventory.",
+      "tags": [
+        "negative_control",
+        "other_domain"
+      ],
+      "expected_status": "answered"
+    },
+    {
+      "id": "unknown-jurisdiction",
+      "question": "I need help with the security deposit for a new apartment. Which local program could help?",
+      "jurisdiction_id": "tampa-bay",
+      "language": "en",
+      "expected_program_ids": [],
+      "expected_status": "needs_jurisdiction",
+      "rationale": "No location supplied. Local applicability is unresolved and geography must be clarified before recommending a local program.",
+      "tags": [
+        "negative_control",
+        "unknown_jurisdiction"
+      ]
+    },
+    {
+      "id": "unsupported-geography",
+      "question": "I live in Miami and need help with a new apartment security deposit. Which local program should I use?",
+      "jurisdiction_id": "tampa-bay",
+      "language": "en",
+      "expected_program_ids": [],
+      "expected_status": "missing_geographic_coverage",
+      "rationale": "Miami is outside the six supported jurisdictions and no supported local deposit program is established.",
+      "tags": [
+        "negative_control",
+        "unsupported_jurisdiction"
+      ]
+    }
+  ]
+}

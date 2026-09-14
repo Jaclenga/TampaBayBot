@@ -1,4 +1,7 @@
 import { intentText } from '../core/router.mjs';
+import { housingNeeds } from './needs.mjs';
+
+export { housingNeeds } from './needs.mjs';
 
 const LOCAL_SOURCES = {
   'st-petersburg': {
@@ -37,20 +40,27 @@ const LOCAL_SOURCES = {
 
 export function housingSituation(question, { jurisdictionId = 'tampa-bay' } = {}) {
   const text = intentText(question);
-  const result = (situation, kind, tampaSources) => {
-    const preferredSourceIds = jurisdictionId === 'tampa' ? tampaSources
+  const needs = housingNeeds(question);
+  const sourcesFor = (kind, tampaSources) => jurisdictionId === 'tampa' ? tampaSources
       : jurisdictionId === 'hillsborough-county' ? (['buy', 'rental'].includes(kind) ? ['florida-housing', 'hillsborough-help'] : ['hillsborough-help'])
       : jurisdictionId === 'tampa-bay' ? ['florida-housing']
       : LOCAL_SOURCES[jurisdictionId]?.[kind] ?? [];
-    return { situation, kind, preferredSourceIds: [...preferredSourceIds] };
+  const choices = [];
+  if (needs.includes('shelter')) choices.push(['A place to stay or help keeping housing', 'urgent', ['hillsborough-help', 'tampa-housing']]);
+  if (needs.includes('repair') || needs.includes('accessibility')) choices.push(['Repairs to a home you own', 'repair', ['tampa-hrrp', 'hillsborough-help']]);
+  if (needs.includes('buy')) choices.push(['Buying a home or finding affordability resources', 'buy', ['florida-housing', 'hillsborough-help']]);
+  if (needs.includes('rental')) choices.push(['Finding an affordable rental', 'rental', ['florida-housing', 'hillsborough-help']]);
+  if (needs.includes('rent')) choices.push(/\b(behind|overdue|this month|back rent|past.due|arrears|already live|existing lease)\b/.test(text)
+    ? ['Help with rent where you already live', 'rent', ['hillsborough-help', 'tampa-rmap']]
+    : ['Rent or moving costs', 'rent', ['tampa-rmap', 'hillsborough-help']]);
+  if (needs.includes('move')) choices.push(['Rent or moving costs', 'rent', ['tampa-rmap', 'hillsborough-help']]);
+  if (needs.includes('utilities')) choices.push(['Help with household utility bills', 'rent', ['hillsborough-help']]);
+  if (!choices.length) choices.push(['Finding housing help', 'general', ['hillsborough-help', 'tampa-housing', 'florida-housing']]);
+  const [situation, kind] = choices[0];
+  return {
+    situation, kind,
+    preferredSourceIds: [...new Set(choices.flatMap(([, needKind, tampaSources]) => sourcesFor(needKind, tampaSources)))],
   };
-  if (/\b(homeless|sleep|shelter|nowhere to live|eviction|evicted)\b/.test(text)) return result('A place to stay or help keeping housing', 'urgent', ['hillsborough-help', 'tampa-housing']);
-  if (/\b(repair|roof|hrrp|rehab|rehabilitation|fix|home preservation)\b/.test(text)) return result('Repairs to a home you own', 'repair', ['tampa-hrrp', 'hillsborough-help']);
-  if (/\b(buy|buying|homebuyer|homeownership|down payment|ship)\b/.test(text)) return result('Buying a home or finding affordability resources', 'buy', ['florida-housing', 'hillsborough-help']);
-  if (/\b(affordable apartment|affordable rental|find an apartment|cheaper place)\b/.test(text)) return result('Finding an affordable rental', 'rental', ['florida-housing', 'hillsborough-help']);
-  if (/\b(behind|overdue|this month|back rent|past.due|arrears|already live|existing lease)\b/.test(text)) return result('Help with rent where you already live', 'rent', ['hillsborough-help', 'tampa-rmap']);
-  if (/\b(rent|rental|deposit|move|moving|rmap)\b/.test(text)) return result('Rent or moving costs', 'rent', ['tampa-rmap', 'hillsborough-help']);
-  return result('Finding housing help', 'general', ['hillsborough-help', 'tampa-housing', 'florida-housing']);
 }
 
 export function verificationQuestions(question, options) {

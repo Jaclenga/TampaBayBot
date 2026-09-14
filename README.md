@@ -61,6 +61,8 @@ Missing evidence, stale or unavailable sources, ambiguous locations and question
 
 ## Evaluation
 
+A separate [applicable-program recall evaluation](docs/PROGRAM_RECALL.md) now finds **65/72 expected program-query pairs in the top 15 retrieved chunks (90.3%)** and **66/72 in final evidence (91.7%)**. Program selection changes improved final coverage from **22/72 (30.6%)** and complete positive questions from **6/28 to 23/28** against the same dated, agent-labeled 18-program inventory. Source anchors can recover a raw retrieval miss. These are development results; independent human adjudication and broader coverage remain open.
+
 Recorded automated code and offline evaluation checks passed for the development corpus. The suite includes bounded factual-accuracy, citation-correctness and citation-completeness cases for 12 exact authored claims; these are dated development fixtures, not a general accuracy score. Synthetic provider tests check transport, validation and fallback behavior; separate real Ollama/Meta Llama 3 tests exercised actual inference. None measures resident usefulness.
 
 ### Published alpha.4 claim results
