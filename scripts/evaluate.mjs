@@ -83,9 +83,10 @@ const summary = {
       ...Object.fromEntries(result.checks.strict_failures.map(id => [`strict.${id}`, false])),
     } })),
 };
+await fs.mkdir(path.join(root, 'evaluation/datasets'), { recursive: true });
 await fs.mkdir(path.join(root, 'evaluation/results'), { recursive: true });
 await fs.mkdir(path.join(root, 'evaluation/human-audit'), { recursive: true });
-await fs.writeFile(path.join(root, 'evaluation/benchmark.json'), JSON.stringify(benchmarks, null, 2) + '\n');
+await fs.writeFile(path.join(root, 'evaluation/datasets/benchmark.json'), JSON.stringify(benchmarks, null, 2) + '\n');
 await fs.writeFile(path.join(root, 'evaluation/results/latest.json'), JSON.stringify(summary, null, 2) + '\n');
 await fs.writeFile(path.join(root, 'evaluation/results/responses.json'), JSON.stringify(results, null, 2) + '\n');
 

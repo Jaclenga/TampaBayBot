@@ -5,7 +5,7 @@ import { answerWithGuardrails } from "../../src/lib/guardrails/navigator.mjs";
 import { parseLlmConfig } from "../../src/lib/llm/index.mjs";
 
 export const qualityGroundTruth = JSON.parse(
-  readFileSync(new URL("../quality-benchmark.json", import.meta.url), "utf8"),
+  readFileSync(new URL("../datasets/quality-benchmark.json", import.meta.url), "utf8"),
 );
 
 const SHA256 = /^[a-f0-9]{64}$/;

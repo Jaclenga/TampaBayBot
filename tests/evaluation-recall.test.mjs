@@ -287,7 +287,7 @@ test('an exclusion control may reference its explicitly allowed program when sta
 
 test('the recall CLI parses explicit corpus, benchmark, output and strict settings', () => {
   assert.deepEqual(parseRecallArguments([]), {
-    corpusRoot: '.', benchmark: 'evaluation/program-recall-benchmark.json', output: 'work/evals/recall', strict: false,
+    corpusRoot: '.', benchmark: 'evaluation/datasets/program-recall-benchmark.json', output: 'work/evals/recall', strict: false,
   });
   assert.deepEqual(parseRecallArguments([
     '--corpus-root', 'work/reviewed-corpus', '--benchmark', 'evaluation/fictional.json',

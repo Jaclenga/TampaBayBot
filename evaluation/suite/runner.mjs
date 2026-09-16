@@ -56,7 +56,7 @@ export async function loadEvaluationContext(root = PROJECT_ROOT) {
   const sourceText = json(corpus.sources);
   const chunkText = json(corpus.chunks);
   const qualityBenchmarkText = await fs.readFile(
-    path.join(root, "evaluation/quality-benchmark.json"),
+    path.join(root, "evaluation/datasets/quality-benchmark.json"),
   );
   let commit = null,
     dirty = null;

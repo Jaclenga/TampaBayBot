@@ -85,7 +85,7 @@ export function assertAllowedReleasePath(name) {
   ].includes(name), `Unreviewed documentation artifact: ${name}`);
   if (name.startsWith('data/')) assert.ok(['data/sources.json', 'data/chunks.json', 'data/corpus.json', 'data/ingestion-report.json', 'data/verification-report.json', 'data/gis-config.json', 'data/development-config.json'].includes(name), `Unreviewed data artifact: ${name}`);
   if (name.startsWith('evaluation/') && name.endsWith('.json')) assert.ok([
-    ...EMPTY_ARRAY_FILES, ...EMPTY_REPORT_FILES, 'evaluation/benchmark.json', 'evaluation/quality-benchmark.json', 'evaluation/program-recall-benchmark.json',
+    ...EMPTY_ARRAY_FILES, ...EMPTY_REPORT_FILES, 'evaluation/datasets/benchmark.json', 'evaluation/datasets/quality-benchmark.json', 'evaluation/datasets/program-recall-benchmark.json', 'evaluation/datasets/ground_truth_questions.json',
   ].includes(name), `Historical evaluation artifact: ${name}`);
 }
 

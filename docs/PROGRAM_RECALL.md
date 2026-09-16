@@ -70,7 +70,7 @@ New reports include `summary.modelUsage` in JSON and a token/cost summary in Mar
 
 ## Labels and denominator
 
-[`program-recall-benchmark.json`](../evaluation/program-recall-benchmark.json) contains a finite inventory, independently authored questions, expected program sets and a rationale for each applicability label. Here, **applicable** means worth considering for the stated need and place under the dated source information. It does not mean a household qualifies or that applications are open. The inventory includes relevant closed programs so that their limitations can be surfaced. General directories, housing listings and navigation services outside the declared scope do not enter the denominator.
+[`program-recall-benchmark.json`](../evaluation/datasets/program-recall-benchmark.json) contains a finite inventory, independently authored questions, expected program sets and a rationale for each applicability label. Here, **applicable** means worth considering for the stated need and place under the dated source information. It does not mean a household qualifies or that applications are open. The inventory includes relevant closed programs so that their limitations can be surfaced. General directories, housing listings and navigation services outside the declared scope do not enter the denominator.
 
 The labels were authored by an agent reading the retained source material before running retrieval. They were not obtained from runtime priorities, retrieved results or generated answers. Independent human adjudication remains pending. These are development cases, not a blind holdout or a representative sample of resident traffic.
 

@@ -52,18 +52,18 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
   await mkdir(work, { recursive: true });
   const root = await mkdtemp(path.join(work, "release-fixture-"));
   try {
-    for (const directory of ["src/app", "src/lib", "scripts/build", "tests", "vendor", "docs", "evaluation/suite/results", "evaluation/results", "data/raw", ".openai", ".git"]) await mkdir(path.join(root, directory), { recursive: true });
+    for (const directory of ["src/app", "src/lib", "scripts/build", "tests", "vendor", "docs", "evaluation/datasets", "evaluation/suite/results", "evaluation/results", "data/raw", ".openai", ".git"]) await mkdir(path.join(root, directory), { recursive: true });
     await writeFile(path.join(root, "data/sources.json"), JSON.stringify([{ source_id: "fixture", status: "available", raw_path: "data/raw/example.html" }]));
     await writeFile(path.join(root, "data/raw/example.html"), "external snapshot sentinel");
     await writeFile(path.join(root, "data/chunks.json"), JSON.stringify([{ text: "external excerpt sentinel" }]));
     await writeFile(path.join(root, "evaluation/results/latest.json"), JSON.stringify({ metrics: { proxy: { passed: 1, total: 1 }, human: { score: null } } }));
     await writeFile(path.join(root, "evaluation/results/responses.json"), "external response sentinel");
-    await writeFile(path.join(root, "evaluation/quality-benchmark.json"), JSON.stringify({ schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] }));
+    await writeFile(path.join(root, "evaluation/datasets/quality-benchmark.json"), JSON.stringify({ schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] }));
     const recallBenchmark = { schema_version: 1, cases: [{ case_id: "fixture-program-recall" }] };
-    await writeFile(path.join(root, "evaluation/program-recall-benchmark.json"), JSON.stringify(recallBenchmark));
-    await writeFile(path.join(root, "evaluation/recall.mjs"), 'import { readFile } from "node:fs/promises";\nexport async function evaluateProgramRecall() { return JSON.parse(await readFile(new URL("./program-recall-benchmark.json", import.meta.url), "utf8")); }\n');
+    await writeFile(path.join(root, "evaluation/datasets/program-recall-benchmark.json"), JSON.stringify(recallBenchmark));
+    await writeFile(path.join(root, "evaluation/recall.mjs"), 'import { readFile } from "node:fs/promises";\nexport async function evaluateProgramRecall() { return JSON.parse(await readFile(new URL("./datasets/program-recall-benchmark.json", import.meta.url), "utf8")); }\n');
     await writeFile(path.join(root, "scripts/eval-recall.mjs"), 'export { evaluateProgramRecall } from "../evaluation/recall.mjs";\n');
-    const recallGuide = "# Program recall\n\n[Benchmark](../evaluation/program-recall-benchmark.json) [Evaluator](../evaluation/recall.mjs)\n";
+    const recallGuide = "# Program recall\n\n[Benchmark](../evaluation/datasets/program-recall-benchmark.json) [Evaluator](../evaluation/recall.mjs)\n";
     await writeFile(path.join(root, "docs/PROGRAM_RECALL.md"), recallGuide);
     await writeFile(path.join(root, ".env"), "private fixture sentinel");
     await writeFile(path.join(root, ".openai/hosting.json"), "owner fixture sentinel");
@@ -83,7 +83,7 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     assert.equal(await readFile(path.join(output, ".gitattributes"), "utf8"), "* text=auto eol=lf\n");
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "data/chunks.json"), "utf8")), []);
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/results/responses.json"), "utf8")), []);
-    assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/quality-benchmark.json"), "utf8")), { schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] });
+    assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/datasets/quality-benchmark.json"), "utf8")), { schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] });
     const packagedRecall = await import(pathToFileURL(path.join(output, "scripts/eval-recall.mjs")).href);
     assert.deepEqual(await packagedRecall.evaluateProgramRecall(), recallBenchmark, "The packaged recall entrypoint must resolve its evaluator and benchmark");
     assert.equal(await readFile(path.join(output, "docs/PROGRAM_RECALL.md"), "utf8"), recallGuide, "The recall guide and its dependency links must survive packaging");

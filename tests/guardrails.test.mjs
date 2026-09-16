@@ -19,7 +19,7 @@ const chunks = JSON.parse(
   readFileSync(new URL("../data/chunks.json", import.meta.url)),
 );
 const benchmark = JSON.parse(
-  readFileSync(new URL("../evaluation/benchmark.json", import.meta.url)),
+  readFileSync(new URL("../evaluation/datasets/benchmark.json", import.meta.url)),
 );
 const options = { sources, chunks, jurisdictionId: "tampa", now: new Date("2026-09-12T12:00:00Z") };
 const question = "Where can I find help paying for housing?";

@@ -15,6 +15,8 @@ npm ci
 npm run eval:suite
 ```
 
+Input JSON datasets are grouped in [`evaluation/datasets/`](../evaluation/datasets/README.md); its index describes each dataset and how to maintain it.
+
 The default destination is `evaluation/suite/results/`:
 
 | File | Purpose |
@@ -40,7 +42,7 @@ The development CI workflow (development artifact omitted from source-only relea
 npm run evaluate
 ```
 
-This is the separate strict narrative evaluator. It reads the same benchmark definitions used by the navigation suite, writes `evaluation/benchmark.json`, `evaluation/results/latest.json` and `evaluation/results/responses.json`, and prepares `evaluation/human-audit/responses.json`. It preserves completed human judgments and flags changed responses. The unified `eval:suite` command does not rewrite these files or historical agent reviews. See [human-review methodology](EVALUATION.md#independent-human-review) before changing review records.
+This is the separate strict narrative evaluator. It reads the same benchmark definitions used by the navigation suite, writes `evaluation/datasets/benchmark.json`, `evaluation/results/latest.json` and `evaluation/results/responses.json`, and prepares `evaluation/human-audit/responses.json`. It preserves completed human judgments and flags changed responses. The unified `eval:suite` command does not rewrite these files or historical agent reviews. See [human-review methodology](EVALUATION.md#independent-human-review) before changing review records.
 
 ## What the cases cover
 
@@ -67,7 +69,7 @@ Expected source IDs, next-step URLs and required terms are useful proxies. Exact
 
 `tests/evaluation-scoring.test.mjs` uses handwritten valid outputs and deliberate mutations to establish that the scorer rejects fabricated quotes, altered bodies, false hashes, wrong locators, unofficial sources, unknown/duplicate markers and changed conservative decisions. These tests verify the evaluator itself; they do not replace a semantic claim audit.
 
-The `quality` suite uses [`quality-benchmark.json`](../evaluation/quality-benchmark.json), which was authored separately from runtime output. It stores questions, expected status, stable claim IDs, SHA-256 hashes of exact expected claims, and the source/chunk pairs allowed to support them. It does not copy the source excerpts into the source-only distribution. Before scoring, the suite verifies every hash and support pair against the retained corpus, then runs the question through the ordinary guarded entrypoint with inference disabled. The answer implementation never receives the oracle.
+The `quality` suite uses [`quality-benchmark.json`](../evaluation/datasets/quality-benchmark.json), which was authored separately from runtime output. It stores questions, expected status, stable claim IDs, SHA-256 hashes of exact expected claims, and the source/chunk pairs allowed to support them. It does not copy the source excerpts into the source-only distribution. Before scoring, the suite verifies every hash and support pair against the retained corpus, then runs the question through the ordinary guarded entrypoint with inference disabled. The answer implementation never receives the oracle.
 
 The three quality metrics have separate failure conditions:
 

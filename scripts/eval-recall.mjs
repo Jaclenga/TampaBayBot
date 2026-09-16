@@ -10,7 +10,7 @@ const sha = value => createHash('sha256').update(value).digest('hex');
 const HELP = `Measure applicable-program recall without network or model calls.
 
   npm run eval:recall -- --corpus-root <checkout-with-reviewed-data>
-  npm run eval:recall -- --benchmark evaluation/program-recall-benchmark.json --output work/evals/recall
+  npm run eval:recall -- --benchmark evaluation/datasets/program-recall-benchmark.json --output work/evals/recall
   npm run eval:recall -- --strict
 
 The active checkout is the default corpus root. An empty source-only corpus is
@@ -21,7 +21,7 @@ or control failure; 2: incomplete corpus, execution failure or invalid inputs.
 `;
 
 export function parseRecallArguments(args) {
-  const flags = { corpusRoot: '.', benchmark: 'evaluation/program-recall-benchmark.json', output: 'work/evals/recall', strict: false };
+  const flags = { corpusRoot: '.', benchmark: 'evaluation/datasets/program-recall-benchmark.json', output: 'work/evals/recall', strict: false };
   const valued = { '--corpus-root': 'corpusRoot', '--benchmark': 'benchmark', '--output': 'output' };
   const seen = new Set();
   for (let i = 0; i < args.length; i++) {

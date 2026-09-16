@@ -101,7 +101,7 @@ export async function createSourceRelease({ root = ROOT, output }) {
   for (const directory of SOURCE_DIRS) for (const name of await sourceFiles(root, directory)) inputs.add(name);
   for (const guide of GUIDE_FILES) inputs.add(`docs/${guide}`);
   for (const name of await sourceFiles(root, "evaluation/suite")) inputs.add(name);
-  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/recall.mjs", "evaluation/benchmark.json", "evaluation/quality-benchmark.json", "evaluation/program-recall-benchmark.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
+  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/recall.mjs", "evaluation/datasets/README.md", "evaluation/datasets/benchmark.json", "evaluation/datasets/quality-benchmark.json", "evaluation/datasets/program-recall-benchmark.json", "evaluation/datasets/ground_truth_questions.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
   // The release gets its own source-only CI workflow, if supplied by the maintainer.
   inputs.add(".github/workflows/source-release.yml");
   inputs.add(".github/workflows/source-refresh.yml");
