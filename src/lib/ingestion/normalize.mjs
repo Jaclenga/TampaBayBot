@@ -1,24 +1,13 @@
 import { createHash } from 'node:crypto';
+import { csvRows } from '../csv.mjs';
 
 export const sha256 = (value) => createHash('sha256').update(value).digest('hex');
 export const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 
 /** RFC 4180 CSV; values are retained as strings to avoid changing IDs or dates. */
 export function parseCsv(text) {
-  const rows = []; let row = []; let value = ''; let quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (c === '"') {
-      if (quoted && text[i + 1] === '"') { value += '"'; i++; }
-      else quoted = !quoted;
-    } else if (c === ',' && !quoted) { row.push(value); value = ''; }
-    else if ((c === '\n' || c === '\r') && !quoted) {
-      if (c === '\r' && text[i + 1] === '\n') i++;
-      row.push(value); if (row.some(Boolean)) rows.push(row); row = []; value = '';
-    } else value += c;
-  }
-  if (quoted) throw new Error('Unterminated quoted CSV field');
-  row.push(value); if (row.some(Boolean)) rows.push(row);
+  // Preserve the ingestion adapter's historical tolerance of embedded quotes.
+  const rows = csvRows(text, { strictQuotes: false });
   const headers = (rows.shift() ?? []).map(header => header.replace(/^\uFEFF/, ''));
   if (!headers.length || headers.some(header => !header) || new Set(headers).size !== headers.length) throw new Error('CSV must have unique, nonempty column headers');
   return rows.map((cells, index) => {

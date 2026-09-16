@@ -7,8 +7,8 @@ import { SUITE_VERSION } from "../evaluation/suite/report.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const SOURCE_DIRS = ["src", "scripts", "tests", "vendor"];
-const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "next.config.ts", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", "playwright.source.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"];
-const GUIDE_FILES = ["README.md", "ACCESSIBILITY.md", "DATA_SOURCES.md", "DEVELOPMENT.md", "EVALUATION.md", "PROGRAM_RECALL.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LIMITATIONS.md", "LLM.md", "METHODOLOGY.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "HISTORY.md", "RELEASE_READINESS.md", "SECRET_SCANNING.md", "SOURCE_UPDATES.md", "DEMO.md"];
+const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", "playwright.source.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"];
+const GUIDE_FILES = ["README.md", "ACCESSIBILITY.md", "DATA_SOURCES.md", "DEVELOPMENT.md", "EVALUATION.md", "PROGRAM_RECALL.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LIMITATIONS.md", "LLM.md", "METHODOLOGY.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "HISTORY.md", "RELEASE_READINESS.md", "SOURCE_UPDATES.md", "DEMO.md"];
 const GENERATED_FIELDS = ["retrieval_date", "source_updated_date", "content_hash", "normalized_content_hash", "raw_path", "normalized_path", "last_attempt", "last_error", "response_url", "content_type", "etag", "last_modified", "content_changed_at", "record_count", "searchable_point_count", "excluded_point_count"];
 const NOTICE = "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy.";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -101,13 +101,12 @@ export async function createSourceRelease({ root = ROOT, output }) {
   for (const directory of SOURCE_DIRS) for (const name of await sourceFiles(root, directory)) inputs.add(name);
   for (const guide of GUIDE_FILES) inputs.add(`docs/${guide}`);
   for (const name of await sourceFiles(root, "evaluation/suite")) inputs.add(name);
-  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/recall.mjs", "evaluation/datasets/README.md", "evaluation/datasets/benchmark.json", "evaluation/datasets/quality-benchmark.json", "evaluation/datasets/program-recall-benchmark.json", "evaluation/datasets/ground_truth_questions.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
+  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/recall.mjs", "evaluation/datasets/README.md", "evaluation/datasets/quality-benchmark.json", "evaluation/datasets/program-recall-benchmark.json", "evaluation/datasets/ground_truth_questions.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
   // The release gets its own source-only CI workflow, if supplied by the maintainer.
   inputs.add(".github/workflows/source-release.yml");
   inputs.add(".github/workflows/source-refresh.yml");
   inputs.add(".github/workflows/operations-monitor.yml");
   inputs.add("docs/OPERATIONS.md");
-  inputs.add("db/schema.ts");
   inputs.add("drizzle/0000_operations.sql");
   inputs.add(".github/PULL_REQUEST_TEMPLATE.md");
   inputs.add(".github/ISSUE_TEMPLATE/bug.yml");

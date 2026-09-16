@@ -13,6 +13,5 @@ export function validPoint(point: unknown): point is Point;
 export function withinServiceRegion(point: unknown): boolean;
 export function haversineMeters(a: Point, b: Point): number;
 export function lookupAddress(address: string): Promise<AddressLookup>;
-export function getJurisdiction(point: Point): Promise<JurisdictionResult>;
 export function getPropertyContext(candidate: Point & { address: string }): Promise<PropertyContext>;
-export function createGeospatialClient(options?: { fetcher?: typeof fetch; settings?: object }): { lookupAddress: typeof lookupAddress; getJurisdiction: typeof getJurisdiction; getPropertyContext: typeof getPropertyContext };
+export function createGeospatialClient(options?: { fetcher?: typeof fetch; settings?: object }): { lookupAddress: typeof lookupAddress; getJurisdiction(point: Point): Promise<JurisdictionResult>; getPropertyContext: typeof getPropertyContext };

@@ -5,14 +5,14 @@
  * Fixtures, logs and reports remain beneath ignored work/.
  */
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
-import { access, cp, mkdir, mkdtemp, readFile, readdir, realpath, symlink, writeFile } from 'node:fs/promises';
+import { realpath, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { parseLlmConfig } from '../src/lib/llm/config.mjs';
 import { prepareOutputDirectory, resolveOutput, writeJsonArtifact } from '../evaluation/suite/runner.mjs';
+import { createRuntimeFixture, createRuntimeWorker } from './runtime-harness.mjs';
 
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workRoot = resolve(project, 'work');
@@ -69,7 +69,6 @@ const report = {
 };
 let fixture;
 let worker;
-let workerLog = '';
 let proxyBase = '';
 const inFlight = new Set();
 function redact(value) {
@@ -143,82 +142,14 @@ async function localJson(path, body) {
   return JSON.parse((await collectBytes(response.body, 2097152)).toString('utf8'));
 }
 
-async function createFixture() {
-  await access(join(project, 'src/lib/runtime-env.mjs'));
-  const actualWork = await realpath(workRoot);
-  assert.equal(relative(join(await realpath(project), 'work'), actualWork), '', 'The fixture work root must not be redirected through a link.');
-  const actual = await realpath(await mkdtemp(join(actualWork, 'ollama-runtime-')));
-  assert.ok(actual.startsWith(`${actualWork}${sep}`), 'Generated fixture must remain inside workspace work/.');
-  for (const name of ['src', 'scripts', 'public', 'evaluation', '.openai', 'vendor']) {
-    await cp(join(project, name), join(actual, name), { recursive: true });
-  }
-  await mkdir(join(actual, 'data'));
-  for (const entry of await readdir(join(project, 'data'), { withFileTypes: true })) {
-    if (entry.isFile() && entry.name.endsWith('.json')) await cp(join(project, 'data', entry.name), join(actual, 'data', entry.name));
-  }
-  for (const name of ['package.json', 'next.config.ts', 'tsconfig.json', 'vite.config.ts']) await cp(join(project, name), join(actual, name));
-  const viteConfig = await readFile(join(actual, 'vite.config.ts'), 'utf8');
-  assert.match(viteConfig, /return\s*\{\s*\n\s*server:/, 'Fixture isolation expects the project Vite config return shape.');
-  await writeFile(join(actual, 'vite.config.ts'), viteConfig.replace(/return\s*\{\s*\n\s*server:/, "return {\n    cacheDir: '.runtime-cache/node_modules/.vite',\n    server:"));
-  await symlink(join(project, 'node_modules'), join(actual, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
-  return actual;
-}
-
-async function freePort() {
-  const temporary = createServer();
-  await new Promise((accept, reject) => { temporary.once('error', reject); temporary.listen(0, '127.0.0.1', accept); });
-  const port = temporary.address().port;
-  await new Promise((accept, reject) => temporary.close(error => error ? reject(error) : accept()));
-  return port;
-}
-
 async function startWorker() {
-  const base = `http://127.0.0.1:${await freePort()}`;
   // JSON quoting keeps dotenv metacharacters literal in this fixture-only file.
   await writeFile(join(fixture, '.env'), [
     'LLM_PROVIDER=ollama', `LLM_BASE_URL=${JSON.stringify(proxyBase)}`, `LLM_MODEL=${JSON.stringify(model)}`,
     'LLM_API_KEY=', `LLM_TIMEOUT_MS=${config.timeoutMs}`, 'LLM_MAX_RESPONSE_BYTES=32768',
   ].join('\n') + '\n');
-  const childEnv = { ...process.env };
-  for (const key of Object.keys(childEnv)) if (key.startsWith('LLM_')) delete childEnv[key];
-  Object.assign(childEnv, { NODE_ENV: 'development', CLOUDFLARE_INCLUDE_PROCESS_ENV: 'false', WRANGLER_SEND_METRICS: 'false', WRANGLER_WRITE_LOGS: 'false' });
-  worker = spawn(process.execPath, [join(fixture, 'node_modules/vinext/dist/cli.js'), 'dev', '--hostname', '127.0.0.1', '--port', new URL(base).port], {
-    cwd: fixture, env: childEnv, windowsHide: true, detached: process.platform !== 'win32', stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  let spawnError = false;
-  const append = value => { workerLog = (workerLog + redact(value)).slice(-100000); };
-  worker.stdout.on('data', append); worker.stderr.on('data', append);
-  worker.on('error', error => { spawnError = true; append(error.message); });
-  const deadline = performance.now() + 120000;
-  while (performance.now() < deadline) {
-    if (spawnError || worker.exitCode !== null) throw new Error('Fixture Worker could not start; inspect the ignored worker.log.');
-    try {
-      const response = await fetch(`${base}/api/health`, { signal: AbortSignal.timeout(3000) });
-      if (response.ok && (await response.json()).status === 'ready') return base;
-    } catch { /* Vite and Workerd are still starting. */ }
-    await new Promise(accept => setTimeout(accept, 500));
-  }
-  throw new Error('Fixture Worker startup exceeded 120 seconds.');
-}
-
-async function stopWorker() {
-  if (!worker?.pid || worker.exitCode !== null) return;
-  const child = worker;
-  worker = null;
-  if (process.platform === 'win32') {
-    // Only the process tree from this script's own spawn is stopped.
-    await new Promise(accept => {
-      const stopper = spawn('taskkill.exe', ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' });
-      stopper.once('error', accept); stopper.once('exit', accept);
-    });
-  } else {
-    try { process.kill(-child.pid, 'SIGTERM'); } catch { /* Already exited. */ }
-  }
-  await new Promise(accept => {
-    if (child.exitCode !== null) return accept();
-    const timer = setTimeout(accept, 5000);
-    child.once('exit', () => { clearTimeout(timer); accept(); });
-  });
+  worker = createRuntimeWorker({ fixture, redact });
+  return worker.start();
 }
 
 async function check(name, test) {
@@ -255,7 +186,7 @@ try {
   };
   await new Promise((accept, reject) => { proxy.once('error', reject); proxy.listen(0, '127.0.0.1', accept); });
   proxyBase = `http://127.0.0.1:${proxy.address().port}`;
-  fixture = await createFixture();
+  fixture = await createRuntimeFixture(project, 'ollama-runtime-');
   report.fixture = relative(project, fixture).split(sep).join('/');
   const base = await startWorker();
   for (const [name, question] of [
@@ -321,13 +252,13 @@ try {
   report.error = redact(error instanceof Error ? error.message : error);
 } finally {
   for (const controller of inFlight) controller.abort();
-  await stopWorker();
+  await worker?.stop();
   proxy.closeAllConnections();
   if (proxy.listening) await new Promise(accept => proxy.close(accept));
   report.observed_at = new Date().toISOString();
   report.passed_checks = report.checks.filter(entry => entry.status === 'passed').length;
   report.failed_checks = report.checks.filter(entry => entry.status === 'failed').length;
-  if (fixture) await writeFile(join(fixture, 'worker.log'), workerLog);
+  if (fixture) await writeFile(join(fixture, 'worker.log'), worker?.log ?? '');
   await writeJsonArtifact(report, 'runtime-results.json', outputDirectory);
   if (report.status !== 'passed') process.exitCode = 1;
   console.log(JSON.stringify({ status: report.status, passed: report.passed_checks, failed: report.failed_checks, report: relative(project, join(outputDirectory, 'runtime-results.json')), error: report.error }, null, 2));

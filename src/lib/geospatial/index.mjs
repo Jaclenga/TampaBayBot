@@ -216,5 +216,4 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
 
 const defaultClient = createGeospatialClient();
 export const lookupAddress = defaultClient.lookupAddress;
-export const getJurisdiction = defaultClient.getJurisdiction;
 export const getPropertyContext = defaultClient.getPropertyContext;

@@ -2,6 +2,7 @@ import config from '../../../data/development-config.json' with { type: 'json' }
 import { createGeospatialClient, haversineMeters, validPoint, withinServiceRegion } from '../geospatial/index.mjs';
 import { fetchBoundedText } from '../geospatial/remote.mjs';
 import { createOfficialDevelopmentReader } from './official.mjs';
+import { csvRows } from '../csv.mjs';
 
 const ACTIVITY_DATE_FIELDS = [
   ['status_date', 'source status date'],
@@ -12,34 +13,7 @@ const ACTIVITY_DATE_FIELDS = [
 /** RFC 4180-style CSV parsing, including quoted commas, newlines, and escaped quotes. */
 export function parseCsv(text, { maxRows = 10000 } = {}) {
   if (typeof text !== 'string') throw new TypeError('CSV input must be text.');
-  const rows = [];
-  let row = [], field = '', quoted = false, afterQuote = false;
-  const input = text.replace(/^\uFEFF/, '');
-  function finishField() { row.push(field); field = ''; afterQuote = false; }
-  function finishRow() {
-    finishField();
-    if (row.some(value => value !== '')) rows.push(row);
-    row = [];
-    if (rows.length > maxRows + 1) throw new Error('CSV exceeds the row limit.');
-  }
-  for (let i = 0; i < input.length; i++) {
-    const char = input[i];
-    if (quoted) {
-      if (char === '"' && input[i + 1] === '"') { field += '"'; i++; }
-      else if (char === '"') { quoted = false; afterQuote = true; }
-      else field += char;
-    } else if (char === ',' ) finishField();
-    else if (char === '\n' || char === '\r') {
-      if (char === '\r' && input[i + 1] === '\n') i++;
-      finishRow();
-    } else if (char === '"' && field === '' && !afterQuote) quoted = true;
-    else {
-      if (afterQuote || char === '"') throw new Error('Malformed CSV quoting.');
-      field += char;
-    }
-  }
-  if (quoted) throw new Error('Unterminated CSV quote.');
-  if (field || row.length || afterQuote) finishRow();
+  const rows = csvRows(text.replace(/^\uFEFF/, ''), { maxRows: maxRows + 1 });
   if (!rows.length) throw new Error('CSV has no header.');
   const headers = rows.shift();
   if (headers.some(h => !h || ['__proto__', 'prototype', 'constructor'].includes(h)) || new Set(headers).size !== headers.length) throw new Error('Invalid or duplicate CSV header.');

@@ -5,15 +5,14 @@
  * never read, copied, changed, or removed. Generated fixtures remain inspectable.
  */
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { createServer } from 'node:http';
-import { access, cp, mkdir, mkdtemp, readFile, readdir, realpath, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRuntimeFixture, createRuntimeWorker } from './runtime-harness.mjs';
 
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const workRoot = resolve(project, 'work');
 const outputPath = resolve(project, 'evaluation/llm-runtime/latest.json');
 const sentinel = `synthetic-llm-test-key-${randomUUID()}`;
 const modelName = 'synthetic-excerpt-selector-no-real-inference';
@@ -30,7 +29,6 @@ const report = {
 };
 let fixture;
 let worker;
-let workerLog = '';
 let mockMode = 'valid';
 let expectedProvider = 'none';
 const modelCalls = [];
@@ -90,87 +88,15 @@ const mock = createServer(async (request, response) => {
   }
 });
 
-async function freePort() {
-  const temporary = createServer();
-  await new Promise((resolveListen, reject) => { temporary.once('error', reject); temporary.listen(0, '127.0.0.1', resolveListen); });
-  const port = temporary.address().port;
-  await new Promise((resolveClose, reject) => temporary.close(error => error ? reject(error) : resolveClose()));
-  return port;
-}
-
-async function createFixture() {
-  await access(join(project, 'src/lib/llm/index.mjs'));
-  await access(join(project, 'src/lib/runtime-env.mjs'));
-  await mkdir(workRoot, { recursive: true });
-  const generated = await mkdtemp(join(workRoot, 'llm-runtime-'));
-  const actual = await realpath(generated);
-  const actualWork = await realpath(workRoot);
-  assert.ok(actual.startsWith(`${actualWork}${sep}`), 'Generated fixture must be inside workspace work/.');
-  for (const name of ['src', 'scripts', 'public', 'evaluation', '.openai', 'vendor']) {
-    await cp(join(project, name), join(actual, name), { recursive: true });
-  }
-  await mkdir(join(actual, 'data'));
-  for (const entry of await readdir(join(project, 'data'), { withFileTypes: true })) {
-    if (entry.isFile() && entry.name.endsWith('.json')) await cp(join(project, 'data', entry.name), join(actual, 'data', entry.name));
-  }
-  for (const name of ['package.json', 'next.config.ts', 'tsconfig.json', 'vite.config.ts']) await cp(join(project, name), join(actual, name));
-  // Keep optimization artifacts out of the shared dependency directory.
-  const config = await readFile(join(actual, 'vite.config.ts'), 'utf8');
-  assert.match(config, /return\s*\{\s*\n\s*server:/, 'Fixture isolation expects the project Vite config return shape.');
-  // vinext's CommonJS plugin recognizes optimized modules by node_modules/.vite
-  // in their path; retain that convention inside this isolated cache directory.
-  await writeFile(join(actual, 'vite.config.ts'), config.replace(/return\s*\{\s*\n\s*server:/, "return {\n    cacheDir: '.runtime-cache/node_modules/.vite',\n    server:"));
-  await symlink(join(project, 'node_modules'), join(actual, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
-  return actual;
-}
-
-async function stopWorker() {
-  if (!worker || worker.exitCode !== null) return;
-  const child = worker;
-  worker = null;
-  if (process.platform === 'win32') {
-    // This is the PID returned by our own spawn; /T stops only its child process tree.
-    await new Promise(resolveStop => {
-      const stopper = spawn('taskkill.exe', ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' });
-      stopper.once('error', resolveStop); stopper.once('exit', resolveStop);
-    });
-  } else {
-    try { process.kill(-child.pid, 'SIGTERM'); } catch { /* Child already exited. */ }
-  }
-  await new Promise(resolveStop => {
-    if (child.exitCode !== null) return resolveStop();
-    const timer = setTimeout(resolveStop, 5000);
-    child.once('exit', () => { clearTimeout(timer); resolveStop(); });
-  });
-}
-
 async function startWorker(provider) {
   expectedProvider = provider;
-  const port = await freePort();
-  const base = `http://127.0.0.1:${port}`;
   // This file belongs to this mkdtemp fixture. The actual project's .env is untouched.
   await writeFile(join(fixture, '.env'), [
     `LLM_PROVIDER=${provider}`, `LLM_BASE_URL=${modelBase}${provider === 'openai-compatible' ? '/v1' : ''}`,
     `LLM_MODEL=${modelName}`, `LLM_API_KEY=${sentinel}`, 'LLM_TIMEOUT_MS=3000', 'LLM_MAX_RESPONSE_BYTES=32768',
   ].join('\n') + '\n');
-  const childEnv = { ...process.env };
-  for (const key of Object.keys(childEnv)) if (key.startsWith('LLM_')) delete childEnv[key];
-  Object.assign(childEnv, { NODE_ENV: 'development', CLOUDFLARE_INCLUDE_PROCESS_ENV: 'false', WRANGLER_SEND_METRICS: 'false', WRANGLER_WRITE_LOGS: 'false' });
-  workerLog = '';
-  worker = spawn(process.execPath, [join(fixture, 'node_modules/vinext/dist/cli.js'), 'dev', '--hostname', '127.0.0.1', '--port', String(port)], { cwd: fixture, env: childEnv, windowsHide: true, detached: process.platform !== 'win32', stdio: ['ignore', 'pipe', 'pipe'] });
-  const appendLog = value => { workerLog = (workerLog + redact(value)).slice(-100000); };
-  worker.stdout.on('data', appendLog); worker.stderr.on('data', appendLog);
-  worker.on('error', error => appendLog(error.message));
-  const deadline = Date.now() + 120000;
-  while (Date.now() < deadline) {
-    if (worker.exitCode !== null) throw new Error(`Fixture Worker stopped during startup. Inspect ${relative(project, fixture)}/worker.log.`);
-    try {
-      const response = await fetch(`${base}/api/health`, { signal: AbortSignal.timeout(3000) });
-      if (response.ok && (await response.json()).status === 'ready') return base;
-    } catch { /* Wait for Vite and Workerd to initialize. */ }
-    await new Promise(resolveWait => setTimeout(resolveWait, 500));
-  }
-  throw new Error('Fixture Worker did not become ready within 120 seconds.');
+  worker = createRuntimeWorker({ fixture, redact });
+  return worker.start();
 }
 
 async function postQuestion(base, question) {
@@ -216,7 +142,7 @@ async function inspectPublicResponses(base) {
 try {
   await new Promise((resolveListen, reject) => { mock.once('error', reject); mock.listen(0, '127.0.0.1', resolveListen); });
   modelBase = `http://127.0.0.1:${mock.address().port}`;
-  fixture = await createFixture();
+  fixture = await createRuntimeFixture(project, 'llm-runtime-');
   report.fixture = relative(project, fixture).split(sep).join('/');
   for (const provider of ['none', 'openai-compatible', 'ollama']) {
     console.log(`Checking ${provider} through isolated vinext Worker HTTP…`);
@@ -286,8 +212,8 @@ try {
     }
     scenario.public_response_checks = await inspectPublicResponses(base);
     assert.deepEqual(mockErrors, []);
-    await writeFile(join(fixture, `worker-${provider}.log`), workerLog);
-    await stopWorker();
+    await writeFile(join(fixture, `worker-${provider}.log`), worker.log);
+    await worker.stop();
     console.log(`${provider}: API environment, gating, fallback, and secret-exposure checks passed.`);
   }
   report.status = 'passed';
@@ -298,11 +224,11 @@ try {
   report.mock_contract_errors = mockErrors;
   process.exitCode = 1;
 } finally {
-  await stopWorker();
+  await worker?.stop();
   mock.closeAllConnections();
   await new Promise(resolveClose => mock.close(resolveClose));
   report.observed_at = new Date().toISOString();
-  if (fixture) await writeFile(join(fixture, 'worker.log'), workerLog);
+  if (fixture) await writeFile(join(fixture, 'worker.log'), worker?.log ?? '');
   await mkdir(dirname(outputPath), { recursive: true });
   await writeFile(outputPath, JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify({ status: report.status, report: relative(project, outputPath), fixture: report.fixture, error: report.error }, null, 2));
