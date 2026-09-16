@@ -42,7 +42,7 @@ Development CI runs against the retained corpus and uploads evaluation, benchmar
 npm run evaluate
 ```
 
-The strict narrative evaluator shares the navigation suite's benchmark definitions. It writes `evaluation/datasets/benchmark.json`, `evaluation/results/latest.json` and `evaluation/results/responses.json`, and prepares `evaluation/human-audit/responses.json`. Completed judgments are preserved and changed responses flagged for [renewed human review](EVALUATION.md#independent-human-review). `eval:suite` does not rewrite these files or historical agent reviews.
+The strict narrative evaluator shares the navigation suite's [benchmark definitions](../evaluation/benchmarks.mjs). It writes `evaluation/results/latest.json` and `evaluation/results/responses.json`, and prepares `evaluation/human-audit/responses.json`. Completed judgments are preserved and changed responses flagged for [renewed human review](EVALUATION.md#independent-human-review). `eval:suite` does not rewrite these files or historical agent reviews.
 
 ## What the cases cover
 

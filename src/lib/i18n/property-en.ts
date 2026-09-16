@@ -4,7 +4,6 @@ import { en } from "./en.ts";
 export const propertyEn = {
   ...en.property,
   disclosure: 'The address is sent to official Hillsborough, Pinellas and Pasco address services. Property lookup checks Tampa, St. Petersburg, Clearwater and Pasco County boundaries. County land-use layers cover unincorporated Pasco only.',
-  sourceTitle: 'Development records',
   official: 'Official city GIS records',
   officialCounty: 'Official county GIS planning records',
   sourceDetails: 'Source details',

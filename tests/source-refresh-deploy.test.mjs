@@ -68,6 +68,7 @@ test('source deploy CLI retries a failed command with the same reviewed build an
   await mkdir(join(root, 'scripts'));
   for (const script of ['source-refresh.mjs', 'build-source-refresh.mjs']) await cp(resolve('scripts', script), join(root, 'scripts', script));
   await cp(resolve('src/lib/ingestion'), join(root, 'src/lib/ingestion'), { recursive: true });
+  await cp(resolve('src/lib/csv.mjs'), join(root, 'src/lib/csv.mjs'));
   const command = join(root, 'fake-deploy.mjs');
   const failMarker = join(root, 'fail-next-deployment');
   const callLog = join(root, 'deployment-call.json');
@@ -88,7 +89,7 @@ test('source deploy CLI retries a failed command with the same reviewed build an
   assert.equal(failed.code, 1, failed.output);
   const afterFailure = JSON.parse(await readFile(receiptPath, 'utf8'));
   assert.equal(afterFailure.status, 'applied');
-  assert.equal(afterFailure.deployment.status, 'failed');
+  assert.equal(afterFailure.deployment.status, 'failed', failed.output);
   assert.equal(afterFailure.deployment_attempts.length, 1);
   assert.equal((await readCorpus(root)).generation, receipt.generation);
   const firstCall = JSON.parse(await readFile(callLog, 'utf8'));

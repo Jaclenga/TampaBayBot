@@ -41,7 +41,7 @@ await mkdir(join(fixture, 'data'));
 for (const entry of await readdir(join(project, 'data'), { withFileTypes: true })) {
   if (entry.isFile() && entry.name.endsWith('.json')) await cp(join(project, 'data', entry.name), join(fixture, 'data', entry.name));
 }
-for (const name of ['package.json', 'next.config.ts', 'tsconfig.json', 'vite.config.ts']) {
+for (const name of ['package.json', 'tsconfig.json', 'vite.config.ts']) {
   await cp(join(project, name), join(fixture, name));
 }
 await symlink(join(project, 'node_modules'), join(fixture, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');

@@ -23,7 +23,7 @@ export async function buildReviewedCandidate(root, candidate, { workerName = 'ta
   for (const name of ['src', 'scripts', 'tests', 'evaluation', 'vendor', 'public']) {
     await cp(join(root, name), join(fixture, name), { recursive: true, filter: source => !relative(root, source).split(sep).some(part => part.startsWith('.')) });
   }
-  for (const name of ['package.json', 'package-lock.json', 'next.config.ts', 'tsconfig.json', 'vite.config.ts', 'eslint.config.mjs', 'postcss.config.mjs', 'playwright.config.ts']) {
+  for (const name of ['package.json', 'package-lock.json', 'tsconfig.json', 'vite.config.ts', 'eslint.config.mjs', 'postcss.config.mjs', 'playwright.config.ts']) {
     await cp(join(root, name), join(fixture, name));
   }
   await mkdir(join(fixture, 'data'));

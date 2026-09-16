@@ -4,7 +4,7 @@ import type { propertyEn } from './property-en.ts';
 export const propertyEs: typeof propertyEn = {
   ...es.property,
   disclosure: 'La dirección se envía a los servicios oficiales de Hillsborough, Pinellas y Pasco. La búsqueda comprueba los límites de Tampa, St. Petersburg, Clearwater y Pasco County. Las capas de uso del suelo del condado cubren solo las áreas no incorporadas de Pasco.',
-  sourceTitle: 'Registros de desarrollo', official: 'Registros GIS municipales oficiales', sourceDetails: 'Detalles de la fuente',
+  official: 'Registros GIS municipales oficiales', sourceDetails: 'Detalles de la fuente',
   officialCounty: 'Registros GIS oficiales de planificación del condado',
   areaMatch: 'El área del proyecto en el mapa intersecta el radio de búsqueda', liveLabel: 'Consulta en directo',
   noDevelopmentQuery: 'No se consultaron registros de desarrollo para esta ubicación.',

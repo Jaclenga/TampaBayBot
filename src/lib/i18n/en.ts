@@ -55,8 +55,6 @@ export const en = {
     source: "Read original source",
     retrieved: "Retrieved",
     updated: "Source updated",
-    unknownDate: "Not provided by source",
-    count: "sources",
     snapshot:
       "Answers use saved public-source snapshots. Follow the official link for the latest information.",
   },
@@ -66,8 +64,6 @@ export const en = {
     placeholder: "For example, 315 E Kennedy Blvd, Tampa",
     submit: "Find address",
     busy: "Looking up the address…",
-    disclosure:
-      "Address searches are sent to public GIS services in Hillsborough, Pinellas, and Pasco counties. No address history is saved by this app.",
     jurisdictionHint: "A mailing address does not confirm city boundaries.",
     select: "Confirm the matching address",
     choose: "Use this address",
@@ -83,13 +79,8 @@ export const en = {
     nearby: "Development nearby",
     radius: "Search distance",
     meters: "meters",
-    distance: "Straight-line distance from the selected point",
-    activityNote:
-      "A nearby record describes observed activity. It does not establish what is allowed on this property, approval, or a legal relationship.",
     records: "Public records",
     record: "View source record",
-    noRecords:
-      "No records were returned within this distance. This does not mean no development has occurred.",
     geoError:
       "Public property information could not be loaded. Try again or use the official source links.",
     unknown: "Not determined",
@@ -119,8 +110,6 @@ export const en = {
     view: "Visit source",
     frequency: "Expected refresh",
     retrieved: "Last retrieved",
-    terms: "Source terms",
-    unavailable: "Not yet retrieved",
     original: "Original source descriptions and terms are shown in their recorded language.",
     coverage: "Areas covered",
     search: "Search sources",
@@ -173,8 +162,6 @@ export const en = {
   common: {
     skip: "Skip to main content",
     opens: "opens in a new tab",
-    close: "Close",
-    retry: "Try again",
   },
   labels: {
     home: "TampaBayBot home",

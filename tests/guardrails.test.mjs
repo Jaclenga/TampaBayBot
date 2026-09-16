@@ -11,15 +11,13 @@ import { containsSensitiveIdentifier } from "../src/lib/guardrails/privacy.mjs";
 import { GUARDRAIL_PROMPT_INSERTS } from "../src/lib/guardrails/prompts.mjs";
 import { answerQuestion } from "../src/lib/core/answer.mjs";
 import { parseLlmConfig } from "../src/lib/llm/index.mjs";
+import { benchmarks } from "../evaluation/benchmarks.mjs";
 
 const sources = JSON.parse(
   readFileSync(new URL("../data/sources.json", import.meta.url)),
 );
 const chunks = JSON.parse(
   readFileSync(new URL("../data/chunks.json", import.meta.url)),
-);
-const benchmark = JSON.parse(
-  readFileSync(new URL("../evaluation/datasets/benchmark.json", import.meta.url)),
 );
 const options = { sources, chunks, jurisdictionId: "tampa", now: new Date("2026-09-12T12:00:00Z") };
 const question = "Where can I find help paying for housing?";
@@ -391,11 +389,8 @@ test("cancellation and invalid guard configuration cannot disable mandatory chec
 });
 
 test("guarded no-model navigation preserves every existing benchmark question response", async () => {
-  const cases = Array.isArray(benchmark)
-    ? benchmark
-    : (benchmark.questions ?? benchmark.cases);
-  assert.ok(cases.length >= 77);
-  for (const item of cases) {
+  assert.ok(benchmarks.length >= 77);
+  for (const item of benchmarks) {
     const original = answerQuestion(item.question, options);
     const guarded = await answerWithGuardrails(item.question, options);
     const { guardrails, generation, ...actual } = guarded;

@@ -135,6 +135,8 @@ npm run test:ollama-runtime -- --allow-provider-call --model llama3:8b --timeout
 
 The isolated runner counts real Ollama calls through a loopback proxy without changing completions. Eligible questions must produce accepted model output; fallback fails. Conservative questions, instruction attacks and synthetic identifiers must make zero calls. It checks model disclosure and blocked access to fixture `.env`, without reading/overwriting user environment files, changing hosted settings or downloading weights. Ignored `work/evals/live/` reports record model/digest, server version, usage and timings without prompts or completions.
 
+Both runners use isolated source fixtures without owner hosting metadata. Startup requires a ready corpus and accepts the expected local or unauthenticated shared-operations state described in the [live smoke guide](DEVELOPMENT.md#live-api-smoke); it does not establish production readiness.
+
 Use [live evaluation](EVAL_SUITE.md#evaluate-an-explicitly-configured-model) for broader/repeated cases and [Ollama results](HISTORY.md#ollama-testing) for dated outcomes. Human assessment remains separate; [release readiness](RELEASE_READINESS.md) tracks verification.
 
 ### Token and cost reporting
