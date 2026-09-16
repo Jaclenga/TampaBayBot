@@ -28,8 +28,6 @@ npm run demo
 
 Open [localhost:3001](http://localhost:3001). The demo uses labeled fictional evidence in a separate directory and needs no account, API key, database or `.env` file. See [demo options and example questions](docs/DEMO.md).
 
-![TampaBayBot with clearly labeled fictional demo evidence](docs/images/demo.png)
-
 For real evidence, [stage, review and apply source updates](docs/SOURCE_UPDATES.md), then run `npm run dev -- --port 3001`. Source downloads and live geographic lookups need internet access.
 
 ## How it works

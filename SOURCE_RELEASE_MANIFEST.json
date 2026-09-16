@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "120e142ca66df6f010ccca11ad3586a652e9c638cccf455f0ae7ec115c1dc6b5",
+  "content_sha256": "039a9b9c025170fc69ff23b44f0375c58d281d9879d1e3162416b52b8165c093",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -187,8 +187,8 @@
     },
     {
       "path": "docs/images/demo.png",
-      "bytes": 81455,
-      "sha256": "cd95754d2f95c2eb4863349203c3de73b00f322759c2c723a27ae720b60c7d9b"
+      "bytes": 77117,
+      "sha256": "fecaeda6b86aac7d460063733132aa42d876498ea99064bdf83edd852b839e69"
     },
     {
       "path": "docs/LIMITATIONS.md",
@@ -442,8 +442,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4076,
-      "sha256": "7b17dccf291eabc8d9396e2f28454f78cae7bd53cd3a5356d0bd323e163fc527"
+      "bytes": 3993,
+      "sha256": "1513da7cb75e363f6c9e8323ebfc8ebfc0ec319c881323cf5fcdfd15f22134e3"
     },
     {
       "path": "scripts/build-source-refresh.mjs",
