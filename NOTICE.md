@@ -8,6 +8,12 @@ It provides informational navigation, not legal advice, official eligibility/zon
 
 Original TampaBayBot software is licensed under [MIT](LICENSE), copyright 2026 TampaBayBot contributors. Dependencies retain their own licenses; versions are recorded in `package-lock.json`.
 
+## Interface and assets
+
+The interface uses a plain text wordmark, system sans-serif type, white backgrounds, blue `#006AAF`, dark blue `#004572`, and charcoal `#292929`. The palette and navigation take inspiration from [Tampa.gov](https://www.tampa.gov/), inspected on September 12, 2026. No City seal, logo or photograph is used in the application; sharing metadata is text-only.
+
+Lucide icons provide functional interface controls and retain their ISC license. [`docs/images/demo.png`](docs/images/demo.png) is a browser capture of the project's own interface using original fictional evidence from [`tests/fixtures/demo-corpus.mjs`](tests/fixtures/demo-corpus.mjs). It contains no downloaded source passages or real resident information and is distributed under the project's [MIT license](LICENSE). [Demo reproduction](docs/DEMO.md) describes how to regenerate it.
+
 ## Public sources and external data
 
 The [register](data/sources.json) and [source documentation](docs/DATA_SOURCES.md) identify publishers, URLs, dates, hashes, coverage and known terms. Source text, documents, GIS data, agency names/trademarks, photographs and external records are not relicensed under MIT by their inclusion or use here.

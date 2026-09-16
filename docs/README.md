@@ -36,15 +36,10 @@ Start with the [project overview and quick start](../README.md). Each guide belo
 | Configure service controls, monitoring and incident response | [Operations](OPERATIONS.md) |
 | Package source or refresh a pull request's manifest | [Distribution](DISTRIBUTION.md) |
 | Scan source and Git history for secrets | [Secret scanning](../evaluation/security/SECRET_SCAN.md) |
-| Understand visual design and asset attribution | [Design and assets](ASSETS.md) |
+| Understand visual design and asset attribution | [Design and assets](../NOTICE.md#interface-and-assets) |
 
 ## Results and historical records
 
-[Release readiness](RELEASE_READINESS.md) records dated verification and unfinished launch work. [Changelog](../CHANGELOG.md) lists changes by release. Supporting records include:
-
-- [Geographic coverage and live verification](COVERAGE_EXPANSION.md)
-- [Real Ollama testing](OLLAMA_TESTING.md)
-- [Bug-fix follow-up and runtime investigation](BUG_FIX_FOLLOWUP_2026-09-12.md)
-- [Risk enumeration](RISK_ENUMERATION.md)
+[Release readiness](RELEASE_READINESS.md) records dated verification and unfinished launch work. [Changelog](../CHANGELOG.md) lists changes by release. The [history index](HISTORY.md) links to preserved runtime investigations, model tests, regional observations and older release receipts. Current coverage and risk guidance live in [geospatial behavior](GEOSPATIAL.md) and [limitations](LIMITATIONS.md).
 
 Historical results apply to their recorded corpus, model and environment. Source-only packages omit downloaded evidence and some raw reports; assess your own installation using the setup and evaluation guides.

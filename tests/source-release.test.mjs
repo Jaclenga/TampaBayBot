@@ -65,6 +65,10 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     await writeFile(path.join(root, "scripts/eval-recall.mjs"), 'export { evaluateProgramRecall } from "../evaluation/recall.mjs";\n');
     const recallGuide = "# Program recall\n\n[Benchmark](../evaluation/datasets/program-recall-benchmark.json) [Evaluator](../evaluation/recall.mjs)\n";
     await writeFile(path.join(root, "docs/PROGRAM_RECALL.md"), recallGuide);
+    const historyGuide = "# Historical records\n\n[Archived report](https://github.com/example/project/blob/frozen/docs/OLLAMA_TESTING.md)\n";
+    await writeFile(path.join(root, "docs/HISTORY.md"), historyGuide);
+    const archivedDocs = ["BUG_FIX_FOLLOWUP_2026-09-12.md", "OLLAMA_TESTING.md", "ALPHA_VERIFICATION.json", "TAMPA_BAY_VERIFICATION.json", "COVERAGE_EXPANSION.md", "RISKS.md", "RISK_ENUMERATION.md", "ASSETS.md"];
+    for (const name of archivedDocs) await writeFile(path.join(root, "docs", name), "archived documentation sentinel");
     await writeFile(path.join(root, ".env"), "private fixture sentinel");
     await writeFile(path.join(root, ".openai/hosting.json"), "owner fixture sentinel");
     await writeFile(path.join(root, "scripts/example.mjs"), "export const originalSoftware = true;\r\n");
@@ -87,6 +91,8 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     const packagedRecall = await import(pathToFileURL(path.join(output, "scripts/eval-recall.mjs")).href);
     assert.deepEqual(await packagedRecall.evaluateProgramRecall(), recallBenchmark, "The packaged recall entrypoint must resolve its evaluator and benchmark");
     assert.equal(await readFile(path.join(output, "docs/PROGRAM_RECALL.md"), "utf8"), recallGuide, "The recall guide and its dependency links must survive packaging");
+    assert.equal(await readFile(path.join(output, "docs/HISTORY.md"), "utf8"), historyGuide, "Permanent archive links must survive packaging");
+    for (const name of archivedDocs) await assert.rejects(readFile(path.join(output, "docs", name)), { code: "ENOENT" });
     assert.match(await readFile(path.join(output, "docs/DATA_SOURCES.md"), "utf8"), /\.\.\/data\/sources\.json/);
     await assert.rejects(readFile(path.join(output, "DATA_SOURCES.md")), { code: "ENOENT" });
     for (const excluded of [".env", ".openai/hosting.json", ".git/config", "data/raw/example.html", "app/example.ts", "lib/example.mjs", "build/example.ts"]) await assert.rejects(readFile(path.join(output, excluded)), { code: "ENOENT" });

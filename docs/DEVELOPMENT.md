@@ -82,7 +82,7 @@ For detailed procedures, use [source updates](SOURCE_UPDATES.md), [focused evalu
 
 [ACCESSIBILITY.md](ACCESSIBILITY.md) covers Chromium installation, ports, existing previews, production Worker/CSP checks, environment variables, reports and manual review.
 
-See [release readiness](RELEASE_READINESS.md) for recorded outcomes and [the rejected-upload transport investigation](BUG_FIX_FOLLOWUP_2026-09-12.md) for the known Windows/Linux local production failure. Standalone deployment smoke uses a separate test set.
+See [release readiness](RELEASE_READINESS.md) for recorded outcomes and [the rejected-upload transport investigation](HISTORY.md#runtime-investigation) for the known Windows/Linux local production failure. Standalone deployment smoke uses a separate test set.
 
 ## Live API smoke
 

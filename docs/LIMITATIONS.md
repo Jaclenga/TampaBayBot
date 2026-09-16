@@ -1,12 +1,12 @@
 # Known limitations
 
-TampaBayBot is an independent source-only alpha for housing-information navigation. It cannot decide eligibility, give an official zoning determination or approve a permit. The package starts without evidence; an operator must [load and review sources](DISTRIBUTION.md). Historical development results do not establish the quality of a new corpus. [Release readiness](RELEASE_READINESS.md) records verification and remaining launch work.
+TampaBayBot is an independent source-only alpha for housing-information navigation. It cannot decide eligibility, give an official zoning determination or approve a permit. A program match does not mean you qualify; the responsible agency determines eligibility. The package starts without evidence; an operator must [load and review sources](DISTRIBUTION.md). Historical development results do not establish the quality of a new corpus. [Release readiness](RELEASE_READINESS.md) records verification and remaining launch work.
 
 ## Information and answer coverage
 
-- The [source registry](DATA_SOURCES.md) covers selected Tampa Bay program pages, guidance and maps, not every program/contact, complete municipal codes or comprehensive-plan text.
-- Literal excerpts can be repetitive, incomplete or unhelpful. Optional model selection can choose valid evidence poorly. Routing can miss unusual phrasing, mixed intents, acronyms and spelling errors.
-- Authority weights do not establish legal precedence. Conflict detection catches only directly opposing application-status statements for the same program; exceptions, supersession and other contradictions require review.
+- The [source registry](DATA_SOURCES.md) covers selected Tampa Bay program pages, guidance and maps, not every program/contact, complete municipal codes or comprehensive-plan text. No match does not mean no help is available; check with the responsible agency or a housing-resource specialist about other programs or circumstances.
+- Literal excerpts can be repetitive, incomplete or unhelpful. Read the full source for qualifications, exceptions and context. Optional model selection can choose valid evidence poorly. Routing can miss unusual phrasing, mixed intents, acronyms and spelling errors.
+- Authority weights do not establish legal precedence. Conflict detection catches only directly opposing application-status statements for the same program; exceptions, supersession and other contradictions require review. Confirm conflicting or uncertain information with the responsible agency.
 - [Evaluation](EVALUATION.md) includes template/keyword proxies and a separate claim-quality suite with 12 dated fixtures. Neither measures general real-world accuracy, audits source accuracy or guarantees completeness.
 
 ## Freshness and availability
@@ -18,7 +18,7 @@ Weekly refreshes stage acquisitions and publish a metadata review report. An ope
 ## Geographic limits
 
 - Every address candidate requires selection. Scores are not probabilities, and new/incomplete addresses, units or shared buildings can remain unresolved. No geocoder match does not establish an invalid address.
-- Resource navigation covers selected sources for Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco. Other municipalities do not inherit county coverage; missing/conflicting cities require clarification.
+- Resource navigation covers selected sources for Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco. Other municipalities do not inherit county coverage; missing/conflicting cities require clarification. Confirm the location and jurisdiction shown with each result, since service areas and rules vary across city and county boundaries.
 - Live property layers cover Tampa, St. Petersburg, Clearwater and Pasco County. Official boundaries establish coverage, not mailing addresses or resource selections. Pasco zoning/land use is withheld when a parcel intersects a municipality or the municipal check fails.
 - Valid parcel polygons support whole-parcel intersections; missing/ambiguous geometry falls back to labeled address-point context. Boundary touches, multiple results, missing fields and transfer limits require review. Intersections do not establish legal split-zoning areas.
 - The app does not check every historic/overlay district, flood constraint, easement, deed restriction, utility condition, variance or site-specific approval.
@@ -47,7 +47,7 @@ Identifier/instruction screening can miss disclosures or reject unrelated text; 
 
 Operators own shared request/concurrency limits, refreshes, monitoring, retention and rollback. The [private reporting channel](../SECURITY.md#reporting-a-problem) carries no staffed incident-response guarantee. [Operations](OPERATIONS.md) describes the required controls.
 
-Windows/Linux local production runs exposed a transport failure after rejected unread uploads. Current Windows verification passes 15 cases using the compiled Worker directly for stalled uploads and the static-assets route for other checks. This does not verify hosted-edge or local static-assets-proxy behavior after abandoned uploads; see the [investigation](BUG_FIX_FOLLOWUP_2026-09-12.md).
+Windows/Linux local production runs exposed a transport failure after rejected unread uploads. Current Windows verification passes 15 cases using the compiled Worker directly for stalled uploads and the static-assets route for other checks. This does not verify hosted-edge or local static-assets-proxy behavior after abandoned uploads; see the [investigation archive](HISTORY.md#runtime-investigation).
 
 Public source availability is separate from a public resident service. Authenticated hosted smoke and operator provider/deployment checks remain release steps in [release readiness](RELEASE_READINESS.md).
 

@@ -29,4 +29,4 @@ Retrieved content and model responses are treated as untrusted input. Input vali
 - Review hosting and provider access, logging, retention, and spending policies. Keep backups and incident contacts current, and rotate credentials after suspected disclosure.
 - Keep real environment files, runtime state, database dumps, production logs, request traces, resident data, and private deployment artifacts out of the source distribution.
 
-Public data configuration, tests, evaluation material, and the release manifest remain available for inspection and reproducibility. Dated verification results and open runtime investigations are maintained in [release readiness](docs/RELEASE_READINESS.md) and the [engineering follow-up](docs/BUG_FIX_FOLLOWUP_2026-09-12.md).
+Public data configuration, tests, evaluation material, and the release manifest remain available for inspection and reproducibility. Dated verification results and open runtime investigations are maintained in [release readiness](docs/RELEASE_READINESS.md) and the [engineering follow-up](docs/HISTORY.md#runtime-investigation).

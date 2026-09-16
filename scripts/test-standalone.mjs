@@ -44,7 +44,7 @@ const report = {
   compatibility_date: config.compatibility_date,
   wrangler: JSON.parse(await readFile(join(project, 'node_modules/wrangler/package.json'), 'utf8')).version,
   platform: process.platform, node: process.version, checks: [],
-  known_limit: 'The local Miniflare static-assets route can lose a following connection after an abandoned upload; see docs/BUG_FIX_FOLLOWUP_2026-09-12.md. Browser verification tests the compiled Worker directly for that boundary.',
+  known_limit: 'The local Miniflare static-assets route can lose a following connection after an abandoned upload; see docs/RELEASE_READINESS.md#remaining-review-and-operational-work. Browser verification tests the compiled Worker directly for that boundary.',
 };
 let worker;
 let log = '';

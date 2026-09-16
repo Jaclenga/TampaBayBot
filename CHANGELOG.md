@@ -64,4 +64,4 @@ The public tree excludes downloaded third-party snapshots, extracted evidence, h
 
 The public source-release CI passed. The complete development browser suite retains one rejected-upload transport failure on both Windows and Linux local runtimes; hosted impact remains unverified. Independent human review, manual accessibility review and deployment operations remain pending. [Current release status and verification](docs/RELEASE_READINESS.md) distinguishes these scopes, including the recorded real Ollama tests and own-account deployment limits.
 
-The later [Linux browser follow-up](https://github.com/Jaclenga/TampaBayBot/releases/download/v0.1.0-alpha.1/linux-browser-followup.json) adds evidence without changing the original alpha source tag. Detailed correction history remains in the [dated bug-fix record](docs/BUG_FIX_FOLLOWUP_2026-09-12.md).
+The later [Linux browser follow-up](https://github.com/Jaclenga/TampaBayBot/releases/download/v0.1.0-alpha.1/linux-browser-followup.json) adds evidence without changing the original alpha source tag. Detailed correction history remains in the [dated bug-fix record](docs/HISTORY.md#runtime-investigation).

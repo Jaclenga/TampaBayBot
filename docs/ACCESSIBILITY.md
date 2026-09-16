@@ -13,7 +13,7 @@ TampaBayBot targets WCAG 2.1 AA; conformance has not been established. This guid
 
 ## Automated checks
 
-Historical complete production-browser runs on Windows and later Ubuntu Linux failed after an abandoned upload poisoned Miniflare's local static-assets transport. The retained Windows production-browser run passed all 15 application cases. It used the built static-assets route for resident, accessibility, asset and response-policy checks and the exact same compiled Worker through a direct route for stalled-upload deadlines. These are local runtime checks, not hosted Cloudflare tests. [Release readiness](RELEASE_READINESS.md) records the current scope, and [the transport follow-up](BUG_FIX_FOLLOWUP_2026-09-12.md) preserves the earlier failure.
+Historical complete production-browser runs on Windows and later Ubuntu Linux failed after an abandoned upload poisoned Miniflare's local static-assets transport. The retained Windows production-browser run passed all 15 application cases. It used the built static-assets route for resident, accessibility, asset and response-policy checks and the exact same compiled Worker through a direct route for stalled-upload deadlines. These are local runtime checks, not hosted Cloudflare tests. [Release readiness](RELEASE_READINESS.md) records the current scope, and [the transport follow-up](HISTORY.md#runtime-investigation) preserves the earlier failure.
 
 The retained production and archived axe scans reported no violations or incomplete nodes in the scanned flows. Reflow, the historical CSS zoom approximation and the production security checks passed. The current source-demo checks below add actual browser zoom and font preferences. Automation does not replace human accessibility review.
 

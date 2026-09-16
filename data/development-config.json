@@ -183,7 +183,7 @@
         "GIS record edit dates are editing timestamps, not application, approval, or construction dates. County planning records do not establish municipal building-permit authority."
       ],
       "verified_at": "2026-09-13",
-      "query_verification": "Metadata and allowlisted record queries verified on 2026-09-13 America/New_York; bounded spatial verification recorded in docs/COVERAGE_EXPANSION.md."
+      "query_verification": "Metadata and allowlisted record queries verified on 2026-09-13 America/New_York; bounded spatial verification recorded in docs/HISTORY.md#geographic-coverage."
     },
     {
       "source_id": "pasco-comprehensive-plan-in-review",
@@ -216,7 +216,7 @@
         "GIS record edit dates are editing timestamps, not application, approval, or construction dates. County planning records do not establish municipal building-permit authority."
       ],
       "verified_at": "2026-09-13",
-      "query_verification": "Metadata and allowlisted record queries verified on 2026-09-13 America/New_York; bounded spatial verification recorded in docs/COVERAGE_EXPANSION.md."
+      "query_verification": "Metadata and allowlisted record queries verified on 2026-09-13 America/New_York; bounded spatial verification recorded in docs/HISTORY.md#geographic-coverage."
     }
   ],
   "official_query": {

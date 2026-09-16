@@ -35,6 +35,7 @@ The omitted content is:
 - `data/raw/**`, `data/normalized/**` and the historical `data/chunks.json` corpus;
 - historical ingestion/verification reports and quote-bearing response, agent-review, human-review and suite-result artifacts;
 - historical accessibility, security, Ollama and local/hosted deployment reports;
+- archived investigations, alpha verification receipts and superseded standalone guides; the [history index](HISTORY.md) links to their preserved Git revisions;
 - historical screenshots, external data archives, runtime state, credentials, deployment-specific hosting configuration, private deployment artifacts and Git history. The original fictional demo image under `docs/images/` is included.
 
 Required JSON imports become placeholders: zero chunks, unset retrieval dates, unavailable sources, empty response/review arrays and reports marked `not_run`. The project README explains this state; links to omitted artifacts become explanatory text. The registry retains publisher URLs, operator-authored descriptions, fetch settings and next-step links. Historical agent review scripts/ratings are omitted to prevent attaching old judgments to new answers.
@@ -63,7 +64,7 @@ Run manifest preparation after the final source edit, then inspect and commit it
 
 ## Report hygiene
 
-Only `docs/ALPHA_VERIFICATION.json` and `docs/TAMPA_BAY_VERIFICATION.json` are allowed as JSON documentation in the source release. Keep deployment receipts and machine-specific reports in ignored local work; updated hashes do not make them distributable.
+JSON documents under `docs/` are excluded from the source release. Older alpha verification receipts remain accessible through the [history index](HISTORY.md#release-verification). Keep new deployment receipts and machine-specific reports in ignored local work; updated hashes do not make them distributable.
 
 Before committing a local JSON report, remove machine prefixes with:
 
