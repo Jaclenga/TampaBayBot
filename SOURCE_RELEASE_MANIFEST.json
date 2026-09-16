@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "039a9b9c025170fc69ff23b44f0375c58d281d9879d1e3162416b52b8165c093",
+  "content_sha256": "aedbe72116ac14e7738bcdbabb6677905bc42ad4419cde44884ac35a5a7fb245",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -157,8 +157,8 @@
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "bytes": 9364,
-      "sha256": "380dc7ce9fe332371802e53af24d7f647d5c13fa88578d29dc83e1235ae04bea"
+      "bytes": 9886,
+      "sha256": "43cfce7883da6f6e5d3f4c9ed6d2c640d97ef8d0391ac509ae9591350ea01742"
     },
     {
       "path": "docs/DISTRIBUTION.md",
@@ -202,8 +202,8 @@
     },
     {
       "path": "docs/METHODOLOGY.md",
-      "bytes": 8836,
-      "sha256": "4040b0f96f1db579e1a3d99648b04cd7421eb82fb66c699feaedccce83630c1e"
+      "bytes": 8877,
+      "sha256": "c169aab1551a870a3c08250791a4e6d51b65ea0a54b5cf8ef961abc4ac19806d"
     },
     {
       "path": "docs/OLLAMA_TESTING.md",
@@ -442,8 +442,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3993,
-      "sha256": "1513da7cb75e363f6c9e8323ebfc8ebfc0ec319c881323cf5fcdfd15f22134e3"
+      "bytes": 4439,
+      "sha256": "809d81b35d11643bea9488c8a1a9aa977e0681932c770e5142c129a32caccf46"
     },
     {
       "path": "scripts/build-source-refresh.mjs",
@@ -527,8 +527,8 @@
     },
     {
       "path": "scripts/smoke.mjs",
-      "bytes": 2907,
-      "sha256": "6158da33fda1d5b61f6d45150c12b190374ad82bba7b86f6cc57118b8245bb46"
+      "bytes": 4058,
+      "sha256": "40f44e1c3ade1337cd67ef5c2ea772ce1a0947bb30cff432796e6ea084aa3b4c"
     },
     {
       "path": "scripts/source-policy.mjs",
@@ -1189,6 +1189,11 @@
       "path": "tests/runtime-env.test.mjs",
       "bytes": 944,
       "sha256": "5e294f8834a65f2776dc9732333412a7e1fa7522ddfd21ec0c8a09fbcc4bce71"
+    },
+    {
+      "path": "tests/smoke.test.mjs",
+      "bytes": 4849,
+      "sha256": "6c70dd6c8908c650cd95495d1e207c5691e41054621e2faa2536edcf257d13fb"
     },
     {
       "path": "tests/source-e2e/demo.spec.ts",

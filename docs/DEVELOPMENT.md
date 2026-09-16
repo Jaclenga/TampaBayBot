@@ -88,6 +88,8 @@ See [release readiness](RELEASE_READINESS.md) for recorded outcomes and [the rej
 
 Run `scripts/smoke.mjs` against a running app with a populated corpus and generated evaluation reports. It checks health, a cited housing answer, source/evaluation downloads and City Hall property/development lookups. Outbound access is required; use `LLM_PROVIDER=none` to avoid a model call.
 
+The smoke requires `health.corpus.ready: true`. It accepts the expected overall `degraded` status when local mode reports `shared_controls_not_configured` or a public shared-mode probe reports `authenticated_probe_required`; these states remain in the saved report. Other operations failures stop the check. The script sends no monitoring credential and does not establish production readiness. Use the [authenticated operations monitor](OPERATIONS.md#health-and-alerts) to verify shared controls and database readiness.
+
 The default target is `http://localhost:3001`; output overwrites `docs/local-api-validation.json`. Preserve dated records with a new output path and create its parent directory first. In PowerShell:
 
 ```powershell
