@@ -10,7 +10,7 @@ TampaBayBot supports operator-selected **Ollama** and **OpenAI-compatible Chat C
 4. The app builds the answer from validated selections and controls status, evidence records, official next steps, explanation and warnings. Models cannot call tools or fetch sources.
 5. Invalid configuration, provider failure/timeout, exceeded response limits or invalid output return the original answer with fallback metadata. Keys, base URLs and raw errors are withheld from the browser.
 
-Generation metadata distinguishes disabled, skipped, model-assisted and fallback behavior. [Guardrail inserts and hooks](GUARDRAIL_INSERTS.md) describes the API's additional input/runtime checks; provider validation does not replace them. [Recorded Ollama tests](OLLAMA_TESTING.md) are separate from synthetic fixtures and do not establish general accuracy or usefulness.
+Generation metadata distinguishes disabled, skipped, model-assisted and fallback behavior. [Guardrail inserts and hooks](GUARDRAIL_INSERTS.md) describes the API's additional input/runtime checks; provider validation does not replace them. [Recorded Ollama tests](HISTORY.md#ollama-testing) are separate from synthetic fixtures and do not establish general accuracy or usefulness.
 
 ## Configuration
 
@@ -135,7 +135,7 @@ npm run test:ollama-runtime -- --allow-provider-call --model llama3:8b --timeout
 
 The isolated runner counts real Ollama calls through a loopback proxy without changing completions. Eligible questions must produce accepted model output; fallback fails. Conservative questions, instruction attacks and synthetic identifiers must make zero calls. It checks model disclosure and blocked access to fixture `.env`, without reading/overwriting user environment files, changing hosted settings or downloading weights. Ignored `work/evals/live/` reports record model/digest, server version, usage and timings without prompts or completions.
 
-Use [live evaluation](EVAL_SUITE.md#evaluate-an-explicitly-configured-model) for broader/repeated cases and [Ollama results](OLLAMA_TESTING.md) for dated outcomes. Human assessment remains separate; [release readiness](RELEASE_READINESS.md) tracks verification.
+Use [live evaluation](EVAL_SUITE.md#evaluate-an-explicitly-configured-model) for broader/repeated cases and [Ollama results](HISTORY.md#ollama-testing) for dated outcomes. Human assessment remains separate; [release readiness](RELEASE_READINESS.md) tracks verification.
 
 ### Token and cost reporting
 

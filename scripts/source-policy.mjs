@@ -78,11 +78,10 @@ export function assertAllowedReleasePath(name) {
   assert.ok(!/(?:^|\/)(?:\.git|\.openai|node_modules|work|raw|normalized)(?:\/|$)/i.test(name), `Forbidden distribution path: ${name}`);
   assert.ok(!/(?:^|\/)(?:\.env(?:\..*)?|\.dev\.vars(?:\..*)?|.*\.(?:pem|key|csv|pdf|zip|tar|gz))$/i.test(name) || name === '.env.example', `Private or external artifact in distribution: ${name}`);
   assert.ok(!/^docs\/screenshots\//i.test(name), `Historical screenshots are not release assets: ${name}`);
-  // Only the deliberately portable verification summaries are public JSON
-  // documents. Rehashing a deployment receipt must not approve owner metadata.
-  if (/^docs\/.+\.json$/i.test(name)) assert.ok([
-    'docs/ALPHA_VERIFICATION.json', 'docs/TAMPA_BAY_VERIFICATION.json',
-  ].includes(name), `Unreviewed documentation artifact: ${name}`);
+  // Historical receipts stay in Git history; rehashing cannot restore them
+  // or approve a new deployment receipt as current release documentation.
+  assert.ok(!/^docs\/.+\.json$/i.test(name), `Unreviewed documentation artifact: ${name}`);
+  assert.ok(!/^docs\/(?:BUG_FIX_FOLLOWUP_2026-09-12|OLLAMA_TESTING|COVERAGE_EXPANSION|RISK_ENUMERATION|RISKS|ASSETS)\.md$/i.test(name), `Archived document is not release content: ${name}`);
   if (name.startsWith('data/')) assert.ok(['data/sources.json', 'data/chunks.json', 'data/corpus.json', 'data/ingestion-report.json', 'data/verification-report.json', 'data/gis-config.json', 'data/development-config.json'].includes(name), `Unreviewed data artifact: ${name}`);
   if (name.startsWith('evaluation/') && name.endsWith('.json')) assert.ok([
     ...EMPTY_ARRAY_FILES, ...EMPTY_REPORT_FILES, 'evaluation/datasets/benchmark.json', 'evaluation/datasets/quality-benchmark.json', 'evaluation/datasets/program-recall-benchmark.json', 'evaluation/datasets/ground_truth_questions.json',

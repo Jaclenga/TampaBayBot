@@ -39,7 +39,7 @@ async function forgeEntry(root, name, value) {
   manifest.content_sha256 = sha(json(manifest.files));
   await writeFile(path.join(root, 'SOURCE_RELEASE_MANIFEST.json'), json(manifest));
 }
-test('semantic verification rejects correctly hashed downloaded evidence and private files', async () => {
+test('semantic verification rejects correctly hashed downloaded evidence, private files and archived documents', async () => {
   for (const [name, value, message] of [
     ['data/chunks.json', [{ text: 'external evidence sentinel' }], /Downloaded evidence/],
     ['evaluation/human-audit/responses.json', [{ question: 'resident input sentinel' }], /response packets/],
@@ -48,6 +48,11 @@ test('semantic verification rejects correctly hashed downloaded evidence and pri
     ['docs/alpha-private-deployment.json', { project_id: 'owner sentinel' }, /Unreviewed documentation artifact/],
     ['docs/deployment.json', { account_id: 'owner sentinel' }, /Unreviewed documentation artifact/],
     ['Docs/Deployment.JSON', { account_id: 'owner sentinel' }, /Unreviewed documentation artifact/],
+    ['docs/ALPHA_VERIFICATION.json', { status: 'historical' }, /Unreviewed documentation artifact/],
+    ['docs/TAMPA_BAY_VERIFICATION.json', { status: 'historical' }, /Unreviewed documentation artifact/],
+    ['docs/OLLAMA_TESTING.md', 'historical model report', /Archived document/],
+    ['docs/BUG_FIX_FOLLOWUP_2026-09-12.md', 'historical runtime report', /Archived document/],
+    ['docs/RISKS.md', 'consolidated warnings', /Archived document/],
     ['evaluation/results/latest.json', { status: 'passed', benchmark_count: 1 }, /Historical evaluation/],
   ]) await fixture(async root => {
     await forgeEntry(root, name, value);

@@ -16,7 +16,7 @@ The source-only distribution starts without evidence; its empty reports mean `no
 | Independent human review | Assess claims, context, completeness, uncertainty and resident usefulness | Remains pending; requires people to inspect sources and the actual experience |
 | Accessibility checks | Exercise browser behavior and automated accessibility rules | Manual assistive-technology and resident review are separate; see [ACCESSIBILITY.md](ACCESSIBILITY.md) |
 
-Recorded [Ollama runs](OLLAMA_TESTING.md) apply to the named model, corpus and machine. Evaluate each model/version separately: record configuration, accepted selections, fallbacks, latency, failures and human usefulness without retaining resident prompts. See the [live-evaluation commands](EVAL_SUITE.md#evaluate-an-explicitly-configured-model).
+Recorded [Ollama runs](HISTORY.md#ollama-testing) apply to the named model, corpus and machine. Evaluate each model/version separately: record configuration, accepted selections, fallbacks, latency, failures and human usefulness without retaining resident prompts. See the [live-evaluation commands](EVAL_SUITE.md#evaluate-an-explicitly-configured-model).
 
 ## Published alpha.4 results
 

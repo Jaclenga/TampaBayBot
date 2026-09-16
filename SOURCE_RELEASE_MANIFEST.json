@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "aedbe72116ac14e7738bcdbabb6677905bc42ad4419cde44884ac35a5a7fb245",
+  "content_sha256": "d69facda472d8ba84d1c3c9b76b02f23e8e349f791caae635e35ba5b108eb228",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -67,8 +67,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 9626,
-      "sha256": "370741b2f96b5202e63c4e8e44f811c712d947fd1b2728aca567c89812299035"
+      "bytes": 9628,
+      "sha256": "2d9fbd5720c6c101bc004ca709ac8c2cd6d6d6391940e49b8d48059570e337cb"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -87,8 +87,8 @@
     },
     {
       "path": "data/development-config.json",
-      "bytes": 11387,
-      "sha256": "d46a88d42bf37b03d28887786576fb478e3864e3f35b39a1a661c447c9735e8a"
+      "bytes": 11405,
+      "sha256": "faac8e609e3c962f60b13bfdad996242b35252675b190b38094b4e9dc475dfb5"
     },
     {
       "path": "data/gis-config.json",
@@ -117,28 +117,8 @@
     },
     {
       "path": "docs/ACCESSIBILITY.md",
-      "bytes": 12879,
-      "sha256": "20662970d6917a2fe45c6df6d420995a59b81aec88daaa04bc0e47c909cbed57"
-    },
-    {
-      "path": "docs/ALPHA_VERIFICATION.json",
-      "bytes": 3400,
-      "sha256": "7285a3f7f712d0b13615451d279acc1034081ca738ba6d9eab4972545668b27a"
-    },
-    {
-      "path": "docs/ASSETS.md",
-      "bytes": 1100,
-      "sha256": "4c96a0a9b7c3b6c7b08b812810699f0472e8ab5d1aaff404c3f81a9159522e9a"
-    },
-    {
-      "path": "docs/BUG_FIX_FOLLOWUP_2026-09-12.md",
-      "bytes": 8372,
-      "sha256": "54ad9c5c8602cb9e8f10568fd5fe97954eea4c873943377483fc06d52efdf1f6"
-    },
-    {
-      "path": "docs/COVERAGE_EXPANSION.md",
-      "bytes": 11060,
-      "sha256": "1efda27d3e998b0ac6e76e43c7ab07aec6a175e0eb92cbb03a36566db504ee9d"
+      "bytes": 12881,
+      "sha256": "ae07f9f2e0506bdd3cfc0c2475a8c4dfbc5277540566eedc467e2184b02ff30b"
     },
     {
       "path": "docs/DATA_SOURCES.md",
@@ -152,18 +132,18 @@
     },
     {
       "path": "docs/DEPLOYMENT.md",
-      "bytes": 6335,
-      "sha256": "09ec53891f9447112f5082f63a0e20f14a7b06e458f8ecf09533548b60813d9a"
+      "bytes": 6337,
+      "sha256": "60bb137adba41ae4b3f7feae0fc82166bfbca4b9be6ea0fc32a91fdba98c4542"
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "bytes": 9886,
-      "sha256": "43cfce7883da6f6e5d3f4c9ed6d2c640d97ef8d0391ac509ae9591350ea01742"
+      "bytes": 9888,
+      "sha256": "69807df4ad73e380de5c783e96d244f1c4e1ea7bb3a0c3a5cc9af7a5b1be74ac"
     },
     {
       "path": "docs/DISTRIBUTION.md",
-      "bytes": 7720,
-      "sha256": "d66ccf854b201b2d9d123cf86c8d2221d6b297b38407f5524331199bd467266b"
+      "bytes": 7934,
+      "sha256": "32f1c54c03e8bb557968610412f16562105d0c98a3d72b5144c5bd676706d71f"
     },
     {
       "path": "docs/EVAL_SUITE.md",
@@ -172,18 +152,23 @@
     },
     {
       "path": "docs/EVALUATION.md",
-      "bytes": 8140,
-      "sha256": "43cdb8e96cae559160ee6d288b36f3e0fff8865e480d8944508a3bed74aee0f3"
+      "bytes": 8148,
+      "sha256": "d3048161d71c99d9e5a46b3cf02214258f5b48bc463097c777217cbbbb97a715"
     },
     {
       "path": "docs/GEOSPATIAL.md",
-      "bytes": 16501,
-      "sha256": "bc486500155034679a60e9a9a2dae9120eeecd0d2c9906f599c05bf3e9e0b262"
+      "bytes": 21730,
+      "sha256": "b0cb417b73420c678ca4a799599c0a051be11d648eafd1a02fac54136203b5f0"
     },
     {
       "path": "docs/GUARDRAIL_INSERTS.md",
       "bytes": 14851,
       "sha256": "748ed3b1d98775ae690acee519d4db9900e828a672d6c3fff89fd91ae5528f17"
+    },
+    {
+      "path": "docs/HISTORY.md",
+      "bytes": 3267,
+      "sha256": "b3147cf4210baf5d4769e471b2e76a9db898134314fe4d87dcb13903815cb361"
     },
     {
       "path": "docs/images/demo.png",
@@ -192,23 +177,18 @@
     },
     {
       "path": "docs/LIMITATIONS.md",
-      "bytes": 7239,
-      "sha256": "287c9c878d26d7eccdf1680a416d276e488bb0f4ab0760fba8ba2c0a2ca48660"
+      "bytes": 7761,
+      "sha256": "84741af308b7570647c864ebacb7afb8ad79214c3146235b5c0dea459db5a4ec"
     },
     {
       "path": "docs/LLM.md",
-      "bytes": 13560,
-      "sha256": "9122f51b8173c27592f0991d0c51622da3f3f4d9131f1c3b6f58d6b9ea48c1bb"
+      "bytes": 13576,
+      "sha256": "df9b0d5689ad4ff17f7cb7b6579f009196d930659629f2fbdbd4bb07cf268306"
     },
     {
       "path": "docs/METHODOLOGY.md",
       "bytes": 8877,
       "sha256": "c169aab1551a870a3c08250791a4e6d51b65ea0a54b5cf8ef961abc4ac19806d"
-    },
-    {
-      "path": "docs/OLLAMA_TESTING.md",
-      "bytes": 4974,
-      "sha256": "d6e34cfa140a41f9ec702079967f7117ca462eb79bf08d032e6ee4757f4ecfbf"
     },
     {
       "path": "docs/OPERATIONS.md",
@@ -222,28 +202,18 @@
     },
     {
       "path": "docs/README.md",
-      "bytes": 2710,
-      "sha256": "7b61f62887edd84109976f4f758b6f3b51ee5dbba853a9f8e93f39747c0e2d7f"
+      "bytes": 2724,
+      "sha256": "710004cdffd91a9c430f5643b23b79c9d910e4990a383e8e7cacd375944d88f4"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
-      "bytes": 20252,
-      "sha256": "57e61a6f257bc7231efefd75aa07dc13b428cea99396a71397bda91e9335b5f0"
-    },
-    {
-      "path": "docs/RISK_ENUMERATION.md",
-      "bytes": 2471,
-      "sha256": "ed44631f102a2ee1cdc7f3b2f550a3b0f96d0829137c837aa2c3f098da132c9a"
+      "bytes": 20299,
+      "sha256": "e12aaa1bd480aa6aabafff94dfff762d85b864b2f52be71857b70420f1f58a6f"
     },
     {
       "path": "docs/SOURCE_UPDATES.md",
       "bytes": 10757,
       "sha256": "41d0f492e33e743f20da8bf1c37971d42d6251bd07ce84a85027ed0e216c9f2c"
-    },
-    {
-      "path": "docs/TAMPA_BAY_VERIFICATION.json",
-      "bytes": 5867,
-      "sha256": "ca0a1e480c215cef2adc6e2c40602903928f084f2f6dd06f2a025113be3c0ef0"
     },
     {
       "path": "drizzle/0000_operations.sql",
@@ -407,8 +377,8 @@
     },
     {
       "path": "NOTICE.md",
-      "bytes": 3082,
-      "sha256": "a682c727a2390969203f51526054b72315cc17c1b661223bb46195df51d7ec6f"
+      "bytes": 3953,
+      "sha256": "5de8ee2dd189e132160af5bf91c2d031bf7e366996088e05d8467be2b296109e"
     },
     {
       "path": "package-lock.json",
@@ -497,8 +467,8 @@
     },
     {
       "path": "scripts/package-release.mjs",
-      "bytes": 13139,
-      "sha256": "9f88b1aca56c924c70c2944eaf4be1dac164b3c690e81f4d45dffe0df5eb30f8"
+      "bytes": 12979,
+      "sha256": "53f74659f4d0e557748f7f7fa23961f32d4fdc87a66f4d98f4d2e08d6927b37d"
     },
     {
       "path": "scripts/reproduce-runtime-transport.mjs",
@@ -532,8 +502,8 @@
     },
     {
       "path": "scripts/source-policy.mjs",
-      "bytes": 8296,
-      "sha256": "bec023deff7ec07b01d938b23ee77986668a2daf536612b5cf9b30992d403862"
+      "bytes": 8385,
+      "sha256": "4ec99037f2633ddf69ffe4c03326962448504aa478709b26a8303cafaac37254"
     },
     {
       "path": "scripts/source-refresh.mjs",
@@ -557,8 +527,8 @@
     },
     {
       "path": "scripts/test-standalone.mjs",
-      "bytes": 12057,
-      "sha256": "64f3cb25f36e8b9934953f1accba71d8307a49636035c0be0fef9e764822ac2d"
+      "bytes": 12085,
+      "sha256": "02884bd93e9ca21a0e7917caf5b0302b4f5f85b5f0211182e023134c58110ade"
     },
     {
       "path": "scripts/update-source-manifest.mjs",
@@ -572,8 +542,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 3447,
-      "sha256": "e72c899f977a1c36c508dcefb14b82d2b57574e3861c6397cc23140efb5d0c40"
+      "bytes": 3449,
+      "sha256": "edb6f14ee32fa6c656b7d278778a6750a89bacf21c92c9c7824a670acd868487"
     },
     {
       "path": "src/app/about/page.tsx",
@@ -1222,8 +1192,8 @@
     },
     {
       "path": "tests/source-policy.test.mjs",
-      "bytes": 11856,
-      "sha256": "da5a71a47f2838b87c5cd4d4fc36814ac5936316ff6cc467df61b664e119acb0"
+      "bytes": 12326,
+      "sha256": "46a69869a73c2c7f329e3523fe12d0856fd55b8cd7fcc79df5a64263a8794e2d"
     },
     {
       "path": "tests/source-refresh-deploy.test.mjs",
@@ -1232,8 +1202,8 @@
     },
     {
       "path": "tests/source-release.test.mjs",
-      "bytes": 9438,
-      "sha256": "852f81267f3ec2ad8956fa85a239365d819424acc6f648c2f3f454490970ef4a"
+      "bytes": 10251,
+      "sha256": "859b32297f2e6688ad30a0d89b24d6e4976013dd3b3fc183173b4744496d6d5b"
     },
     {
       "path": "tsconfig.json",
