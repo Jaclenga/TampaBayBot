@@ -1,65 +1,55 @@
 # Known limitations
 
-TampaBayBot is an independent source-only alpha for housing-information navigation. It cannot make an eligibility decision, give an official zoning determination or approve a permit. This guide summarizes the boundaries a resident or operator needs to understand; [release readiness](RELEASE_READINESS.md) records the current evidence and remaining launch work.
-
-The public source package starts with no evidence and cannot answer factual questions until its operator [loads and reviews sources](DISTRIBUTION.md). Results from the populated development checkout do not establish the quality of a newly acquired corpus.
+TampaBayBot is an independent source-only alpha for housing-information navigation. It cannot decide eligibility, give an official zoning determination or approve a permit. The package starts without evidence; an operator must [load and review sources](DISTRIBUTION.md). Historical development results do not establish the quality of a new corpus. [Release readiness](RELEASE_READINESS.md) records verification and remaining launch work.
 
 ## Information and answer coverage
 
-- The [source registry](DATA_SOURCES.md) is a bounded collection of program pages, guidance and map services for Tampa Bay. It does not cover every program or contact, complete municipal codes, or comprehensive-plan text.
-- Answers use deterministic retrieval and literal excerpts, with optional model-assisted evidence selection. They can be repetitive or relevant without fully resolving the question. An exact quotation can still be incomplete or unhelpful in context; a model can select valid evidence poorly.
-- Explicit routing patterns and synonyms can miss unusual phrasing, mixed intents, acronyms and spelling errors.
-- Authority weights do not establish legal precedence. Conflict detection addresses only directly opposing application-status statements for the same program. Exceptions, superseded rules and other contradictions require review.
-- Some evaluation measures are labeled template/keyword proxies. The separate claim-quality suite measures exact authored claims and citation relations for 12 dated fixtures. Neither is a real-world accuracy estimate, source accuracy audit or guarantee of completeness for arbitrary questions.
+- The [source registry](DATA_SOURCES.md) covers selected Tampa Bay program pages, guidance and maps, not every program/contact, complete municipal codes or comprehensive-plan text.
+- Literal excerpts can be repetitive, incomplete or unhelpful. Optional model selection can choose valid evidence poorly. Routing can miss unusual phrasing, mixed intents, acronyms and spelling errors.
+- Authority weights do not establish legal precedence. Conflict detection catches only directly opposing application-status statements for the same program; exceptions, supersession and other contradictions require review.
+- [Evaluation](EVALUATION.md) includes template/keyword proxies and a separate claim-quality suite with 12 dated fixtures. Neither measures general real-world accuracy, audits source accuracy or guarantees completeness.
 
 ## Freshness and availability
 
-Retrieval date means a response was obtained then; its content can still be old or contradictory. A weekly source-refresh workflow stages acquisitions and publishes only a metadata review report. An operator must review and approve an exact candidate digest before applying it; scheduled acquisition never deploys new evidence automatically.
+Retrieval dates do not establish current content. Sources may retain old income tables, unresolved reopening projections or map amendments needing staff review. Websites/APIs can fail, rate-limit or change schema/terms. [Failed-candidate rules](SOURCE_UPDATES.md#acquire-a-candidate) retain dated prior evidence only for unchanged source definitions. Outages do not prove a program or designation is absent.
 
-- Upstream websites/APIs can fail, rate-limit, change schema or change terms. Failed refreshes retain dated prior evidence. An outage does not prove a program or designation is absent.
-- A recent retrieval can contain an old income table, an unresolved reopening projection or a map amendment needing staff review. Dated examples and source-specific caveats are maintained in [DATA_SOURCES.md](DATA_SOURCES.md).
-
-Operators must assign a refresh owner, inspect scheduled failures and changes, and use the reviewed apply/build workflow in [source updates](SOURCE_UPDATES.md). Residents should verify time-sensitive information through the cited agency.
+Weekly refreshes stage acquisitions and publish a metadata review report. An operator must approve the exact candidate digest before applying it; acquisition never deploys evidence automatically. Operators need a refresh owner and the [reviewed apply/build workflow](SOURCE_UPDATES.md). Residents should confirm time-sensitive information with the cited agency.
 
 ## Geographic limits
 
-- Address selection is required. Locator scores are not probabilities. New/incomplete addresses, units and shared buildings can remain unresolved.
-- Resource navigation covers selected sources for Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco. Other municipalities do not automatically inherit county programs or rules. Unspecified/conflicting cities require clarification.
-- Live property layers cover Tampa, St. Petersburg, Clearwater and Pasco County. Pasco zoning and future land use are withheld wherever a parcel intersects a municipality or its municipal check fails. Official boundary intersection establishes which connected city applies; a mailing address, selected resource area, or regional coordinate guard does not.
-- Pasco address candidates require explicit selection. An empty geocoder result outside connected locator coverage does not mean an address is invalid.
-- Valid, bounded parcel polygons are used for whole-parcel zoning and future-land-use intersections. Missing or ambiguous geometry explicitly falls back to address-point context. Boundary touches and multiple results require agency review; intersections do not establish legal split-zoning areas.
-- The MVP does not check every historic/overlay district, flood constraint, easement, deed restriction, utility condition, variance or site-specific approval.
-- Multiple features, missing fields and transfer limits remain uncertainty states. No result is an official property or project determination.
+- Every address candidate requires selection. Scores are not probabilities, and new/incomplete addresses, units or shared buildings can remain unresolved. No geocoder match does not establish an invalid address.
+- Resource navigation covers selected sources for Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco. Other municipalities do not inherit county coverage; missing/conflicting cities require clarification.
+- Live property layers cover Tampa, St. Petersburg, Clearwater and Pasco County. Official boundaries establish coverage, not mailing addresses or resource selections. Pasco zoning/land use is withheld when a parcel intersects a municipality or the municipal check fails.
+- Valid parcel polygons support whole-parcel intersections; missing/ambiguous geometry falls back to labeled address-point context. Boundary touches, multiple results, missing fields and transfer limits require review. Intersections do not establish legal split-zoning areas.
+- The app does not check every historic/overlay district, flood constraint, easement, deed restriction, utility condition, variance or site-specific approval.
 
 Use the official maps and planners for whole-property decisions. See [GIS methods](GEOSPATIAL.md).
 
 ## Development records
 
-The independent source is a pinned normalized core snapshot dated August 23, 2026, not a complete current inventory. Search excludes rows without accepted coordinates/identifiers and does not query every location of a multi-location activity.
+The independent Tampa source is a pinned August 23, 2026 snapshot. It excludes rows without accepted coordinates/identifiers and does not search every location of a multi-location activity. Separate official adapters cover Clearwater planning cases, St. Petersburg district projects and Pasco in-review zoning/comprehensive-plan cases. These are limited published records, not complete current inventories. Pasco includes older entries; St. Petersburg provides no source update dates.
 
-The pinned development snapshot covers Tampa only. Separate official adapters query Clearwater planning cases, St. Petersburg district projects, and Pasco in-review zoning/comprehensive-plan cases. St. Petersburg and Pasco live checks passed on September 13, 2026; availability can change. Pasco layers include older entries, and St. Petersburg supplies no source update dates. These are limited published cases, not complete permit inventories. Every adapter verifies geography and labels its scope; absence or outage never means no development occurred.
+Tampa results use representative-point distance; official adapters use radius/polygon intersections without numeric polygon distance. Both return at most 30 records. Neither establishes walking/parcel-edge distance or a legal relationship. Date groups preserve different source meanings and are not construction-start trends. A permit/status does not prove work started or finished; no match or an outage does not prove inactivity.
 
-The Tampa snapshot uses straight-line great-circle point distance and displays the nearest 30 records with total matches/truncation. Official city and county adapters return up to 30 project/case polygons intersecting the requested radius; they assign no numeric polygon distance. Neither method establishes walking distance, parcel-edge distance or a legal relationship. Source dates retain their different meanings, including Pasco GIS record edit dates; temporal groups are not measured construction-start trends.
-
-A permit-like name or status does not demonstrate physical work started or finished. No match does not establish inactivity. Refreshing the pinned Tampa snapshot requires reviewing a newer normalized dataset, updating its commit/hash/snapshot metadata and rerunning integrity/geographic checks. A fresh official query does not establish that the publisher has updated each case's status.
+[GIS methods](GEOSPATIAL.md#tampa-development-records-adapter) defines distance, truncation, dated checks and snapshot-refresh requirements. A fresh query alone does not establish updated case status.
 
 ## Accessibility, language and human review
 
-WCAG 2.1 AA is a target, not verified conformance. Thirty human-audit responses remain pending independent review. Manual keyboard, screen-reader, 200% text resizing and resident usability checks also remain pending unless actual later results are recorded in [ACCESSIBILITY.md](ACCESSIBILITY.md) and audit artifacts.
+WCAG 2.1 AA conformance is unverified. Thirty human-audit responses and manual keyboard, screen-reader, 200% text resizing and resident usability checks remain pending unless later results are recorded in [ACCESSIBILITY.md](ACCESSIBILITY.md) and audit artifacts.
 
-The app is English-first. Separated UI strings are preparation for localization, not a completed translation system. Regulatory terminology has no verified translation. Official destinations and external PDFs/maps/forms have their own accessibility limitations.
+Question, property and reference interfaces support English and Spanish. Source titles, quotations and records retain their original language; regulatory text is not silently translated. Spanish wording still needs independent fluent-speaker and resident review. External PDFs, maps, forms and agency sites have their own accessibility limits.
 
 ## Privacy and operations
 
-The app does not save questions or addresses to a database or browser storage. A bounded topic/program/jurisdiction context is kept temporarily in page memory for follow-up questions and cleared on reset or reload. Eligible questions and public excerpts go to the configured model provider when assistance is enabled. Address text goes to the configured Hillsborough and Pinellas locators; selected coordinates go to connected municipal-boundary and property services. Opening the optional map sends coordinates to OpenStreetMap. Transient caches, host logs and provider retention are separate. This is not a promise of anonymity or zero retention. [SECURITY.md](../SECURITY.md#data-flow-and-privacy) explains each boundary.
+Questions and addresses are not saved to a database or browser storage. Bounded follow-up context stays in page memory until reset/reload. Enabled models receive eligible questions and public excerpts; locators receive address text, property services receive coordinates, and opening the optional map sends coordinates to OpenStreetMap. Caches, host logs and provider retention are separate; this does not promise anonymity or zero retention. [Security](../SECURITY.md#data-flow-and-privacy) details these flows.
 
-Identifier and instruction-pattern checks are limited: they can miss disclosures or reject unrelated text, and trusted extensions are not sandboxed. Validation constrains model output but cannot guarantee useful evidence selection. The recorded [Ollama tests](OLLAMA_TESTING.md) cover one model/configuration; other deployments need their own review. Keep `LLM_PROVIDER=none` for the default no-model path, and use the [model guide](LLM.md) for local/hosted configuration and cloud-forwarding limits.
+Identifier/instruction screening can miss disclosures or reject unrelated text; trusted extensions are not sandboxed. Model tests cover specific configurations, and localhost does not guarantee local inference. [LLM.md](LLM.md) covers provider review and cloud forwarding; `LLM_PROVIDER=none` is the default.
 
-Shared request/concurrency limits, a source-refresh schedule, monitoring, retention and an operational rollback process remain operator responsibilities. A [private vulnerability-reporting channel](../SECURITY.md#reporting-a-problem) exists, but no staffed incident-response guarantee is made. [Operations](OPERATIONS.md) and [release readiness](RELEASE_READINESS.md) describe configuration and the work needed before unrestricted resident access.
+Operators own shared request/concurrency limits, refreshes, monitoring, retention and rollback. The [private reporting channel](../SECURITY.md#reporting-a-problem) carries no staffed incident-response guarantee. [Operations](OPERATIONS.md) describes the required controls.
 
-Historical Windows and Linux production-browser runs exposed a local-runtime transport failure after an unread upload was rejected. Current Windows application verification passes all 15 cases by testing stalled uploads against the exact compiled Worker through a direct route and retaining the static-assets route for resident, asset, accessibility and response-policy checks. This verifies the application behavior but does not establish how a hosted edge or Miniflare's defective local static-assets proxy behaves after an abandoned upload. The [follow-up report](BUG_FIX_FOLLOWUP_2026-09-12.md) preserves the earlier evidence.
+Windows/Linux local production runs exposed a transport failure after rejected unread uploads. Current Windows verification passes 15 cases using the compiled Worker directly for stalled uploads and the static-assets route for other checks. This does not verify hosted-edge or local static-assets-proxy behavior after abandoned uploads; see the [investigation](BUG_FIX_FOLLOWUP_2026-09-12.md).
 
-Public source availability is separate from operating a public resident service. Authenticated hosted smoke testing and an operator's provider/deployment checks remain separate release steps, recorded in [release readiness](RELEASE_READINESS.md).
+Public source availability is separate from a public resident service. Authenticated hosted smoke and operator provider/deployment checks remain release steps in [release readiness](RELEASE_READINESS.md).
 
 ## Terms and independence
 

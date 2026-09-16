@@ -1,8 +1,8 @@
 # Evaluation and review
 
-This guide explains what TampaBayBot's evaluations measure and how human review complements them. [EVAL_SUITE.md](EVAL_SUITE.md) is the command and report-format reference. [Release readiness](RELEASE_READINESS.md) is the canonical record of dated results, environments and unresolved checks; the published result below summarizes that record for readers evaluating the project.
+This guide explains evaluation metrics and human review. Use [EVAL_SUITE.md](EVAL_SUITE.md) for commands, report formats and scorer contracts, and [release readiness](RELEASE_READINESS.md) for dated results and unresolved checks.
 
-The source-only distribution initially contains no evidence or completed evaluation. Its empty reports mean `not_run`, not zero-error success. Load and review a corpus before running the complete evaluations. The [distribution guide](DISTRIBUTION.md) explains why a fresh download can differ from the historical development snapshots.
+The source-only distribution starts without evidence; its empty reports mean `not_run`. [Load and review a corpus](DISTRIBUTION.md#populate-and-validate-locally) before evaluating it. Historical results apply to their retained development snapshots.
 
 ## Distinct kinds of evidence
 
@@ -16,33 +16,23 @@ The source-only distribution initially contains no evidence or completed evaluat
 | Independent human review | Assess claims, context, completeness, uncertainty and resident usefulness | Remains pending; requires people to inspect sources and the actual experience |
 | Accessibility checks | Exercise browser behavior and automated accessibility rules | Manual assistive-technology and resident review are separate; see [ACCESSIBILITY.md](ACCESSIBILITY.md) |
 
-Real local Ollama testing has been recorded in [OLLAMA_TESTING.md](OLLAMA_TESTING.md). Those results describe the named Meta model, corpus and machine; they do not retroactively turn synthetic tests or baseline response packets into model-quality evidence.
+Recorded [Ollama runs](OLLAMA_TESTING.md) apply to the named model, corpus and machine. Evaluate each model/version separately: record configuration, accepted selections, fallbacks, latency, failures and human usefulness without retaining resident prompts. See the [live-evaluation commands](EVAL_SUITE.md#evaluate-an-explicitly-configured-model).
 
 ## Published alpha.4 results
 
-The September 12, 2026 development evaluation produced these results before the sanitized source-only release was built:
-
-| Metric | Passed | Failed | Not applicable |
-| --- | ---: | ---: | ---: |
-| Factual accuracy | **12** | 0 | 0 |
-| Citation correctness | **12** | 0 | 0 |
-| Citation completeness | **12** | 0 | 0 |
-
-All **236 offline cases** passed, with **4,370 applicable checks passed**, zero failed and 582 marked not applicable. The code suite also passed all 236 tests. The three claim metrics run over the same 12 exact, hand-authored cases; they are separate checks of claim identity, supporting-source attribution and citation coverage rather than 36 independent answers.
-
-The result is reproducible against the retained dated development corpus. It is not an open-ended semantic accuracy rate, a blind holdout, a current-source audit or a completed human review. The downloadable source release intentionally starts without the retained evidence, so its generated reports are marked `not_run` until an operator fetches, reviews and evaluates a corpus.
+The [September 12, 2026 alpha.4 record](RELEASE_READINESS.md#historical-v010-alpha4-evaluation-and-repository-organization) contains the published totals and validation environment. Factual accuracy, citation correctness and citation completeness each passed the same 12 hand-authored cases: three checks per answer, not 36 independent answers. These results measure exact claims against dated evidence, not general semantic accuracy or current publisher truth.
 
 ## Benchmark design and reference date
 
-The narrative evaluator uses preserved sources and a fixed reference date from `evaluation/scenarios.mjs`. This makes a retained development corpus reproducible as it ages. Runtime answers use the actual current time and flag snapshots older than each registry refresh interval. Refreshing a corpus requires deliberate review of the reference date and changed expectations.
+The narrative evaluator uses preserved sources and a fixed reference date from `evaluation/scenarios.mjs`; runtime answers use the current time and each source's refresh interval. Review the date and expectations when refreshing a corpus.
 
-There are **77 hand-authored questions**, spanning housing (28), zoning (16), permitting (11), development (10), and navigation (12). They cover ordinary language, misspellings, vague questions, missing definitions, invented programs and ordinances, current/old source content, conflicting availability, unavailable sources, malicious documents, unsupported eligibility and legal judgments, malformed/incomplete locations, and irrelevant requests. Four cases use synthetic scenario data. Fixture agencies and `.invalid` URLs are labeled test material and do not enter ordinary resident retrieval; they can appear in evaluation artifacts.
+The **77 hand-authored questions** span housing (28), zoning (16), permitting (11), development (10), and navigation (12). They cover unclear language, invented programs, stale or conflicting evidence, malicious documents, unsupported judgments, incomplete locations and irrelevant requests. Four use synthetic scenario data; fixture agencies and `.invalid` URLs stay outside ordinary resident retrieval.
 
-[`evaluation/benchmarks.mjs`](../evaluation/benchmarks.mjs) is the editable narrative benchmark definition. The unified suite adds guardrail, provider-contract, repeatable input/corpus-variation and claim-quality cases around it. [`evaluation/datasets/quality-benchmark.json`](../evaluation/datasets/quality-benchmark.json) is a separate, checked-in oracle for 12 exact extractive claims and their allowed source/chunk support. Both sets are hand-authored development fixtures. A fresh independently authored holdout is needed before claims about general performance. File destinations and regeneration commands are listed in the [suite guide](EVAL_SUITE.md).
+[`evaluation/benchmarks.mjs`](../evaluation/benchmarks.mjs) defines the narrative benchmark. The unified suite adds [other case groups](EVAL_SUITE.md#what-the-cases-cover), including a separate [oracle](../evaluation/datasets/quality-benchmark.json) for 12 exact claims and their supporting source/chunk pairs. These are development fixtures; general-performance claims require an independently authored holdout.
 
 ## Reading the metrics
 
-[Applicable-program recall](PROGRAM_RECALL.md) measures omissions separately: how many programs in an authored applicability set appear in ranked retrieval and final evidence. It counts programs rather than expected-source hits and preserves missed programs in the denominator. Its dated development inventory does not establish completeness outside the reviewed source pages.
+[Applicable-program recall](PROGRAM_RECALL.md) separately measures omissions against a fixed inventory of distinct programs. Its denominator includes missed programs but cannot account for programs outside that inventory.
 
 | Reported metric | What it measures | What it does not establish |
 | --- | --- | --- |
@@ -59,22 +49,20 @@ There are **77 hand-authored questions**, spanning housing (28), zoning (16), pe
 | Government routing | Expected official next-step URL is present | Whether a resident can complete an application |
 | Location request | Property questions request location confirmation | Geocoding, jurisdiction, parcel, or distance correctness |
 
-The scoped automated metrics cover 12 dated exact-claim cases across six Tampa Bay jurisdictions. **Independent human factual support, unsupported-claim rate, geographic correctness, and next-step usefulness remain null.** The evaluator does not disguise exact hashes and authored support pairs as an open-ended semantic claim audit. Geographic calculations and jurisdiction behavior have separate meaningful tests in the GIS module; no answered property in this narrative benchmark is treated as spatially verified.
+**Independent human factual support, unsupported-claim rate, geographic correctness, and next-step usefulness remain null.** GIS calculations and jurisdiction behavior have separate tests; the narrative benchmark does not spatially verify answered properties. Its saved review packets describe the [deterministic baseline](METHODOLOGY.md), not subsequent model-assisted answers.
 
-The narrative benchmark and saved review packets describe the deterministic baseline defined in [methodology](METHODOLOGY.md). Enabling a provider does not validate new model-assisted output against those older packets. Evaluate each chosen model/version separately, recording configuration, accepted selections, fallback rate, latency, failures and human usefulness without retaining resident prompts. The [model guide](LLM.md) explains provider disclosure and configuration; [live-evaluation commands](EVAL_SUITE.md#evaluate-an-explicitly-configured-model) explain the run contract.
-
-Null checks mean not applicable, never successful. Empty or all-null cases cannot pass. The scorers check rendered quotations, independently recompute chunk hashes, and validate authored claim/support pairs before evaluation. Mutation tests deliberately introduce fabricated text, misattribution, missing citations, partial coverage and damaged provenance. The [scoring contract](EVAL_SUITE.md#read-the-scores) describes those safeguards. Literal matching still cannot determine semantic relevance or source truth.
+Null checks mean not applicable, never successful; empty or all-null cases cannot pass. See the [scoring contract](EVAL_SUITE.md#read-the-scores) for independent hash checks, support validation and mutation tests.
 
 ## Independent human review
 
-The development checkout has 30 prepared response packets in `evaluation/human-audit/responses.json`. Independent human review has not been completed. The public source package excludes those copied answers and starts with an empty packet list; running the narrative evaluator after source loading prepares new pending packets. A prepared response, a generated rubric or a successful model run is not a completed review.
+Independent human review remains pending. The development checkout has 30 prepared packets in `evaluation/human-audit/responses.json`; the source package starts with an empty list. After source loading, the [narrative evaluator](EVAL_SUITE.md#narrative-benchmark-and-human-packets) prepares new pending packets, preserves completed judgments and flags changed responses for renewed review. The unified suite does not rewrite review records.
 
-The [human review rubric](../evaluation/human-audit/RUBRIC.md) is the canonical scoring worksheet. Reviewers must inspect original sources and enough surrounding text to assess exceptions, dates and scope; record the reviewer, date, dimension scores and concrete corrections. Unassessable dimensions remain null with a reason. Complete a substantive-claim inventory before calculating an unsupported-claim rate, and report its numerator and denominator rather than an aggregate “AI accuracy” score.
+Use the [human review rubric](../evaluation/human-audit/RUBRIC.md). Inspect original sources and surrounding context for exceptions, dates and scope; record the reviewer, date, dimension scores and corrections. Leave unassessable dimensions null with a reason. An unsupported-claim rate requires a substantive-claim inventory and a reported numerator and denominator.
 
-The narrative evaluator preserves completed human judgments and flags responses changed since review. The unified suite does not rewrite those packets or treat pending rows as completed. Changed responses need renewed review; inaccessible essential actions and materially misleading claims cannot be offset by other passing dimensions. The separate [accessibility checklist](ACCESSIBILITY.md#manual-review-checklist) covers keyboard, screen-reader, zoom and resident task assessment.
+Inaccessible essential actions and materially misleading claims cannot be offset by other passing dimensions. Use the [accessibility checklist](ACCESSIBILITY.md#manual-review-checklist) for keyboard, screen-reader, zoom and resident task assessment. Prepared packets, generated rubrics and model runs do not complete either review.
 
 ## Historical agent review
 
-The development archive retains an explicitly labeled 30-response agent review under `evaluation/agent-audit/`. It identified irrelevant secondary excerpts, a poorly selected PDF passage and arbitrary contact routing, then recorded corrections and remaining limits. UI accessibility and spatial correctness scores were left null because those were outside that inspection.
+The development archive's 30-response agent review in `evaluation/agent-audit/` identified irrelevant secondary excerpts, a poorly selected PDF passage and arbitrary contact routing, then recorded corrections and limits. UI accessibility and spatial correctness were outside its scope and remained null.
 
-This is historical agent evidence, excluded from the source-only package and not automatically recreated during ingestion. It does not satisfy independent human review. Current release status and outstanding actions remain in [release readiness](RELEASE_READINESS.md).
+This historical agent evidence is excluded from the source package, is not recreated by ingestion and does not satisfy independent human review.

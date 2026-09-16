@@ -1,31 +1,26 @@
 # Optional language-model providers
 
-TampaBayBot can use an operator-selected model through **Ollama** or an **OpenAI-compatible Chat Completions endpoint**. `LLM_PROVIDER=none` is the default: the existing deterministic, cited answer path runs without a model. The adapter uses HTTP directly; a paid service or provider SDK is not required.
-
-The model selects from already-retrieved evidence and returns evidence IDs with full literal excerpts. It cannot add free-form facts, new citations, eligibility decisions or project approvals. The contract below applies to both local and remote providers.
+TampaBayBot supports operator-selected **Ollama** and **OpenAI-compatible Chat Completions** endpoints over HTTP, without a provider SDK. `LLM_PROVIDER=none` is the default deterministic, cited path. Models can select retrieved evidence; they cannot add facts, citations, eligibility decisions or approvals. The same contract applies to local and remote providers.
 
 ## What a model receives and can change
 
-1. Routing, retrieval, source selection and the initial cited answer run first.
-2. A configured provider is considered only when that answer has status `answered`. Insufficient evidence, official judgment, conflicting/stale evidence and location/coverage states remain on the deterministic path.
-3. The server sends the current resident question, bounded retrieved evidence containing IDs/titles/excerpts, and selector instructions to the configured model endpoint. It does not attach application conversation history, provider credentials, property-lookup results or the complete corpus. The question itself can contain personal information the resident typed.
-4. The model returns one to three structured selections. The first supplied evidence entry must stay first, and each selection must contain a supplied ID with its full literal quote. Unsupported IDs, duplicate entries, altered/reordered primary evidence, unexpected prose, malformed output and incomplete responses fail validation.
-5. The application builds the answer from validated selections. Existing status, evidence records, official next steps, explanation and warnings remain under application control. The model does not issue tool calls or trigger another source fetch.
-6. Invalid configuration, an unreachable/slow provider, response limits or invalid output return the original deterministic answer with fallback metadata. Provider keys, base URLs and raw error details are not returned to the browser.
+1. Routing and retrieval produce the initial cited answer. A provider runs only for status `answered`; insufficient evidence, official judgment, conflicts/staleness and location/coverage states remain deterministic.
+2. The server sends the current question, bounded evidence IDs/titles/excerpts and selector instructions. It attaches no conversation history, provider credentials, property results or complete corpus. The question can contain personal information the resident typed.
+3. The model returns one to three selections, each with a supplied ID and its full literal quote. The first evidence entry must stay first. Unsupported IDs, duplicates, altered/reordered primary evidence, extra prose, malformed output and incomplete responses fail validation.
+4. The app builds the answer from validated selections and controls status, evidence records, official next steps, explanation and warnings. Models cannot call tools or fetch sources.
+5. Invalid configuration, provider failure/timeout, exceeded response limits or invalid output return the original answer with fallback metadata. Keys, base URLs and raw errors are withheld from the browser.
 
-The API's generation metadata distinguishes disabled, skipped, model-assisted and fallback behavior. [Real Ollama engineering tests](OLLAMA_TESTING.md) have run, separately from synthetic adapter fixtures. Neither establishes general accuracy or resident usefulness: literal evidence can still be incomplete or poorly selected.
-
-The guarded API screens input and surrounds model use with application checks. See [guardrail inserts and hooks](GUARDRAIL_INSERTS.md) for the stages, narrow screening limits and extension contract; provider validation does not replace those checks.
+Generation metadata distinguishes disabled, skipped, model-assisted and fallback behavior. [Guardrail inserts and hooks](GUARDRAIL_INSERTS.md) describes the API's additional input/runtime checks; provider validation does not replace them. [Recorded Ollama tests](OLLAMA_TESTING.md) are separate from synthetic fixtures and do not establish general accuracy or usefulness.
 
 ## Configuration
 
-Copy `.env.example` to an ignored `.env` file when you want to configure a provider. No copy is needed for the default no-model mode. On PowerShell:
+For model use, copy `.env.example` to ignored `.env`, or edit the existing file. No file is needed for the default mode. On PowerShell:
 
 ```powershell
 Copy-Item -LiteralPath .env.example -Destination .env
 ```
 
-On a POSIX shell use `cp .env.example .env`. Edit the existing `.env` instead if you already have one. Restart the local development server after changing configuration. This repository's installed Cloudflare plugin loads local `.env` values into Worker bindings; do not assume ordinary shell variables automatically reach that Worker. Avoid competing values in `.dev.vars`, which takes precedence over `.env`. Cloudflare documents the local files and their precedence separately from deployed secrets. [Cloudflare secrets documentation](https://developers.cloudflare.com/workers/configuration/secrets/)
+On POSIX use `cp .env.example .env`. Restart the development server after changes. The installed Cloudflare plugin loads `.env` into Worker bindings; ordinary shell variables may not reach the Worker. `.dev.vars` takes precedence, so avoid competing values. See [Cloudflare's local configuration rules](https://developers.cloudflare.com/workers/configuration/secrets/).
 
 | Variable | Default / accepted value | Meaning |
 | --- | --- | --- |
@@ -37,11 +32,11 @@ On a POSIX shell use `cp .env.example .env`. Edit the existing `.env` instead if
 | `LLM_MAX_RESPONSE_BYTES` | `32768`; integer `1024`–`262144` | Maximum provider response body |
 | `LLM_ALLOW_PRIVATE_HTTP` | `false` | Explicitly allow HTTP to a literal private IP (RFC1918 IPv4 or IPv6 ULA); loopback HTTP is allowed without this flag |
 
-Public remote endpoints require HTTPS. Private-IP HTTPS is allowed; the private-HTTP flag changes only the plain-HTTP case. Redirects, credentials embedded in URLs, query/fragment-bearing base URLs, full chat-endpoint URLs and reserved/link-local endpoints are rejected. Residents cannot select arbitrary endpoint URLs or provide provider credentials through the question API. DNS and network trust remain an operator responsibility; URL validation does not authenticate a model server or resolve DNS to guarantee a public destination.
+Public endpoints require HTTPS; private-IP HTTPS is also allowed. `LLM_ALLOW_PRIVATE_HTTP` changes only plain HTTP. Redirects, URL credentials, queries/fragments, full chat-endpoint URLs and reserved/link-local endpoints are rejected. Residents cannot supply endpoints or provider credentials through the question API. Operators remain responsible for network/DNS trust: URL checks neither authenticate a server nor resolve DNS to guarantee a public destination.
 
 ## Local Ollama
 
-Install and run Ollama separately, choose a model that fits the machine and its license, and ensure that model is available before starting a model-assisted question. TampaBayBot does not install Ollama, download model weights, start a model daemon or choose a model for you. Check the installed model name with `ollama list`.
+Install/run Ollama separately and choose a model suited to the machine and its license. TampaBayBot does not install Ollama, download weights, start the daemon or choose a model. Check installed identifiers with `ollama list`.
 
 In `.env`, replace the model placeholder with that exact local identifier:
 
@@ -55,17 +50,17 @@ LLM_MAX_RESPONSE_BYTES=32768
 LLM_ALLOW_PRIVATE_HTTP=false
 ```
 
-For Meta Llama 3, an example installed identifier is `llama3:8b`. If it is absent, `ollama pull llama3:8b` downloads the weights; `ollama serve` starts the daemon when it is not already running. The [Ollama Llama 3 listing](https://ollama.com/library/llama3) identifies the 8B variant and its download size. Model weights have their own license, separate from this application's MIT license.
+For example, `ollama pull llama3:8b` downloads Meta Llama 3 if absent; `ollama serve` starts a stopped daemon. The [model listing](https://ollama.com/library/llama3) gives size and licensing information. Weight licenses are separate from the app's MIT license.
 
-CPU inference can exceed the default 30-second deadline, especially while loading the model and processing the first prompt. For local testing, set `LLM_TIMEOUT_MS=120000` and allow an adequate evaluation budget. A timeout returns the cited baseline and is recorded as a failed model-acceptance check; it must not be counted as successful inference.
+CPU inference, especially first load, can exceed 30 seconds. For local testing, use `LLM_TIMEOUT_MS=120000` and adequate evaluation time. A timeout falls back to the cited baseline and fails model acceptance; it is not successful inference.
 
-The native adapter appends `/api/chat`, supplies `model` and `messages`, requests non-streaming output, and validates the structured selection independently. Ollama's native API supports a JSON format/schema and defaults to streaming unless disabled. [Ollama chat API](https://docs.ollama.com/api/chat)
+The native adapter appends `/api/chat`, sends `model`/`messages`, requests non-streaming structured output and validates selections independently. See the [Ollama chat API](https://docs.ollama.com/api/chat).
 
-Ollama normally listens on `127.0.0.1:11434`. A localhost endpoint alone does not prove that inference stays on the device: Ollama can send cloud-model work to its cloud service. For local-only inference, use locally running weights and disable cloud features in the **Ollama process** with `OLLAMA_NO_CLOUD=1` if needed, then restart Ollama. This is separate from the app's `.env`. [Ollama FAQ](https://docs.ollama.com/faq), [Ollama cloud model behavior](https://docs.ollama.com/cloud)
+Ollama normally listens on `127.0.0.1:11434`, but localhost does not guarantee on-device inference: Ollama can forward cloud-model work. For local-only inference, use local weights and, if needed, set `OLLAMA_NO_CLOUD=1` in the **Ollama process**, then restart it. The app's `.env` does not set this daemon option. See the [Ollama FAQ](https://docs.ollama.com/faq) and [cloud behavior](https://docs.ollama.com/cloud).
 
 ## OpenAI-compatible server
 
-This provider name refers to a request/response protocol. You choose the model host and its terms. The adapter uses `POST <LLM_BASE_URL>/chat/completions`, with the configured model/messages and JSON-object output, and reads a completed text message from the response. This is a Chat Completions integration; Responses API, provider tools, streaming and multimodal input are outside this adapter. [OpenAI Chat Completions reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create)
+You choose the host and its terms. The adapter sends `POST <LLM_BASE_URL>/chat/completions` with model/messages and JSON-object output, then reads a completed text message. Responses API, provider tools, streaming and multimodal input are unsupported. See the [Chat Completions reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create).
 
 For Ollama's compatibility endpoint, configure:
 
@@ -76,9 +71,9 @@ LLM_MODEL=your-installed-local-model
 LLM_API_KEY=
 ```
 
-The `/v1` part belongs in this base URL; `/chat/completions` is appended by TampaBayBot. Native `ollama` mode instead uses the root without `/v1`. Ollama implements a subset of the OpenAI interface, so compatibility should be tested against the actual server/version. Its local interface does not need a real paid API key. [Ollama compatibility documentation](https://docs.ollama.com/api/openai-compatibility)
+Include `/v1` for compatibility mode; native `ollama` mode uses the root without it. Ollama's local interface needs no paid API key. Test the actual server/version because it implements a subset of the protocol. See [Ollama compatibility](https://docs.ollama.com/api/openai-compatibility).
 
-For a remote service, use the actual HTTPS API root documented by that provider, its exact model name and its required credential in the server-side secret store. Do not paste a full `/chat/completions` URL into `LLM_BASE_URL` unless the adapter contract is deliberately changed. Do not assume every service advertising compatibility supports the same fields or response behavior; invalid responses fall back to the cited baseline.
+For remote services, use the provider's documented HTTPS API root, exact model name and server-side credential. Omit `/chat/completions` from `LLM_BASE_URL`; the adapter appends it. Advertised compatibility does not guarantee supported fields or response behavior.
 
 ## Local computer, LAN and hosted deployment
 
@@ -88,15 +83,15 @@ For a remote service, use the actual HTTPS API root documented by that provider,
 | On a computer/container with a separate LAN model server | Operator-selected private address | Connectivity, authentication and firewall policy must be configured; private-IP plain HTTP needs the explicit flag; unqualified Docker service names are not accepted |
 | On a hosted Sites/Cloudflare worker | Reachable protected HTTPS provider | Worker requests originate from the hosted runtime; its localhost is not the resident's computer |
 
-A deployed web app cannot use `127.0.0.1` to call Ollama on the resident's PC. The app and model must both run locally for the direct same-device setup. An operator can instead provide a reachable, authenticated HTTPS model service; exposing a bare Ollama port publicly is not required by this integration. Cloud-only model services and remote inference are not local processing, even when the application software is open source.
+A same-device setup requires both app and model to run locally. Hosted apps need a reachable, authenticated HTTPS provider; they cannot reach the resident's Ollama through `127.0.0.1`. This does not require exposing a bare Ollama port publicly. Open-source application software does not make remote inference local processing.
 
-For hosted deployment, configure `LLM_*` through runtime environment bindings/secrets, then deploy and verify them. Keep API keys out of Vite build-time values, `NEXT_PUBLIC_*` variables, frontend bundles and `.openai/hosting.json`. A local `.env` does not configure an already-deployed app. [Independent deployment](DEPLOYMENT.md#optional-model-provider) provides the Wrangler steps. [Cloudflare secrets documentation](https://developers.cloudflare.com/workers/vite-plugin/reference/secrets/)
+Set hosted `LLM_*` values through runtime bindings/secrets, then deploy and verify. Keep keys out of Vite build-time values, `NEXT_PUBLIC_*`, frontend bundles and `.openai/hosting.json`. Local `.env` does not configure a deployed app. [Deployment steps](DEPLOYMENT.md#optional-model-provider) and [Cloudflare secrets](https://developers.cloudflare.com/workers/vite-plugin/reference/secrets/) cover this setup.
 
-The default deployed configuration stays `none` unless the deployment operator enables a provider. A provider configured on a hosted app applies to eligible requests served by that app; it is not a per-resident endpoint setting. Check the displayed provider/data-flow disclosure before sending a question.
+Deployed configuration defaults to `none`. An enabled provider applies to the app's eligible requests, not a per-resident endpoint choice. Check the displayed provider/data-flow disclosure before sending questions.
 
 ## Custom trusted server adapter
 
-`answerWithGuardrails` accepts a server-side `provider.complete({ messages, model, signal, schema })` hook and passes it to the model adapter after the application checks. The hook returns **JSON text** in the same selection format as the built-in providers. This example belongs in a repository-root server module; `completeWithYourBackend` is a function you implement for your backend, not a bundled SDK:
+`answerWithGuardrails` accepts a server-side `provider.complete({ messages, model, signal, schema })` hook after application checks. Return **JSON text** in the built-in selection format. In this repository-root server-module example, implement `completeWithYourBackend` for your own backend:
 
 ```js
 import { parseLlmConfig } from './src/lib/llm/index.mjs';
@@ -120,40 +115,38 @@ export async function answerWithBackend(question, corpus, env, completeWithYourB
 }
 ```
 
-The parsed configuration must still be valid and enabled. New transport code is trusted operator code: implement its authentication, endpoint policy, response bounds and cancellation; the shared outer deadline and selection validation still apply. A transport that ignores `signal` can continue upstream work after the app returns a fallback. Do not wire provider objects, keys or endpoints directly into the browser or let a resident select them. Add tests for malformed output, failure, timeout and preserved conservative states before exposing a custom backend. Keep this guarded entry point: the lower-level `answerQuestion` and `synthesizeAnswer` helpers alone do not run the application guardrails.
+Configuration must remain valid and enabled. Custom transport is trusted operator code: implement authentication, endpoint policy, response bounds and cancellation. The shared deadline and selection validation still apply, but ignoring `signal` can leave upstream work running after fallback. Keep provider objects, keys and endpoints server-side. Test malformed output, failure, timeout and conservative states. Use this guarded entry point; `answerQuestion` and `synthesizeAnswer` alone omit application guardrails.
 
 ## Reproduce integration checks
 
-Run the deterministic suite with `npm test`. To check actual local vinext Worker environment/HTTP wiring against synthetic provider responses, run:
+Run deterministic tests with `npm test`. Check local vinext Worker environment/HTTP wiring against synthetic provider responses with:
 
 ```sh
 npm run test:llm-runtime
 ```
 
-The fixture creates its own ignored `work/` copy and synthetic `.env`, starts a localhost mock provider and exercises native Ollama and compatibility response formats. It checks validated use, invalid-output fallback, conservative-state bypass and secret exclusion without reading or overwriting a user's environment files or calling a real model. It expects the documented evidence corpus; an empty source-only release needs [source acquisition](DISTRIBUTION.md) first. The ordinary [browser suite](ACCESSIBILITY.md) assumes `LLM_PROVIDER=none`. Dated outcomes belong in [release readiness](RELEASE_READINESS.md).
+This fixture creates an ignored `work/` copy, synthetic `.env` and localhost mock provider. Both formats are checked for validated use, fallback, conservative-state bypass and secret exclusion. It never reads/overwrites user environment files or calls a real model. It needs the documented corpus; acquire [sources](DISTRIBUTION.md) first for an empty release. The ordinary [browser suite](ACCESSIBILITY.md) expects `LLM_PROVIDER=none`.
 
-To test a **real installed Ollama model** through the app's HTTP API, keep the daemon running and use:
+For a **real installed Ollama model** through the app's HTTP API, keep its daemon running and use:
 
 ```sh
 npm run test:ollama-runtime -- --allow-provider-call --model llama3:8b --timeout-ms 120000 --output work/evals/live/ollama-runtime-llama3-8b
 ```
 
-This separate runner creates an isolated local app fixture, requires an installed local model, and forwards requests to Ollama through a loopback proxy that counts calls without changing completions. Eligible questions must return accepted model output; a safe fallback fails that check. Conservative questions, instruction attacks and synthetic identifiers must make zero provider calls. It also checks the app's model disclosure and blocks access to the fixture's `.env`. The runner never reads or overwrites the user's environment files, changes hosted settings or downloads weights. Reports under ignored `work/evals/live/` identify the selected model/digest, server version, token counts and timings without retaining prompts or completions.
+The isolated runner counts real Ollama calls through a loopback proxy without changing completions. Eligible questions must produce accepted model output; fallback fails. Conservative questions, instruction attacks and synthetic identifiers must make zero calls. It checks model disclosure and blocked access to fixture `.env`, without reading/overwriting user environment files, changing hosted settings or downloading weights. Ignored `work/evals/live/` reports record model/digest, server version, usage and timings without prompts or completions.
 
-For broader real-model cases and repeated runs, see the [live evaluation instructions](EVAL_SUITE.md#evaluate-an-explicitly-configured-model). Use the [recorded Ollama results](OLLAMA_TESTING.md) for model identity, timings, outcomes and their limits. Human assessment of evidence usefulness remains separate.
+Use [live evaluation](EVAL_SUITE.md#evaluate-an-explicitly-configured-model) for broader/repeated cases and [Ollama results](OLLAMA_TESTING.md) for dated outcomes. Human assessment remains separate; [release readiness](RELEASE_READINESS.md) tracks verification.
 
 ### Token and cost reporting
 
-The adapter retains only validated numeric usage fields from provider responses. For compatible Chat Completions responses, these come from `usage.prompt_tokens`, `usage.completion_tokens`, `usage.total_tokens` and optional `usage.prompt_tokens_details.cached_tokens`. See the [OpenAI Chat Completions response reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create). Native Ollama uses `prompt_eval_count`, `eval_count` and optional `prompt_eval_cached_count`, with total tokens computed from input plus output. See the [Ollama chat response reference](https://docs.ollama.com/api/chat).
+Only validated numeric usage fields are retained. [Chat Completions](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create) supplies `usage.prompt_tokens`, `usage.completion_tokens`, `usage.total_tokens` and optional `usage.prompt_tokens_details.cached_tokens`. [Native Ollama](https://docs.ollama.com/api/chat) supplies `prompt_eval_count`, `eval_count` and optional `prompt_eval_cached_count`; total is input plus output.
 
-Usage can be reported even when the model's evidence selection is rejected and the application falls back. Missing, malformed or unreadable usage remains unknown; it does not invalidate an otherwise acceptable answer or imply free inference. Cached tokens are already included in input tokens. Raw usage objects, request text and provider errors are not copied into token metrics.
+Usage can survive rejected selections/fallback. Missing or malformed usage stays unknown; it neither invalidates an acceptable answer nor implies free inference. Cached tokens are included in input totals. Metrics exclude raw usage objects, request text and provider errors.
 
-The [live evaluation report](EVAL_SUITE.md#token-usage-and-estimated-cost) aggregates per-call usage and estimates USD cost from operator-supplied rates. There are no built-in prices, and local Ollama is not automatically treated as free. A cost estimate is separate from answer correctness and excludes infrastructure and other billing adjustments. The application does not use these metrics to decide eligibility or evidence relevance.
+[Live reports](EVAL_SUITE.md#token-usage-and-estimated-cost) aggregate usage and estimate USD cost from operator-supplied rates, excluding infrastructure/billing adjustments. There are no built-in prices or assumptions that local Ollama is free. Cost does not measure correctness or influence eligibility/evidence selection.
 
 ## Privacy, security and evaluation limits
 
-With `none`, questions are not sent to a model. With an enabled provider, eligible questions and the selected public evidence are sent to that provider. A question can contain an address or personal information the resident typed; source selection does not redact that text. Provider retention, logs, routing, subprocesses and cloud forwarding depend on the chosen service. Local mode has the strongest geographic meaning when both app and weights run on the same controlled machine.
+`none` sends no questions to a model. Enabled providers receive eligible questions without redacting resident-entered personal information. Their retention, logs, routing, subprocesses and cloud forwarding depend on the service. The app does not persist conversation history, but cannot control provider/host logs. See [security](../SECURITY.md) for data flow/reporting and [operations](OPERATIONS.md) for retention and access.
 
-The app does not persist conversation history, but that does not control the provider's or hosting platform's logs. Software licensing is separate from model-weight licenses and API terms. [Security](../SECURITY.md) explains privacy and reporting; [operations](OPERATIONS.md) covers retention, access and operating limits; [guardrails](GUARDRAIL_INSERTS.md) describes injection defenses and their limits.
-
-Use public or synthetic questions to evaluate the selected model/version. Record identity, configuration, latency, fallback behavior and selection usefulness without saving real resident prompts. Keep synthetic transport checks, real inference and human review distinct as described in [evaluation](EVALUATION.md).
+Evaluate each model/version with public or synthetic questions. Record identity, configuration, latency, fallback and selection usefulness without real resident prompts. [Evaluation](EVALUATION.md) distinguishes synthetic transport tests, real inference and human review; validated quotations alone do not establish completeness or usefulness.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "19800d23f3e7704d6cdb604f45365a5a11d4a50968a7967454cf729e4770950b",
+  "content_sha256": "120e142ca66df6f010ccca11ad3586a652e9c638cccf455f0ae7ec115c1dc6b5",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -72,8 +72,8 @@
     },
     {
       "path": "CONTRIBUTING.md",
-      "bytes": 6410,
-      "sha256": "6ae767042271355965ec4a6da72cc654390bdd960ed1ea040d4dc33285b6038c"
+      "bytes": 4162,
+      "sha256": "6241b67b06388fb5e1892a643692627cb0d0ec2e31c961bbb7821d51149c2d80"
     },
     {
       "path": "data/chunks.json",
@@ -147,8 +147,8 @@
     },
     {
       "path": "docs/DEMO.md",
-      "bytes": 1865,
-      "sha256": "7e51f714e05b57523ab76b1a54cd8bc7358650cea93935d8a8f34e0bcff94c5b"
+      "bytes": 1498,
+      "sha256": "4307246695682473269d31e8c6a05f007f80d9714953e78569f253e89d205894"
     },
     {
       "path": "docs/DEPLOYMENT.md",
@@ -157,23 +157,23 @@
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "bytes": 11051,
-      "sha256": "151a05d0989f0e84a1add5e5948a755c9eeeabde6777439b871f2197c0737828"
+      "bytes": 9364,
+      "sha256": "380dc7ce9fe332371802e53af24d7f647d5c13fa88578d29dc83e1235ae04bea"
     },
     {
       "path": "docs/DISTRIBUTION.md",
-      "bytes": 9311,
-      "sha256": "d1ea5cf7614013c250b82c19f74235ddd16d9adca07270dd7d52c1bed12bdca2"
+      "bytes": 7720,
+      "sha256": "d66ccf854b201b2d9d123cf86c8d2221d6b297b38407f5524331199bd467266b"
     },
     {
       "path": "docs/EVAL_SUITE.md",
-      "bytes": 20456,
-      "sha256": "60c361c3b74c37bf8f1eb62648f31cfd0e52b29f32e83e7803539f96f0ea7bc9"
+      "bytes": 16249,
+      "sha256": "26c13a6dd0c726ef3d366486dc8a05f50c29dd1214eae4ede404054996282c34"
     },
     {
       "path": "docs/EVALUATION.md",
-      "bytes": 11143,
-      "sha256": "606ea204d7d020e8cf52c3b6bafb50791d6c21d3337ce480f5e6bda45c0defef"
+      "bytes": 8140,
+      "sha256": "43cdb8e96cae559160ee6d288b36f3e0fff8865e480d8944508a3bed74aee0f3"
     },
     {
       "path": "docs/GEOSPATIAL.md",
@@ -192,18 +192,18 @@
     },
     {
       "path": "docs/LIMITATIONS.md",
-      "bytes": 9748,
-      "sha256": "f306aef6c60bf9bc521783940ad8c879fbcf0b7651767c28fd2510a3fb6cfefc"
+      "bytes": 7239,
+      "sha256": "287c9c878d26d7eccdf1680a416d276e488bb0f4ab0760fba8ba2c0a2ca48660"
     },
     {
       "path": "docs/LLM.md",
-      "bytes": 17389,
-      "sha256": "08326b7b402336fa115b7ee6a1f7f5ee22abce38ffdfcfe05eae500eed66ae5f"
+      "bytes": 13560,
+      "sha256": "9122f51b8173c27592f0991d0c51622da3f3f4d9131f1c3b6f58d6b9ea48c1bb"
     },
     {
       "path": "docs/METHODOLOGY.md",
-      "bytes": 11381,
-      "sha256": "2209498e37b62f295026a3a27593f8cadbbfd32724e7aecfee28c0bcc7fe1f76"
+      "bytes": 8836,
+      "sha256": "4040b0f96f1db579e1a3d99648b04cd7421eb82fb66c699feaedccce83630c1e"
     },
     {
       "path": "docs/OLLAMA_TESTING.md",
@@ -217,13 +217,13 @@
     },
     {
       "path": "docs/PROGRAM_RECALL.md",
-      "bytes": 13661,
-      "sha256": "d5cfe57e0ff7da2f249aa722228cf64aa24e8f296ee3e4b965a010e96ab765b9"
+      "bytes": 10649,
+      "sha256": "9e2b1e38467909212a763c3ae543a3c0a6a13821ab2c74ede960b7d33a6934db"
     },
     {
       "path": "docs/README.md",
-      "bytes": 4242,
-      "sha256": "7abc92aeb4d300c5ba268c48cde474c57ac7ce752cc846ab87024282c79bba51"
+      "bytes": 2710,
+      "sha256": "7b61f62887edd84109976f4f758b6f3b51ee5dbba853a9f8e93f39747c0e2d7f"
     },
     {
       "path": "docs/RELEASE_READINESS.md",
@@ -442,8 +442,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 12313,
-      "sha256": "6d87accb41388428b8292a25da560d931b49458b7cb49dd97ff077b0c08aafc8"
+      "bytes": 4076,
+      "sha256": "7b17dccf291eabc8d9396e2f28454f78cae7bd53cd3a5356d0bd323e163fc527"
     },
     {
       "path": "scripts/build-source-refresh.mjs",

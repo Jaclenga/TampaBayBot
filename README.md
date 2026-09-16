@@ -2,147 +2,57 @@
 
 Find Tampa Bay housing resources, property information and official next steps, with the public sources behind each answer.
 
-TampaBayBot is an independent, open-source civic-tech project for people asking about housing assistance, zoning, permits and development near an address. You can start with a question instead of knowing which agency, map or document to search.
+TampaBayBot is an independent, open-source project for questions about housing assistance, zoning, permits and nearby development. It retrieves public evidence and shows supporting quotations, source dates and agency links. The default answer engine works without a language model.
 
-It brings together information scattered across government pages, PDFs and GIS services, and keeps the supporting evidence visible. The default answer engine works without a language model; local or API-based model assistance is optional.
+> **Alpha: for contributors and supervised testing.** The source release starts without downloaded evidence. Independent human review and production-readiness work remain open; see [release status](docs/RELEASE_READINESS.md).
 
-Choose Tampa, St. Petersburg, Clearwater, or county resources for Hillsborough, Pinellas and Pasco. Questions without a clear area ask for clarification before applying local programs or rules. Live property layers cover those cities plus Pasco County parcels and unincorporated land use. Municipal authority and unavailable sources remain explicit. [Coverage and maps](docs/GEOSPATIAL.md).
-
-> **Alpha: for contributors and supervised testing.** The downloadable source release starts without loaded evidence. Fetch and review sources before expecting cited answers. Independent human review and production-readiness work remain open. See [quick start](#quick-start) and [release status](docs/RELEASE_READINESS.md).
-
-**Project links:** [Code](https://github.com/Jaclenga/TampaBayBot) · [Releases](https://github.com/Jaclenga/TampaBayBot/releases) · [Issues](https://github.com/Jaclenga/TampaBayBot/issues) · [Private security reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new)
+[Releases](https://github.com/Jaclenga/TampaBayBot/releases) | [Issues](https://github.com/Jaclenga/TampaBayBot/issues) | [Private security reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new)
 
 ## What it does
 
 - Find housing resources for renters and homeowners.
-- Look up mapped zoning and future-land-use designations after address confirmation.
-- Find permitting guidance and the relevant application or contact.
-- Explore nearby observed development records.
-- Navigate to the agency and original source responsible for a topic.
-- Show evidence excerpts and official next steps alongside answers.
+- Look up mapped zoning and future land use after address confirmation.
+- Find permitting guidance, applications and agency contacts.
+- Explore nearby development records with their sources and dates.
 
-Government guidance and mapped designations are distinct from observed development activity. Official eligibility, zoning and permitting decisions remain with the responsible agencies.
-
-## Demo
-
-![TampaBayBot with clearly labeled fictional demo evidence](docs/images/demo.png)
-
-Run `npm ci` and `npm run demo` to try the interface offline with clearly labeled, original fictional evidence. The demo runs in a separate directory and does not replace your sources or enable a model. See [the demo guide](docs/DEMO.md). For actual local evidence, select your city or county, or name it in your question. Example resident questions include:
-
-- “Where can I find help paying for housing?”
-- “What zoning applies to this address?”
-- “Do condo renovations use a residential permit?”
-- “Are there development records near 315 E Kennedy Blvd, Tampa?”
-- “Who should I contact about a variance?”
-
-Run it locally with the [quick start](#quick-start).
-
-## How it works
-
-Question → identify intent and location → retrieve relevant public sources → assemble evidence → present an answer → link to an official next step.
-
-The default path is deterministic and extractive: it selects relevant passages and combines literal quotations with navigation text. Address-based questions ask you to confirm a location before looking up property context.
-
-Optional model assistance can select among evidence already retrieved by the application. Free-form model prose is not used, and the model cannot make an official decision. The application checks the selection and falls back to the original answer if the model response is invalid.
-
-## Data sources
-
-Sources include Tampa, St. Petersburg, Clearwater, Hillsborough County, Pinellas County, Pasco County, Plan Hillsborough and Florida Housing Finance Corporation. Each source declares its service area; county resources do not automatically apply inside every city.
-
-Nearby activity combines the pinned [Tampa Development Records](https://github.com/Jaclenga/Tampa-Development-Records) snapshot with official Clearwater planning cases, St. Petersburg district projects, and Pasco in-review zoning and comprehensive-plan cases. St. Petersburg and Pasco live queries passed on September 13, 2026. Sources retain distinct coverage, dates and attribution; published cases are not a complete permit inventory or proof of construction. [Expanded services and live verification](docs/COVERAGE_EXPANSION.md).
-
-Coverage is bounded, and public information can change or become unavailable. The app distinguishes when a source was retrieved from when its publisher updated it. See [data sources](docs/DATA_SOURCES.md) and [geospatial methods](docs/GEOSPATIAL.md).
-
-## Trust and evidence
-
-Answers expose literal excerpts, source URLs and provenance, including retrieval dates and section, page, record or layer references where available. Government sources and independent development records remain separately labeled.
-
-Missing evidence, stale or unavailable sources, ambiguous locations and questions requiring official judgment produce explicit uncertainty states. Optional model selections must retain valid evidence references and unchanged quotations. These checks make answers inspectable; they do not establish completeness, applicability or detection of every source conflict. See [methodology](docs/METHODOLOGY.md).
-
-## Evaluation
-
-A separate [applicable-program recall evaluation](docs/PROGRAM_RECALL.md) now finds **65/72 expected program-query pairs in the top 15 retrieved chunks (90.3%)** and **66/72 in final evidence (91.7%)**. Program selection changes improved final coverage from **22/72 (30.6%)** and complete positive questions from **6/28 to 23/28** against the same dated, agent-labeled 18-program inventory. Source anchors can recover a raw retrieval miss. These are development results; independent human adjudication and broader coverage remain open.
-
-Recorded automated code and offline evaluation checks passed for the development corpus. The suite includes bounded factual-accuracy, citation-correctness and citation-completeness cases for 12 exact authored claims; these are dated development fixtures, not a general accuracy score. Synthetic provider tests check transport, validation and fallback behavior; separate real Ollama/Meta Llama 3 tests exercised actual inference. None measures resident usefulness.
-
-### Published alpha.4 claim results
-
-| Metric | Result | Tested requirement |
-| --- | ---: | --- |
-| Factual accuracy | **12 / 12 passed** | Each answer returned the expected status and exact authored claim set, without an additional unsupported claim |
-| Citation correctness | **12 / 12 passed** | Every supplied claim citation matched an allowed source and evidence chunk for that exact claim |
-| Citation completeness | **12 / 12 passed** | Every claim-bearing paragraph included a valid citation marker |
-
-The complete offline suite passed **236 / 236 cases and 4,370 / 4,370 applicable checks**; 582 checks were not applicable. These scores apply only to the 12 dated, hand-authored Tampa Bay claim cases and retained development corpus. They do not estimate accuracy on arbitrary questions, prove that publisher information is current, or replace independent human review. See the [metric definitions and limitations](docs/EVALUATION.md#published-alpha4-results).
-
-An agent review examined sample responses. **Independent human review remains pending.** The complete browser suite also retains a documented local-runtime transport failure on Windows and Linux.
-
-See [evaluation and human-review methods](docs/EVALUATION.md), [running evaluations](docs/EVAL_SUITE.md) and the [current results and known issues](docs/RELEASE_READINESS.md).
+Choose Tampa, St. Petersburg, Clearwater, or county resources for Hillsborough, Pinellas and Pasco. The app asks for clarification when location is unclear. Coverage varies by source and service; see [geographic coverage](docs/GEOSPATIAL.md).
 
 ## Quick start
 
-Use Node.js 24 LTS and npm. From the project directory:
+Use Node.js 24 and npm. From the project directory:
 
-```bash
+```sh
 npm ci
 npm run demo
 ```
 
-Open [localhost:3001](http://localhost:3001). This demo uses fictional examples and needs no account, API key, database or `.env` file. `npm test` runs the offline source regression suite; `npm run test:source:browser` tests the demo in Chromium.
+Open [localhost:3001](http://localhost:3001). The demo uses labeled fictional evidence in a separate directory and needs no account, API key, database or `.env` file. See [demo options and example questions](docs/DEMO.md).
 
-For real source information, follow [staged source updates](docs/SOURCE_UPDATES.md), then run `npm run dev -- --port 3001`. The public package starts without downloaded evidence. Acquired evidence and live geographic lookups need internet access; historical evaluation results do not certify fresh downloads.
+![TampaBayBot with clearly labeled fictional demo evidence](docs/images/demo.png)
 
-For PowerShell troubleshooting, development commands and API routes, see the [developer guide](docs/DEVELOPMENT.md). For your own hosting account, see [deployment](docs/DEPLOYMENT.md).
+For real evidence, [stage, review and apply source updates](docs/SOURCE_UPDATES.md), then run `npm run dev -- --port 3001`. Source downloads and live geographic lookups need internet access.
 
-Questions and navigation support English and Spanish. Follow-up questions retain a bounded topic and location context in memory until reset or reload; source quotations stay in their original language. Property tools and reference pages remain in English.
+## How it works
 
-## Optional model assistance
+The app identifies the question's topic and location, retrieves relevant evidence, and assembles quotations with an official next step. Missing evidence, unavailable sources and ambiguous locations produce explicit uncertainty states. Questions and navigation support English and Spanish; source quotations retain their original language.
 
-- `none`: use the deterministic answer engine without model calls.
-- `ollama`: connect to an operator-selected Ollama model, including locally running weights.
-- `openai-compatible`: connect to a compatible local or remote provider.
+Optional Ollama or OpenAI-compatible providers can select from retrieved evidence. The application validates their selections and falls back to the baseline answer when needed. See [methodology](docs/METHODOLOGY.md) for the evidence pipeline and [model configuration](docs/LLM.md) for setup and data flow.
 
-Enabled providers receive eligible questions and bounded public excerpts to select evidence. Their logging, retention and any cloud forwarding depend on configuration. Do not enter account numbers or application documents. See [model configuration and data flow](docs/LLM.md) before enabling assistance.
+## Evaluation and limits
 
-## Limitations
+Automated checks cover source regressions, exact-claim and citation behavior, program recall, provider validation and browser flows. [Evaluation and review](docs/EVALUATION.md) explains the metrics; [program recall](docs/PROGRAM_RECALL.md) and [release readiness](docs/RELEASE_READINESS.md) preserve dated results and unresolved checks. These development results do not establish general accuracy or resident usefulness.
 
-- A program match is not an eligibility decision; a zoning designation is not permission to build.
-- Source coverage is limited, and pages or records may be stale, incomplete, conflicting or unavailable.
-- Nearby development does not establish a legal relationship, project approval or physical construction status.
-- Parcel lookups do not evaluate every constraint or the whole parcel against every boundary.
-- Independent human answer review and resident usability testing remain pending.
-- Automated accessibility checks do not establish WCAG conformance; manual assistive-technology review is still needed.
-- A local-runtime upload transport issue and outstanding operational controls limit readiness for unrestricted resident use.
-
-Read [limitations](docs/LIMITATIONS.md) for the full scope and [security](SECURITY.md) for data handling and private vulnerability reporting.
+A resource match is not an eligibility decision, a zoning designation is not permission to build, and nearby records do not prove construction or a legal relationship. Public information may be incomplete, stale or unavailable. Confirm consequential decisions with the responsible agency. See [limitations](docs/LIMITATIONS.md) and [security and privacy](SECURITY.md).
 
 ## Documentation
 
-**Using TampaBayBot:** [Data sources](docs/DATA_SOURCES.md) · [Models](docs/LLM.md) · [Geospatial behavior](docs/GEOSPATIAL.md)
-
-**Trust and evaluation:** [Methodology](docs/METHODOLOGY.md) · [Evaluation](docs/EVALUATION.md) · [Accessibility](docs/ACCESSIBILITY.md) · [Limitations](docs/LIMITATIONS.md) · [Security](SECURITY.md)
-
-**Development and deployment:** [Contributing](CONTRIBUTING.md) · [Developer guide](docs/DEVELOPMENT.md) · [Deployment](docs/DEPLOYMENT.md) · [Distribution](docs/DISTRIBUTION.md) · [Release readiness](docs/RELEASE_READINESS.md)
-
-The [documentation index](docs/README.md) identifies the main guide for each topic and separates current instructions from historical records.
-
-## Repository layout
-
-| Directory | Contents |
-| --- | --- |
-| `src/` | Resident application, shared components, answer engine, adapters, guardrails and Worker entry point |
-| `data/` | Source registry and locally generated evidence placeholders |
-| `evaluation/` | Benchmarks, scoring, reports and human-review materials |
-| `tests/` | Code, integration and browser regressions |
-| `scripts/` | Ingestion, evaluation, build, security and release tools |
-| `docs/` | Setup, methods, limitations and release evidence |
-| `public/` | Static browser assets |
-| `vendor/` | Reviewed local dependency replacements and their licenses |
-
-The root keeps only project entry points, open-source governance files, package manifests and configuration that the build tools discover there.
+- [Documentation index](docs/README.md): guides by task and topic.
+- [Development](docs/DEVELOPMENT.md): setup, repository layout, tests and APIs.
+- [Contributing](CONTRIBUTING.md): review requirements and pull requests.
+- [Deployment](docs/DEPLOYMENT.md): build and host with your own account.
 
 ## License and independence
 
-Original software is available under the [MIT License](LICENSE). Government content, GIS layers, upstream datasets, dependencies and model weights retain their respective terms; see [notices](NOTICE.md).
+Original software is available under the [MIT License](LICENSE). External information, dependencies and model weights retain their respective terms; see [notices](NOTICE.md).
 
-TampaBayBot is an independent project, not an official city, county, Plan Hillsborough or State of Florida service. Confirm consequential housing, zoning, permitting and eligibility decisions with the responsible agency.
+TampaBayBot is independent of city, county, Plan Hillsborough and State of Florida services.

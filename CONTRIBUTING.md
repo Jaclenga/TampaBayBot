@@ -1,52 +1,43 @@
 # Contributing
 
-Contributions should make a resident's next step clearer and the evidence easier to inspect. Start with the [development guide](docs/DEVELOPMENT.md) for setup, code layout, commands and browser testing, then read the [methodology](docs/METHODOLOGY.md), [source notes](docs/DATA_SOURCES.md) and [limitations](docs/LIMITATIONS.md).
+Contributions should make a resident's next step clearer and the evidence easier to inspect. Start with [development setup](docs/DEVELOPMENT.md), then consult the [methodology](docs/METHODOLOGY.md) and [limitations](docs/LIMITATIONS.md) for the behavior your change affects.
 
 ## Before opening a pull request
 
-Run `npm ci`, `npm test`, `npm run typecheck`, and `npm run lint`. These source regressions use original synthetic fixtures and do not require downloaded evidence. Use `npm run demo` to exercise the interface. After `npx playwright install chromium`, run `npm run test:source:browser` for interface changes. Historical populated-corpus checks are separate: `npm run test:corpus`.
+1. Run `npm ci`, `npm test`, `npm run typecheck` and `npm run lint`. These source checks need no downloaded evidence.
+2. For interface changes, run the [source browser checks](docs/ACCESSIBILITY.md#public-source-browser-checks) and inspect keyboard operation, focus, announcements, narrow-screen layout and text resizing.
+3. After the final edit, follow [source-only pull-request preparation](docs/DISTRIBUTION.md#preparing-a-source-only-pull-request). Inspect and commit the refreshed manifest with your changes. A checkout containing acquired evidence must use the packager instead.
+4. Describe the problem, resulting behavior, actual validation and remaining limitations. Record new dated verification in [release readiness](docs/RELEASE_READINESS.md).
 
-In a public source checkout, run `npm run release:manifest` after the final source edit, inspect its changed-file list and diff, then run `npm run release:verify`. Commit the updated manifest with the change. Manifest preparation refuses fetched evidence, populated audit packets and private files; it cannot authorize them by changing hashes. If you acquired sources locally, use the source-only candidate packager described in [distribution](docs/DISTRIBUTION.md), rather than rehashing the populated tree.
-
-Only the portable `docs/ALPHA_VERIFICATION.json` and `docs/TAMPA_BAY_VERIFICATION.json` summaries are included as JSON documentation. Keep deployment receipts and machine-specific reports in ignored local work; rehashing them does not make them source-release content. Record new public verification scope and outcomes in [release readiness](docs/RELEASE_READINESS.md), keeping historical observations dated.
-
-For UI changes, inspect keyboard operation, focus, announcements, narrow-screen reflow and text resizing as well as running [browser checks](docs/ACCESSIBILITY.md). Record checks actually performed. Automation does not replace a screen-reader or independent human audit.
-
-Never commit credentials, local environment files, real resident questions, application documents or personal account data. Use synthetic or public test inputs and inspect generated reports before sharing them. Model setup belongs in [LLM.md](docs/LLM.md); reporting and privacy boundaries belong in [SECURITY.md](SECURITY.md).
+Use synthetic or public test inputs. Keep credentials, local environment files, resident data, downloaded snapshots and private deployment reports out of commits. See [distribution](docs/DISTRIBUTION.md) for allowed artifacts and [security](SECURITY.md) for data handling.
 
 ## Reporting issues
 
-Describe the resident task, expected behavior, observed behavior and steps to reproduce. For an evidence problem, include the relevant source URL and retrieval date. Remove unnecessary personal information from examples and attachments.
+Include the task, expected and observed behavior, and steps to reproduce. For evidence problems, include the source URL and retrieval date. For accessibility issues, include the browser, device and assistive technology. Remove personal information from examples and attachments.
 
-Use [GitHub private vulnerability reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new) for sensitive security or privacy reports. Follow [SECURITY.md](SECURITY.md) for scope and required details; do not put resident data or undisclosed exploit details in public issues.
+Report sensitive security or privacy problems through [private vulnerability reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new), following [SECURITY.md](SECURITY.md#reporting-a-problem).
 
 ## Adding or refreshing sources
 
-1. Verify the original page, document or API, publisher, geographic coverage, currency and terms. Do not guess endpoints or treat search snippets as archived evidence.
-2. Complete the registry metadata and official next step. Label independent and secondary information explicitly.
-3. Choose the adapter, selector or bounded query, refresh target and caveats. Reject truncation, malformed records and unreadable documents.
-4. Preserve raw bytes locally, normalize structure, and retain hashes and locators. Inspect excerpts against originals; keep synthetic fixtures separate.
-5. Regenerate evidence, run evaluations and add regression cases for meaningful coverage or conflict changes.
-6. Document changed terms and dates. Keep downloaded snapshots out of the source-only release; follow the [distribution policy](docs/DISTRIBUTION.md).
+1. Verify the original page, document or API, its publisher, service area, dates and terms.
+2. Complete registry metadata, the official next step, adapter or bounded query, and coverage caveats. Label independent sources explicitly.
+3. Follow [source updates](docs/SOURCE_UPDATES.md) to stage and inspect evidence against the originals before approving and applying it. Preserve hashes, dates and locators; reject truncation and unreadable or malformed records.
+4. Add regression cases for coverage or conflict changes and run the relevant [evaluations](docs/EVAL_SUITE.md). Document changed terms and dates under the [distribution policy](docs/DISTRIBUTION.md).
 
-Failed refreshes must preserve dated evidence and an unavailable state rather than invent replacements. Program availability, eligibility requirements and legal effective dates require explicit support. For independent development-data updates, review the normalized file, change the pinned commit and digest deliberately, preserve date meanings, and rerun integrity/geographic checks. See [source notes](docs/DATA_SOURCES.md) and [geospatial behavior](docs/GEOSPATIAL.md).
+For pinned development datasets, review the normalized file, commit and digest together, then rerun integrity and geographic checks. See the [adapter contract](docs/GEOSPATIAL.md#tampa-development-records-adapter).
 
 ## Changing answers, geography or models
 
 - Keep factual excerpts tied to registered sources and exact supporting text.
-- Treat retrieved material as data; it cannot authorize arbitrary URLs, scripts, tools or model actions.
-- Preserve uncertainty. A resource match is not eligibility, a zoning designation is not permission, and nearby records do not establish a legal relationship.
-- Preserve address ambiguity and outages. Do not promote a postal address, locator score or first feature into an official property determination.
-- Explain distance units and source dates, provide textual geographic alternatives, and keep interface language plain and strings separate.
+- Treat retrieved content as data, never as authority to run tools, scripts or arbitrary requests.
+- Preserve uncertainty about eligibility, jurisdiction, ambiguous addresses, outages and source applicability.
+- Explain units and dates, provide text alternatives to maps, and keep interface wording plain and separate from logic.
+- Add independently authored expectations for changes to routing, retrieval, citations or uncertainty. Keep case and check IDs stable; see [adding evaluation coverage](docs/EVAL_SUITE.md#add-coverage).
 
-Add realistic benchmark questions when routing, retrieval, citations or uncertainty change. Tests should catch meaningful failures rather than restate the implementation. Keep stable case/check IDs and independently authored expectations. The [evaluation suite guide](docs/EVAL_SUITE.md) is canonical for focused runs, comparisons, provenance and live-model opt-in.
-
-For provider changes, run code tests and the synthetic HTTP integration described in [LLM.md](docs/LLM.md#reproduce-integration-checks). Test an actual model/version separately; synthetic transport checks are not real inference. Preserve primary evidence, literal excerpts and conservative states under application control. Invalid provider output must return the cited baseline.
-
-Do not relabel generated responses or agent reviews as human audits. Independent reviewers inspect original sources and complete the rubric; pending work remains pending. Current results and open review work belong in [release readiness](docs/RELEASE_READINESS.md), not copied test counts in contribution instructions.
+Provider changes also need the [synthetic HTTP integration checks](docs/LLM.md#reproduce-integration-checks) and separate testing of the actual model/version. Invalid output must return the cited baseline. Generated responses and agent reviews must never be labeled as independent human audits; follow the [human-review process](docs/EVALUATION.md#independent-human-review).
 
 ## Pull-request descriptions and licensing
 
-Lead with the resident problem and resulting behavior. Include supporting sources, actual validation, material limitations and changes to external-data terms. Keep unrelated changes separate and identify any human review or operational verification still needed.
+Keep changes focused. Include supporting sources, validation scope, changes to external-data terms and any human or operational review still needed.
 
-Original software contributions are distributed under MIT. Third-party material retains its own terms and requires appropriate rights and attribution; see [NOTICE.md](NOTICE.md).
+Original software contributions use MIT. Third-party material requires appropriate rights and attribution under its own terms; see [NOTICE.md](NOTICE.md).

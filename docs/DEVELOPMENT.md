@@ -1,19 +1,18 @@
 # Development guide
 
-This guide covers local setup, code layout, checks and the HTTP API. Start with the [project overview](../README.md); use [Contributing](../CONTRIBUTING.md) for source changes and pull-request expectations.
+Local setup, code layout, checks and the HTTP API. See [Contributing](../CONTRIBUTING.md) for pull-request expectations.
 
 ## Local setup
 
-Use Node.js 24 for the toolchain used in the recorded project checks. `package.json` declares a minimum of Node.js 22.19; that minimum is not a record of testing every Node version. Install from the committed lockfile:
+Use Node.js 24, the toolchain used for recorded checks. The declared minimum is 22.19; other versions have not all been tested. Install from the committed lockfile:
 
 ```sh
 npm ci
-npm run demo
 ```
 
-Open `http://localhost:3001`. The isolated demo shows a fictional-data banner and never replaces your working evidence. For an already populated and reviewed installation, use `npm run dev -- --port 3001`. The default `LLM_PROVIDER=none` needs no model account, application secret, `.env` file, database or Sites account. To enable a model, follow [model configuration](LLM.md); local environment files are ignored by Git.
+Run `npm run demo` for the [fictional demo](DEMO.md), or `npm run dev -- --port 3001` for a reviewed installation. Open `http://localhost:3001`. The default `LLM_PROVIDER=none` needs no model account, secret, `.env` file, database or Sites account. See [model configuration](LLM.md) to enable a model; local environment files are ignored by Git.
 
-The source-only alpha contains an unfetched source registry and empty evidence/evaluation placeholders. The interface runs, but cited answers and corpus-dependent tests require locally acquired evidence. Follow [source acquisition and distribution](DISTRIBUTION.md) before running those checks. On a pristine source-release checkout, `npm run release:verify` checks its manifest before generated outputs are added.
+The source-only alpha has empty evidence and evaluation placeholders. For real cited answers and corpus-dependent tests, [acquire and review sources](SOURCE_UPDATES.md) under the [distribution terms](DISTRIBUTION.md). On a pristine source-release checkout, run `npm run release:verify` before generating outputs.
 
 ### PowerShell
 
@@ -21,14 +20,13 @@ If execution policy blocks `npm.ps1`, use `npm.cmd` and `npx.cmd`:
 
 ```powershell
 npm.cmd ci
-npm.cmd run demo
 ```
 
-This does not require changing execution policy. The other npm commands in this guide work in PowerShell and POSIX shells.
+No execution-policy change is needed. The other npm commands work in PowerShell and POSIX shells.
 
 ## Architecture and code layout
 
-React and TypeScript provide the resident interface. Vinext/Vite compiles the application and its server routes for a Cloudflare-compatible Worker. The default answer flow routes the question, retrieves evidence from the local corpus, constructs a cited extractive answer and provides an official next step. Optional models operate after retrieval; [LLM.md](LLM.md) owns their selection contract and configuration.
+React and TypeScript provide the resident interface; Vinext/Vite compiles it and its server routes for a Cloudflare-compatible Worker. The answer engine routes questions, retrieves local evidence and constructs cited extractive answers with official next steps. Optional models operate after retrieval; see [model configuration](LLM.md).
 
 ```text
 src/
@@ -46,13 +44,13 @@ public/                 Static browser assets
 vendor/                 Reviewed local dependency replacements and licenses
 ```
 
-The JSON registry and corpus are the initial index store; retrieval builds an in-memory lexical index. There is no database migration or external vector-index setup, and independent builds configure no D1 or R2 binding.
+The JSON registry and corpus back an in-memory lexical index. There is no database migration or external vector-index setup; independent builds configure no D1 or R2 binding.
 
-Source URLs, selectors and refresh policies live in `data/sources.json`. GIS configuration is in `data/gis-config.json`; independent development-record version, digest and bounds are in `data/development-config.json`. Downloaded snapshots and completed reports are operator-generated material, not part of the source-only alpha.
+Source URLs, selectors and refresh policies live in `data/sources.json`; GIS settings in `data/gis-config.json`; and development-record version, digest and bounds in `data/development-config.json`. See [source updates](SOURCE_UPDATES.md) for the authoritative corpus, publication and recovery.
 
 ## Commands and evidence prerequisites
 
-Run commands from the project root. Use the checks appropriate to the change and record what actually ran.
+Run from the project root and record the checks performed.
 
 | Command | Purpose / prerequisite |
 | --- | --- |
@@ -74,23 +72,23 @@ Run commands from the project root. Use the checks appropriate to the change and
 | `npm run build` | Compile the production application |
 | `npm run start` | Start Vinext's local production server after building |
 
-`npm run check` combines typecheck, lint, source regressions and build. `npm run check:corpus` additionally runs the complete corpus regressions, legacy evaluation and offline suite. It does not run source regeneration checks, browser checks or real-model tests. Source-only release checks cover its manifest, packaging and standalone smoke; their success does not imply that the full corpus or browser suite passed.
+`npm run check` combines typecheck, lint, source regressions and build. `npm run check:corpus` adds complete corpus regressions, legacy evaluation and the offline suite. Neither includes source regeneration, browser checks or real-model tests. Source-only release checks cover the manifest, packaging and standalone smoke.
 
-Failed source refreshes preserve previous evidence with its original dates and an unavailable state, then exit unsuccessfully. Review changed text, metadata, terms and evaluation results before using refreshed material. See [data sources](DATA_SOURCES.md) and [distribution](DISTRIBUTION.md) for acquisition and licensing, [evaluation suite](EVAL_SUITE.md) for focused runs/comparisons, and [LLM.md](LLM.md#reproduce-integration-checks) for real Ollama testing. Release preparation and secret scanning are documented in [distribution](DISTRIBUTION.md) and the [secret-scan guide](../evaluation/security/SECRET_SCAN.md).
+For detailed procedures, use [source updates](SOURCE_UPDATES.md), [focused evaluations](EVAL_SUITE.md), [real Ollama checks](LLM.md#reproduce-integration-checks), [release preparation](DISTRIBUTION.md#preparing-a-source-only-pull-request) and [secret scanning](../evaluation/security/SECRET_SCAN.md).
 
 ## Browser and accessibility checks
 
 `npm run test:a11y` and `npm run test:e2e` invoke the same Playwright suite. Resident tests expect `LLM_PROVIDER=none` and the documented evidence corpus; provider-enabled tests use the separate fixtures described in [LLM.md](LLM.md).
 
-[ACCESSIBILITY.md](ACCESSIBILITY.md) is canonical for Chromium installation, default port 3100, testing an existing preview, production Worker/CSP checks, PowerShell environment variables and report locations. It also distinguishes automated checks from manual keyboard, screen-reader, text-resizing and resident review.
+[ACCESSIBILITY.md](ACCESSIBILITY.md) covers Chromium installation, ports, existing previews, production Worker/CSP checks, environment variables, reports and manual review.
 
-The known rejected-upload transport failure occurs in Windows and Linux local production runs. See [release readiness](RELEASE_READINESS.md) for actual outcomes and [the investigation](BUG_FIX_FOLLOWUP_2026-09-12.md) for scope. The standalone deployment smoke uses a different, bounded test set.
+See [release readiness](RELEASE_READINESS.md) for recorded outcomes and [the rejected-upload transport investigation](BUG_FIX_FOLLOWUP_2026-09-12.md) for the known Windows/Linux local production failure. Standalone deployment smoke uses a separate test set.
 
 ## Live API smoke
 
-Run `scripts/smoke.mjs` against an already running app with a populated corpus and generated evaluation reports. It checks health, a cited housing answer, source/evaluation downloads and the public City Hall address through property and nearby-development lookups. It needs outbound access; with a provider enabled, its housing question may also make a model call. Use `LLM_PROVIDER=none` for the baseline.
+Run `scripts/smoke.mjs` against a running app with a populated corpus and generated evaluation reports. It checks health, a cited housing answer, source/evaluation downloads and City Hall property/development lookups. Outbound access is required; use `LLM_PROVIDER=none` to avoid a model call.
 
-The default target is `http://localhost:3001`, and the default output overwrites `docs/local-api-validation.json`. Preserve dated records by choosing a new output; create its parent directory first. For example, in PowerShell:
+The default target is `http://localhost:3001`; output overwrites `docs/local-api-validation.json`. Preserve dated records with a new output path and create its parent directory first. In PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force work/smoke | Out-Null
@@ -100,7 +98,7 @@ node scripts/smoke.mjs
 Remove-Item Env:TAMPABAYBOT_SMOKE_URL, Env:TAMPABAYBOT_SMOKE_OUTPUT
 ```
 
-For POSIX shells, create the directory with `mkdir -p work/smoke`, then run `TAMPABAYBOT_SMOKE_URL=http://localhost:3001 TAMPABAYBOT_SMOKE_OUTPUT=work/smoke/local-api.json node scripts/smoke.mjs`. The script neither starts a server nor authenticates through a hosting sign-in gate. A failed request or incomplete evidence stops the check; inspect the result and its scope before claiming hosted verification. It is separate from the standalone artifact smoke and does not complete human geographic or accessibility review.
+In POSIX shells, run `mkdir -p work/smoke`, then `TAMPABAYBOT_SMOKE_URL=http://localhost:3001 TAMPABAYBOT_SMOKE_OUTPUT=work/smoke/local-api.json node scripts/smoke.mjs`. The script does not start a server or pass a hosting sign-in gate; failed requests or incomplete evidence stop the check. It is separate from standalone artifact smoke and human geographic/accessibility review.
 
 ## HTTP API
 
@@ -120,12 +118,10 @@ POST routes accept JSON. Property and development lookups use a selected, confir
 | `GET /api/evaluation?artifact=human` | Human-review packets and recorded review states |
 | `GET /api/evaluation?artifact=suite` | Offline suite report; unavailable unless its mode is `offline` |
 
-An unknown evaluation artifact returns 404. Downloads expose the files bundled with that build; the source-only release contains empty/pending placeholders. Input bodies, text and coordinates are bounded and resident-input responses disable caching. Shared rate limiting requires the configuration described in [operations](OPERATIONS.md).
+Unknown evaluation artifacts return 404. Downloads expose that build's bundled files, including empty/pending source-release placeholders. Input bodies, text and coordinates are bounded; resident-input responses disable caching. See [operations](OPERATIONS.md) for shared rate limiting.
 
-Resource IDs are `tampa-bay`, `tampa`, `st-petersburg`, `clearwater`, `hillsborough-county`, `pinellas-county`, and `pasco-county`. Unsupported IDs return 400. A conflicting city selection/question yields `needs_jurisdiction`; the response includes `jurisdictionId`, `jurisdictionLabel` and `needsJurisdiction`. These fields describe source selection, never a property-boundary finding. Legacy Tampa benchmark calls explicitly select `tampa`.
+Resource IDs are `tampa-bay`, `tampa`, `st-petersburg`, `clearwater`, `hillsborough-county`, `pinellas-county` and `pasco-county`; unsupported IDs return 400. Conflicting city selections/questions yield `needs_jurisdiction`, with `jurisdictionId`, `jurisdictionLabel` and `needsJurisdiction` for source selection, not property-boundary findings. Legacy Tampa benchmarks explicitly select `tampa`.
 
 ## Deployment and verification records
 
-[Independent deployment](DEPLOYMENT.md) covers building an isolated Worker artifact, local production smoke, your own Cloudflare account, runtime secrets and rollback.
-
-For dated results and remaining work, use [release readiness](RELEASE_READINESS.md) and [release notes](../CHANGELOG.md). Keep those observations separate from this guide's repeatable commands.
+[Deployment](DEPLOYMENT.md) covers Worker artifacts, production smoke, Cloudflare hosting, secrets and rollback. Dated results and remaining work belong in [release readiness](RELEASE_READINESS.md) and the [changelog](../CHANGELOG.md).
