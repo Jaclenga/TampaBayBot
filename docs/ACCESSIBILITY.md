@@ -17,7 +17,7 @@ Historical complete production-browser runs on Windows and later Ubuntu Linux fa
 
 The retained production and archived axe scans reported no violations or incomplete nodes in the scanned flows. Reflow, the historical CSS zoom approximation and the production security checks passed. The current source-demo checks below add actual browser zoom and font preferences. Automation does not replace human accessibility review.
 
-The desktop, mobile, housing-answer and evaluation images in `docs/screenshots/` retain the earlier redesign captures associated with the 15:17 UTC browser run. An implementation agent visually inspected those earlier images; they were not refreshed or visually reviewed for the final production run. This is not a human usability audit.
+Historical desktop, mobile, housing-answer and evaluation images under `docs/screenshots/` were associated with the 15:17 UTC browser run and are omitted from source-only packages. An implementation agent inspected those earlier images; they were not refreshed or visually reviewed for the final production run. See [historical verification](HISTORY.md#release-verification) for the archived records. This is not a human usability audit.
 
 ## Public source browser checks
 
@@ -41,6 +41,8 @@ npx playwright test --config playwright.source.config.ts tests/source-e2e/ui-acc
 The HTML report and its attachments are written under `work/source-browser-report/`; the temporary browser profiles stay under `test-results/`. These generated files are excluded from the public source package.
 
 On 2026-09-13, the Windows/Chromium 153.0.8010.12 source-browser run passed all 11 cases with no retries: four accessibility cases above, four existing demo cases and three Spanish reference/property/quotation cases. An implementation agent visually inspected the home and open-evidence viewport captures at 200%/400% browser zoom and 200% default-font size. The Spanish property case uses mocked GIS responses and checks 320px reflow, untranslated original record text and axe violations; it does not verify a live GIS service. The public demo image and archived production images were not refreshed by this run.
+
+All 11 source-browser cases passed again after the September 16 architecture fixes. That automated rerun did not repeat the earlier visual inspection or add human/screen-reader review; see [the current verification record](RELEASE_READINESS.md#september-16-2026-local-architecture-verification).
 
 ## Run the historical corpus browser checks
 
@@ -72,7 +74,7 @@ Remove-Item Env:PLAYWRIGHT_BASE_URL
 
 The POSIX equivalent is `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001 npm run test:a11y`. If `PLAYWRIGHT_PRODUCTION_SECURITY=true` is also set, that existing server must actually be a production build. By default the upload checks use that same external URL; set `PLAYWRIGHT_INPUT_BASE_URL` only when the deployment exposes a separate direct Worker test route. These variables configure tests, not application secrets. Generic Node/PowerShell setup is documented in the [development guide](DEVELOPMENT.md).
 
-The eleven resident/browser tests cover home, source library, project information, evaluation, a cited housing answer, an address-selection flow with unavailable GIS data, address-only entry, labeled model selection/fallback, private-input correction, keyboard submission, accessible errors, mobile reflow, a 200% zoom approximation with reduced motion, and malformed API requests. Four security integration tests run alongside them; the production-only CSP test is skipped in development mode. Synthetic address and provider cases are explicitly fixtures; they do not verify live geography or real-model quality. Live property verification is separately recorded in `docs/geospatial-live-validation.json`.
+The eleven resident/browser tests cover home, source library, project information, evaluation, a cited housing answer, an address-selection flow with unavailable GIS data, address-only entry, labeled model selection/fallback, private-input correction, keyboard submission, accessible errors, mobile reflow, a 200% zoom approximation with reduced motion, and malformed API requests. Four security integration tests run alongside them; the production-only CSP test is skipped in development mode. Synthetic address and provider cases are explicitly fixtures; they do not verify live geography or real-model quality. Dated live property observations are linked from [geographic verification history](HISTORY.md#geographic-coverage); their raw reports are omitted from source-only packages.
 
 Playwright writes fresh raw JSON to `evaluation/accessibility/playwright-results.json` and its HTML report under `playwright-report/`. `evaluation/accessibility/latest.json` is the retained Windows summary; a later raw run does not automatically make that dated summary current. The later Linux result is a separate receipt linked from [release readiness](RELEASE_READINESS.md). Keep dates, environments and report hashes together before updating any summary.
 

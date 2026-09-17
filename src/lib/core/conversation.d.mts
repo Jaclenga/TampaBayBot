@@ -6,4 +6,4 @@ export interface ConversationContext {
 }
 export function readConversation(value: unknown, sources?: Source[]): ConversationContext | null;
 export function resolveConversation(question: string, options?: { conversation?: unknown; jurisdictionId?: JurisdictionId; sources?: Source[] }): {question: string; jurisdictionId: JurisdictionId; used: boolean; turns: number};
-export function nextConversation(question: string, answer: ResidentAnswer, turns?: number): ConversationContext | null;
+export function nextConversation(question: string, answer: ResidentAnswer, turns?: number, sources?: Source[]): ConversationContext | null;

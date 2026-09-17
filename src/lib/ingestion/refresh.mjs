@@ -4,10 +4,14 @@ import { mkdir, readFile } from 'node:fs/promises';
 import { dirname, relative, resolve, sep } from 'node:path';
 import { fetchSource, DownloadError } from './fetch.mjs';
 import { normalize, chunkUnits } from './normalize.mjs';
+import { NormalizationLimitError, validateNormalized } from './normalization-limits.mjs';
+import { processSource, SourceProcessingError } from './process-source.mjs';
+import { deriveFacts } from '../domain/facts.mjs';
 import { digest, json, makeCorpus, readCorpus, validateCorpus, workspacePath, writeAtomic, withPublicationLock, publishCorpus } from './generation.mjs';
 
 const generatedFields = ['retrieval_date', 'source_updated_date', 'content_hash', 'normalized_content_hash', 'raw_path', 'normalized_path', 'last_attempt', 'last_error', 'response_url', 'content_type', 'etag', 'last_modified', 'content_changed_at', 'status'];
-const errorCode = error => error instanceof DownloadError ? error.code : 'source_normalization_or_provenance_failed';
+const errorCode = error => error instanceof DownloadError || error instanceof SourceProcessingError || error instanceof NormalizationLimitError
+  ? error.code : 'source_normalization_or_provenance_failed';
 const snapshot = source => ({ status: source?.status ?? 'unavailable', content_hash: source?.content_hash ?? null, normalized_content_hash: source?.normalized_content_hash ?? null, retrieval_date: source?.retrieval_date ?? null });
 const changedConfiguration = (before, after) => [...new Set([...Object.keys(before ?? {}), ...Object.keys(after)])]
   .filter(key => !generatedFields.includes(key) && JSON.stringify(before?.[key]) !== JSON.stringify(after[key]));
@@ -85,10 +89,17 @@ export async function stageRefresh(root, { output, sourceId, offline = false, fe
           ...downloadOptions, ...(fetchImpl ? { fetchImpl } : {}), accept: source.source_type === 'html' ? 'text/html' : '*/*',
         }));
       }
-      const normalized = await normalizeImpl(bytes, source);
-      const rawHash = digest(bytes); const normalizedHash = digest(JSON.stringify(normalized.units));
+      const rawHash = digest(bytes);
       const retrievedAt = offline ? source.retrieval_date : attemptedAt;
-      const chunks = chunkUnits(normalized, source, retrievedAt, rawHash);
+      let normalized, chunks;
+      if (normalizeImpl === normalize) ({ normalized, chunks } = await processSource(bytes, source, retrievedAt, rawHash, { signal: downloadOptions.signal }));
+      else {
+        // Trusted test adapters still obey output budgets before serialization.
+        normalized = await normalizeImpl(bytes, source);
+        validateNormalized(normalized);
+        chunks = chunkUnits(normalized, source, retrievedAt, rawHash);
+      }
+      const normalizedHash = digest(JSON.stringify(normalized.units));
       assert.ok(chunks.length, 'Normalization produced no evidence');
       const extension = ['arcgis', 'geojson'].includes(source.source_type) ? 'json' : source.source_type;
       assert.ok(['html', 'pdf', 'csv', 'json'].includes(extension), 'Unsupported snapshot type');
@@ -196,8 +207,23 @@ export async function verifyPreservedSources(root, sourceId, { allowEmpty = fals
       assert.ok(source.raw_path?.startsWith(`data/raw/${source.source_id}/`), 'No preserved snapshot');
       const bytes = await readFile(await workspacePath(root, source.raw_path));
       assert.equal(digest(bytes), source.content_hash, 'Raw snapshot digest mismatch');
-      const normalized = await normalize(bytes, source); const chunks = chunkUnits(normalized, source, source.retrieval_date, source.content_hash);
-      assert.deepEqual(chunks, stored, 'Preserved corpus differs');
+      const { chunks } = await processSource(bytes, source, source.retrieval_date, source.content_hash);
+      // Older reviewed generations predate semantic annotations. Compare their
+      // original evidence fields without requiring a publication to add facts.
+      const compatible = chunks.map(chunk => {
+        const previous = stored.find(item => item.id === chunk.id);
+        const candidate = { ...chunk };
+        if (previous && !Object.hasOwn(previous, 'facts')) delete candidate.facts;
+        if (previous && !Object.hasOwn(previous, 'answer_sections')) delete candidate.answer_sections;
+        if (previous && !Object.hasOwn(previous.locator ?? {}, 'starts_at_sentence_boundary')) {
+          candidate.locator = { ...candidate.locator }; delete candidate.locator.starts_at_sentence_boundary;
+          // Compare annotations under the same conservative boundary knowledge
+          // as the reviewed generation, without deleting any existing facts.
+          if (Object.hasOwn(previous, 'facts')) candidate.facts = deriveFacts(candidate, source);
+        }
+        return candidate;
+      });
+      assert.deepEqual(compatible, stored, 'Preserved corpus differs');
       report.sources.push({ source_id: source.source_id, status: 'passed', chunks: chunks.length });
     } catch { report.status = 'failed'; report.sources.push({ source_id: source.source_id, status: 'failed', error_code: 'preserved_source_verification_failed' }); }
   }

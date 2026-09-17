@@ -1,10 +1,76 @@
 # Release readiness
 
-**As of September 13, 2026: the public main branch includes the updates below; v0.1.0-alpha.4 remains the historical source-only release tag. Readiness for an unrestricted resident-facing service is not established.**
+**As of September 16, 2026: the repaired retained-corpus evaluation passes all 236 offline cases and 77 narrative cases; program-recall omissions remain. The latest local verification is recorded below; v0.1.0-alpha.4 remains the historical published source-only release tag. Local changes do not establish publication or deployment. Readiness for an unrestricted resident-facing service is not established.**
 
 This is the canonical record of release status, completed verification and remaining review. [Release notes](../CHANGELOG.md) summarize changes; dated bug scans and model reports preserve earlier observations. Documentation changes do not rerun those checks or change the frozen release tag.
 
-## Current main development changes
+## September 16, 2026 complexity reduction
+
+The follow-up refactor separates format parsers from shared input/output validation, replaces manual worker-settlement state with a single awaited cleanup path, shares the repeated qualification response, and avoids repeated income-fact extraction and fact-deduplication scans. Public contracts, evidence ordering, limits and failure codes are preserved. Three additional worker lifecycle regressions cover successful termination, cleanup failures and construction time within the deadline.
+
+`npm run check` passed typecheck, lint, all 469 source tests and the production build. The unchanged retained corpus passed 236/236 offline cases, 77/77 narrative cases and all three 12/12 exact-claim quality measures. Comparison with the preceding security-fix run reported no regressions or provenance changes. Direct comparison with that implementation also matched 128 normalization results/failures, 81 chunk results/failures and facts from all 1,044 retained chunks. Strict program recall still exits 1 with unchanged omissions (65/72 retrieval at 15, 66/72 final evidence; all six controls pass).
+
+Reports are retained under ignored `work/evals/complexity-20260916-offline/`, with comparison and recall in the corresponding `-comparison/` and `-recall/` directories; the direct comparison is in `work/complexity-20260916/behavior-comparison.json`. The active source-only corpus remains unchanged. No new acquisition, real-model call, browser run or deployment is claimed for this refactor; the preceding browser and HTTP security checks are recorded below.
+
+## September 16, 2026 local security fixes
+
+The three findings from the agent-assisted code review are repaired: unsupported page/form/action uploads are refused before framework parsing; source downloads stop at redirects instead of following unreviewed targets; and normalization/chunk expansion has incremental output limits plus a terminable parsing worker. Failure paths preserve the active corpus. Updated [operations](OPERATIONS.md#shared-controls) and [source-update guidance](SOURCE_UPDATES.md#acquire-a-candidate) describe admission rules, processing budgets, stable failure codes and reviewed URL changes.
+
+`npm run check` passed typecheck, lint, all 466 source tests and the production build. All 11 source browser tests passed. Four HTTP security tests passed against the compiled Worker through the direct local no-assets transport, including unfinished JSON uploads, immediate page/form/action rejection, disabled image-processing routes and response policy headers. Unit tests also cover shared maintenance, redirect destinations, repeated HTML/CSV/metadata expansion, PDF extraction, worker deadlines and cancellation. An independent agent integration review found no additional blocker.
+
+The unchanged retained corpus again passed 77/77 narrative and 236/236 offline cases, with all 4,370 applicable checks and all three 12/12 exact-claim quality measures. Comparison against the preceding passing repair run reported no regressions or provenance changes. Strict program recall still exits 1 for the existing omissions: retrieval at 15 remains 65/72 and final evidence 66/72, with all six controls passing. Offline reports are preserved under ignored `work/evals/security-fixes-20260916-offline/`, with comparison and recall in the corresponding `-comparison/` and `-recall/` directories. HTTP results are in `work/security-fix-20260916/http-results.json`.
+
+These checks used local synthetic inputs and the dated retained evidence, with no new acquisition, real-model calls, hosted upload/load test or deployment. The separate static-assets interrupted-upload issue below remains open; the four direct-Worker checks do not certify that proxy or hosted behavior. The active source-only corpus remains unchanged.
+
+## September 16, 2026 local architecture verification
+
+The [answer architecture refactor](ARCHITECTURE.md) adds QueryPlan signals, declarative source section preferences, evidence-linked facts during ingestion, distinct retrieval stages with diagnostics, and explicit non-exhaustive coverage. The answer entrypoint coordinates smaller selection, qualification, response and next-step components. Literal citations, reviewed publication, geographic confirmation and optional model fallback remain the trust boundaries.
+
+The follow-up bug scan fixes program switching and alias recall, preserves required quotation spans, separates dollar amounts from dates, validates the year actually quoted, retains complete continuation sentences, and extracts advisory and structured narrative closure notices. Additional cases cover unquotable qualifications, conflicting application statuses, old amounts embedded in restrictions and income headings without values. The fixes add 33 regression tests.
+
+Final local verification passed all 422 source tests, typecheck, lint and production build through `npm run check`, plus all 11 source browser tests. Browser checks include keyboard operation, narrow layouts, forced colors, browser zoom, text resizing and Spanish. Routing was compared with the previous implementation on 840 generated cases; retrieval hits and scores matched on 79 synthetic queries before intentional semantic improvements. These are engineering regressions over synthetic evidence; no new source-currentness audit, populated-corpus benchmark, real-model run, independent human review or deployment is claimed. The repository-wide TypeScript migration remains deferred.
+
+## September 16, 2026 retained-corpus evaluation rerun
+
+**The initial rerun failed; the repairs and passing follow-up are recorded below.** The implementation was tested in an isolated source copy against the unchanged September 12 snapshot: 33 sources, 1,044 chunks, generation `e44828a7d15c5425117fc9986de5a491f298ae3faab05590a184354de061f1be`. Quality and recall support hashes validated before evaluation. The active source-only corpus stayed unchanged, and no source acquisition or real-model call occurred.
+
+| Check | Result |
+| --- | --- |
+| Strict narrative benchmark | 75/77 cases passed; `h05` and `h18` failed. |
+| Complete offline suite | 230/236 cases and 4,358/4,370 applicable checks passed; 582 checks were not applicable. |
+| Exact-claim quality | Factual accuracy and citation correctness: 11/12 each; citation completeness: 12/12. |
+| Program recall | Retrieval at 15: 65/72 pairs; final evidence: 66/72 pairs; all 6 controls passed. Strict recall exited 1 for unchanged omissions. |
+
+The six offline failures covered three issues: application-method wording was treated as an open/closed-status question (`h05`); asking to use 2025 income limits "today" returned `answered`, with a dated heading mistaken for an income value (`h18` and three formatting variants); and the Clearwater permit first-step instruction was rejected as too short, causing a later application step to replace the authored claim/support pair (`clearwater-permit`). The retained implementation selected the expected Clearwater instruction on the same snapshot. These failures showed that the passing source and browser suites above did not establish corpus compatibility.
+
+Full reports are preserved in ignored `work/evals/architecture-20260916-offline/` and `work/evals/architecture-20260916-recall/`. They describe dated engineering evidence, not current publisher truth. [Program recall](PROGRAM_RECALL.md#september-16-2026-rerun) records the unchanged omissions and comparison scope.
+
+### Regression repairs and follow-up evaluation
+
+Application methods now require instructions without implying intake availability; requests for an alternative program support resource discovery. Explicit open/closed questions still require status evidence. Current use of a previous year's income limits requires current-year evidence, while a historical income question retains its year even beside a current application-status question. Calendar dates and household counts cannot supply an income value. Short numbered steps require a complete action and object plus source context; headings and unsafe or out-of-scope evidence remain excluded.
+
+The repaired source was evaluated against the same retained corpus and unchanged benchmark expectations:
+
+| Check | Follow-up result |
+| --- | --- |
+| Strict narrative benchmark | 77/77 passed. |
+| Complete offline suite | 236/236 cases and 4,370/4,370 applicable checks passed; 582 checks were not applicable. |
+| Exact-claim quality | Factual accuracy, citation correctness and citation completeness: 12/12 each. |
+| Program recall | Retrieval at 15: 65/72 pairs; final evidence: 66/72 pairs; all 6 controls passed. Strict recall still exited 1 for the existing omissions. |
+
+All six initial failures are repaired. A separate Pasco alternative-program question also returns `answered` again with its retained LIHEAP citation. The failed reports remain intact; passing reports and the input receipt are in ignored `work/evals/regression-repair-final-20260916-offline/`, with recall in `work/evals/regression-repair-final-20260916-recall/`. The active corpus remained unchanged, with no source acquisition or model calls. This restores the prior bounded evaluation results; it does not resolve the separate program-recall gaps or establish current publisher truth.
+
+The follow-up adds 18 source regression tests, including punctuation, historical/current-year wording, program discovery and method/status combinations. `npm run check` passed all 440 source tests, typecheck, lint and the production build; all 11 source browser checks passed on the final code. The [development regression gate](DEVELOPMENT.md#behavior-change-regression-gate) now requires populated-corpus comparison for routing, retrieval, fact and answer changes when reviewed evidence is available.
+
+The preserved comparison in `work/evals/regression-repair-final-20260916-comparison/` exits 1 for 21 response-shape flags on `h05` and `h18`: corrected statuses change check applicability and citation cardinalities. Manual review confirmed unchanged authored expectations and input hashes, no candidate check failures and no changed check results in previously passing cases. These flags were reviewed rather than suppressed or relabeled as a passing comparison.
+
+## September 16, 2026 documentation verification
+
+The documentation was checked against the current modules, HTTP contracts and npm scripts. All local Markdown links and heading anchors resolved. A new source-only package installed 514 locked packages from the local cache using Node 24.13.1 and npm 11.8.0, then passed all 422 source tests and the documented manifest refresh/verification commands. The isolated demo served its fictional home page and executed the development guide's API example with cited evidence, follow-up context and the documented local readiness response. The custom-provider example passed accepted-selection, clarification-bypass and invalid-output-fallback checks; all six quoted guardrail blocks matched their exported versions.
+
+API, architecture, contributor and model guidance now describe the current fields, required citations and selection limits. Historical screenshot/report references and local-versus-published verification are distinguished. External publisher availability, real-model calls and cloud deployment were not revalidated by this documentation check.
+
+## Current development changes
 
 Current source now includes offline synthetic application/browser tests, mandatory semantic release validation, a contributor manifest command, a fictional demo, staged atomic source updates with scheduled metadata reports, short factual evidence retrieval, temporary follow-up context, Spanish question/navigation support, and expanded GIS adapters. The tagged alpha observations below describe earlier source and are not rerun claims for these changes. [Source updates](SOURCE_UPDATES.md), [demo](DEMO.md), and [live coverage verification](HISTORY.md#geographic-coverage) document their exact scope.
 

@@ -10,7 +10,7 @@ export async function answerResidentQuestion(question, { conversation, locale = 
   const response = {
     ...answer,
     query: question,
-    conversation: nextConversation(resolved.question, answer, resolved.turns),
+    conversation: nextConversation(resolved.question, answer, resolved.turns, options.sources),
     conversationUsed: resolved.used,
     evidence: answer.evidence.map(item => {
       const source = options.sources?.find(source => source.source_id === item.source_id);

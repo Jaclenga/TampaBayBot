@@ -24,6 +24,8 @@ From the project directory:
 
 ```sh
 node scripts/package-release.mjs --output work/releases/v0.1.0-alpha.4-source
+cd work/releases/v0.1.0-alpha.4-source
+npm run release:verify
 ```
 
 Use a new output directory under `work/releases/`; existing output is never replaced. The script follows an explicit source-file policy, rejects symlinked inputs and redirected output ancestors, and preserves the working corpus.
@@ -39,6 +41,8 @@ The omitted content is:
 - historical screenshots, external data archives, runtime state, credentials, deployment-specific hosting configuration, private deployment artifacts and Git history. The original fictional demo image under `docs/images/` is included.
 
 Required JSON imports become placeholders: zero chunks, unset retrieval dates, unavailable sources, empty response/review arrays and reports marked `not_run`. The project README explains this state; links to omitted artifacts become explanatory text. The registry retains publisher URLs, operator-authored descriptions, fetch settings and next-step links. Historical agent review scripts/ratings are omitted to prevent attaching old judgments to new answers.
+
+The packager also regenerates `docs/DATA_SOURCES.md` as an empty-corpus notice. Keep reusable registry-field and extension guidance in [answer architecture](ARCHITECTURE.md#adding-source-semantics); edits only to that generated notice do not survive packaging. Synthetic software tests remain separate from the corpus evaluation reports marked `not_run`.
 
 The package includes documentation, `.github/workflows/source-release.yml` when present, and Gitleaks setup, configuration and a metadata-only report template. It excludes historical scan reports and the corpus-dependent development workflow. Source-build checks do not count missing-corpus regressions or evaluations as passes.
 

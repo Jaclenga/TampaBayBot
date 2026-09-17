@@ -2,6 +2,14 @@
 
 This benchmark measures omitted **distinct applicable programs**, separately from [claim accuracy and citation quality](EVALUATION.md#reading-the-metrics). Correct quotations can still omit relevant programs.
 
+## September 16, 2026 rerun
+
+The architecture implementation and its subsequent regression repairs were rerun against the same 33-source, 1,044-chunk retained snapshot. Corpus generation, source/chunk hashes, benchmark hash and reference date match the prior selection-improvement report; evaluator and runner versions differ. Retrieval at 15 remains 65/72 pairs (90.3%), final evidence remains 66/72 (91.7%), all ranked candidates contain 72/72, and all 6 controls pass. No execution failures or model calls occurred. Strict mode exited 1 because omissions remain.
+
+The same five questions miss six expected program matches: the St. Petersburg homeless-family question misses a housing-choice voucher; Clearwater homebuyer questions miss SHIP in English and Habitat in Spanish; Pinellas homebuyer misses SHIP; and Pinellas buy-or-rent misses SHIP and a housing-choice voucher. All missing support ranks below the 15-chunk retrieval cutoff. The initial rerun also changed the Pasco senior-electricity answer to insufficient application-status evidence while retaining its LIHEAP citation. The final repair recognizes its request for an alternative program and restores `answered`; the unchanged recall score alone did not reveal that response regression.
+
+The initial reports are preserved in ignored `work/evals/architecture-20260916-recall/`, and the final repair follow-up in `work/evals/regression-repair-final-20260916-recall/`. Their recall stages and omissions match; the Pasco answer-status repair is described above. The separate offline evaluation initially failed 6 of 236 cases; the repaired implementation passes 236/236, all 77 narrative cases and all 12 claim-quality cases with unchanged expectations. See [current evaluation results](RELEASE_READINESS.md#regression-repairs-and-follow-up-evaluation). The historical passing figures below apply only to their earlier runs.
+
 ## Program selection improvement
 
 Evidence selection now retains multiple programs per page and relevant programs outside the preferred agency list. It handles multiple needs, explicit exclusions and Spanish punctuation while filtering procurement notices and incompatible water/electric or adult/child programs. Primary excerpts and qualifications remain intact; supplemental quotations stay literal and within eight evidence cards.
@@ -19,7 +27,7 @@ Final macro recall is 94.9%. English final evidence improves from 20/60 to 55/60
 
 The runtime recognizes mechanisms from source text and headings without loading benchmark labels, program IDs or support hashes. The benchmark is unchanged, but the improvement was developed with knowledge of its failures: **this is not an independent holdout result**. Per-need queries and program diversity are candidates for addressing the remaining cutoff misses.
 
-The improvement measures evidence cards. The deterministic body still leads with one primary quotation; optional model selection can use up to three while retaining all cards. Each chunk permits one contiguous quotation. These limits, and ambiguous provider scope in generic utility program names, still require relevance and eligibility review.
+The improvement measures evidence cards. The deterministic body leads with a primary quotation and includes required details and qualifications. Optional model selection can use up to three quotations while retaining all cards; it falls back when more required quotations are needed. Each card contains one contiguous quotation, and separate facts within a chunk can receive separate cards. These limits, and ambiguous provider scope in generic utility program names, still require relevance and eligibility review.
 
 Validation: **135/135 targeted source tests**, **236/236 offline cases and 4,370/4,370 applicable checks**, including all 12 claim-quality cases; changed JavaScript passed ESLint. Missing dependencies blocked the normal full build/typecheck. The source manifest was subsequently refreshed and verified in a clean tracked-file copy without downloaded data. Live-model and resident-usability checks were not part of this run.
 

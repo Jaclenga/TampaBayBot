@@ -67,7 +67,9 @@ test('source deploy CLI retries a failed command with the same reviewed build an
   const { root, staged, receipt, receiptPath } = await appliedFixture(t);
   await mkdir(join(root, 'scripts'));
   for (const script of ['source-refresh.mjs', 'build-source-refresh.mjs']) await cp(resolve('scripts', script), join(root, 'scripts', script));
-  await cp(resolve('src/lib/ingestion'), join(root, 'src/lib/ingestion'), { recursive: true });
+  for (const directory of ['ingestion', 'domain']) {
+    await cp(resolve('src/lib', directory), join(root, 'src/lib', directory), { recursive: true });
+  }
   await cp(resolve('src/lib/csv.mjs'), join(root, 'src/lib/csv.mjs'));
   const command = join(root, 'fake-deploy.mjs');
   const failMarker = join(root, 'fail-next-deployment');

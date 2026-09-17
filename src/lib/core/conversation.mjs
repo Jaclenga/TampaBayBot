@@ -1,4 +1,5 @@
-import { routeQuestion, intentText } from './router.mjs';
+import { intentText } from './router.mjs';
+import { createQueryPlan } from './query-plan.mjs';
 import { isJurisdictionId, JURISDICTIONS, sourceCoversJurisdiction } from '../coverage.mjs';
 import { housingSituation } from '../housing/navigation.mjs';
 
@@ -37,7 +38,8 @@ export function readConversation(value, sources = []) {
 
 export function resolveConversation(question, { conversation, jurisdictionId = 'tampa-bay', sources = [] } = {}) {
   const context = readConversation(conversation, sources);
-  const current = routeQuestion(question, { jurisdictionId });
+  const plan = createQueryPlan(question, { jurisdictionId, sources });
+  const current = plan.route;
   if (!context) return { question, jurisdictionId, used: false, turns: 0 };
   // A changed picker starts a new geographic context. A clarification may choose
   // its area, but two different explicit jurisdictions still reach normal routing.
@@ -50,7 +52,11 @@ export function resolveConversation(question, { conversation, jurisdictionId = '
   // and "ese programa" becomes "that program" before reaching this point.
   const followup = /^(?:and |also |what about |does (?:it|that)|is (?:it|that)|(?:it|that(?: program)?) covers|covers (?:it|that)|can i apply|how (?:do|can) i apply|how much|how long|what (?:documents|requirements)|what(?:s| is| are) (?:the |el |la )?(?:maximum|minimum|amount|fee|cost|deadline|loan term)|when (?:can|do)|where (?:do|can|apply)|can it|y |tambien |that program|lo covers)/.test(text);
   const implicit = current.subjectCategory === 'navigation' || current.outOfScope;
-  const explicitOtherProgram = /\b(?:rmap|hrrp|ship)\b/.test(text);
+  // Resolve names against the same registry as the answer path. A newly named
+  // program replaces the old preference, including aliases and unknown names;
+  // it must never inherit a competing program title from an earlier answer.
+  const explicitOtherProgram = plan.entities.some(entity => entity.type === 'program' &&
+    (!entity.sourceId || entity.sourceId !== context.sourceId));
   const newTopic = !implicit && current.subjectCategory !== context.topic;
   const currentNeed = housingNeedOf(question, current);
   const newHousingNeed = current.subjectCategory === 'housing' && context.topic === 'housing' && currentNeed !== 'general' && currentNeed !== context.housingNeed;
@@ -66,9 +72,9 @@ export function resolveConversation(question, { conversation, jurisdictionId = '
   return { question: effective, jurisdictionId: area, used: true, turns: context.turns + 1 };
 }
 
-export function nextConversation(question, answer, turns = 0) {
+export function nextConversation(question, answer, turns = 0, sources = []) {
   if (['out_of_scope', 'missing_geographic_coverage'].includes(answer.status)) return null;
-  const route = routeQuestion(question, { jurisdictionId: answer.jurisdictionId });
+  const { route } = createQueryPlan(question, { jurisdictionId: answer.jurisdictionId, sources });
   const housingNeed = housingNeedOf(question, route);
   return {
     version: 1,

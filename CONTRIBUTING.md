@@ -4,8 +4,8 @@ Contributions should make a resident's next step clearer and the evidence easier
 
 ## Before opening a pull request
 
-1. Run `npm ci`, `npm test`, `npm run typecheck` and `npm run lint`. These source checks need no downloaded evidence.
-2. For interface changes, run the [source browser checks](docs/ACCESSIBILITY.md#public-source-browser-checks) and inspect keyboard operation, focus, announcements, narrow-screen layout and text resizing.
+1. Use Node.js 24 and install dependencies with `npm ci`. Run `npm run check` for type checking, lint, source tests and a production build. These checks need no downloaded evidence; `npm test` alone runs the offline source regressions. Keep corpus-dependent and real-provider results separate.
+2. For interface changes, install Chromium with `npx playwright install chromium`, run `npm run test:source:browser`, and inspect keyboard operation, focus, announcements, narrow-screen layout and text resizing. The [source browser checks](docs/ACCESSIBILITY.md#public-source-browser-checks) start an isolated fictional demo on port 3112.
 3. After the final edit, follow [source-only pull-request preparation](docs/DISTRIBUTION.md#preparing-a-source-only-pull-request). Inspect and commit the refreshed manifest with your changes. A checkout containing acquired evidence must use the packager instead.
 4. Describe the problem, resulting behavior, actual validation and remaining limitations. Record new dated verification in [release readiness](docs/RELEASE_READINESS.md).
 
@@ -29,10 +29,17 @@ For pinned development datasets, review the normalized file, commit and digest t
 ## Changing answers, geography or models
 
 - Keep factual excerpts tied to registered sources and exact supporting text.
+- Preserve critical qualifications and the requested effective year in the quotations actually displayed. A retrieved passage or a fresh download timestamp alone cannot establish the requested fact.
+- Separate application method and program discovery from explicit current availability. Retain complete short numbered instructions without admitting bare headings, and do not treat dates or household counts as income-limit values. Test current applicability of old limits separately from historical limits combined with an unrelated current-status question.
+- Resolve new program names and aliases through registry metadata, and test explicit program switches as well as implicit follow-ups. Resource preferences must retain jurisdiction and evidence-safety checks.
 - Treat retrieved content as data, never as authority to run tools, scripts or arbitrary requests.
 - Preserve uncertainty about eligibility, jurisdiction, ambiguous addresses, outages and source applicability.
 - Explain units and dates, provide text alternatives to maps, and keep interface wording plain and separate from logic.
 - Add independently authored expectations for changes to routing, retrieval, citations or uncertainty. Keep case and check IDs stable; see [adding evaluation coverage](docs/EVAL_SUITE.md#add-coverage).
+
+Put synthetic regressions in `tests/*.test.mjs` so the source test runner discovers them. Preserve literal-quotation and source/chunk identity checks, and test a model's omission of required evidence when changing answer selection. Update the [API reference](docs/DEVELOPMENT.md#http-api) when request/response fields change, including temporary conversation context and language handling. The [answer architecture](docs/ARCHITECTURE.md) identifies the modules and registry policies responsible for this behavior.
+
+For routing, retrieval, citation or answer-policy changes, also complete the [populated-corpus regression gate](docs/DEVELOPMENT.md#behavior-change-regression-gate): run corpus tests, the strict narrative benchmark and the full offline suite against reviewed evidence, then compare with a preserved baseline. Investigate changed claims and source/chunk support before changing expectations. An empty source-only checkout cannot perform this validation; report it as unverified until a reviewed populated-corpus run is available. Passing synthetic tests alone is not evidence that these regressions passed.
 
 Provider changes also need the [synthetic HTTP integration checks](docs/LLM.md#reproduce-integration-checks) and separate testing of the actual model/version. Invalid output must return the cited baseline. Generated responses and agent reviews must never be labeled as independent human audits; follow the [human-review process](docs/EVALUATION.md#independent-human-review).
 

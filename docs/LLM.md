@@ -6,11 +6,13 @@ TampaBayBot supports operator-selected **Ollama** and **OpenAI-compatible Chat C
 
 1. Routing and retrieval produce the initial cited answer. A provider runs only for status `answered`; insufficient evidence, official judgment, conflicts/staleness and location/coverage states remain deterministic.
 2. The server sends the current question, bounded evidence IDs/titles/excerpts and selector instructions. It attaches no conversation history, provider credentials, property results or complete corpus. The question can contain personal information the resident typed.
-3. The model returns one to three selections, each with a supplied ID and its full literal quote. The first evidence entry must stay first. Unsupported IDs, duplicates, altered/reordered primary evidence, extra prose, malformed output and incomplete responses fail validation.
+3. The model returns one to three selections, each with a supplied ID and its full literal quote. The first evidence entry must stay first. Every `requiredEvidenceIds` entry must be included to retain requested facts and their qualifications. Unsupported IDs, duplicates, altered/reordered primary evidence, omitted required citations, extra prose, malformed output and incomplete responses fail validation.
 4. The app builds the answer from validated selections and controls status, evidence records, official next steps, explanation and warnings. Models cannot call tools or fetch sources.
 5. Invalid configuration, provider failure/timeout, exceeded response limits or invalid output return the original answer with fallback metadata. Keys, base URLs and raw errors are withheld from the browser.
 
 Generation metadata distinguishes disabled, skipped, model-assisted and fallback behavior. [Guardrail inserts and hooks](GUARDRAIL_INSERTS.md) describes the API's additional input/runtime checks; provider validation does not replace them. [Recorded Ollama tests](HISTORY.md#ollama-testing) are separate from synthetic fixtures and do not establish general accuracy or usefulness.
+
+Selection accepts at most eight supplied evidence entries and three required entries. A baseline exceeding either limit keeps its complete deterministic answer with `invalid_evidence` fallback before any provider call. A quotation that cannot retain an essential application condition within the citation limit produces `insufficient_evidence`, so it also bypasses the provider. These limits never authorize dropping a restriction to make a request fit.
 
 ## Configuration
 
@@ -98,10 +100,11 @@ import { parseLlmConfig } from './src/lib/llm/index.mjs';
 import { answerWithGuardrails } from './src/lib/guardrails/navigator.mjs';
 import { siteGuards } from './src/lib/guardrails/site.mjs';
 
-export async function answerWithBackend(question, corpus, env, completeWithYourBackend, signal) {
+export async function answerWithBackend(question, corpus, env, completeWithYourBackend, { jurisdictionId = 'tampa-bay', signal } = {}) {
   return answerWithGuardrails(question, {
     sources: corpus.sources,
     chunks: corpus.chunks,
+    jurisdictionId,
     config: parseLlmConfig(env),
     extraGuards: siteGuards,
     signal,
@@ -115,7 +118,7 @@ export async function answerWithBackend(question, corpus, env, completeWithYourB
 }
 ```
 
-Configuration must remain valid and enabled. Custom transport is trusted operator code: implement authentication, endpoint policy, response bounds and cancellation. The shared deadline and selection validation still apply, but ignoring `signal` can leave upstream work running after fallback. Keep provider objects, keys and endpoints server-side. Test malformed output, failure, timeout and conservative states. Use this guarded entry point; `answerQuestion` and `synthesizeAnswer` alone omit application guardrails.
+Pass the resident's selected resource area as `jurisdictionId`, or name it in the question; the default regional scope may require clarification before answering. Configuration must remain valid and enabled. Custom transport is trusted operator code: implement authentication, endpoint policy, response bounds and cancellation. The shared deadline and selection validation still apply, but ignoring `signal` can leave upstream work running after fallback. Keep provider objects, keys and endpoints server-side. Test malformed output, failure, timeout and conservative states. Use this guarded entry point; `answerQuestion` and `synthesizeAnswer` alone omit application guardrails.
 
 ## Reproduce integration checks
 
