@@ -1,6 +1,13 @@
 // Translate application-authored navigation only. Quotes, source titles, agencies,
 // URLs and recorded facts remain exact original evidence, never model translations.
 const MESSAGES = new Map([
+  ['I found relevant guidance, but the available quotations cannot preserve all application conditions or restrictions.', 'Encontré orientación pertinente, pero las citas disponibles no pueden conservar todas las condiciones o restricciones de solicitud.'],
+  ['Ask the responsible agency to confirm the application conditions and restrictions before relying on this resource.', 'Pida a la agencia responsable que confirme las condiciones y restricciones de solicitud antes de confiar en este recurso.'],
+  ['I found income information, but the available quotations do not establish the income limits for the requested year.', 'Encontré información sobre ingresos, pero las citas disponibles no confirman los límites de ingresos para el año solicitado.'],
+  ['Ask the responsible agency to confirm the current income limits before relying on this resource.', 'Pida a la agencia responsable que confirme los límites de ingresos actuales antes de confiar en este recurso.'],
+  ['I found relevant guidance, but the available quotations do not confirm whether applications are open or closed.', 'Encontré orientación pertinente, pero las citas disponibles no confirman si las solicitudes están abiertas o cerradas.'],
+  ['Ask the responsible agency to confirm current availability before applying.', 'Pida a la agencia responsable que confirme la disponibilidad actual antes de presentar una solicitud.'],
+  ['These are resources found in the reviewed collection. Other programs or resources may exist.', 'Estos son recursos encontrados en la colección revisada. Pueden existir otros programas o recursos.'],
   ['I found relevant guidance, but the available source quotations do not establish every amount, fee, time period, or deadline you asked for.', 'Encontré orientación pertinente, pero las citas disponibles no confirman todos los montos, las tarifas, los períodos o las fechas límite que solicitó.'],
   ['Ask the responsible agency to confirm the missing detail before relying on this resource.', 'Pida a la agencia responsable que confirme el dato que falta antes de confiar en este recurso.'],
   ['I could not determine this reliably from the available public information.', 'No pude determinarlo de forma fiable con la información pública disponible.'],
@@ -55,6 +62,8 @@ function translate(text) {
     return 'No pude verificar el programa o la ordenanza que indicó en la colección de esta jurisdicción. Las fuentes que se muestran sirven para consultar; no confirman que exista.';
   const stale = text.match(/^The preserved (.*) excerpt is shown below\. Check the live page with the agency before acting\.$/s);
   if (stale) return `El fragmento guardado de ${stale[1]} se muestra a continuación. Consulte la página actual con la agencia antes de actuar.`;
+  const income = text.match(/^The available (.*) income table is labeled (\d{4})\. I cannot confirm that those figures are the requested eligibility limits\. Check the latest limits with the program agency\.(.*)$/s);
+  if (income) return `La tabla de ingresos disponible de ${income[1]} indica el año ${income[2]}. No puedo confirmar que esas cifras sean los límites de elegibilidad solicitados. Consulte los límites más recientes con la agencia del programa.${income[3]}`;
   return text;
 }
 
@@ -70,5 +79,6 @@ export function localizeAnswer(answer, locale = 'en') {
       : `${item.title}: “${item.quote}” [${item.id}]`).join('\n\n');
   }
   return { ...answer, answer: text, meaning: translate(answer.meaning), warnings: answer.warnings.map(translate),
+    ...(answer.coverage ? { coverage: { ...answer.coverage, statement: translate(answer.coverage.statement) } } : {}),
     ...(answer.requirementsToVerify ? { requirementsToVerify: answer.requirementsToVerify.map(translate) } : {}) };
 }

@@ -72,4 +72,4 @@ npx wrangler rollback <previous-version-id> --config work/standalone/independent
 
 [Operations](OPERATIONS.md) covers access controls, request limits, monitoring, retention and incident response. [Release readiness](RELEASE_READINESS.md) records source-refresh responsibilities, manual reviews and remaining launch checks.
 
-The rejected-upload transport failure remains reproducible in Windows and Linux local production runs; hosted impact is unverified. The standalone smoke uses complete bounded inputs and does not replace the full browser suite. See the [investigation](HISTORY.md#runtime-investigation) for evidence and the [accessibility guide](ACCESSIBILITY.md) for browser-test commands.
+Historical Windows and Linux local production runs reproduced a rejected-upload transport failure; hosted impact remains unverified. The later split application harness and source-demo checks have separate verification scopes. The standalone smoke uses complete bounded inputs and does not replace the full browser suite. See the [investigation](HISTORY.md#runtime-investigation) for evidence and the [accessibility guide](ACCESSIBILITY.md) for browser-test commands.

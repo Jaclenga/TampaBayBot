@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
 import { lstat, mkdir, open, readFile, realpath, rename, unlink } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { factAnnotationsMatch, startsAtSentenceBoundary } from '../domain/facts.mjs';
+import { classifyAnswerSections } from '../domain/answer-policy.mjs';
 
 export const digest = value => createHash('sha256').update(value).digest('hex');
 export const json = value => `${JSON.stringify(value, null, 2)}\n`;
@@ -12,6 +14,19 @@ export function validateCorpus(corpus) {
   assert.ok(Array.isArray(corpus.sources) && Array.isArray(corpus.chunks), 'Corpus requires sources and chunks');
   assert.equal(corpus.generation, makeCorpus(corpus.sources, corpus.chunks).generation, 'Corpus generation digest mismatch');
   const sources = new Map(); const chunks = new Set();
+  const units = new Map(); const boundaryPredecessors = new Map();
+  for (const chunk of corpus.chunks) {
+    if (!chunk.locator) continue;
+    const unitKey = JSON.stringify([chunk.source_id, chunk.locator.unit_index]);
+    if (!units.has(unitKey)) units.set(unitKey, []);
+    units.get(unitKey).push(chunk);
+  }
+  for (const unit of units.values()) {
+    unit.sort((a, b) => a.locator.text_start - b.locator.text_start);
+    for (let index = 1; index < unit.length; index++) {
+      if (unit[index - 1].locator.text_end <= unit[index].locator.text_start) boundaryPredecessors.set(unit[index], unit[index - 1]);
+    }
+  }
   for (const source of corpus.sources) {
     assert.match(source.source_id, /^[a-z0-9-]+$/, 'Invalid source id');
     assert.ok(!sources.has(source.source_id), 'Duplicate source id'); sources.set(source.source_id, source);
@@ -23,6 +38,17 @@ export function validateCorpus(corpus) {
     assert.equal(typeof chunk.text, 'string', 'Chunk must contain text');
     assert.equal(chunk.content_hash, digest(chunk.text), 'Chunk content digest mismatch');
     if (source.content_hash) assert.equal(chunk.raw_content_hash, source.content_hash, 'Chunk and source raw provenance differ');
+    if (chunk.locator?.starts_at_sentence_boundary !== undefined) {
+      const locator = chunk.locator;
+      assert.equal(typeof locator.starts_at_sentence_boundary, 'boolean', 'Invalid sentence boundary annotation');
+      assert.ok(Number.isInteger(locator.unit_index) && Number.isInteger(locator.text_start) && locator.text_start >= 0
+        && Number.isInteger(locator.text_end) && locator.text_end > locator.text_start, 'Invalid sentence boundary locator');
+      const preceding = boundaryPredecessors.get(chunk);
+      const boundary = locator.text_start === 0 || Boolean(preceding && startsAtSentenceBoundary(preceding.text, chunk.text));
+      assert.equal(locator.starts_at_sentence_boundary, boundary, 'Sentence boundary differs from preceding evidence');
+    }
+    assert.ok(factAnnotationsMatch(chunk, source), 'Chunk facts differ from literal evidence derivation');
+    if (chunk.answer_sections !== undefined) assert.deepEqual(chunk.answer_sections, classifyAnswerSections(source, chunk), 'Chunk answer sections differ from source policy');
   }
   return corpus;
 }

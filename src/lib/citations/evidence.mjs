@@ -1,4 +1,7 @@
-import { tokens, isAuthoritative, sourceIsStale, requestedDetailScore } from '../retrieval/search.mjs';
+import { tokens } from '../retrieval/tokens.mjs';
+import { isAuthoritative, sourceIsStale, evidenceSafetyReason } from '../retrieval/eligibility.mjs';
+import { requestedDetailScore } from '../retrieval/details.mjs';
+import { factsForChunk } from '../domain/facts.mjs';
 
 export function safeSourceUrl(candidate, canonical) {
   try {
@@ -23,16 +26,32 @@ export function selectQuote(text, question, maxLength = 720) {
   return text.slice(selected.index, Math.min(end, selected.index + maxLength)).trim();
 }
 
+/** Keep the exact statement used to establish a fact attached to its citation. */
+export function withFactEvidence(hit, fact) {
+  const { source, chunk } = hit;
+  if (evidenceSafetyReason(source, chunk) || fact?.sourceId !== source.source_id ||
+      fact.evidenceChunkId !== chunk.id || typeof fact.quote !== 'string' || !fact.quote.trim() || fact.quote.length > 720) return null;
+  const start = chunk.text.indexOf(fact.quote);
+  if (start < 0) return null;
+  return { ...hit, evidenceQuote: { start, end: start + fact.quote.length } };
+}
+
 export function makeEvidence(hit, question, index, now = new Date()) {
   const { source, chunk } = hit;
+  if (evidenceSafetyReason(source, chunk)) return null;
   const url = safeSourceUrl(chunk.url, source.canonical_url);
   if (!url) return null;
-  // Program discovery may select a literal window in a long multi-program
-  // passage. Verify its bounds here; never assemble a quote from separate text.
-  const focus = hit.programQuote;
-  const focusedQuote = chunk.text.length > 720 && focus && Number.isSafeInteger(focus.start) && Number.isSafeInteger(focus.end) &&
-    focus.start >= 0 && focus.end > focus.start && focus.end <= chunk.text.length && focus.end - focus.start <= 720
-    ? chunk.text.slice(focus.start, focus.end).trim() : null;
+  // Explicit semantic/program windows must survive query-based quote scoring.
+  // Invalid supplied windows fail closed rather than citing unrelated text.
+  const hasFocus = Object.hasOwn(hit, 'evidenceQuote') || Object.hasOwn(hit, 'programQuote');
+  const focus = Object.hasOwn(hit, 'evidenceQuote') ? hit.evidenceQuote : hit.programQuote;
+  let focusedQuote;
+  if (hasFocus) {
+    if (!focus || !Number.isSafeInteger(focus.start) || !Number.isSafeInteger(focus.end) ||
+        focus.start < 0 || focus.end <= focus.start || focus.end > chunk.text.length || focus.end - focus.start > 720) return null;
+    focusedQuote = chunk.text.slice(focus.start, focus.end).trim();
+    if (!focusedQuote) return null;
+  }
   return {
     id: `E${index + 1}`, chunk_id: chunk.id, source_id: source.source_id,
     title: source.title, agency: source.agency,
@@ -46,32 +65,32 @@ export function makeEvidence(hit, question, index, now = new Date()) {
   };
 }
 
-function applicationStatus(text) {
-  if (/\b(not (?:currently )?accepting (?:new )?applications|applications? (?:are |is )?(?:currently )?closed|applications? (?:are |is )?(?:currently )?paused)\b/i.test(text)) return 'closed';
-  if (/\b((?:now |currently )?accepting (?:new )?applications|applications? (?:are |is )?(?:currently )?open)\b/i.test(text)) return 'open';
-  return null;
-}
-
 /** Narrow contradiction rule: same named program, opposite application availability.
  * Other contradictions require source review; this is not a semantic conflict oracle. */
 export function findApplicationConflicts(hits, allSources, allChunks, now = new Date()) {
-  const topics = new Set(hits.map(hit => hit.source.topic_id ?? hit.source.source_id));
+  const topics = new Set(hits.map(hit => hit.source.program_id ?? hit.source.topic_id ?? hit.source.source_id));
   const registry = new Map(allSources.map(source => [source.source_id, source]));
   const groups = new Map();
   for (const chunk of allChunks) {
     const source = registry.get(chunk.source_id);
-    if (!source || !isAuthoritative(source) || sourceIsStale(source, chunk, now)) continue;
-    const topic = source.topic_id ?? source.source_id;
+    if (!source || !isAuthoritative(source) || sourceIsStale(source, chunk, now) || evidenceSafetyReason(source, chunk)) continue;
+    const topic = source.program_id ?? source.topic_id ?? source.source_id;
     if (!topics.has(topic)) continue;
-    const status = applicationStatus(chunk.text ?? '');
-    if (!status) continue;
+    const statuses = factsForChunk(chunk, source).filter(fact => fact.factType === 'application_status');
+    if (!statuses.length) continue;
     const statements = groups.get(topic) ?? {};
-    statements[status] ??= { source, chunk, applicationStatus: status };
+    for (const fact of statuses) {
+      const hit = withFactEvidence({ source, chunk, applicationStatus: fact.value, required: true }, fact);
+      if (hit && (!statements[fact.value] || statements[fact.value].unquotable)) statements[fact.value] = hit;
+      else statements[fact.value] ??= { unquotable: true };
+    }
     groups.set(topic, statements);
   }
-  // Preserve topic order and the first supporting passage for each status.
+  // Preserve topic order and the first quotable passage for each status. An
+  // unquotable opposing statement still prevents an unqualified answer.
   for (const [topic, { open, closed }] of groups) {
-    if (open && closed) return { topic, hits: [open, closed] };
+    if (open && closed) return { topic, hits: [open, closed].filter(hit => !hit.unquotable),
+      ...(open.unquotable || closed.unquotable ? { unquotable: true } : {}) };
   }
   return null;
 }

@@ -4,6 +4,8 @@ Shared mode uses a D1 binding named `DB`. Independent builds work in `local` mod
 
 ## Shared controls
 
+Before framework dispatch, the Worker accepts GET/HEAD navigation and JSON POSTs only at the exact `/api/ask`, `/api/location`, `/api/property` and `/api/development` paths. Other methods or POST paths return 405; non-JSON bodies at those input paths return 400. Unused server-action headers return 404. These refusals occur before reading the body, so page/form/action uploads cannot reach the framework's form parser or bypass the bounded API readers. Supported API requests continue through the shared controls below.
+
 Shared mode coordinates request rates, client and service concurrency, outbound reads and optional model calls across Worker instances. Request and database timeouts limit how long the service waits for work; expiring leases recover capacity after interrupted requests. Invalid shared configuration and database failures refuse requests instead of silently switching to local counters.
 
 Client limits use temporary identifiers derived from trusted Cloudflare ingress addresses with a server-side secret; raw addresses are not stored. Request limits return 429 with `Retry-After`. Exhausted outbound budgets, unavailable storage and maintenance return 503; the request deadline returns 504. Clients should respect these responses and avoid immediate retry loops.

@@ -39,6 +39,30 @@ function isImageOptimizer(pathname: string) {
   return false;
 }
 
+const inputPaths = new Set([
+  "/api/ask", "/api/location", "/api/property", "/api/development",
+]);
+
+function unsupportedRequest(request: Request, pathname: string): Response | null {
+  // This application has no server actions. Vinext can process these before
+  // resolving an API route, so even a known input URL must reject action headers.
+  if (request.headers.has("Next-Action") || request.headers.has("X-RSC-Action"))
+    return new Response("Not found.", { status: 404 });
+  if (request.method === "GET" || request.method === "HEAD") return null;
+
+  // Admit only the exact routes whose handlers bound and validate JSON input.
+  // Do not decode aliases: a different framework interpretation could send an
+  // admitted body to a page's progressive form parser instead of its API reader.
+  if (request.method !== "POST" || !inputPaths.has(pathname))
+    return new Response("Method not allowed.", {
+      status: 405,
+      headers: { Allow: inputPaths.has(pathname) ? "POST" : "GET, HEAD" },
+    });
+  if (request.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase() !== "application/json")
+    return Response.json({ error: "Send a JSON request." }, { status: 400 });
+  return null;
+}
+
 export async function withResponseSecurity(
   request: Request,
   dispatch: (securedRequest: Request) => Promise<Response>,
@@ -54,8 +78,14 @@ export async function withResponseSecurity(
   headers.delete("x-nonce");
   const url = new URL(request.url);
   let response: Response;
-  if (isImageOptimizer(url.pathname)) {
-    response = new Response("Not found.", { status: 404 });
+  const refusal = isImageOptimizer(url.pathname)
+    ? new Response("Not found.", { status: 404 })
+    : unsupportedRequest(request, url.pathname);
+  if (refusal) {
+    // Rejected uploads must never reach a body reader. Cancellation is best
+    // effort: a stalled or rejecting transport cannot delay the refusal.
+    void request.body?.cancel().catch(() => {});
+    response = refusal;
   } else {
     try {
       response = await dispatch(new Request(request, { headers }));

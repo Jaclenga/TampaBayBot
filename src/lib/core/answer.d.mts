@@ -1,20 +1,10 @@
 import type { JurisdictionId } from '../coverage.mjs';
+import type { ServiceCategory } from './routing/types.mjs';
+import type { Source, Chunk } from '../domain/types.mjs';
+export type { Source, Chunk } from '../domain/types.mjs';
 
-export type ServiceCategory = 'housing' | 'zoning' | 'permitting' | 'development' | 'navigation';
+export type { ServiceCategory } from './routing/types.mjs';
 export type AnswerStatus = 'answered' | 'insufficient_evidence' | 'conflicting_evidence' | 'potentially_outdated' | 'needs_location' | 'needs_jurisdiction' | 'official_judgment' | 'out_of_scope' | 'unavailable_source' | 'missing_geographic_coverage';
-export interface Source {
-  source_id: string; title: string; agency: string; canonical_url: string;
-  authoritative_status: string; source_type?: string; categories?: string[];
-  jurisdiction_ids?: string[];
-  keywords?: string[]; retrieval_date?: string | null; source_updated_date?: string | null;
-  refresh_days?: number; topic_id?: string; availability?: string; last_fetch_status?: string;
-  next_step?: { label: string; url: string }; [key: string]: unknown;
-}
-export interface Chunk {
-  id: string; source_id: string; text: string; title?: string; section?: string | null;
-  page?: number | null; record_id?: string | null; layer?: string | null;
-  retrieved_at?: string; content_hash?: string; url?: string; [key: string]: unknown;
-}
 export interface Evidence {
   language?: 'en' | 'es' | 'und';
   id: string; chunk_id: string; source_id: string; title: string; agency: string;
@@ -24,6 +14,11 @@ export interface Evidence {
   content_hash: string | null;
 }
 export interface ResidentAnswer {
+  coverage?: {
+    kind: 'retrieved_resources'; exhaustive: false;
+    jurisdictionId: JurisdictionId; category: ServiceCategory;
+    registrySourceCount: number; citedSourceCount: number; statement: string;
+  };
   requiredEvidenceIds?: string[];
   conversation?: import('./conversation.mjs').ConversationContext | null;
   conversationUsed?: boolean;

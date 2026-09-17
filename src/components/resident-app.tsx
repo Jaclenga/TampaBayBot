@@ -244,6 +244,9 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                 <p>{answer.meaning}</p>
               </section>
             )}
+            {answer.evidence.length > 0 && answer.coverage && (
+              <p className="small muted">{answer.coverage.statement}</p>
+            )}
             {answer.warnings.length > 0 && (
               <ul className="warning-list">
                 {answer.warnings.map((w) => (

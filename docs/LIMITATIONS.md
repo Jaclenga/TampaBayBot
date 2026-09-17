@@ -6,12 +6,17 @@ TampaBayBot is an independent source-only alpha for housing-information navigati
 
 - The [source registry](DATA_SOURCES.md) covers selected Tampa Bay program pages, guidance and maps, not every program/contact, complete municipal codes or comprehensive-plan text. No match does not mean no help is available; check with the responsible agency or a housing-resource specialist about other programs or circumstances.
 - Literal excerpts can be repetitive, incomplete or unhelpful. Read the full source for qualifications, exceptions and context. Optional model selection can choose valid evidence poorly. Routing can miss unusual phrasing, mixed intents, acronyms and spelling errors.
+- Registered aliases improve matching and can supply a missing subject, but they are not a complete program directory or a fuzzy name search. They cannot extend service areas, override an explicit different subject or establish eligibility. Displayed registry and citation counts measure sources, not the share of programs found.
+- Structured facts use conservative text rules, not general language or date understanding. A dated heading does not date a separate income row, and an unknown continuation boundary can leave a real first-sentence fact unclassified. Recognized currency amounts are kept separate from years, but varied table formats and unusual wording still require source review.
+- Essential statements must fit literal quotations of at most 720 characters. A long sentence or serialized record may be impossible to cite safely within that bound; the answer then reports insufficient evidence. Distinct recognized restrictions are retained even across separate chunks. The optional model cannot remove required citations, and answers requiring more than its three-quotation selection limit stay deterministic.
 - Authority weights do not establish legal precedence. Conflict detection catches only directly opposing application-status statements for the same program; exceptions, supersession and other contradictions require review. Confirm conflicting or uncertain information with the responsible agency.
 - [Evaluation](EVALUATION.md) includes template/keyword proxies and a separate claim-quality suite with 12 dated fixtures. Neither measures general real-world accuracy, audits source accuracy or guarantees completeness.
 
 ## Freshness and availability
 
 Retrieval dates do not establish current content. Sources may retain old income tables, unresolved reopening projections or map amendments needing staff review. Websites/APIs can fail, rate-limit or change schema/terms. [Failed-candidate rules](SOURCE_UPDATES.md#acquire-a-candidate) retain dated prior evidence only for unchanged source definitions. Outages do not prove a program or designation is absent.
+
+Current-income requests need a dated value for the requested year in the actual answer quotation. A current table elsewhere in the corpus cannot validate an older excerpt; missing dated values remain insufficient evidence. This year check does not establish that a published rule is still legally effective. Multiple distinct requested years are not interpreted as an income-table comparison.
 
 Weekly refreshes stage acquisitions and publish a metadata review report. An operator must approve the exact candidate digest before applying it; acquisition never deploys evidence automatically. Operators need a refresh owner and the [reviewed apply/build workflow](SOURCE_UPDATES.md). Residents should confirm time-sensitive information with the cited agency.
 

@@ -5,10 +5,42 @@ import { join } from 'node:path';
 import { digest, json, makeCorpus, readCorpus } from './generation.mjs';
 import { applyRefresh, inspectCandidate, stageRefresh, verifyPreservedSources } from './refresh.mjs';
 import { refreshFixture } from './refresh-fixtures.mjs';
+import { deriveFacts } from '../domain/facts.mjs';
 
 const updatedHtml = '<main><h1>Fixture program</h1><p>Updated synthetic guidance requires agency review.</p></main>';
 const fetchUpdated = async () => new Response(updatedHtml);
 const buildPassed = async () => ({ status: 'passed', artifact: 'synthetic-test-artifact' });
+
+test('redirected acquisition fails before contacting its target and preserves active evidence', async t => {
+  const { root, corpus } = await refreshFixture(t);
+  let calls = 0;
+  const staged = await stageRefresh(root, { fetchImpl: async () => {
+    calls++;
+    return new Response(null, { status: 302, headers: { location: 'https://127.0.0.1/internal' } });
+  } });
+  assert.equal(calls, 1);
+  assert.equal(staged.report.failures, 1);
+  assert.equal(staged.report.sources[0].error_code, 'source_redirect_not_allowed');
+  assert.equal(staged.report.sources[0].retained_previous_evidence, true);
+  const candidate = await inspectCandidate(root, staged.directory, staged.candidate_sha256);
+  assert.deepEqual(candidate.manifest.payload, []);
+  assert.equal(candidate.corpus.sources[0].status, 'unavailable');
+  assert.deepEqual(candidate.corpus.chunks, corpus.chunks);
+  assert.deepEqual(await readCorpus(root), corpus);
+});
+
+test('excessive normalization output fails before serialization and keeps the active generation', async t => {
+  const { root, corpus } = await refreshFixture(t);
+  const staged = await stageRefresh(root, { fetchImpl: fetchUpdated,
+    normalizeImpl: async () => ({ units: Array.from({ length: 10001 }, () => ({ text: 'Synthetic evidence remains subject to agency review.' })), links: [] }),
+  });
+  assert.equal(staged.report.failures, 1);
+  assert.equal(staged.report.sources[0].error_code, 'normalization_limit_exceeded');
+  const candidate = await inspectCandidate(root, staged.directory, staged.candidate_sha256);
+  assert.deepEqual(candidate.manifest.payload, []);
+  assert.deepEqual(candidate.corpus.chunks, corpus.chunks);
+  assert.deepEqual(await readCorpus(root), corpus);
+});
 
 test('staging honors edited source configuration without changing active evidence', async t => {
   const { root, corpus, source } = await refreshFixture(t);
@@ -88,6 +120,53 @@ test('offline staging verifies preserved raw hashes and does not perform network
   assert.equal(staged.report.failures, 0); assert.equal(staged.report.sources[0].normalized_changed, false);
   await writeFile(join(root, source.raw_path), 'corrupted preserved snapshot');
   const failed = await stageRefresh(root, { offline: true }); assert.equal(failed.report.failures, 1);
+});
+
+test('facts survive reviewed publication and preserved snapshot verification', async t => {
+  const { root } = await refreshFixture(t);
+  const html = '<main><p>Applications are closed.</p><p>Maximum assistance: $2,000.</p><p>Income Limits 2025: $60,000.</p></main>';
+  const staged = await stageRefresh(root, { fetchImpl: async () => new Response(html) });
+  const candidate = await inspectCandidate(root, staged.directory, staged.candidate_sha256);
+  assert.equal(candidate.corpus.chunks.flatMap(chunk => chunk.facts).filter(fact => fact.factType === 'application_status').length, 1);
+  await applyRefresh(root, { directory: staged.directory, approve: staged.candidate_sha256, reviewer: 'Synthetic reviewer', validateAndBuild: buildPassed });
+  assert.deepEqual((await readCorpus(root)).chunks, candidate.corpus.chunks);
+  assert.equal((await verifyPreservedSources(root)).status, 'passed');
+});
+
+test('legacy snapshots remain verifiable and offline staging adds facts without changing evidence identity', async t => {
+  const { root, corpus } = await refreshFixture(t);
+  const legacy = makeCorpus(corpus.sources, corpus.chunks.map(chunk => {
+    const copy = { ...chunk, locator: { ...chunk.locator } }; delete copy.facts; delete copy.answer_sections;
+    delete copy.locator.starts_at_sentence_boundary; return copy;
+  }));
+  for (const [name, value] of [['corpus', legacy], ['sources', legacy.sources], ['chunks', legacy.chunks]]) await writeFile(join(root, 'data', `${name}.json`), json(value));
+  assert.equal((await verifyPreservedSources(root)).status, 'passed');
+  const staged = await stageRefresh(root, { offline: true });
+  const candidate = await inspectCandidate(root, staged.directory);
+  assert.equal(staged.report.sources[0].normalized_changed, false);
+  assert.deepEqual(candidate.corpus.chunks.map(chunk => chunk.id), legacy.chunks.map(chunk => chunk.id));
+  assert.ok(candidate.corpus.chunks.every(chunk => Array.isArray(chunk.facts)));
+  assert.ok(candidate.corpus.chunks.every(chunk => typeof chunk.locator.starts_at_sentence_boundary === 'boolean'));
+});
+
+test('legacy annotated continuation chunks verify conservatively and offline staging restores a complete leading closure', async t => {
+  const { root } = await refreshFixture(t);
+  const html = `<main><p>${'Background. '.repeat(116)}Notes. Applications are currently closed. Contact the agency for future availability.</p></main>`;
+  const staged = await stageRefresh(root, { fetchImpl: async () => new Response(html) });
+  await applyRefresh(root, { directory: staged.directory, approve: staged.candidate_sha256, reviewer: 'Synthetic reviewer', validateAndBuild: buildPassed });
+  const active = await readCorpus(root);
+  const legacy = makeCorpus(active.sources, active.chunks.map(chunk => {
+    const copy = { ...chunk, locator: { ...chunk.locator } }; delete copy.locator.starts_at_sentence_boundary;
+    copy.facts = deriveFacts(copy, active.sources[0]); return copy;
+  }));
+  assert.ok(!legacy.chunks.flatMap(chunk => chunk.facts).some(fact => fact.factType === 'application_status'));
+  for (const [name, value] of [['corpus', legacy], ['sources', legacy.sources], ['chunks', legacy.chunks]]) await writeFile(join(root, 'data', `${name}.json`), json(value));
+  assert.equal((await verifyPreservedSources(root)).status, 'passed');
+  const regenerated = await stageRefresh(root, { offline: true });
+  const candidate = await inspectCandidate(root, regenerated.directory);
+  assert.deepEqual(candidate.corpus.chunks.map(chunk => chunk.id), legacy.chunks.map(chunk => chunk.id));
+  assert.deepEqual(candidate.corpus.chunks.map(chunk => chunk.content_hash), legacy.chunks.map(chunk => chunk.content_hash));
+  assert.deepEqual(candidate.corpus.chunks.flatMap(chunk => chunk.facts).filter(fact => fact.factType === 'application_status').map(fact => fact.value), ['closed']);
 });
 
 test('offline regeneration cannot relabel an old snapshot using an edited publisher definition', async t => {

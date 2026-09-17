@@ -35,11 +35,49 @@ test('a publisher delay outside our budget never becomes an early retry', async 
   assert.equal(requests, 1);
 });
 
-test('terminal HTTP errors are not retried and HTTPS redirects cannot downgrade', async () => {
+test('terminal HTTP errors are not retried', async () => {
   let requests = 0;
   await assert.rejects(fetchSource('https://example.gov/source', { fetchImpl: async () => { requests++; return new Response('not found', { status: 404 }); } }), { code: 'source_http_status' });
   assert.equal(requests, 1);
-  await assert.rejects(fetchSource('https://example.gov/source', { fetchImpl: async () => new Response(null, { status: 302, headers: { location: 'http://example.gov/unsafe' } }) }), { code: 'source_requires_https' });
+});
+
+test('every redirect is rejected without following, reading its body, or retrying', async () => {
+  const destinations = [
+    null, '', '/reviewed-looking-relative', 'https://example.gov/same-origin',
+    'https://other.example.gov/public', 'https://127.0.0.1/private', 'https://[::1]/private',
+    'https://192.168.1.1/private', 'https://169.254.169.254/private',
+    'https://user:private-token@example.gov/credential', 'http://example.gov/downgrade',
+    'file:///private', 'https://[invalid-url',
+  ];
+  for (const status of [301, 302, 303, 307, 308]) {
+    for (const location of destinations) {
+      let requests = 0; let cancellations = 0; let reads = 0; let waits = 0;
+      const response = { status, ok: false,
+        headers: new Headers(location === null ? {} : { location }),
+        body: { cancel() { cancellations++; return new Promise(() => {}); }, getReader() { reads++; throw new Error('Redirect body was read'); } },
+      };
+      await assert.rejects(fetchSource('https://example.gov/source', {
+        // An obsolete option cannot restore redirect following.
+        maxRedirects: 5,
+        fetchImpl: async (url, options) => {
+          requests++;
+          assert.equal(url.href, 'https://example.gov/source');
+          assert.equal(options.redirect, 'manual');
+          return response;
+        },
+        wait: async () => { waits++; },
+      }), { name: 'DownloadError', code: 'source_redirect_not_allowed', message: 'source_redirect_not_allowed', status });
+      assert.deepEqual({ requests, cancellations, reads, waits }, { requests: 1, cancellations: 1, reads: 0, waits: 0 }, `${status} ${location}`);
+    }
+  }
+});
+
+test('initial URLs still require HTTPS without embedded credentials', async () => {
+  for (const url of ['http://example.gov/source', 'file:///private', 'https://user:private-token@example.gov/source']) {
+    let requests = 0;
+    await assert.rejects(fetchSource(url, { fetchImpl: async () => { requests++; throw new Error('Unsafe initial URL was fetched'); } }), { code: 'source_requires_https' });
+    assert.equal(requests, 0);
+  }
 });
 
 test('uncooperative fetches and stalled streams cannot exceed their attempt deadline', async () => {

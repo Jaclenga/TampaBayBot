@@ -36,6 +36,45 @@ test("incomplete uploads return safe timeouts from every input API", async ({ ba
   expect(health.status()).toBe(200);
 });
 
+test("unused page and action uploads are refused without waiting for their bodies", async ({ baseURL, request }) => {
+  const uploadBaseURL = process.env.PLAYWRIGHT_INPUT_BASE_URL ??
+    process.env.PLAYWRIGHT_BASE_URL ??
+    (process.env.PLAYWRIGHT_PRODUCTION_SECURITY === "true" ? "http://127.0.0.1:3101" : baseURL);
+  for (const probe of [
+    { path: "/", status: 405, action: false },
+    { path: "/sources", status: 405, action: false },
+    { path: "/api/ask", status: 400, action: false },
+    { path: "/api/ask", status: 404, action: true },
+  ]) {
+    const result = await new Promise<{ status: number | undefined; headers: Record<string, string | string[] | undefined> }>((resolve, reject) => {
+      const url = new URL(probe.path, uploadBaseURL);
+      const client = (url.protocol === "https:" ? httpsRequest : httpRequest)(url, {
+        method: "POST", headers: {
+          "Content-Type": "multipart/form-data; boundary=synthetic",
+          "Transfer-Encoding": "chunked",
+          ...(probe.action ? { "Next-Action": "synthetic-action" } : {}),
+        },
+      });
+      const timer = setTimeout(() => { client.destroy(); reject(new Error(`${probe.path} waited for an unsupported upload`)); }, 5000);
+      client.on("error", error => { clearTimeout(timer); reject(error); });
+      client.on("response", response => {
+        response.resume();
+        response.on("error", reject);
+        response.on("end", () => {
+          clearTimeout(timer);
+          resolve({ status: response.statusCode, headers: response.headers });
+          client.destroy();
+        });
+      });
+      client.write('--synthetic\r\nContent-Disposition: form-data; name="$ACTION_ID_synthetic"\r\n\r\nunfinished');
+    });
+    expect(result.status).toBe(probe.status);
+    expect(result.headers["cache-control"]).toBe("no-store");
+    expect(result.headers["content-security-policy"]).toContain("object-src 'none'");
+  }
+  expect((await request.get(new URL("/api/health", uploadBaseURL).href)).status()).toBe(200);
+});
+
 test("Worker refuses unused image processing routes before redirecting or fetching", async ({ request }) => {
   for (const path of ["/_vinext/image", "/_next/image", "/_vinext/image/", "/%5fvinext%2fimage"]) {
     const response = await request.get(`${path}?url=https://untrusted.example/image&w=640&q=75`, { maxRedirects: 0 });

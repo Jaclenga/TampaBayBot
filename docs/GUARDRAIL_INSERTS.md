@@ -4,6 +4,8 @@ TampaBayBot provides six reusable, versioned instruction blocks in [`src/lib/gua
 
 **Prompt text supports the guardrails implemented in code. It does not establish enforcement, factual correctness, local processing, or resistance to every prompt injection.** The server still decides whether a model may run, validates the output schema and complete quotations, preserves conservative states and provenance, restricts provider configuration, and falls back to the deterministic answer. Changing a prompt must not bypass those checks.
 
+The selection pipeline also supplies the baseline's required evidence IDs. Output must retain every required amount, closure and restriction citation. If the baseline exceeds the selector's three required-entry or eight supplied-entry limit, it is returned intact before any model call. If an essential qualification cannot be quoted within the citation limit, the baseline reports insufficient evidence. See [model selection limits](LLM.md#what-a-model-receives-and-can-change).
+
 ## Insert into the trusted instruction message
 
 The module exports:

@@ -22,6 +22,8 @@ The application does not persist resident questions, conversation histories, or 
 
 Retrieved content and model responses are treated as untrusted input. Input validation, access controls, browser protections, and resource limits support the service's security; they do not guarantee complete protection or the accuracy of external information.
 
+The Worker rejects unsupported page/form/action uploads before framework parsing and routes supported JSON uploads through bounded API readers and operational controls. Source acquisition refuses redirects, bounds normalized evidence and chunk output, and terminates parsing workers that exceed their deadline. See [request controls](docs/OPERATIONS.md#shared-controls) and [source-processing limits](docs/SOURCE_UPDATES.md#acquire-a-candidate) for the exact behavior and operator recovery steps.
+
 ## Safe deployment
 
 - Use HTTPS, restrict administrative access, and configure the shared production controls and monitoring described in [operations](docs/OPERATIONS.md).

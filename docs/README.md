@@ -31,6 +31,7 @@ Start with the [project overview and quick start](../README.md). Each guide belo
 | Task | Guide |
 | --- | --- |
 | Set up a checkout, run checks or use the APIs | [Development](DEVELOPMENT.md) |
+| Extend query planning, evidence policy and structured facts | [Answer architecture](ARCHITECTURE.md) |
 | Submit code, sources, documentation or review | [Contributing](../CONTRIBUTING.md) |
 | Build and deploy with your own hosting account | [Deployment](DEPLOYMENT.md) |
 | Configure service controls, monitoring and incident response | [Operations](OPERATIONS.md) |

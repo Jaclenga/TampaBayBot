@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Simplify format parsing around shared validation, use one awaited worker cleanup path, and remove duplicated qualification responses, income-fact extraction and fact-deduplication scans without changing answer or security policy.
+- Reject unsupported page/form/action uploads before framework parsing, refuse source-download redirects until their destination is reviewed, and bound normalization/chunk expansion inside terminable parsing workers. Add security regressions and document failure/recovery behavior.
+- Split query planning, source semantics, retrieval stages and answer assembly into focused modules, with retrieval diagnostics and explicit non-exhaustive resource coverage. See [answer architecture](docs/ARCHITECTURE.md).
+- Resolve conversation program switches and configured aliases through the shared registry, so a newly named program replaces the previous preference and aliases participate in retrieval.
+- Preserve exact citations for amounts, closures and all distinct restrictions, require those citations during optional model selection, and report insufficient evidence when an essential qualification cannot fit a valid quotation.
+- Separate money from effective years, require the requested income year in the displayed evidence, preserve complete continuation sentences, and extract explicit closure notices from advisory wording and structured narrative fields.
+- Distinguish application methods and program discovery from availability, require current evidence when old income limits are proposed for use today, exclude calendar dates and household counts from income values, and admit short complete numbered application instructions.
 - Add shared D1 request/concurrency/outbound budgets, absolute deadlines, protected aggregate metrics, truthful readiness, monitor alerts, maintenance and incident/rollback procedures.
 - Translate property tools and reference pages into Spanish, retain source-language attributes and preserve language-switch focus. Use relative font sizes and verify actual browser zoom/text enlargement, keyboard-only flows and forced colors.
 - Update current versus historical verification, authenticated hosted smoke, coordinate sharing and whole-parcel documentation.
