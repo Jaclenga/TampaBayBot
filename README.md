@@ -1,7 +1,5 @@
 # TampaBayBot
 
-Find Tampa Bay housing resources, property information, and official next steps, with the public sources behind each answer.
-
 TampaBayBot is an open-source project for questions about housing assistance, zoning, permits, and nearby development in the Tampa Bay Area. It retrieves public evidence and shows supporting quotations, source dates, and agency links. The default answer engine works without a language model.
 
 > **Alpha: for contributors and supervised testing.** The source release starts without downloaded evidence. Independent human review and production-readiness work remain open; see [release status](docs/RELEASE_READINESS.md).
