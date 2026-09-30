@@ -54,14 +54,14 @@
   "dependencies": {
     "cheerio": "^1.2.0",
     "lucide-react": "^1.45.0",
-    "next": "16.3.5",
+    "next": "16.3.7",
     "pdf-parse": "^2.4.5",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@cloudflare/vite-plugin": "1.54.8",
+    "@cloudflare/vite-plugin": "1.62.2",
     "@playwright/test": "^1.63.0",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
@@ -69,13 +69,13 @@
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.26",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.3.5",
+    "eslint-config-next": "16.3.7",
     "image-size": "file:vendor/image-dimensions",
     "react-server-dom-webpack": "19.2.8",
     "typescript": "5.9.3",
     "vinext": "0.0.50",
     "vite": "8.3.0",
-    "wrangler": "4.131.1"
+    "wrangler": "4.144.0"
   },
   "overrides": {
     "image-size": "$image-size"
