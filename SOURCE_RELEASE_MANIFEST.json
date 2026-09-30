@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "c057c0b545727470664078391265573459bee1d7fa8236a5435a6f4d4989a7d7",
+  "content_sha256": "6c1c7cf550d9631bbed7b65177bc8d35391bdb62ae50b86c6985584b143654d5",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -372,13 +372,13 @@
     },
     {
       "path": "package-lock.json",
-      "bytes": 330579,
-      "sha256": "81f791a8e8de25cc164380e4cb3af31a615da37fdde5c94b725622b538df2315"
+      "bytes": 330581,
+      "sha256": "a0b6ae7ea47ee0fd7f5fd907ff7b17d9a93bbe82d263cb05139c8020c0477548"
     },
     {
       "path": "package.json",
       "bytes": 3432,
-      "sha256": "547ee959e56a52832d7bd9bdeaffab82504f2d275be8d5d43619c61f0a88b763"
+      "sha256": "2fbe43a23f47162580d9563a02f85c7acea624fa61ae199e11c27c755b133dba"
     },
     {
       "path": "playwright.config.ts",
@@ -402,8 +402,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4439,
-      "sha256": "809d81b35d11643bea9488c8a1a9aa977e0681932c770e5142c129a32caccf46"
+      "bytes": 4313,
+      "sha256": "0155583aa92c6d8d6cfbbe15ba0e65f29c4b5ed00c5b1938db86371f070d0c5e"
     },
     {
       "path": "scripts/build-source-refresh.mjs",
