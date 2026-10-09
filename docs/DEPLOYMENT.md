@@ -1,5 +1,7 @@
 # Independent deployment
 
+The separate [Cloudflare Pages preview](https://tampabaybot-housing-preview.pages.dev/) was verified on October 9, 2026 with a private source-only backend, no model, and an empty reviewed corpus. The live housing directory, API binding, synthetic eviction guide, address lookup, partial property layers, and dated development response were checked. This guide below describes a different standalone Worker deployment path; its own public URL and full cited-answer behavior have not been verified. See [the Pages deployment record](../CLOUDFLARE_DEPLOYMENT.md) for the current preview.
+
 Build a Worker artifact and deploy it through your own Cloudflare account. A Sites account, database and model account are not required. The generated configuration uses `LLM_PROVIDER=none`.
 
 The independent build, Wrangler upload dry-run and local production HTTP path have been tested. Deployment to an independently authenticated Cloudflare account and smoke tests on its public URL remain unverified. [Release readiness](RELEASE_READINESS.md) records the dated results and remaining work.
@@ -50,7 +52,7 @@ For CI, keep a narrowly scoped API token and account ID in the CI secret store a
 
 ## Optional model provider
 
-[LLM.md](LLM.md) is canonical for provider settings, localhost/LAN/hosted connectivity, model data flow and evaluation. A hosted Worker needs a reachable provider; its localhost cannot reach Ollama on a resident's PC.
+[LLM.md](LLM.md) is canonical for provider settings, localhost/LAN/hosted connectivity, model data flow and evaluation. A hosted Worker needs a reachable HTTP provider or a Workers AI binding; its localhost cannot reach Ollama on a resident's PC. Before exposing any model provider publicly, configure a shared D1 binding, `TAMPABAYBOT_OPERATIONS_MODE=shared`, a private limit secret, and visitor/global/model-concurrency limits in the [Pages and Workers AI demo guide](../CLOUDFLARE_DEPLOYMENT.md). The generated standalone config uses local mode and refuses inference by default. The explicit loopback-only development opt-in has no shared AI budget and is unsuitable for a public deployment. See [AI usage limits](AI_USAGE_LIMITS.md) and [cost controls](CLOUDFLARE_COST_CONTROLS.md).
 
 To enable a provider, set its non-secret `LLM_*` values in the generated config's `vars`. After the first default deployment, enter any required key through the prompt and deploy the reviewed config:
 

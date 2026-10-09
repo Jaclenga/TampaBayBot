@@ -13,6 +13,10 @@ import { dateLabel } from "@/lib/i18n/format";
 import { JURISDICTIONS } from "@/lib/coverage.mjs";
 import type { JurisdictionId } from "@/lib/coverage.mjs";
 import { publicText, jurisdictionLabel, quotedSegments } from "@/lib/i18n/public-text.mjs";
+import CrisisPlan from "./crisis-plan";
+import { buildCrisisPlan } from "@/lib/housing/crisis.mjs";
+import type { CrisisResource } from "@/lib/housing/crisis.mjs";
+import housingCatalog from "../../pages-demo/src/housing-resources.json";
 
 const subscribeToReady = () => () => {};
 const clientReady = () => true;
@@ -63,7 +67,14 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
   const [question, setQuestion] = useState("");
   const [jurisdictionId, setJurisdictionId] = useState<JurisdictionId>("tampa-bay");
   const [rawAnswer, setAnswer] = useState<ResidentAnswer | null>(null);
-  const answer = useMemo(() => rawAnswer ? localizeAnswer(rawAnswer, locale) : null, [rawAnswer, locale]);
+  const [referenceTime] = useState(() => Date.now());
+  const answer = useMemo(() => {
+    if (!rawAnswer) return null;
+    const localized = localizeAnswer(rawAnswer, locale);
+    if (!rawAnswer.crisisPlan?.input) return localized;
+    return { ...localized, crisisPlan: buildCrisisPlan(rawAnswer.crisisPlan.input,
+      housingCatalog.resources as unknown as CrisisResource[], { locale, now: referenceTime }) ?? undefined };
+  }, [rawAnswer, locale, referenceTime]);
   const [conversation, setConversation] = useState<ConversationContext | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -96,7 +107,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
       const response = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: text, jurisdictionId, ...(conversation ? { conversation } : {}) }),
+        body: JSON.stringify({ question: text, jurisdictionId, locale, ...(conversation ? { conversation } : {}) }),
         signal: request.signal,
       });
       const result = await response.json();
@@ -131,6 +142,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
         <div className="hero-inner">
           <h1 id="hero-title">{en.hero.title}</h1>
           <p className="hero-description">{en.hero.description}</p>
+          <p><Link href="/housing-help" className="secondary-button">{locale === 'es' ? 'Necesito ayuda de vivienda' : 'I Need Housing Help'} <ArrowRight size={16} aria-hidden="true" /></Link></p>
           {locale === 'es' && <p className="small muted">{en.language.scope}</p>}
           <form
             className="question-form"
@@ -228,6 +240,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
             <p className="answer-lead">
               <CitedText answer={answer} />
             </p>
+            {answer.crisisPlan && <CrisisPlan plan={answer.crisisPlan} now={referenceTime} />}
             {answer.conversationUsed && <p className="small muted">{en.answer.continuing}</p>}
             {answer.jurisdictionLabel && (
               <p className="small muted">{en.answer.area}: {jurisdictionLabel(answer.jurisdictionLabel, locale)}</p>

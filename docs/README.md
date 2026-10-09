@@ -11,6 +11,9 @@ Start with the [project overview and quick start](../README.md). Each guide belo
 | Inspect publisher configuration and source dates | [Data sources](DATA_SOURCES.md) |
 | Understand addresses, parcels and nearby records | [Geospatial behavior](GEOSPATIAL.md) |
 | Configure Ollama or API assistance | [Models](LLM.md) |
+| Find housing help without chat | [Housing help without AI](AI_FALLBACK.md) |
+| Use the optional crisis guide or understand its plan | [Housing-crisis architecture](HOUSING_CRISIS_ARCHITECTURE.md) |
+| Check resource dates, status and coverage | [Resource verification](RESOURCE_VERIFICATION.md) |
 
 ## Trust and review
 
@@ -22,6 +25,8 @@ Start with the [project overview and quick start](../README.md). Each guide belo
 | Applicable-program omissions and dated measurements | [Program recall](PROGRAM_RECALL.md) |
 | Browser checks and manual accessibility review | [Accessibility](ACCESSIBILITY.md) |
 | Coverage and decision boundaries | [Limitations](LIMITATIONS.md) |
+| Housing-crisis safety and human review | [Safety and limitations](SAFETY_AND_LIMITATIONS.md) |
+| Housing-crisis fictional scenarios | [Housing-crisis evaluation](HOUSING_CRISIS_EVALUATION.md) |
 | Privacy and vulnerability reporting | [Security](../SECURITY.md) |
 | Trusted prompt and runtime checks | [Guardrail extensions](GUARDRAIL_INSERTS.md) |
 | External information and software licensing | [Notices](../NOTICE.md) |
@@ -34,6 +39,10 @@ Start with the [project overview and quick start](../README.md). Each guide belo
 | Extend query planning, evidence policy and structured facts | [Answer architecture](ARCHITECTURE.md) |
 | Submit code, sources, documentation or review | [Contributing](../CONTRIBUTING.md) |
 | Build and deploy with your own hosting account | [Deployment](DEPLOYMENT.md) |
+| Deploy the Pages and Workers AI demo | [Cloudflare demo](../CLOUDFLARE_DEPLOYMENT.md) |
+| Estimate free-tier usage | [Cloudflare cost estimate](../COST_ESTIMATE.md) |
+| Configure daily AI usage caps | [AI usage limits](AI_USAGE_LIMITS.md) |
+| Understand Cloudflare inference cost controls | [Cloudflare cost controls](CLOUDFLARE_COST_CONTROLS.md) |
 | Configure service controls, monitoring and incident response | [Operations](OPERATIONS.md) |
 | Package source or refresh a pull request's manifest | [Distribution](DISTRIBUTION.md) |
 | Scan source and Git history for secrets | [Secret scanning](../evaluation/security/SECRET_SCAN.md) |

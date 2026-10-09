@@ -1,5 +1,7 @@
 # Release readiness
 
+**October 9, 2026 update:** The separate [Cloudflare Pages preview](https://tampabaybot-housing-preview.pages.dev/) now serves the restored simple frontend through a Pages Function bound to a private source-only Worker. The hosted home and API routes, desktop/mobile directory filtering, a synthetic eviction guide, address selection, and partial property/development responses were checked. The active corpus still has zero evidence chunks, Workers AI is disabled, public GitHub code changes remain unpublished, and readiness for an unrestricted resident-facing service is not established. The dated historical verification below remains scoped to its original tests.
+
 **As of September 16, 2026: the repaired retained-corpus evaluation passes all 236 offline cases and 77 narrative cases; program-recall omissions remain. The latest local verification is recorded below; v0.1.0-alpha.4 remains the historical published source-only release tag. Local changes do not establish publication or deployment. Readiness for an unrestricted resident-facing service is not established.**
 
 This is the canonical record of release status, completed verification and remaining review. [Release notes](../CHANGELOG.md) summarize changes; dated bug scans and model reports preserve earlier observations. Documentation changes do not rerun those checks or change the frozen release tag.

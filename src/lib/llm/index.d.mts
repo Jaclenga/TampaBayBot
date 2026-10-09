@@ -1,9 +1,11 @@
 import type { ResidentAnswer } from '../core/answer.mjs';
 
-export type LlmProviderKind = 'none' | 'ollama' | 'openai-compatible';
+export type LlmProviderKind = 'none' | 'ollama' | 'openai-compatible' | 'workers-ai';
 export interface LlmConfig {
   readonly provider: LlmProviderKind; readonly valid: boolean; readonly enabled: boolean;
   readonly endpoint?: string; readonly model?: string; readonly apiKey?: string;
+  readonly maxOutputTokens?: number;
+  readonly maxPromptBytes?: number;
   readonly timeoutMs: number; readonly maxResponseBytes: number;
   readonly locality: 'loopback' | 'network' | null; readonly invalidReason?: string;
 }
@@ -27,6 +29,7 @@ export interface HttpProviderOptions { onUsage?: (usage: LlmTokenUsage) => void 
 export function parseLlmConfig(env?: Record<string, unknown>): LlmConfig;
 export function publicLlmInfo(config: LlmConfig): PublicLlmInfo;
 export function createHttpProvider(config: LlmConfig, fetchImpl?: typeof fetch, options?: HttpProviderOptions): LlmProvider;
+export function createWorkersAiProvider(binding: unknown, config: LlmConfig): LlmProvider;
 export function synthesizeAnswer<T extends ResidentAnswer>(baseline: T, options?: {
   config?: LlmConfig; fetchImpl?: typeof fetch; provider?: LlmProvider; signal?: AbortSignal;
 }): Promise<T & {generation: GenerationInfo}>;

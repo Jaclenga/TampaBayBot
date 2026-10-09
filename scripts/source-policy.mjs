@@ -65,11 +65,13 @@ export const EMPTY_REPORT_FILES = [
 // never be listed as release payload. Private inputs are deliberately absent.
 export const GENERATED_ROOT_DIRECTORIES = ['.git', 'node_modules', 'work', 'dist', '.next', '.vinext', '.wrangler', 'playwright-report', 'test-results'];
 export function isGeneratedReleasePath(name) {
-  return GENERATED_ROOT_DIRECTORIES.includes(name.split('/')[0]) || /(?:^|\/)(?:next-env\.d\.ts|[^/]+\.tsbuildinfo)$/.test(name);
+  return GENERATED_ROOT_DIRECTORIES.includes(name.split('/')[0]) || name.startsWith('pages-demo/dist/') ||
+    name.startsWith('evaluation/llm-runtime/') || name === 'evaluation/accessibility/playwright-results.json' ||
+    /(?:^|\/)(?:next-env\.d\.ts|[^/]+\.tsbuildinfo)$/.test(name);
 }
 
 export function isReleaseTextPath(name) {
-  return /\.(?:mjs|js|cjs|ts|tsx|mts|css|md|json|ya?ml|txt|toml|tmpl|html|svg|sql)$/.test(name)
+  return /\.(?:mjs|js|cjs|ts|tsx|mts|css|md|json|jsonc|ya?ml|txt|toml|tmpl|html|svg|sql)$/.test(name)
     || /(?:^|\/)(?:LICENSE|NOTICE|\.gitignore|\.gitattributes|\.gitleaksignore|\.env\.example)$/.test(name);
 }
 
@@ -84,7 +86,7 @@ export function assertAllowedReleasePath(name) {
   assert.ok(!/^docs\/(?:BUG_FIX_FOLLOWUP_2026-09-12|OLLAMA_TESTING|COVERAGE_EXPANSION|RISK_ENUMERATION|RISKS|ASSETS)\.md$/i.test(name), `Archived document is not release content: ${name}`);
   if (name.startsWith('data/')) assert.ok(['data/sources.json', 'data/chunks.json', 'data/corpus.json', 'data/ingestion-report.json', 'data/verification-report.json', 'data/gis-config.json', 'data/development-config.json'].includes(name), `Unreviewed data artifact: ${name}`);
   if (name.startsWith('evaluation/') && name.endsWith('.json')) assert.ok([
-    ...EMPTY_ARRAY_FILES, ...EMPTY_REPORT_FILES, 'evaluation/datasets/quality-benchmark.json', 'evaluation/datasets/program-recall-benchmark.json', 'evaluation/datasets/ground_truth_questions.json',
+    ...EMPTY_ARRAY_FILES, ...EMPTY_REPORT_FILES, 'evaluation/datasets/quality-benchmark.json', 'evaluation/datasets/program-recall-benchmark.json', 'evaluation/datasets/ground_truth_questions.json', 'evaluation/datasets/housing-crisis-scenarios.json',
   ].includes(name), `Historical evaluation artifact: ${name}`);
 }
 

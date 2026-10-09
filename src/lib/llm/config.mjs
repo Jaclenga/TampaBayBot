@@ -1,5 +1,8 @@
 const DEFAULT_TIMEOUT_MS = 30000;
 const DEFAULT_RESPONSE_BYTES = 32768;
+const DEFAULT_WORKERS_AI_MODEL = '@cf/meta/llama-3.1-8b-instruct-fp8';
+const DEFAULT_WORKERS_AI_OUTPUT_TOKENS = 512;
+const DEFAULT_WORKERS_AI_PROMPT_BYTES = 12000;
 const CONFIGS = new WeakSet();
 
 function config(value) {
@@ -47,10 +50,22 @@ export function parseLlmConfig(env = {}) {
   try {
     if (!env || typeof env !== 'object' || Array.isArray(env)) return disabled(false, 'invalid_environment');
     const provider = env.LLM_PROVIDER === undefined || env.LLM_PROVIDER === '' ? 'none' : env.LLM_PROVIDER;
-    if (!['none', 'ollama', 'openai-compatible'].includes(provider)) return disabled(false, 'invalid_provider');
+    if (!['none', 'ollama', 'openai-compatible', 'workers-ai'].includes(provider)) return disabled(false, 'invalid_provider');
     if (provider === 'none') return disabled();
-    const model = env.LLM_MODEL;
+    const model = provider === 'workers-ai' && (env.LLM_MODEL === undefined || env.LLM_MODEL === '')
+      ? DEFAULT_WORKERS_AI_MODEL : env.LLM_MODEL;
     if (typeof model !== 'string' || !model.trim() || model.length > 200 || /[\u0000-\u001f\u007f]/.test(model)) return disabled(false, 'invalid_model');
+    if (provider === 'workers-ai') {
+      if (typeof env.AI?.run !== 'function') return disabled(false, 'missing_ai_binding');
+      const timeoutMs = boundedInteger(env.LLM_TIMEOUT_MS, DEFAULT_TIMEOUT_MS, 1000, 120000);
+      const maxResponseBytes = boundedInteger(env.LLM_MAX_RESPONSE_BYTES, DEFAULT_RESPONSE_BYTES, 1024, 262144);
+      const maxOutputTokens = boundedInteger(env.LLM_MAX_OUTPUT_TOKENS, DEFAULT_WORKERS_AI_OUTPUT_TOKENS, 128, 512);
+      const maxPromptBytes = boundedInteger(env.LLM_MAX_PROMPT_BYTES, DEFAULT_WORKERS_AI_PROMPT_BYTES, 1024, 12000);
+      if (timeoutMs === null || maxResponseBytes === null || maxOutputTokens === null || maxPromptBytes === null)
+        return disabled(false, 'invalid_limits');
+      return config({ provider, valid: true, enabled: true, model: model.trim(),
+        timeoutMs, maxResponseBytes, maxOutputTokens, maxPromptBytes, locality: 'network' });
+    }
     if (typeof env.LLM_BASE_URL !== 'string' || !env.LLM_BASE_URL.trim() || env.LLM_BASE_URL.length > 2048) return disabled(false, 'invalid_endpoint');
     if (/[\u0000-\u0020\u007f\\]/.test(env.LLM_BASE_URL)) return disabled(false, 'invalid_endpoint');
     const url = new URL(env.LLM_BASE_URL);

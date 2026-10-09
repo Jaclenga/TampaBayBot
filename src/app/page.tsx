@@ -8,7 +8,8 @@ export default function Home() {
     <main id="main" className="document-page content-width">
       <h1>Source information is not loaded</h1>
       <p>This installation is not ready to answer questions. Its operator needs to load and review the source information first.</p>
-      <p>You can still visit the official sources directly.</p>
+      <p>You can still browse housing assistance contacts and visit official sources directly.</p>
+      <Link href="/housing-help" className="text-link">I Need Housing Help</Link><br />
       <Link href="/sources" className="text-link">Browse official sources</Link>
     </main>
   );

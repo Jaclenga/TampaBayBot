@@ -1,10 +1,14 @@
 import { parseLlmConfig, publicLlmInfo, isParsedLlmConfig } from './config.mjs';
 import { createHttpProvider, LlmFailure } from './providers.mjs';
-import { selectionRequest, validateSelection, renderSelection } from './selection.mjs';
+import { createWorkersAiProvider } from './workers-ai.mjs';
+import { selectionRequest, validateSelection, validateModelAnswer, renderSelection } from './selection.mjs';
+import { markAiOutcome } from '../operations/control.mjs';
 
-export { parseLlmConfig, publicLlmInfo, createHttpProvider };
+export { parseLlmConfig, publicLlmInfo, createHttpProvider, createWorkersAiProvider };
 
-const SAFE_REASONS = new Set(['provider_failure', 'invalid_output', 'response_too_large', 'timeout', 'cancelled', 'invalid_evidence', 'input_too_large']);
+const SAFE_REASONS = new Set(['provider_failure', 'provider_quota', 'provider_capacity', 'ai_configuration', 'invalid_model',
+  'model_unavailable', 'invalid_output', 'response_too_large', 'timeout', 'cancelled',
+  'invalid_evidence', 'input_too_large']);
 
 /** Optional constrained evidence selection. The deterministic answer remains the authority.
  * Configuration is server-owned; no resident field can enable or select a provider. */
@@ -18,7 +22,8 @@ export async function synthesizeAnswer(baseline, { config = parseLlmConfig(), fe
   if (baseline?.status !== 'answered') return fallback('skipped', 'non_answered_status');
   if (signal?.aborted) return fallback('fallback', 'cancelled');
   let request;
-  try { request = selectionRequest(baseline); }
+  const modelAnswer = config.provider === 'workers-ai';
+  try { request = selectionRequest(baseline, { modelAnswer }); }
   catch (error) { return fallback('fallback', error instanceof LlmFailure && SAFE_REASONS.has(error.reason) ? error.reason : 'invalid_evidence'); }
   const controller = new AbortController();
   let timer;
@@ -37,12 +42,17 @@ export async function synthesizeAnswer(baseline, { config = parseLlmConfig(), fe
     const text = await Promise.race([Promise.resolve().then(() => adapter.complete({
       messages: request.messages, schema: request.schema, model: config.model, signal: controller.signal,
     })), timeout, cancellation]);
-    const selected = validateSelection(text, request.evidence, config.maxResponseBytes, request.requiredIds);
-    return { ...baseline, answer: renderSelection(selected), generation: {
+    const answer = modelAnswer
+      ? validateModelAnswer(text, request.evidence, config.maxResponseBytes, request.requiredIds)
+      : renderSelection(validateSelection(text, request.evidence, config.maxResponseBytes, request.requiredIds));
+    markAiOutcome('succeeded');
+    return { ...baseline, answer, generation: {
       mode: 'llm', provider: config.provider, status: 'used',
     } };
   } catch (error) {
-    return fallback('fallback', error instanceof LlmFailure && SAFE_REASONS.has(error.reason) ? error.reason : 'provider_failure');
+    const reason = error instanceof LlmFailure && SAFE_REASONS.has(error.reason) ? error.reason : 'provider_failure';
+    markAiOutcome('failed', reason);
+    return fallback('fallback', reason);
   } finally {
     clearTimeout(timer);
     signal?.removeEventListener('abort', cancel);

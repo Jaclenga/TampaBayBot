@@ -8,9 +8,10 @@ test('API input errors preserve status, safe codes, fallback text, and no-store 
   for (const [error, status, body] of [
     [new RequestInputError('Upload timed out.', 408, 'request_timeout'), 408, { error: 'Upload timed out.', code: 'request_timeout' }],
     [new RequestInputError('Upload interrupted.', 400, 'request_aborted'), 400, { error: 'Upload interrupted.', code: 'request_aborted' }],
-    [new Error('Send a JSON request.'), 400, { error: 'Send a JSON request.' }],
-    [{ message: 'private detail', status: 503, code: 'untrusted' }, 400, { error: 'Lookup unavailable.' }],
-    [null, 400, { error: 'Lookup unavailable.' }],
+    [new Error('Send a JSON request.'), 400, { error: 'Send a JSON request.', code: 'invalid_input' }],
+    [new Error('private upstream URL and credential detail'), 503, { error: 'Lookup unavailable.', code: 'service_unavailable' }],
+    [{ message: 'private detail', status: 503, code: 'untrusted' }, 503, { error: 'Lookup unavailable.', code: 'service_unavailable' }],
+    [null, 503, { error: 'Lookup unavailable.', code: 'service_unavailable' }],
   ]) {
     const response = inputErrorJson(error, 'Lookup unavailable.');
     assert.equal(response.status, status);
@@ -47,7 +48,7 @@ test('preflight rejections cancel unread uploads without waiting for cancellatio
   for (const [header, value, expected] of [
     ['Content-Type', 'text/plain', /JSON/],
     ['Origin', 'https://foreign.example', /own website/],
-    ['Origin', 'not a URL', /Invalid URL/],
+    ['Origin', 'not a URL', /own website/],
     ['Content-Length', String(REJECTED_BODY_DRAIN_LIMIT_BYTES + 1), /too long/],
   ]) {
     for (const result of ['pending', 'rejected']) {

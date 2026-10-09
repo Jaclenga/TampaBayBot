@@ -7,8 +7,22 @@ const DETAIL_FIELDS = [
   { id: 'deadline', query: /\b(?:deadline|due date)\b/, body: /\b(?:deadline|due|by)\b/, kind: /\b\d{4}\b/ },
 ];
 
-/** Fields explicitly requested as facts, optionally limited to those a quote supports. */
-export function requestedDetails(question, text, requestedFacts) {
+// Numeric-detail questions inspect the same published passages repeatedly.
+// Strings are immutable; bound the per-isolate cache to keep memory predictable.
+const normalizedBodyCache = new Map();
+
+function normalizedBody(text) {
+  const value = String(text ?? '');
+  if (value.length > 8192) return intentText(value);
+  const cached = normalizedBodyCache.get(value);
+  if (cached !== undefined) return cached;
+  const normalized = intentText(value);
+  if (normalizedBodyCache.size >= 256) normalizedBodyCache.delete(normalizedBodyCache.keys().next().value);
+  normalizedBodyCache.set(value, normalized);
+  return normalized;
+}
+
+function detailContext(question, requestedFacts) {
   const query = intentText(question);
   const benefitQuestion = /\b(?:assistance|benefit|grant|aid)\b/.test(query);
   const feeQuestion = /\b(?:fees?|costs?)\b/.test(query) &&
@@ -16,8 +30,12 @@ export function requestedDetails(question, text, requestedFacts) {
   const fields = DETAIL_FIELDS.filter(field => (requestedFacts ? requestedFacts.includes(field.id) : field.query.test(query)) &&
     (field.id !== 'amount' || !feeQuestion || benefitQuestion && /\b(?:and|also)\b/.test(query)) &&
     (field.id !== 'fee' || feeQuestion && /\b(?:how much|what (?:is|are)|amount|maximum|max|minimum|min)\b/.test(query)));
-  if (text === undefined) return fields.map(field => field.id);
-  const body = intentText(text);
+  return { query, fields };
+}
+
+function detailsInBody({ query, fields }, text) {
+  if (fields.length === 0) return [];
+  const body = normalizedBody(text);
   if (!/\d|\b(?:no fee|free of charge)\b/.test(body)) return [];
   // An income threshold and a benefit amount are different facts even when both
   // contain a dollar figure and the same word "maximum".
@@ -34,6 +52,18 @@ export function requestedDetails(question, text, requestedFacts) {
     }
     return true;
   }).map(field => field.id);
+}
+
+/** Fields explicitly requested as facts, optionally limited to those a quote supports. */
+export function requestedDetails(question, text, requestedFacts) {
+  const context = detailContext(question, requestedFacts);
+  return text === undefined ? context.fields.map(field => field.id) : detailsInBody(context, text);
+}
+
+/** Compile question-side checks once when ranking many passages. */
+export function requestedDetailScorer(question, requestedFacts) {
+  const context = detailContext(question, requestedFacts);
+  return text => detailsInBody(context, text).length;
 }
 
 /** Match the requested factual field in the passage itself, not its page title. */

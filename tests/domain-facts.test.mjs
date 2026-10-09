@@ -66,6 +66,23 @@ test('legacy and annotated evidence use identical derivation and forged literal-
   }
 });
 
+test('cached facts follow evidence, source identity and sentence-boundary edits', () => {
+  const localSource = { ...source };
+  const evidence = chunk('Applications are closed.');
+  const initial = factsForChunk(evidence, localSource);
+  assert.deepEqual(factsForChunk(evidence, localSource), initial);
+  initial[0].value = 'open';
+  assert.equal(factsForChunk(evidence, localSource)[0].value, 'closed');
+  evidence.text = 'Applications are open.';
+  assert.equal(factsForChunk(evidence, localSource)[0].value, 'open');
+  localSource.topic_id = 'another-topic';
+  assert.equal(factsForChunk(evidence, localSource)[0].programId, 'another-topic');
+  evidence.locator = { text_start: 10, starts_at_sentence_boundary: false };
+  assert.deepEqual(factsForChunk(evidence, localSource), []);
+  evidence.locator.starts_at_sentence_boundary = true;
+  assert.equal(factsForChunk(evidence, localSource)[0].value, 'open');
+});
+
 test('HTML, CSV and structured adapters generate repeatable facts with unchanged content and raw hashes', async () => {
   const records = [
     ['html', '<main><p>Applications are closed.</p><p>Income limits for 2025: $60,000.</p></main>'],

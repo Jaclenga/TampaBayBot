@@ -139,9 +139,14 @@ test("evaluation page exposes the published offline cases and exact failure coun
   await expect(
     page.getByRole("link", { name: "Offline engineering suite report (JSON)" }),
   ).toHaveAttribute("href", "/api/evaluation?artifact=suite");
-  // The original artifacts remain separately inspectable.
+  // Aggregate reports remain public. Detailed review files require monitor access.
   expect((await request.get("/api/evaluation?artifact=summary")).ok()).toBeTruthy();
-  expect((await request.get("/api/evaluation?artifact=human")).ok()).toBeTruthy();
+  for (const artifact of ["responses", "agent", "human"]) {
+    const denied = await request.get(`/api/evaluation?artifact=${artifact}`);
+    expect(denied.status()).toBe(404);
+    expect(denied.headers()["content-disposition"]).toBeUndefined();
+    await expect(page.locator(`a[href="/api/evaluation?artifact=${artifact}"]`)).toHaveCount(0);
+  }
 });
 
 test("model selection and fallback remain labeled with accessible source citations", async ({

@@ -23,6 +23,7 @@ async function projectFixture(t) {
     ['package.json', '{"type":"module"}'], ['tsconfig.json', '{}'],
     ['vite.config.ts', 'export default () => { return {\n  server: {}\n}; };\n'],
     ['data/corpus.json', '{"synthetic":true}'], ['data/raw/private.txt', 'synthetic raw input'],
+    ['pages-demo/src/housing-resources.json', '{"resources":[]}'],
     ['.env', 'SYNTHETIC_PRIVATE_VALUE=do-not-copy'],
     ['node_modules/vinext/package.json', '{"type":"module"}'],
   ]) {
@@ -45,6 +46,7 @@ test('runtime fixtures work without hosting or Next config and isolate project c
     }
     assert.deepEqual(await readdir(join(fixture, 'data')), ['corpus.json']);
     assert.deepEqual(JSON.parse(await readFile(join(fixture, 'data/corpus.json'))), { synthetic: true });
+    assert.deepEqual(JSON.parse(await readFile(join(fixture, 'pages-demo/src/housing-resources.json'))), { resources: [] });
     assert.equal(await realpath(join(fixture, 'node_modules')), await realpath(join(project, 'node_modules')));
     assert.match(await readFile(join(fixture, 'vite.config.ts'), 'utf8'), /cacheDir: '\.runtime-cache\/node_modules\/\.vite'/);
     assert.doesNotMatch(await readFile(join(project, 'vite.config.ts'), 'utf8'), /cacheDir/);

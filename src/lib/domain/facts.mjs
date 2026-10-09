@@ -5,6 +5,8 @@ export const FACT_TYPES = Object.freeze([
   'eligibility', 'assistance_restriction', 'contact',
 ]);
 
+const derivedFactCache = new WeakMap();
+
 const incomeContext = /\b(?:income\s+(?:limits?|guidelines?|requirements?|thresholds?)|(?:maximum|minimum|household|annual)\s+income|area median income|AMI)\b/i;
 const money = /(?:\$\s*\d[\d,]*(?:\.\d{2})?|\b\d[\d,]*(?:\.\d{2})?\s+dollars?\b)/gi;
 const year = /\b(?:19|20)\d{2}\b/g;
@@ -132,7 +134,21 @@ export function deriveFacts(chunk, source) {
 /** Never trust an annotation merely because its quote is literal. Rederivation
  * also checks the meaning, program identity and source/evidence relationship. */
 export function factsForChunk(chunk, source) {
-  return deriveFacts(chunk, source);
+  if (!chunk || typeof chunk !== 'object') return deriveFacts(chunk, source);
+  const programId = source?.program_id ?? source?.topic_id ?? source?.source_id;
+  const textStart = chunk.locator?.text_start;
+  const startsAtSentenceBoundary = chunk.locator?.starts_at_sentence_boundary;
+  const prior = derivedFactCache.get(chunk);
+  if (prior && prior.source === source && prior.sourceId === source?.source_id &&
+      prior.programId === programId && prior.id === chunk.id &&
+      prior.chunkSourceId === chunk.source_id && prior.text === chunk.text &&
+      prior.textStart === textStart && prior.startsAtSentenceBoundary === startsAtSentenceBoundary)
+    return prior.facts.map(fact => ({ ...fact }));
+  const facts = deriveFacts(chunk, source);
+  derivedFactCache.set(chunk, { source, sourceId: source?.source_id, programId,
+    id: chunk.id, chunkSourceId: chunk.source_id, text: chunk.text,
+    textStart, startsAtSentenceBoundary, facts });
+  return facts.map(fact => ({ ...fact }));
 }
 
 export function factAnnotationsMatch(chunk, source) {

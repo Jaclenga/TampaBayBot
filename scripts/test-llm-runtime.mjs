@@ -94,6 +94,7 @@ async function startWorker(provider) {
   await writeFile(join(fixture, '.env'), [
     `LLM_PROVIDER=${provider}`, `LLM_BASE_URL=${modelBase}${provider === 'openai-compatible' ? '/v1' : ''}`,
     `LLM_MODEL=${modelName}`, `LLM_API_KEY=${sentinel}`, 'LLM_TIMEOUT_MS=3000', 'LLM_MAX_RESPONSE_BYTES=32768',
+    'TAMPABAYBOT_ALLOW_UNMETERED_LOCAL_AI=1',
   ].join('\n') + '\n');
   worker = createRuntimeWorker({ fixture, redact });
   return worker.start();

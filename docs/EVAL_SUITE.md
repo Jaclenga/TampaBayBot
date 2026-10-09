@@ -44,6 +44,8 @@ npm run evaluate
 
 The strict narrative evaluator shares the navigation suite's [benchmark definitions](../evaluation/benchmarks.mjs). It writes `evaluation/results/latest.json` and `evaluation/results/responses.json`, and prepares `evaluation/human-audit/responses.json`. Completed judgments are preserved and changed responses flagged for [renewed human review](EVALUATION.md#independent-human-review). `eval:suite` does not rewrite these files or historical agent reviews.
 
+The three `responses.json` placeholders remain tracked for the application build, even though generated copies are ignored by Git. After running `evaluate`, keep populated response and human-review packets local. Run `node scripts/check-evaluation-artifacts.mjs` before a commit or deployment; it rejects populated working-tree or staged copies. Public source CI runs the same check, and source-only packaging replaces all three response files with empty arrays. A direct push can still publish staged packets before CI finishes, so review staged changes and do not bypass this check.
+
 ## What the cases cover
 
 | Group | Cases | Coverage |

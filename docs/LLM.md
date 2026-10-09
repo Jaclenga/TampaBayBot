@@ -1,13 +1,13 @@
 # Optional language-model providers
 
-TampaBayBot supports operator-selected **Ollama** and **OpenAI-compatible Chat Completions** endpoints over HTTP, without a provider SDK. `LLM_PROVIDER=none` is the default deterministic, cited path. Models can select retrieved evidence; they cannot add facts, citations, eligibility decisions or approvals. The same contract applies to local and remote providers.
+TampaBayBot supports operator-selected **Cloudflare Workers AI**, **Ollama**, and **OpenAI-compatible Chat Completions** providers. `LLM_PROVIDER=none` is the default deterministic, cited path. Workers AI writes a quote-only answer; the HTTP providers select retrieved evidence for a deterministic answer. No provider can add facts, citations, eligibility decisions or approvals.
 
 ## What a model receives and can change
 
 1. Routing and retrieval produce the initial cited answer. A provider runs only for status `answered`; insufficient evidence, official judgment, conflicts/staleness and location/coverage states remain deterministic.
-2. The server sends the current question, bounded evidence IDs/titles/excerpts and selector instructions. It attaches no conversation history, provider credentials, property results or complete corpus. The question can contain personal information the resident typed.
-3. The model returns one to three selections, each with a supplied ID and its full literal quote. The first evidence entry must stay first. Every `requiredEvidenceIds` entry must be included to retain requested facts and their qualifications. Unsupported IDs, duplicates, altered/reordered primary evidence, omitted required citations, extra prose, malformed output and incomplete responses fail validation.
-4. The app builds the answer from validated selections and controls status, evidence records, official next steps, explanation and warnings. Models cannot call tools or fetch sources.
+2. The server sends the current question, bounded evidence IDs/titles/excerpts and instructions. It attaches no raw conversation history, provider credentials, property results or complete corpus. The question can contain personal information the resident typed.
+3. Workers AI returns an `answer` and `citations` in JSON. The answer can contain only one to three complete literal supplied quotes, each followed by its matching `[E#]` citation. HTTP providers return one to three evidence selections. The first evidence entry must stay first. Every `requiredEvidenceIds` entry must be included to retain requested facts and their qualifications. Unsupported IDs, duplicates, changed quotes, omitted required citations, extra prose, malformed output and incomplete responses fail validation.
+4. The app displays the validated Workers AI answer directly. For HTTP providers it builds the answer from validated selections. The app controls status, evidence records, official next steps, explanation and warnings. Models cannot call tools or fetch sources.
 5. Invalid configuration, provider failure/timeout, exceeded response limits or invalid output return the original answer with fallback metadata. Keys, base URLs and raw errors are withheld from the browser.
 
 Generation metadata distinguishes disabled, skipped, model-assisted and fallback behavior. [Guardrail inserts and hooks](GUARDRAIL_INSERTS.md) describes the API's additional input/runtime checks; provider validation does not replace them. [Recorded Ollama tests](HISTORY.md#ollama-testing) are separate from synthetic fixtures and do not establish general accuracy or usefulness.
@@ -26,15 +26,22 @@ On POSIX use `cp .env.example .env`. Restart the development server after change
 
 | Variable | Default / accepted value | Meaning |
 | --- | --- | --- |
-| `LLM_PROVIDER` | `none`; or `ollama`, `openai-compatible` | Explicit backend selection |
-| `LLM_BASE_URL` | Empty; required when enabled | Operator-selected API root, without the chat endpoint suffix |
-| `LLM_MODEL` | Empty; required when enabled | Exact installed/served model identifier; no model is selected automatically |
+| `LLM_PROVIDER` | `none`; or `workers-ai`, `ollama`, `openai-compatible` | Explicit backend selection |
+| `LLM_BASE_URL` | Empty; required for HTTP providers | Operator-selected API root, without the chat endpoint suffix |
+| `LLM_MODEL` | Workers AI defaults to `@cf/meta/llama-3.1-8b-instruct-fp8`; required for HTTP providers | Exact operator-selected model identifier |
 | `LLM_API_KEY` | Empty; optional | Server-side bearer credential when the chosen server requires it |
+| `LLM_MAX_OUTPUT_TOKENS` | `512`; integer `128`–`512` for Workers AI | Maximum generated tokens for the Workers AI quoted answer |
 | `LLM_TIMEOUT_MS` | `30000`; integer `1000`–`120000` | Request deadline in milliseconds |
 | `LLM_MAX_RESPONSE_BYTES` | `32768`; integer `1024`–`262144` | Maximum provider response body |
 | `LLM_ALLOW_PRIVATE_HTTP` | `false` | Explicitly allow HTTP to a literal private IP (RFC1918 IPv4 or IPv6 ULA); loopback HTTP is allowed without this flag |
 
-Public endpoints require HTTPS; private-IP HTTPS is also allowed. `LLM_ALLOW_PRIVATE_HTTP` changes only plain HTTP. Redirects, URL credentials, queries/fragments, full chat-endpoint URLs and reserved/link-local endpoints are rejected. Residents cannot supply endpoints or provider credentials through the question API. Operators remain responsible for network/DNS trust: URL checks neither authenticate a server nor resolve DNS to guarantee a public destination.
+## Cloudflare Workers AI
+
+Set `LLM_PROVIDER=workers-ai` on the deployed Worker and bind Cloudflare Workers AI as `AI`. No base URL or bearer key is needed. The model is configurable with `LLM_MODEL`; the default is [`@cf/meta/llama-3.1-8b-instruct-fp8`](https://developers.cloudflare.com/workers-ai/models/llama-3.1-8b-instruct-fp8/). The Worker sends the current question and bounded retrieved excerpts through `AI.run` and asks for a structured quote-only answer. It displays the model's answer only when its citations and full quotations match supplied evidence exactly. Invalid output, missing binding, quota exhaustion and inference errors return the existing extractive answer. No inference runs when retrieval lacks an answered result.
+
+The Workers AI adapter limits the serialized prompt to 12,000 UTF-8 bytes and output to at most 512 tokens. The conversation context remains the existing bounded topic and jurisdiction state; raw prior turns are not sent to the model. The model writes only cited source quotes, not free-form resident advice. Cloudflare's [JSON Mode supported-model list](https://developers.cloudflare.com/workers-ai/features/json-mode/) omits this FP8 model, so the application requests JSON in the prompt and validates the returned text itself. For a Pages and Workers deployment, account setup, D1 shared limits and reviewed-evidence requirements, see [the Cloudflare demo guide](../CLOUDFLARE_DEPLOYMENT.md) and [cost estimate](../COST_ESTIMATE.md). Local use of the `AI` binding contacts the Cloudflare account and can consume its daily neuron allowance; fixture tests use a mock binding.
+
+For HTTP providers, public endpoints require HTTPS; private-IP HTTPS is also allowed. `LLM_ALLOW_PRIVATE_HTTP` changes only plain HTTP. Redirects, URL credentials, queries/fragments, full chat-endpoint URLs and reserved/link-local endpoints are rejected. Residents cannot supply endpoints or provider credentials through the question API. Operators remain responsible for network/DNS trust: URL checks neither authenticate a server nor resolve DNS to guarantee a public destination.
 
 ## Local Ollama
 
@@ -50,13 +57,14 @@ LLM_API_KEY=
 LLM_TIMEOUT_MS=30000
 LLM_MAX_RESPONSE_BYTES=32768
 LLM_ALLOW_PRIVATE_HTTP=false
+TAMPABAYBOT_ALLOW_UNMETERED_LOCAL_AI=1
 ```
 
 For example, `ollama pull llama3:8b` downloads Meta Llama 3 if absent; `ollama serve` starts a stopped daemon. The [model listing](https://ollama.com/library/llama3) gives size and licensing information. Weight licenses are separate from the app's MIT license.
 
 CPU inference, especially first load, can exceed 30 seconds. For local testing, use `LLM_TIMEOUT_MS=120000` and adequate evaluation time. A timeout falls back to the cited baseline and fails model acceptance; it is not successful inference.
 
-The native adapter appends `/api/chat`, sends `model`/`messages`, requests non-streaming structured output and validates selections independently. See the [Ollama chat API](https://docs.ollama.com/api/chat).
+The local AI opt-in works only when both the app request and model endpoint use loopback, with `TAMPABAYBOT_OPERATIONS_MODE=local`. It does not enforce visitor or global daily limits; never use it for a public deployment. Public model traffic requires shared D1 controls. The native adapter appends `/api/chat`, sends `model`/`messages`, requests non-streaming structured output and validates selections independently. See the [Ollama chat API](https://docs.ollama.com/api/chat).
 
 Ollama normally listens on `127.0.0.1:11434`, but localhost does not guarantee on-device inference: Ollama can forward cloud-model work. For local-only inference, use local weights and, if needed, set `OLLAMA_NO_CLOUD=1` in the **Ollama process**, then restart it. The app's `.env` does not set this daemon option. See the [Ollama FAQ](https://docs.ollama.com/faq) and [cloud behavior](https://docs.ollama.com/cloud).
 
@@ -71,6 +79,7 @@ LLM_PROVIDER=openai-compatible
 LLM_BASE_URL=http://127.0.0.1:11434/v1
 LLM_MODEL=your-installed-local-model
 LLM_API_KEY=
+TAMPABAYBOT_ALLOW_UNMETERED_LOCAL_AI=1
 ```
 
 Include `/v1` for compatibility mode; native `ollama` mode uses the root without it. Ollama's local interface needs no paid API key. Test the actual server/version because it implements a subset of the protocol. See [Ollama compatibility](https://docs.ollama.com/api/openai-compatibility).

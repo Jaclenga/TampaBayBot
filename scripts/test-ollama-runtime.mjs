@@ -147,6 +147,7 @@ async function startWorker() {
   await writeFile(join(fixture, '.env'), [
     'LLM_PROVIDER=ollama', `LLM_BASE_URL=${JSON.stringify(proxyBase)}`, `LLM_MODEL=${JSON.stringify(model)}`,
     'LLM_API_KEY=', `LLM_TIMEOUT_MS=${config.timeoutMs}`, 'LLM_MAX_RESPONSE_BYTES=32768',
+    'TAMPABAYBOT_ALLOW_UNMETERED_LOCAL_AI=1',
   ].join('\n') + '\n');
   worker = createRuntimeWorker({ fixture, redact });
   return worker.start();

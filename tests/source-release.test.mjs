@@ -52,7 +52,7 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
   await mkdir(work, { recursive: true });
   const root = await mkdtemp(path.join(work, "release-fixture-"));
   try {
-    for (const directory of ["src/app", "src/lib", "scripts/build", "tests", "vendor", "docs", "evaluation/datasets", "evaluation/suite/results", "evaluation/results", "data/raw", ".openai", ".git"]) await mkdir(path.join(root, directory), { recursive: true });
+    for (const directory of ["src/app", "src/lib", "scripts/build", "tests", "vendor", "pages-demo/public", "docs", "evaluation/datasets", "evaluation/suite/results", "evaluation/results", "data/raw", ".openai", ".git"]) await mkdir(path.join(root, directory), { recursive: true });
     await writeFile(path.join(root, "data/sources.json"), JSON.stringify([{ source_id: "fixture", status: "available", raw_path: "data/raw/example.html" }]));
     await writeFile(path.join(root, "data/raw/example.html"), "external snapshot sentinel");
     await writeFile(path.join(root, "data/chunks.json"), JSON.stringify([{ text: "external excerpt sentinel" }]));
@@ -74,6 +74,7 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     await writeFile(path.join(root, "scripts/example.mjs"), "export const originalSoftware = true;\r\n");
     await writeFile(path.join(root, "src/app/example.ts"), "export const organizedApp = true;\r\n");
     await writeFile(path.join(root, "src/lib/example.mjs"), "export const organizedLibrary = true;\r\n");
+    await writeFile(path.join(root, "pages-demo/public/_headers"), "/*\n  X-Frame-Options: DENY\n");
     await writeFile(path.join(root, "scripts/build/example.ts"), "export const organizedBuildTool = true;\r\n");
     const result = await createSourceRelease({ root, output: "work/releases/alpha" });
     const output = path.join(root, result.output);
@@ -83,6 +84,7 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     assert.equal(await readFile(path.join(output, "scripts/example.mjs"), "utf8"), "export const originalSoftware = true;\n");
     assert.equal(await readFile(path.join(output, "src/app/example.ts"), "utf8"), "export const organizedApp = true;\n");
     assert.equal(await readFile(path.join(output, "src/lib/example.mjs"), "utf8"), "export const organizedLibrary = true;\n");
+    assert.equal(await readFile(path.join(output, "pages-demo/public/_headers"), "utf8"), "/*\n  X-Frame-Options: DENY\n");
     assert.equal(await readFile(path.join(output, "scripts/build/example.ts"), "utf8"), "export const organizedBuildTool = true;\n");
     assert.equal(await readFile(path.join(output, ".gitattributes"), "utf8"), "* text=auto eol=lf\n");
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "data/chunks.json"), "utf8")), []);

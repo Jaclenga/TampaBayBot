@@ -27,10 +27,24 @@ export class RequestInputError extends Error {
   }
 }
 
+const publicInputMessages = new Set([
+  "Send a JSON request.",
+  "Use this service from its own website.",
+  "The request is too long.",
+  "The request is empty.",
+  "The request is not valid JSON.",
+  "Provide a JSON object.",
+  "Enter a valid question or address.",
+  "Choose a supported Tampa Bay area.",
+  "Select a location within the Tampa Bay service area.",
+]);
+
 export function inputErrorJson(error: unknown, fallback: string) {
   if (error instanceof RequestInputError)
     return json({ error: error.message, code: error.code }, error.status);
-  return json({ error: error instanceof Error ? error.message : fallback }, 400);
+  if (error instanceof Error && publicInputMessages.has(error.message))
+    return json({ error: error.message, code: "invalid_input" }, 400);
+  return json({ error: fallback, code: "service_unavailable" }, 503);
 }
 
 export async function readInput(
@@ -54,12 +68,14 @@ export async function readInput(
     )
       throw new Error("Send a JSON request.");
     const origin = request.headers.get("origin");
-    if (
-      origin &&
-      (origin !== new URL(origin).origin ||
-        origin !== new URL(request.url).origin)
-    )
-      throw new Error("Use this service from its own website.");
+    if (origin) {
+      let sameOrigin = false;
+      try {
+        sameOrigin = origin === new URL(origin).origin &&
+          origin === new URL(request.url).origin;
+      } catch { /* A malformed Origin is not trusted input. */ }
+      if (!sameOrigin) throw new Error("Use this service from its own website.");
+    }
     if (
       declaredLength > REQUEST_BODY_MAX_BYTES &&
       !drainDeclaredOversize

@@ -37,6 +37,10 @@ const fixture = await mkdtemp(join(workRoot, 'standalone-build-'));
 for (const name of ['src', 'scripts', 'public', 'evaluation', 'vendor']) {
   await cp(join(project, name), join(fixture, name), { recursive: true, filter: source => !relative(project, source).split(sep).some(part => part.startsWith('.')) });
 }
+// The Next housing-help route and deterministic chat plans share this small
+// checked catalog with the independent Pages bundle.
+await mkdir(join(fixture, 'pages-demo', 'src'), { recursive: true });
+await cp(join(project, 'pages-demo', 'src', 'housing-resources.json'), join(fixture, 'pages-demo', 'src', 'housing-resources.json'));
 await mkdir(join(fixture, 'data'));
 for (const entry of await readdir(join(project, 'data'), { withFileTypes: true })) {
   if (entry.isFile() && entry.name.endsWith('.json')) await cp(join(project, 'data', entry.name), join(fixture, 'data', entry.name));

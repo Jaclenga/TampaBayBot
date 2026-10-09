@@ -38,6 +38,7 @@ yarn-error.log*
 # typescript
 next-env.d.ts
 /dist/
+/pages-demo/dist/
 /.wrangler/
 /outputs/
 /work/
@@ -70,3 +71,6 @@ next-env.d.ts
 /evaluation/agent-audit/responses.json
 /evaluation/human-audit/responses.json
 /evaluation/suite/results/
+/evaluation/llm-runtime/
+/evaluation/accessibility/playwright-results.json
+/evaluation/security/release-secret-scan.json

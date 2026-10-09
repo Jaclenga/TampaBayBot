@@ -11,6 +11,42 @@
   --sans:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
+.housing-help-page { padding-block: 36px 64px; }
+.housing-help-page > h1 { margin-bottom: 12px; }
+.crisis-immediate, .crisis-intake, .crisis-directory, .crisis-plan {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: clamp(16px, 3vw, 28px);
+  margin-block: 24px;
+  background: var(--white);
+}
+.crisis-immediate { border-left: 5px solid var(--red); background: #fff8f6; }
+.crisis-immediate li { margin-block: 8px; }
+.crisis-immediate small { display: block; color: var(--muted); }
+.crisis-exit { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.crisis-exit a, .crisis-actions button {
+  min-height: 44px; padding: 8px 14px; border: 1px solid var(--heading);
+  border-radius: 4px; background: white; color: var(--heading); font-weight: 600;
+}
+.crisis-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; margin-block: 16px; }
+.crisis-form-grid label { display: grid; gap: 5px; font-weight: 600; }
+.crisis-form-grid select { min-height: 44px; width: 100%; padding: 8px; color: var(--ink); background: white; border: 1px solid #8499a8; border-radius: 4px; }
+.crisis-plan { background: var(--panel); }
+.crisis-plan li { margin-block: 8px; }
+.crisis-priority-label { color: var(--red); font-weight: 700; }
+.crisis-resource-list { list-style: none; padding: 0; }
+.crisis-resource-list > li { border-top: 1px solid var(--line); padding-block: 12px; }
+.crisis-resource-list small { display: block; color: var(--muted); }
+.crisis-plan-notes { color: var(--muted); }
+.crisis-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.crisis-directory > ul { list-style: none; padding: 0; display: grid; gap: 16px; }
+.crisis-directory > ul > li { border-top: 1px solid var(--line); padding-block: 12px; }
+@media print {
+  .site-header, .site-footer, .crisis-exit, .crisis-form-grid, .crisis-actions { display: none !important; }
+  .housing-help-page { width: 100%; padding: 0; }
+  .housing-help-page:has(.crisis-plan) .crisis-directory, .housing-help-page:has(.crisis-plan) .crisis-immediate { display: none; }
+  .crisis-plan { border: 0; padding: 0; }
+}
 * {
   box-sizing: border-box;
 }

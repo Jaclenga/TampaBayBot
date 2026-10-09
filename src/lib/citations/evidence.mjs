@@ -1,7 +1,19 @@
 import { tokens } from '../retrieval/tokens.mjs';
 import { isAuthoritative, sourceIsStale, evidenceSafetyReason } from '../retrieval/eligibility.mjs';
-import { requestedDetailScore } from '../retrieval/details.mjs';
+import { requestedDetailScorer } from '../retrieval/details.mjs';
 import { factsForChunk } from '../domain/facts.mjs';
+
+const quoteTokenCache = new Map();
+
+function quoteTokens(text) {
+  if (text.length > 8192) return tokens(text);
+  const cached = quoteTokenCache.get(text);
+  if (cached) return cached;
+  const words = tokens(text);
+  if (quoteTokenCache.size >= 512) quoteTokenCache.delete(quoteTokenCache.keys().next().value);
+  quoteTokenCache.set(text, words);
+  return words;
+}
 
 export function safeSourceUrl(candidate, canonical) {
   try {
@@ -18,8 +30,12 @@ export function selectQuote(text, question, maxLength = 720) {
   const query = new Set(tokens(question, true));
   const sentences = [...text.matchAll(/[^.!?\n]+(?:[.!?](?=\s|$)|$)/g)].map(match => ({ text: match[0].trim(), index: match.index + match[0].indexOf(match[0].trim()) }));
   if (!sentences.length) return text.slice(0, maxLength).trim();
-  const scored = sentences.map(sentence => ({ ...sentence, score: tokens(sentence.text).reduce((total, token) => total + (query.has(token) ? 1 : 0), 0) + (/not (?:currently )?accepting|closed|online only|move.in|paused/i.test(sentence.text) ? 1 : 0) }));
-  scored.sort((a, b) => requestedDetailScore(question, b.text) - requestedDetailScore(question, a.text) || b.score - a.score || a.index - b.index);
+  const detailScoreFor = requestedDetailScorer(question);
+  const scored = sentences.map(sentence => ({ ...sentence,
+    detailScore: detailScoreFor(sentence.text),
+    score: quoteTokens(sentence.text).reduce((total, token) => total + (query.has(token) ? 1 : 0), 0) + (/not (?:currently )?accepting|closed|online only|move.in|paused/i.test(sentence.text) ? 1 : 0),
+  }));
+  scored.sort((a, b) => b.detailScore - a.detailScore || b.score - a.score || a.index - b.index);
   const selected = scored[0];
   const next = sentences.find(sentence => sentence.index > selected.index);
   const end = next && next.text.split(/\s+/).length >= 5 && next.index + next.text.length - selected.index <= maxLength ? next.index + next.text.length : selected.index + selected.text.length;

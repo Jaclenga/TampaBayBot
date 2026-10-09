@@ -16,10 +16,13 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
+    "build:pages": "vite build --config pages-demo/vite.config.mjs --configLoader native",
     "start": "vinext start",
     "test": "node scripts/test-source.mjs",
+    "test:pages": "node --test --test-isolation=none pages-demo/tests/*.test.mjs",
+    "test:pages:browser": "npm run build:pages && playwright test --config pages-demo/playwright.config.mjs",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern pages-demo/dist --ignore-pattern .next",
     "ingest": "node --use-system-ca scripts/ingest.mjs",
     "evaluate": "node scripts/evaluate.mjs --strict",
     "eval:suite": "node scripts/eval-suite.mjs",
@@ -33,6 +36,7 @@
     "test:llm-runtime": "node scripts/test-llm-runtime.mjs",
     "test:ollama-runtime": "node scripts/test-ollama-runtime.mjs",
     "build:standalone": "node scripts/build-standalone.mjs",
+    "prepare:cloudflare-demo": "node scripts/prepare-cloudflare-demo.mjs",
     "test:standalone": "node scripts/test-standalone.mjs",
     "release:source": "node scripts/package-release.mjs",
     "release:verify": "node scripts/verify-source-release.mjs",
@@ -54,14 +58,14 @@
   "dependencies": {
     "cheerio": "^1.2.0",
     "lucide-react": "^1.45.0",
-    "next": "16.3.7",
+    "next": "16.3.8",
     "pdf-parse": "^2.4.5",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@cloudflare/vite-plugin": "1.62.2",
+    "@cloudflare/vite-plugin": "1.63.1",
     "@playwright/test": "^1.63.0",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
@@ -69,13 +73,13 @@
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.26",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.3.7",
+    "eslint-config-next": "16.3.8",
     "image-size": "file:vendor/image-dimensions",
     "react-server-dom-webpack": "19.2.8",
     "typescript": "5.9.3",
     "vinext": "0.0.50",
     "vite": "8.3.0",
-    "wrangler": "4.144.0"
+    "wrangler": "4.149.0"
   },
   "overrides": {
     "image-size": "$image-size"

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseLlmConfig, publicLlmInfo, synthesizeAnswer, createHttpProvider } from '../src/lib/llm/index.mjs';
+import { parseLlmConfig, publicLlmInfo, synthesizeAnswer, createHttpProvider, createWorkersAiProvider } from '../src/lib/llm/index.mjs';
+import { workersAiFailureReason } from '../src/lib/llm/workers-ai.mjs';
 
 const BASELINE = {
   category: 'housing', status: 'answered', query: 'Can I apply for housing help?',
@@ -17,6 +18,10 @@ const snapshot = () => structuredClone(BASELINE);
 const envFor = (provider = 'ollama', extra = {}) => ({ LLM_PROVIDER: provider, LLM_BASE_URL: provider === 'ollama' ? 'http://127.0.0.1:11434' : 'https://api.example.com/v1', LLM_MODEL: 'operator-selected-model', ...extra });
 const configFor = (provider = 'ollama', extra = {}) => parseLlmConfig(envFor(provider, extra));
 const selection = (evidence = BASELINE.evidence.slice(0, 1)) => JSON.stringify({ selections: evidence.map(({ id, quote }) => ({ id, quote })) });
+const modelAnswer = (evidence = BASELINE.evidence.slice(0, 1)) => JSON.stringify({
+  answer: evidence.map(({ id, quote }) => `${quote} [${id}]`).join('\n\n'),
+  citations: evidence.map(({ id }) => id),
+});
 const json = (value, options = {}) => new Response(JSON.stringify(value), { headers: { 'content-type': 'application/json' }, ...options });
 const ollama = text => json({ message: { role: 'assistant', content: text }, done: true });
 const compatible = (text, extra = {}) => json({ choices: [{ message: { role: 'assistant', content: text }, finish_reason: 'stop', ...extra }] });
@@ -139,6 +144,140 @@ test('OpenAI-compatible transport uses chat completions and keeps credentials ou
   assert.equal(request.body.stream, false);
   assert.doesNotMatch(JSON.stringify(request.body), /fake-test-secret/);
   assert.equal(result.generation.status, 'used');
+});
+
+test('Workers AI requires its server binding and bounds model output configuration', () => {
+  const binding = { run() { throw new Error('must not run during configuration'); } };
+  const config = parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding });
+  assert.equal(config.valid, true);
+  assert.equal(config.model, '@cf/meta/llama-3.1-8b-instruct-fp8');
+  assert.equal(config.maxOutputTokens, 512);
+  assert.equal(config.maxPromptBytes, 12000);
+  assert.deepEqual(publicLlmInfo(config), { enabled: true, provider: 'workers-ai', locality: 'network' });
+  const missingBinding = parseLlmConfig({ LLM_PROVIDER: 'workers-ai' });
+  assert.equal(missingBinding.invalidReason, 'missing_ai_binding');
+  assert.equal(parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: {} }).valid, false);
+  assert.equal(parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding, LLM_MAX_OUTPUT_TOKENS: '128' }).maxOutputTokens, 128);
+  assert.equal(parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding, LLM_MAX_PROMPT_BYTES: '1024' }).maxPromptBytes, 1024);
+  for (const value of ['0', '127', '513', '1.5', 'Infinity'])
+    assert.equal(parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding, LLM_MAX_OUTPUT_TOKENS: value }).valid, false);
+  for (const value of ['0', '1023', '12001', '1.5', 'Infinity'])
+    assert.equal(parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding, LLM_MAX_PROMPT_BYTES: value }).valid, false);
+});
+
+test('missing Workers AI binding falls back before any model call', async () => {
+  const config = parseLlmConfig({ LLM_PROVIDER: 'workers-ai' });
+  const result = await synthesizeAnswer(snapshot(), { config, provider: {
+    complete() { throw new Error('must not run'); },
+  } });
+  assert.equal(result.generation.reason, 'invalid_config');
+  assert.equal(result.answer, BASELINE.answer);
+});
+
+test('Workers AI authors a fully validated, cited answer with bounded non-streaming inference', async () => {
+  let call;
+  const binding = { async run(model, request) { call = { model, request }; return { response: modelAnswer(BASELINE.evidence) }; } };
+  const config = parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding, LLM_MODEL: '@cf/meta/llama-3.1-8b-instruct-fp8' });
+  const baseline = snapshot();
+  const result = await synthesizeAnswer(baseline, { config, provider: createWorkersAiProvider(binding, config) });
+  assert.equal(call.model, config.model);
+  assert.equal(call.request.stream, false);
+  assert.equal(call.request.max_tokens, 512);
+  assert.equal(call.request.temperature, 0);
+  assert.equal(call.request.response_format, undefined);
+  assert.deepEqual(Object.keys(JSON.parse(call.request.messages[1].content)).sort(), ['evidence', 'question']);
+  assert.match(call.request.messages[0].content, /Write the answer for a resident/);
+  assert.deepEqual(call.request.messages[0].role, 'system');
+  assert.equal(result.generation.status, 'used');
+  assert.equal(result.answer, JSON.parse(modelAnswer(BASELINE.evidence)).answer);
+  assert.match(result.answer, /not currently being accepted/);
+  assert.match(result.answer, /\[E1\]/);
+  assert.match(result.answer, /\[E2\]/);
+  unchangedDecisions(baseline, result);
+});
+
+test('Workers AI cannot invent answer prose, alter a quote, or drop required qualifications', async () => {
+  const baseline = { ...snapshot(), requiredEvidenceIds: ['E1', 'E2'] };
+  const exact = JSON.parse(modelAnswer(BASELINE.evidence));
+  const acceptedBinding = { async run() { return { response: JSON.stringify(exact) }; } };
+  const acceptedConfig = parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: acceptedBinding });
+  const accepted = await synthesizeAnswer(baseline, {
+    config: acceptedConfig, provider: createWorkersAiProvider(acceptedBinding, acceptedConfig),
+  });
+  assert.equal(accepted.generation.status, 'used');
+  assert.equal(accepted.answer, exact.answer);
+  const invalid = [
+    { ...exact, answer: 'Everyone qualifies.\n\n' + exact.answer },
+    { ...exact, answer: exact.answer.replace('not currently', 'currently') },
+    { ...exact, answer: exact.answer.replace('[E1]', '[E999]') },
+    { ...exact, answer: `${BASELINE.evidence[0].quote} [E1]`, citations: ['E1'] },
+    { ...exact, citations: ['E2', 'E1'] },
+    { ...exact, citations: ['E1', 'E1'] },
+    { ...exact, url: 'https://attacker.example.com' },
+    { selections: BASELINE.evidence.map(({ id, quote }) => ({ id, quote })) },
+  ];
+  for (const value of invalid) {
+    const binding = { async run() { return { response: JSON.stringify(value) }; } };
+    const config = parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding });
+    const result = await synthesizeAnswer(baseline, { config, provider: createWorkersAiProvider(binding, config) });
+    assert.equal(result.generation.reason, 'invalid_output');
+    assert.equal(result.answer, baseline.answer);
+    unchangedDecisions(baseline, result);
+  }
+});
+
+test('Workers AI binding errors, tool calls, oversized output, and oversized prompts keep the cited baseline', async () => {
+  const cases = [
+    { run: async () => { throw new Error('private upstream failure'); }, reason: 'provider_failure' },
+    { run: async () => ({ response: modelAnswer(), tool_calls: [{ name: 'approve' }] }), reason: 'invalid_output' },
+    { run: async () => ({ response: 'a'.repeat(1200) }), reason: 'response_too_large', maxResponseBytes: '1024' },
+    { run: async () => ({ response: '{bad json' }), reason: 'invalid_output' },
+  ];
+  for (const scenario of cases) {
+    const binding = { run: scenario.run };
+    const config = parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding,
+      ...(scenario.maxResponseBytes ? { LLM_MAX_RESPONSE_BYTES: scenario.maxResponseBytes } : {}) });
+    const result = await synthesizeAnswer(snapshot(), { config, provider: createWorkersAiProvider(binding, config) });
+    assert.equal(result.answer, BASELINE.answer);
+    assert.equal(result.generation.reason, scenario.reason);
+    assert.doesNotMatch(JSON.stringify(result), /private upstream failure/);
+  }
+  let calls = 0;
+  const binding = { async run() { calls++; return { response: modelAnswer() }; } };
+  const config = parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding });
+  const evidence = Array.from({ length: 8 }, (_, index) => ({
+    ...BASELINE.evidence[0], id: `E${index + 1}`, quote: `Published source passage ${index + 1}: ${'A'.repeat(1900)}`,
+  }));
+  const result = await synthesizeAnswer({ ...snapshot(), evidence }, { config, provider: createWorkersAiProvider(binding, config) });
+  assert.equal(result.generation.reason, 'input_too_large');
+  assert.equal(calls, 0);
+  const shorterConfig = parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding, LLM_MAX_PROMPT_BYTES: '1024' });
+  const shorter = await synthesizeAnswer(snapshot(), { config: shorterConfig,
+    provider: createWorkersAiProvider(binding, shorterConfig) });
+  assert.equal(shorter.generation.reason, 'input_too_large');
+  assert.equal(calls, 0);
+});
+
+test('Workers AI distinguishes daily quota, capacity, timeout, model configuration and other errors', async () => {
+  const cases = [
+    [{ code: 3036, status: 429 }, 'provider_quota'],
+    [{ status: 429, errors: [{ code: 3036, message: 'account limited' }] }, 'provider_quota'],
+    [{ status: 429, error: { errors: [{ code: 3036 }] } }, 'provider_quota'],
+    [{ code: 3040, status: 429 }, 'provider_capacity'],
+    [{ code: 3007, status: 408 }, 'timeout'],
+    [{ code: 5007, status: 400 }, 'invalid_model'],
+    [{ code: 5035, status: 403 }, 'model_unavailable'],
+    [new Error('private upstream failure'), 'provider_failure'],
+  ];
+  for (const [failure, expected] of cases) {
+    assert.equal(workersAiFailureReason(failure), expected);
+    const binding = { async run() { throw failure; } };
+    const config = parseLlmConfig({ LLM_PROVIDER: 'workers-ai', AI: binding });
+    const result = await synthesizeAnswer(snapshot(), { config, provider: createWorkersAiProvider(binding, config) });
+    assert.equal(result.generation.reason, expected);
+    assert.equal(result.answer, BASELINE.answer);
+    assert.doesNotMatch(JSON.stringify(result), /private upstream failure|3036|3040|3007|5007|5035/);
+  }
 });
 
 test('the provider receives only question and bounded evidence, not hidden state or property context', async () => {

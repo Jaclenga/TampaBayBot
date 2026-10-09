@@ -1,6 +1,6 @@
 # Answer architecture
 
-The answer path is a deterministic pipeline over reviewed evidence. HTTP routes remain thin, property and development tools still require confirmed locations, and the optional model can only select validated quotations from the completed baseline.
+The answer path is a deterministic pipeline over reviewed evidence. HTTP routes remain thin, property and development tools still require confirmed locations, and optional models can only return validated quotations from the completed baseline.
 
 ```text
 resident question / bounded conversation context
@@ -9,7 +9,7 @@ resident question / bounded conversation context
   -> evidence eligibility -> lexical candidates -> ranking
   -> source section preferences + factual details + critical qualifications
   -> literal citations + uncertainty state + explicit coverage
-  -> optional validated model selection, or the baseline
+  -> optional validated model answer or selection, or the baseline
 ```
 
 ## Responsibilities
@@ -23,7 +23,7 @@ resident question / bounded conversation context
 | Retrieval | `retrieval/candidates.mjs`, `retrieval/ranking.mjs` | Lexical matching and separately inspectable scoring. `search.mjs` composes these stages and retains existing exports. |
 | Answer assembly | `src/lib/core/answer.mjs`, `core/answer/` | Orchestration, source selection, qualifications, coverage, next steps and response states. No municipality-specific source identifiers in assembly. |
 | Citation boundary | `src/lib/citations/evidence.mjs` | Registered source/chunk relationship, safe URL, exact substring, provenance and same-program conflicts. |
-| Model boundary | `src/lib/llm/`, `src/lib/guardrails/` | Credential isolation, bounded evidence selection, required qualifications and deterministic fallback. |
+| Model boundary | `src/lib/llm/`, `src/lib/guardrails/` | Credential isolation, bounded quote-only output, required qualifications and deterministic fallback. |
 
 `QueryPlan.query` is the resolved query used for matching. `originalQuery` can preserve the resident's unexpanded text. A detected program or place is a query hint, never evidence of eligibility or a parcel boundary.
 
@@ -76,7 +76,7 @@ Source-policy or extractor changes must be checked against already annotated gen
 | Consequential decisions | The decision signal produces `consequentialDecision`; answer response policy refuses official eligibility, legal and property determinations. |
 | Untrusted-source isolation | Retrieval, manual evidence selection, conflict detection and final citations use the same instruction-text policy. |
 | Credential secrecy | Guarded orchestration never passes configured credentials to extension hooks or evidence prompts. |
-| Model cannot introduce evidence | Selection requires baseline IDs and exact complete quotations; required factual details and qualifications cannot be dropped. Invalid output returns the baseline. |
+| Model cannot introduce evidence | HTTP selection and the Workers AI answer require baseline IDs and exact complete quotations; required factual details and qualifications cannot be dropped. Invalid output returns the baseline. |
 
 Narrative admission and qualification admission serve different roles. Both enforce the same hard safety boundary. A supplemental explicit restriction can remain useful even when it is too short to be a primary narrative passage.
 
@@ -84,7 +84,7 @@ Fact-focused citations preserve exact source spans within the 720-character quot
 
 A historical income-year request retains its explicit year when "today" belongs to a separate application-status clause: "What were the 2025 housing income limits, and are applications open today?" still asks for the 2025 table. Asking whether the 2025 income limits can be used today instead requires income evidence for the current UTC year. Current-income requests without an explicit year also use the current UTC year; multiple distinct requested years are not interpreted as a comparison. The requested table must appear in the actual answer quotation. Finding a current table elsewhere cannot validate an older quoted amount. A dated heading can support an outdated-table caution, but cannot supply missing limit values. Unresolved application-status conflicts retain priority over income-date checks.
 
-The optional selector accepts at most eight evidence entries and can select one to three complete quotations. Every required evidence ID, including the first entry, must survive. A baseline needing more than three required entries remains a deterministic answer rather than dropping qualifications to fit the model contract.
+The optional model receives at most eight evidence entries and can use one to three complete quotations. Workers AI writes the displayed quote-only answer; HTTP providers select evidence for deterministic rendering. Every required evidence ID, including the first entry, must survive. A baseline needing more than three required entries remains a deterministic answer rather than dropping qualifications to fit the model contract.
 
 ## Diagnosis and coverage
 

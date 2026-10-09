@@ -4,11 +4,15 @@ TampaBayBot is an open-source project for questions about housing assistance, zo
 
 > **Alpha: for contributors and supervised testing.** The source release starts without downloaded evidence. Independent human review and production-readiness work remain open; see [release status](docs/RELEASE_READINESS.md).
 
+The [Cloudflare Pages preview](https://tampabaybot-housing-preview.pages.dev/) currently has the simple question-and-address interface, a private source-only backend, and a static housing-help directory. Its backend has no AI model enabled and no reviewed source passages, so cited answers are unavailable. The housing directory and crisis guide remain usable without the backend. Public map services can return partial results. This Direct Upload preview is separate from the GitHub source release; repository pushes do not update it.
+
 [Releases](https://github.com/Jaclenga/TampaBayBot/releases) | [Issues](https://github.com/Jaclenga/TampaBayBot/issues) | [Private security reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new)
 
 ## What it does
 
+- Choose an optional housing-crisis guide for eviction, rent, homelessness, unsafe housing, utility shutoff, domestic violence, disaster displacement, or affordable housing. It gives deterministic urgency and next-step guidance with local contacts.
 - Find housing resources for renters and homeowners.
+- Browse official eviction, shelter referral, legal-aid and emergency contacts in the Cloudflare Pages demo through **Find Housing Help Without AI**, even when its chat backend is unavailable.
 - Look up mapped zoning and future land use after address confirmation.
 - Find permitting guidance, applications and agency contacts.
 - Explore nearby development records with their sources and dates.
@@ -36,11 +40,15 @@ For real evidence, [stage, review and apply source updates](docs/SOURCE_UPDATES.
 
 The app identifies the question's topic and location, retrieves relevant evidence, and assembles quotations with an official next step. Missing evidence, unavailable sources, and ambiguous locations produce explicit uncertainty states. Questions and navigation support English and Spanish; source quotations retain their original language.
 
-Optional Ollama or OpenAI-compatible providers can select from retrieved evidence. The application validates their selections and falls back to the baseline answer when needed. See [methodology](docs/METHODOLOGY.md) for the evidence pipeline and [model configuration](docs/LLM.md) for setup and data flow.
+Optional Ollama or OpenAI-compatible providers can select from retrieved evidence. Cloudflare Workers AI can write a quote-only cited answer. The application validates model output against retrieved evidence and falls back to the baseline answer when needed. See [methodology](docs/METHODOLOGY.md) for the evidence pipeline and [model configuration](docs/LLM.md) for setup and data flow.
+
+The Cloudflare Pages demo has a static housing-assistance directory and an optional **I Need Housing Help** guide. Its selections and short plans run in the browser without model calls, embeddings or an account. The original Next.js interface also links to a deterministic `/housing-help` route. Chat crisis responses can attach the same structured plan to the ordinary RAG answer; the plan keeps its own official resource links separate from quoted RAG citations. An empty chat corpus or exhausted AI allowance does not block the Pages directory. Check each resource's last public check, restrictions and official source before relying on current availability. See [housing-crisis architecture](docs/HOUSING_CRISIS_ARCHITECTURE.md), [resource verification](docs/RESOURCE_VERIFICATION.md) and [housing help without AI](docs/AI_FALLBACK.md).
+
+On the prepared Cloudflare deployment, server-side D1 controls allow up to 15 eligible AI model attempts per visitor and 100 across the deployment each UTC day, with a separate concurrency cap. A reserved attempt counts even if inference fails. The interface shows the visitor's remaining allowance and the application reset time. Anonymous network-based identifiers can group people on a shared network or change when a visitor changes networks. These request limits do not guarantee a Cloudflare neuron or monetary budget. See [AI usage limits](docs/AI_USAGE_LIMITS.md) and [Cloudflare cost controls](docs/CLOUDFLARE_COST_CONTROLS.md).
 
 ## Evaluation and limits
 
-Automated checks cover source regressions, exact-claim and citation behavior, program recall, provider validation and browser flows. [Evaluation and review](docs/EVALUATION.md) explains the metrics; [program recall](docs/PROGRAM_RECALL.md) and [release readiness](docs/RELEASE_READINESS.md) preserve dated results and unresolved checks. These development results do not establish general accuracy or resident usefulness.
+Automated checks cover source regressions, exact-claim and citation behavior, program recall, provider validation, browser flows and fictional housing-crisis scenarios. [Evaluation and review](docs/EVALUATION.md) explains the metrics; [housing-crisis evaluation](docs/HOUSING_CRISIS_EVALUATION.md), [program recall](docs/PROGRAM_RECALL.md) and [release readiness](docs/RELEASE_READINESS.md) preserve the limits of those checks. These development results do not establish real-world safety, general accuracy or resident usefulness. Eviction language and local intake paths still need qualified external review before public use.
 
 A resource match is not an eligibility decision, a zoning designation is not permission to build, and nearby records do not prove construction or a legal relationship. Public information may be incomplete, stale, or unavailable. Confirm consequential decisions with the responsible agency. See [limitations](docs/LIMITATIONS.md) and [security and privacy](SECURITY.md).
 
@@ -50,6 +58,15 @@ A resource match is not an eligibility decision, a zoning designation is not per
 - [Development](docs/DEVELOPMENT.md): setup, repository layout, tests and APIs.
 - [Contributing](CONTRIBUTING.md): review requirements and pull requests.
 - [Deployment](docs/DEPLOYMENT.md): build and host with your own account.
+- [Cloudflare demo](CLOUDFLARE_DEPLOYMENT.md): Pages frontend, Workers AI, reviewed evidence and deployment steps.
+- [Cloudflare cost estimate](COST_ESTIMATE.md): free-tier limits and usage scenarios.
+- [AI usage limits](docs/AI_USAGE_LIMITS.md): daily accounting, configuration and privacy limits.
+- [Housing help without AI](docs/AI_FALLBACK.md): static directory and inference-failure behavior.
+- [Housing-crisis architecture](docs/HOUSING_CRISIS_ARCHITECTURE.md): deterministic triage, plans and data boundaries.
+- [Resource verification](docs/RESOURCE_VERIFICATION.md): source checks, freshness and contributor workflow.
+- [Safety and limitations](docs/SAFETY_AND_LIMITATIONS.md): legal, emergency, privacy and external-review boundaries.
+- [Housing-crisis evaluation](docs/HOUSING_CRISIS_EVALUATION.md): fictional scenarios and safety criteria.
+- [Cloudflare cost controls](docs/CLOUDFLARE_COST_CONTROLS.md): what request caps can and cannot bound.
 
 ## License and independence
 

@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: '24'
           cache: npm
+      - run: node scripts/check-evaluation-artifacts.mjs
       # A missing manifest is a failed release check, never a successful skip.
       - run: npm run release:verify
       - run: npm run security:scan

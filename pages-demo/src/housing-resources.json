@@ -1,0 +1,1370 @@
+{
+  "verifiedAt": "2026-10-09",
+  "resources": [
+    {
+      "id": "court-hillsborough-eviction",
+      "categories": [
+        "eviction",
+        "legal"
+      ],
+      "organization": "Hillsborough County Clerk of Court & Comptroller",
+      "program": "Residential eviction court information",
+      "description": "Find the clerk's eviction process overview and case information. The clerk can explain court processes but cannot give legal advice.",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://www.hillsclerk.com/eviction",
+      "contacts": [
+        {
+          "label": "Clerk",
+          "value": "(813) 276-8100",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People with an eviction matter in Hillsborough County.",
+      "availability": "Public court information page and clerk phone verified; check case notices for deadlines.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.hillsclerk.com/eviction",
+      "crisisCategories": [
+        "eviction"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 90,
+      "restrictions": []
+    },
+    {
+      "id": "court-pasco-eviction",
+      "categories": [
+        "eviction",
+        "legal"
+      ],
+      "organization": "Pasco County Clerk & Comptroller",
+      "program": "Landlord and tenant court information",
+      "description": "Find Pasco County court information and links to landlord and tenant eviction forms. The clerk handles process questions, not legal advice.",
+      "geography": [
+        "pasco"
+      ],
+      "url": "https://pascoclerk.com/700/LandlordTenant-Eviction",
+      "contacts": [
+        {
+          "label": "Dade City civil division",
+          "value": "(352) 521-4542",
+          "kind": "phone"
+        },
+        {
+          "label": "New Port Richey civil division",
+          "value": "(727) 847-8031",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People with a landlord or tenant matter in Pasco County.",
+      "availability": "Public court information and civil division contacts verified; check case notices for deadlines.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://pascoclerk.com/246/Contact-Us",
+      "crisisCategories": [
+        "eviction"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 90,
+      "restrictions": []
+    },
+    {
+      "id": "court-pinellas-eviction",
+      "categories": [
+        "eviction",
+        "legal"
+      ],
+      "organization": "Pinellas County Clerk of the Circuit Court & Comptroller",
+      "program": "Tenant rights and eviction forms",
+      "description": "Open the clerk's tenant information sheet for court filing guidance and office locations. The sheet says it is basic information, not legal advice.",
+      "geography": [
+        "pinellas"
+      ],
+      "url": "https://www.mypinellasclerk.gov/Portals/0/Forms/Tenant_Info_1.pdf",
+      "contacts": [
+        {
+          "label": "Clerk",
+          "value": "(727) 464-7000",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People with a tenant or eviction matter in Pinellas County.",
+      "availability": "Public tenant information sheet and clerk phone verified; check case notices for deadlines.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.mypinellasclerk.gov/Portals/0/Forms/Tenant_Info_1.pdf",
+      "crisisCategories": [
+        "eviction"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 90,
+      "restrictions": []
+    },
+    {
+      "id": "emergency-911",
+      "categories": [
+        "emergency"
+      ],
+      "organization": "National 911 Program",
+      "program": "Emergency services",
+      "description": "Call 911 if someone is in immediate physical danger or needs urgent police, fire, or medical help. This website cannot dispatch help.",
+      "geography": [
+        "national"
+      ],
+      "url": "https://www.911.gov/",
+      "contacts": [
+        {
+          "label": "Emergency call",
+          "value": "911",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People in the United States experiencing an emergency.",
+      "availability": "Emergency number published by the National 911 Program; response depends on local services.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.911.gov/",
+      "crisisCategories": [
+        "domestic_violence",
+        "unsafe_housing",
+        "disaster"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 90,
+      "restrictions": []
+    },
+    {
+      "id": "emergency-988",
+      "categories": [
+        "emergency"
+      ],
+      "organization": "988 Suicide & Crisis Lifeline",
+      "program": "Mental health and emotional crisis support",
+      "description": "Call or text 988 for support with suicidal thoughts, a mental health or substance use crisis, or other emotional distress. For immediate physical danger, call 911.",
+      "geography": [
+        "national"
+      ],
+      "url": "https://www.samhsa.gov/mental-health/988",
+      "contacts": [
+        {
+          "label": "Call",
+          "value": "988",
+          "kind": "phone"
+        },
+        {
+          "label": "Text",
+          "value": "988",
+          "kind": "text"
+        }
+      ],
+      "eligibility": "Anyone in the United States who needs crisis support, including someone concerned about another person.",
+      "availability": "The federal provider lists phone, text, and chat support 24/7.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.samhsa.gov/mental-health/988/faqs",
+      "crisisCategories": [
+        "domestic_violence",
+        "homelessness"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [],
+      "serviceHours": "Call, text, and chat are listed as 24/7."
+    },
+    {
+      "id": "emergency-casa",
+      "categories": [
+        "emergency",
+        "homelessness"
+      ],
+      "organization": "CASA Pinellas",
+      "program": "Domestic violence hotline and safety planning",
+      "description": "Speak with an advocate about immediate safety, domestic violence support, and possible shelter or other services.",
+      "geography": [
+        "pinellas"
+      ],
+      "url": "https://casapinellas.org/get-help/",
+      "contacts": [
+        {
+          "label": "24-hour domestic violence hotline",
+          "value": "(727) 895-4912",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People affected by domestic violence in Pinellas County; contact an advocate for service details.",
+      "availability": "The provider lists a 24-hour hotline; shelter space is not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://casapinellas.org/get-help/",
+      "crisisCategories": [
+        "domestic_violence"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [],
+      "serviceHours": "Provider lists the hotline as 24 hours."
+    },
+    {
+      "id": "emergency-fema-disaster",
+      "categories": [
+        "emergency",
+        "homelessness"
+      ],
+      "organization": "Federal Emergency Management Agency",
+      "program": "Disaster assistance and temporary housing information",
+      "description": "Check whether disaster assistance is available for your location and incident. FEMA may offer housing help after qualifying declarations; this directory does not confirm an open application period.",
+      "geography": [
+        "national"
+      ],
+      "url": "https://www.disasterassistance.gov/",
+      "contacts": [
+        {
+          "label": "FEMA Helpline",
+          "value": "(800) 621-3362",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "FEMA determines eligibility by disaster declaration, location, damage, and program rules.",
+      "availability": "General application channel verified; assistance for a specific disaster is not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.fema.gov/node/4-ways-apply-disaster-assistance",
+      "crisisCategories": [
+        "disaster"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Aid depends on a qualifying declaration and current application rules; no open window is confirmed here."
+      ]
+    },
+    {
+      "id": "emergency-hillsborough-energy",
+      "categories": [
+        "emergency"
+      ],
+      "organization": "Hillsborough County Social Services",
+      "program": "Low-Income Home Energy Assistance Program",
+      "description": "Ask about help paying a home energy bill, including when a shutoff is a concern. Eligibility and any payment depend on county review and funding.",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://hcfl.gov/residents/human-services/financial-assistance/apply-for-energy-assistance",
+      "contacts": [
+        {
+          "label": "Social Services",
+          "value": "(813) 272-5220",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Hillsborough County residents responsible for home energy bills who meet the published household and income requirements.",
+      "availability": "Program page verified; funding and approval are not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://hcfl.gov/residents/human-services/financial-assistance/apply-for-energy-assistance",
+      "crisisCategories": [
+        "utilities"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Assistance depends on available funding and eligibility review."
+      ]
+    },
+    {
+      "id": "emergency-pasco-energy",
+      "categories": [
+        "emergency"
+      ],
+      "organization": "You Thrive Florida",
+      "program": "Low-Income Home Energy Assistance Program",
+      "description": "Contact the Pasco LIHEAP provider about electric or gas bills, deposits, and possible crisis assistance for a past-due bill.",
+      "geography": [
+        "pasco"
+      ],
+      "url": "https://youthrivefl.org/program/energy-assistance/",
+      "contacts": [
+        {
+          "label": "You Thrive Florida",
+          "value": "(888) 802-7483",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Pasco County households meeting the provider's income, bill, and documentation rules.",
+      "availability": "Program page and contact verified; funds and approval are not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://youthrivefl.org/program/energy-assistance/",
+      "crisisCategories": [
+        "utilities"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Funding and individual approval are not verified."
+      ]
+    },
+    {
+      "id": "emergency-pinellas-energy",
+      "categories": [
+        "emergency"
+      ],
+      "organization": "Pinellas County Urban League",
+      "program": "Low-Income Home Energy Assistance Program",
+      "description": "Contact the county's LIHEAP provider about help with home energy costs or a threatened shutoff.",
+      "geography": [
+        "pinellas"
+      ],
+      "url": "https://www.pcul.org/housing",
+      "contacts": [
+        {
+          "label": "Program applications",
+          "value": "(727) 327-2081",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Pinellas County households meeting current LIHEAP eligibility and documentation rules.",
+      "availability": "Program and application phone verified; funds and approval are not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.pcul.org/contact-pcul",
+      "crisisCategories": [
+        "utilities"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Funding and individual approval are not verified."
+      ]
+    },
+    {
+      "id": "emergency-spring",
+      "categories": [
+        "emergency",
+        "homelessness"
+      ],
+      "organization": "The Spring of Tampa Bay",
+      "program": "Domestic violence crisis hotline",
+      "description": "Call or text a trained advocate for safety planning, domestic violence resources, and discussion of safe shelter options.",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://thespring.org/get-help/crisis-hotline/",
+      "contacts": [
+        {
+          "label": "24-hour crisis call",
+          "value": "(813) 247-7233",
+          "kind": "phone"
+        },
+        {
+          "label": "24-hour crisis text",
+          "value": "(813) 247-7233",
+          "kind": "text"
+        }
+      ],
+      "eligibility": "People affected by domestic violence in Hillsborough County; advocates can explain options.",
+      "availability": "The provider lists a 24-hour hotline; shelter space is not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://thespring.org/get-help/crisis-hotline/",
+      "crisisCategories": [
+        "domestic_violence"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [],
+      "serviceHours": "Provider lists the hotline as 24 hours."
+    },
+    {
+      "id": "emergency-sunrise",
+      "categories": [
+        "emergency",
+        "homelessness"
+      ],
+      "organization": "Sunrise of Pasco County",
+      "program": "Domestic and sexual violence hotline",
+      "description": "Speak with an advocate about safety, counseling, legal advocacy, and possible confidential shelter services.",
+      "geography": [
+        "pasco"
+      ],
+      "url": "https://www.sunrisepasco.org/",
+      "contacts": [
+        {
+          "label": "24-hour hotline",
+          "value": "(352) 521-3120",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Survivors of domestic or sexual violence in Pasco County; the organization says its services are free.",
+      "availability": "The provider lists a 24-hour hotline; shelter space is not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.sunrisepasco.org/",
+      "crisisCategories": [
+        "domestic_violence"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [],
+      "serviceHours": "Provider lists the hotline as 24 hours."
+    },
+    {
+      "id": "homeless-hillsborough-211",
+      "categories": [
+        "homelessness",
+        "emergency"
+      ],
+      "organization": "Crisis Center of Tampa Bay",
+      "program": "211 community resource and shelter referrals",
+      "description": "Call 211 to ask an intervention specialist about shelter, rent, utilities, disaster assistance, and other local support. This is a referral service, not a shelter reservation.",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://www.crisiscenter.com/about-us/services-programs/gateway-contact-center/",
+      "contacts": [
+        {
+          "label": "Community help line",
+          "value": "211",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People in Hillsborough County seeking information or support; the center says its 211 service is free.",
+      "availability": "The center lists 211 staff 24/7; individual program availability is not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.crisiscenter.com/about-us/services-programs/gateway-contact-center/",
+      "crisisCategories": [
+        "eviction",
+        "rent",
+        "imminent_homelessness",
+        "homelessness",
+        "utilities",
+        "disaster",
+        "affordable_housing"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [],
+      "serviceHours": "211 line is listed as 24/7."
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Resource map is a referral tool, not a guarantee of meals, hygiene facilities, or shelter."
+      ],
+      "id": "homeless-hillsborough-meals",
+      "categories": [
+        "homelessness"
+      ],
+      "crisisCategories": [
+        "homelessness",
+        "imminent_homelessness"
+      ],
+      "organization": "Tampa Hillsborough Homeless Initiative",
+      "program": "Meal sites and street-survival resource guide",
+      "description": "Open the local resource guide and meal-site map to look for food and day-to-day support. Confirm location, hours, transportation, and eligibility with the listed provider before traveling.",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://www.thhi.org/homelessresources",
+      "contacts": [
+        {
+          "label": "THHI office",
+          "value": "(813) 223-6115",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People seeking homelessness resources in Hillsborough County; each listed provider has separate rules.",
+      "availability": "Directory and map links checked; individual meal sites and supplies are not verified.",
+      "sourceUrl": "https://www.thhi.org/homelessresources"
+    },
+    {
+      "id": "homeless-hillsborough-thhi",
+      "categories": [
+        "homelessness"
+      ],
+      "organization": "Tampa Hillsborough Homeless Initiative",
+      "program": "Homeless resources and access points",
+      "description": "Browse the Hillsborough homeless resource list and the designated access point link to begin a housing-services process if you cannot access shelter.",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://www.thhi.org/resources",
+      "contacts": [
+        {
+          "label": "THHI office",
+          "value": "(813) 223-6115",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People seeking homelessness resources in Hillsborough County; each provider sets its own intake rules.",
+      "availability": "Resource directory verified; shelter space and placement are not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.thhi.org/resources",
+      "crisisCategories": [
+        "imminent_homelessness",
+        "homelessness"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": []
+    },
+    {
+      "id": "homeless-metro-ministry-intake",
+      "categories": [
+        "homelessness"
+      ],
+      "organization": "Metropolitan Ministries",
+      "program": "Emergency shelter intake",
+      "description": "Contact the intake team for your county about emergency shelter for families with children and women seeking shelter. An application or call is not a bed reservation.",
+      "geography": [
+        "hillsborough",
+        "pinellas",
+        "pasco"
+      ],
+      "url": "https://www.metromin.org/get-help/",
+      "contacts": [
+        {
+          "label": "Hillsborough intake",
+          "value": "(813) 209-1222",
+          "kind": "phone"
+        },
+        {
+          "label": "Pinellas intake",
+          "value": "(727) 250-0930",
+          "kind": "phone"
+        },
+        {
+          "label": "Pasco intake",
+          "value": "(727) 756-1956",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "The provider describes families with children and women navigating life independently; intake staff determine program fit and county rules.",
+      "availability": "Intake contacts verified; shelter space and application outcomes are not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.metromin.org/get-help/",
+      "crisisCategories": [
+        "imminent_homelessness",
+        "homelessness"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "The provider portal requires registration and collects application details. Call the county intake number if online access is difficult.",
+        "Submitting an application does not reserve a shelter bed."
+      ],
+      "intakeUrl": "https://metrominintake.powerappsportals.com/"
+    },
+    {
+      "id": "homeless-pinellas-211",
+      "categories": [
+        "homelessness",
+        "emergency"
+      ],
+      "organization": "First Contact and Homeless Leadership Alliance of Pinellas",
+      "program": "Homeless Helpline",
+      "description": "Call 211 for Pinellas homelessness navigation and shelter referrals. Care coordinators discuss housing options for people who are homeless or at risk.",
+      "geography": [
+        "pinellas"
+      ],
+      "url": "https://www.firstcontact.org/homeless-helpline",
+      "contacts": [
+        {
+          "label": "Homeless Helpline",
+          "value": "211",
+          "kind": "phone"
+        },
+        {
+          "label": "Text ZIP code",
+          "value": "898211",
+          "kind": "text"
+        }
+      ],
+      "eligibility": "The provider describes people who are homeless, facing an eviction filed in court, or otherwise at risk of homelessness.",
+      "availability": "The provider lists 211 access 24/7; shelter placement is not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.pinellashomeless.org/request-help",
+      "crisisCategories": [
+        "eviction",
+        "rent",
+        "imminent_homelessness",
+        "homelessness",
+        "utilities",
+        "disaster",
+        "affordable_housing"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [],
+      "serviceHours": "211 line is listed as 24/7."
+    },
+    {
+      "id": "homeless-tampa-hope",
+      "categories": [
+        "homelessness"
+      ],
+      "organization": "Catholic Charities Diocese of St. Petersburg",
+      "program": "Tampa Hope shelter inquiry",
+      "description": "Call the shelter front desk or an outreach specialist to ask about admission and housing navigation for adults experiencing homelessness in Tampa.",
+      "geography": [
+        "hillsborough"
+      ],
+      "municipalities": [
+        "tampa"
+      ],
+      "url": "https://www.ccdosp.org/tampa-hope/",
+      "contacts": [
+        {
+          "label": "Front desk voicemail",
+          "value": "(813) 415-8002",
+          "kind": "phone"
+        },
+        {
+          "label": "Outreach specialist",
+          "value": "(813) 394-2881",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Adults experiencing homelessness who meet the shelter's admission rules; ask staff for details.",
+      "availability": "Inquiry phones verified; admission and bed space are not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.ccdosp.org/tampa-hope/",
+      "crisisCategories": [
+        "imminent_homelessness",
+        "homelessness"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": []
+    },
+    {
+      "id": "homeless-tampa-outreach",
+      "categories": [
+        "homelessness"
+      ],
+      "organization": "City of Tampa Housing and Community Development",
+      "program": "Homeless Outreach Team",
+      "description": "City outreach staff assess needs and help people facing homelessness locate resources in Tampa.",
+      "geography": [
+        "hillsborough"
+      ],
+      "municipalities": [
+        "tampa"
+      ],
+      "url": "https://www.tampa.gov/homeless",
+      "contacts": [
+        {
+          "label": "Homeless Outreach",
+          "value": "(813) 274-8960",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People facing homelessness in the City of Tampa; contact staff about service scope.",
+      "availability": "Outreach contact verified; shelter or accommodation availability is not verified.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.tampa.gov/homeless",
+      "crisisCategories": [
+        "imminent_homelessness",
+        "homelessness"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": []
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Listings do not guarantee that a unit is vacant, affordable to a particular household, or accessible."
+      ],
+      "id": "housing-florida-search",
+      "categories": [
+        "homelessness"
+      ],
+      "crisisCategories": [
+        "imminent_homelessness",
+        "homelessness",
+        "affordable_housing",
+        "disaster"
+      ],
+      "organization": "Florida Housing Finance Corporation",
+      "program": "FloridaHousingSearch.org affordable rental locator",
+      "description": "Search statewide rental listings by area and housing needs or call for search assistance. Contact a property manager directly to confirm a unit, price, eligibility, and vacancy.",
+      "geography": [
+        "florida"
+      ],
+      "url": "https://www.floridahousingsearch.org/",
+      "contacts": [
+        {
+          "label": "Housing search assistance",
+          "value": "(877) 428-8844",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Anyone searching for rental housing in Florida; each property has its own qualifications.",
+      "availability": "The state links to the locator; individual listings and vacancies are not verified by this directory.",
+      "sourceUrl": "https://www.floridahousing.org/programs/renters"
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "crisisCategories": [
+        "rent",
+        "eviction",
+        "utilities",
+        "imminent_homelessness"
+      ],
+      "categories": [
+        "eviction",
+        "emergency"
+      ],
+      "organization": "Metropolitan Ministries",
+      "program": "Rent and utility assistance orientation",
+      "description": "Ask about rent or utility assistance and complete the required orientation for your county. The provider says assistance is first-come while funding lasts; attending orientation is not approval.",
+      "eligibility": "County residents with documented financial hardship; the provider screens applications and explains current rules during orientation.",
+      "availability": "Provider pathway checked; funding, orientation spots, and individual approval are not verified.",
+      "restrictions": [
+        "The provider requires an in-person financial-assistance orientation and limited reservation spots. Its county page has separate reservation links for ZIP codes 33610, 33605 and 33619.",
+        "Funding and approval are not guaranteed."
+      ],
+      "id": "housing-hillsborough-metro-financial",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://www.metromin.org/financial-assistance-for-hillsborough-county/",
+      "contacts": [
+        {
+          "label": "Metropolitan Ministries main line",
+          "value": "(813) 209-1000",
+          "kind": "phone"
+        }
+      ],
+      "sourceUrl": "https://www.metromin.org/get-help/"
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "No specific rent-arrears grant or application opening is confirmed by this entry."
+      ],
+      "id": "housing-hillsborough-navigation",
+      "categories": [
+        "eviction",
+        "homelessness"
+      ],
+      "crisisCategories": [
+        "eviction",
+        "rent",
+        "imminent_homelessness",
+        "homelessness",
+        "affordable_housing"
+      ],
+      "organization": "Hillsborough County Social Services",
+      "program": "Help Me, Hillsborough and Community Resource Centers",
+      "description": "Ask the county call center to help locate current rental, housing, and other assistance and the closest Community Resource Center. This is navigation, not a confirmed rent payment.",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://hcfl.gov/residents/human-services/help-me-hillsborough",
+      "contacts": [
+        {
+          "label": "Social Services Call Center",
+          "value": "(813) 272-5220",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Hillsborough County residents seeking housing or social-service navigation; each program has its own rules.",
+      "availability": "Public navigation page and call center checked; existing-lease rental funding is not verified.",
+      "sourceUrl": "https://hcfl.gov/departments/social-services"
+    },
+    {
+      "id": "housing-pasco-coalition",
+      "categories": [
+        "eviction",
+        "homelessness"
+      ],
+      "organization": "Coalition for the Homeless of Pasco County",
+      "program": "Coordinated entry and housing navigation",
+      "description": "Connect with Pasco's homeless-services coalition for coordinated entry, case management, and referrals. The provider says financial or rehousing assistance depends on funding and its by-name list.",
+      "geography": [
+        "pasco"
+      ],
+      "url": "https://www.pascohomelesscoalition.org/services/",
+      "contacts": [
+        {
+          "label": "Families with a minor",
+          "value": "(727) 842-8605 ext. 7",
+          "kind": "phone"
+        },
+        {
+          "label": "Individuals",
+          "value": "(727) 756-1952",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Pasco County residents experiencing or at risk of homelessness; specific programs have separate screening.",
+      "availability": "No shelter opening, housing placement, or financial assistance is guaranteed.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.pascohomelesscoalition.org/",
+      "crisisCategories": [
+        "rent",
+        "imminent_homelessness",
+        "homelessness"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Financial help and housing placement depend on eligibility, referrals, and funding; none is guaranteed."
+      ]
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "crisisCategories": [
+        "rent",
+        "eviction",
+        "utilities",
+        "imminent_homelessness"
+      ],
+      "categories": [
+        "eviction",
+        "emergency"
+      ],
+      "organization": "Metropolitan Ministries",
+      "program": "Rent and utility assistance orientation",
+      "description": "Ask about rent or utility assistance and complete the required orientation for your county. The provider says assistance is first-come while funding lasts; attending orientation is not approval.",
+      "eligibility": "County residents with documented financial hardship; the provider screens applications and explains current rules during orientation.",
+      "availability": "Provider pathway checked; funding, orientation spots, and individual approval are not verified.",
+      "restrictions": [
+        "The provider requires an in-person orientation at a Pasco Family Support Center. Check its page for the latest times and holiday closures before traveling.",
+        "Funding and approval are not guaranteed."
+      ],
+      "id": "housing-pasco-metro-financial",
+      "geography": [
+        "pasco"
+      ],
+      "url": "https://www.metromin.org/financial-assistance-for-pasco-county/",
+      "contacts": [
+        {
+          "label": "West Pasco Family Support Center",
+          "value": "(727) 937-3268",
+          "kind": "phone"
+        },
+        {
+          "label": "East Pasco Family Support Center",
+          "value": "(352) 437-4815",
+          "kind": "phone"
+        }
+      ],
+      "sourceUrl": "https://www.metromin.org/get-help/"
+    },
+    {
+      "id": "housing-pinellas-adult-financial",
+      "categories": [
+        "eviction",
+        "emergency"
+      ],
+      "organization": "Pinellas County Human Services",
+      "program": "Adult Emergency Financial Assistance Program",
+      "description": "The county lists past-due rent to avoid eviction and utility assistance among possible qualifying emergency needs. First Contact 211 performs the initial screening.",
+      "geography": [
+        "pinellas"
+      ],
+      "url": "https://pinellas.gov/adult-emergency-financial-assistance-program",
+      "contacts": [
+        {
+          "label": "First Contact screening",
+          "value": "211",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "County page describes adults without minor children in the household, a qualifying emergency need, and income and documentation rules.",
+      "availability": "Funding and approval are not verified; call 211 for current screening.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://pinellas.gov/adult-emergency-financial-assistance-program",
+      "crisisCategories": [
+        "eviction",
+        "rent",
+        "imminent_homelessness",
+        "utilities"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "For adults without minor children in their household; county screening and eligibility rules apply."
+      ],
+      "serviceHours": "Financial-assistance phone screening: Monday-Friday, 7:30 a.m.-6 p.m.; 211 access is listed as 24/7."
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Requires referral from the Pinellas Coordinated Entry System."
+      ],
+      "id": "housing-pinellas-family-fhap",
+      "categories": [
+        "homelessness"
+      ],
+      "crisisCategories": [
+        "imminent_homelessness",
+        "homelessness"
+      ],
+      "organization": "Pinellas County Human Services",
+      "program": "Family Housing Assistance Program",
+      "description": "County program for eligible families experiencing homelessness who are referred through Pinellas Coordinated Entry. It describes housing assistance and case management; a referral does not guarantee enrollment.",
+      "geography": [
+        "pinellas"
+      ],
+      "url": "https://pinellas.gov/programs/family-housing-assistance-program",
+      "contacts": [
+        {
+          "label": "Human Services Administration",
+          "value": "(727) 464-4200",
+          "kind": "phone"
+        },
+        {
+          "label": "Coordinated Entry via First Contact",
+          "value": "211",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Pinellas County families experiencing homelessness and referred by Coordinated Entry; the county determines program eligibility.",
+      "availability": "Program page and referral route checked; slots, funding, and enrollment are not verified.",
+      "sourceUrl": "https://pinellas.gov/programs/family-housing-assistance-program"
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "crisisCategories": [
+        "rent",
+        "eviction",
+        "utilities",
+        "imminent_homelessness"
+      ],
+      "categories": [
+        "eviction",
+        "emergency"
+      ],
+      "organization": "Metropolitan Ministries",
+      "program": "Rent and utility assistance orientation",
+      "description": "Ask about rent or utility assistance and complete the required orientation for your county. The provider says assistance is first-come while funding lasts; attending orientation is not approval.",
+      "eligibility": "County residents with documented financial hardship; the provider screens applications and explains current rules during orientation.",
+      "availability": "Provider pathway checked; funding, orientation spots, and individual approval are not verified.",
+      "restrictions": [
+        "The provider lists a required virtual financial-assistance orientation on Fridays at noon, in English. Confirm the current schedule and ask about language or access needs.",
+        "Funding, appointments, and approval are not guaranteed."
+      ],
+      "id": "housing-pinellas-metro-financial",
+      "geography": [
+        "pinellas"
+      ],
+      "url": "https://www.metromin.org/financial-assistance-in-pinellas-county/",
+      "contacts": [
+        {
+          "label": "Metropolitan Ministries main line",
+          "value": "(813) 209-1000",
+          "kind": "phone"
+        }
+      ],
+      "sourceUrl": "https://www.metromin.org/get-help/"
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Check current wait-list status and program eligibility directly with the authority."
+      ],
+      "id": "housing-tampa-authority",
+      "categories": [
+        "homelessness"
+      ],
+      "crisisCategories": [
+        "imminent_homelessness",
+        "homelessness",
+        "affordable_housing"
+      ],
+      "organization": "Tampa Housing Authority",
+      "program": "Public housing and Housing Choice Voucher information",
+      "description": "Review the authority housing programs and wait-list information or call its help center. The directory does not confirm an open wait list or an available unit.",
+      "geography": [
+        "hillsborough"
+      ],
+      "url": "https://www.tampaha.org/wait-list-information",
+      "contacts": [
+        {
+          "label": "Tampa Housing Authority Help Center",
+          "value": "(813) 341-9101",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "The authority serves Tampa and listed Hillsborough County communities; each housing program has separate eligibility and wait-list rules.",
+      "availability": "Public program and wait-list pages checked; open applications and units are not verified.",
+      "sourceUrl": "https://www.tampaha.org/",
+      "serviceHours": "Help Center office hours listed as Monday-Friday, 8 a.m.-5 p.m."
+    },
+    {
+      "id": "housing-tampa-rmap",
+      "categories": [
+        "homelessness"
+      ],
+      "organization": "City of Tampa",
+      "program": "Rental and Move-In Assistance Program",
+      "description": "Ask the City of Tampa about new move-in assistance. The current city program page excludes existing leases, but its linked portal has conflicting text; confirm the current rules directly with the city.",
+      "geography": [
+        "hillsborough"
+      ],
+      "municipalities": [
+        "tampa"
+      ],
+      "url": "https://www.tampa.gov/housing-and-community-development/rental-move-in-assistance",
+      "contacts": [
+        {
+          "label": "Housing Information Line",
+          "value": "(813) 307-5555",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "The published rules require an approved unit inside Tampa city limits and other income and program conditions.",
+      "availability": "Application windows, funding, and individual eligibility must be confirmed on the city page.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.tampa.gov/housing-and-community-development/rental-move-in-assistance",
+      "crisisCategories": [
+        "imminent_homelessness",
+        "affordable_housing"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "The city program page says Phase X is for new move-in costs only and existing leases are ineligible. Its linked portal still mentions current-lease and eviction-prevention assistance; contact the city to resolve this conflict before relying on either description.",
+        "An approved unit inside Tampa city limits and other program conditions are required."
+      ],
+      "serviceHours": "Housing Information Line: Monday-Friday, 9 a.m.-3 p.m."
+    },
+    {
+      "id": "legal-bay-area",
+      "categories": [
+        "eviction",
+        "legal"
+      ],
+      "organization": "Bay Area Legal Services",
+      "program": "Civil legal aid for renters",
+      "description": "Apply for free civil legal help with a landlord or tenant issue, including an eviction. The organization reviews eligibility and whether it can take a case.",
+      "geography": [
+        "hillsborough",
+        "pinellas",
+        "pasco"
+      ],
+      "url": "https://bals.org/help",
+      "contacts": [
+        {
+          "label": "Legal Aid Line",
+          "value": "(800) 625-2257",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Eligible residents of Bay Area Legal Services' five-county service area; screening is required.",
+      "availability": "Application contact verified; case acceptance is not guaranteed.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://bals.org/locations",
+      "crisisCategories": [
+        "eviction",
+        "rent",
+        "unsafe_housing",
+        "domestic_violence"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [],
+      "serviceHours": "Legal Aid Line: Monday-Friday, 9 a.m.-4:30 p.m.; online application link on provider page is available anytime for non-emergency matters."
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 90,
+      "restrictions": [
+        "The statewide self-help site does not offer advice about a specific case. Contact the county clerk for filing-process questions or legal aid for advice."
+      ],
+      "id": "legal-florida-courts-self-help",
+      "categories": [
+        "eviction",
+        "legal"
+      ],
+      "crisisCategories": [
+        "eviction"
+      ],
+      "organization": "Florida State Courts System",
+      "program": "Self-help information and landlord-tenant court forms",
+      "description": "Find Florida court self-help links for landlord-tenant matters and court forms. The statewide page provides general information, not advice about your case.",
+      "geography": [
+        "florida"
+      ],
+      "url": "https://www.flcourts.gov/Services/Family-Courts/self-help-information",
+      "contacts": [
+        {
+          "label": "Florida Courts self-help page",
+          "value": "https://www.flcourts.gov/Services/Family-Courts/self-help-information",
+          "kind": "web"
+        }
+      ],
+      "eligibility": "Public court information for Florida residents and court users.",
+      "availability": "Public self-help page checked; form access and legal outcomes are not guaranteed.",
+      "sourceUrl": "https://www.flcourts.gov/Services/Family-Courts/self-help-information"
+    },
+    {
+      "id": "legal-florida-tenant-rights",
+      "categories": [
+        "eviction",
+        "legal"
+      ],
+      "organization": "Florida Department of Agriculture and Consumer Services",
+      "program": "Landlord and tenant rights information",
+      "description": "Read the state agency's summary of Florida landlord and tenant law. It is public legal information, not advice for an individual case.",
+      "geography": [
+        "florida"
+      ],
+      "url": "https://www.fdacs.gov/Consumer-Resources/Landlord-Tenant-Law-in-Florida",
+      "contacts": [
+        {
+          "label": "Consumer Services",
+          "value": "(800) 435-7352",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Anyone seeking general information about a Florida residential tenancy.",
+      "availability": "Public information page and consumer contact verified; legal advice is not provided.",
+      "verifiedAt": "2026-10-09",
+      "sourceUrl": "https://www.fdacs.gov/ConsumerServices",
+      "crisisCategories": [
+        "eviction",
+        "unsafe_housing"
+      ],
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 90,
+      "restrictions": []
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "The county says it does not accept anonymous code complaints and supplied name and address can be public records.",
+        "Code enforcement does not give legal advice or emergency dispatch."
+      ],
+      "id": "unsafe-hillsborough-code",
+      "categories": [
+        "legal",
+        "emergency"
+      ],
+      "crisisCategories": [
+        "unsafe_housing"
+      ],
+      "organization": "Hillsborough County Code Enforcement",
+      "program": "Housing standards and unsafe structure complaints",
+      "description": "Report suspected housing-standard problems for property in unincorporated Hillsborough County, such as mold, broken heating or cooling, or a dangerous structure. Ask staff to confirm jurisdiction.",
+      "geography": [
+        "hillsborough"
+      ],
+      "municipalities": [
+        "unincorporated-hillsborough"
+      ],
+      "url": "https://hcfl.gov/residents/property-owners-and-renters/code-violations/report-a-code-violation",
+      "contacts": [
+        {
+          "label": "Code Enforcement",
+          "value": "(813) 274-6600",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Property in unincorporated Hillsborough County; city properties use their own code office.",
+      "availability": "Official reporting page and phone checked; response and inspection timing are not verified.",
+      "sourceUrl": "https://hcfl.gov/residents/property-owners-and-renters/code-violations/report-a-code-violation"
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Ask about confidentiality and public records before sharing sensitive information.",
+        "For immediate physical danger, use emergency services."
+      ],
+      "id": "unsafe-pasco-routing",
+      "categories": [
+        "legal",
+        "emergency"
+      ],
+      "crisisCategories": [
+        "unsafe_housing"
+      ],
+      "organization": "Pasco County Customer Service",
+      "program": "County 311 code concern routing",
+      "description": "Call the county customer-service line to ask how to report an unsafe housing or code concern and confirm which office serves the property. This line is not an emergency response service.",
+      "geography": [
+        "pasco"
+      ],
+      "url": "https://pascocountyfl.qscend.com/311/contact",
+      "contacts": [
+        {
+          "label": "Pasco County Customer Service",
+          "value": "(727) 847-2411",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People with a concern about property in Pasco County; staff should confirm jurisdiction and complaint process.",
+      "availability": "County 311 contact page checked; code enforcement jurisdiction and inspection timing require confirmation.",
+      "sourceUrl": "https://pascocountyfl.qscend.com/311/contact"
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "County code jurisdiction is limited to unincorporated Pinellas; confirm the correct city office before filing.",
+        "Ask about public record handling before sharing sensitive details."
+      ],
+      "id": "unsafe-pinellas-routing",
+      "categories": [
+        "legal",
+        "emergency"
+      ],
+      "crisisCategories": [
+        "unsafe_housing"
+      ],
+      "organization": "Pinellas County Code Enforcement",
+      "program": "Unsafe rental housing complaint routing",
+      "description": "Call to ask which code office handles unsafe living conditions. County Code Enforcement handles unincorporated Pinellas; staff say they can help identify the right municipality for city properties.",
+      "geography": [
+        "pinellas"
+      ],
+      "url": "https://rent.pinellas.gov/help-with-housing/",
+      "contacts": [
+        {
+          "label": "Pinellas County Code Enforcement",
+          "value": "(727) 464-4761",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Pinellas County tenants; county enforcement applies only to unincorporated property, while cities have their own offices.",
+      "availability": "County renter guidance and routing phone checked; inspection timing is not verified.",
+      "sourceUrl": "https://rent.pinellas.gov/help-with-housing/"
+    },
+    {
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "A code complaint may require identifying information and may create a public record; ask the city about privacy before submitting sensitive details.",
+        "Code enforcement does not give legal advice or emergency dispatch."
+      ],
+      "id": "unsafe-tampa-code",
+      "categories": [
+        "legal",
+        "emergency"
+      ],
+      "crisisCategories": [
+        "unsafe_housing"
+      ],
+      "organization": "City of Tampa Neighborhood Enhancement",
+      "program": "Unsafe rental housing and minimum standards complaints",
+      "description": "Contact the city about a potentially unsafe rental unit inside Tampa city limits and ask how to request a minimum-standards inspection. If there is immediate physical danger, seek emergency help.",
+      "geography": [
+        "hillsborough"
+      ],
+      "municipalities": [
+        "tampa"
+      ],
+      "url": "https://www.tampa.gov/neighborhood-enhancement/contact-us",
+      "contacts": [
+        {
+          "label": "Neighborhood Enhancement",
+          "value": "(813) 274-5545",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "Properties within the City of Tampa; staff can help determine whether a reported condition is in their jurisdiction.",
+      "availability": "City contact and inspection guidance checked; inspection timing and outcome are not verified.",
+      "sourceUrl": "https://www.tampa.gov/neighborhood-enhancement/contact-us",
+      "serviceHours": "Office hours listed as Monday-Friday, 8 a.m.-4:30 p.m."
+    },
+    {
+      "id": "homeless-metro-mobile-outreach",
+      "categories": [
+        "homelessness"
+      ],
+      "crisisCategories": [
+        "imminent_homelessness",
+        "homelessness"
+      ],
+      "organization": "Metropolitan Ministries",
+      "program": "Metro BrigAIDe Mobile Outreach",
+      "description": "Call the county mobile outreach team to ask about housing assessments, referrals, identification help, and other community resources. Meeting points and visit times must be confirmed with the team.",
+      "geography": [
+        "hillsborough",
+        "pinellas",
+        "pasco"
+      ],
+      "url": "https://www.metromin.org/get-help/",
+      "contacts": [
+        {
+          "label": "Hillsborough mobile outreach",
+          "value": "(813) 209-1044",
+          "kind": "phone"
+        },
+        {
+          "label": "Pinellas mobile outreach",
+          "value": "(727) 756-1943",
+          "kind": "phone"
+        },
+        {
+          "label": "Pasco mobile outreach",
+          "value": "(727) 756-1952",
+          "kind": "phone"
+        }
+      ],
+      "eligibility": "People experiencing homelessness in Hillsborough, Pinellas, or Pasco; ask outreach staff about the service and referral process.",
+      "availability": "County outreach phone numbers source-checked; current meeting points, schedules, and referral capacity are not verified.",
+      "verifiedAt": "2026-10-09",
+      "verificationStatus": "source_checked",
+      "availabilityStatus": "unknown",
+      "refreshDays": 30,
+      "restrictions": [
+        "Calling mobile outreach does not reserve a shelter bed or guarantee an appointment."
+      ],
+      "sourceUrl": "https://www.metromin.org/get-help/"
+    }
+  ]
+}

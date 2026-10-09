@@ -22,6 +22,10 @@ The application does not persist resident questions, conversation histories, or 
 
 Retrieved content and model responses are treated as untrusted input. Input validation, access controls, browser protections, and resource limits support the service's security; they do not guarantee complete protection or the accuracy of external information.
 
+## Known development dependency advisory
+
+As of October 9, 2026, the lockfile contains `braces@3.0.3` through development-only ESLint and vinext build dependencies. [GitHub advisory GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) lists this version as affected by stack exhaustion on deeply nested brace patterns and lists no patched release. The package is not part of the deployed static directory assets or the production dependency set. Build and lint inputs must remain trusted while upstream packages work toward a fix. The current `npm audit` response reports zero findings, but that response does not resolve the advisory; review it again when a patched release is available.
+
 The Worker rejects unsupported page/form/action uploads before framework parsing and routes supported JSON uploads through bounded API readers and operational controls. Source acquisition refuses redirects, bounds normalized evidence and chunk output, and terminates parsing workers that exceed their deadline. See [request controls](docs/OPERATIONS.md#shared-controls) and [source-processing limits](docs/SOURCE_UPDATES.md#acquire-a-candidate) for the exact behavior and operator recovery steps.
 
 ## Safe deployment
@@ -30,5 +34,6 @@ The Worker rejects unsupported page/form/action uploads before framework parsing
 - Keep credentials and private service endpoints in server-side runtime configuration. Never put secrets in source files or public build variables; review [deployment](docs/DEPLOYMENT.md) and [model configuration](docs/LLM.md).
 - Review hosting and provider access, logging, retention, and spending policies. Keep backups and incident contacts current, and rotate credentials after suspected disclosure.
 - Keep real environment files, runtime state, database dumps, production logs, request traces, resident data, and private deployment artifacts out of the source distribution.
+- Before a public commit or deployment, run `node scripts/check-evaluation-artifacts.mjs`. It checks the working tree and staged Git index for populated evaluation response packets. Source-only CI also checks them, but CI cannot retract content from a direct push.
 
 Public data configuration, tests, evaluation material, and the release manifest remain available for inspection and reproducibility. Dated verification results and open runtime investigations are maintained in [release readiness](docs/RELEASE_READINESS.md) and the [engineering follow-up](docs/HISTORY.md#runtime-investigation).

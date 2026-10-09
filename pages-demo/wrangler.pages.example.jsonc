@@ -1,0 +1,10 @@
+// Example only: copy to the repository root as wrangler.jsonc after reviewing
+// the Pages project name and bound Worker. It is not loaded automatically.
+{
+  "name": "tampabaybot-demo",
+  "pages_build_output_dir": "./pages-demo/dist",
+  "compatibility_date": "2026-10-09",
+  "services": [
+    { "binding": "BACKEND", "service": "tampabaybot-demo-api" }
+  ]
+}

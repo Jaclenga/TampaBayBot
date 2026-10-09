@@ -191,9 +191,6 @@ export default function EvaluationContent({ result, suiteReport, agentReviewCoun
             ? [{ label: copy.suiteDownload, url: "/api/evaluation?artifact=suite" }]
             : []),
           { label: copy.summary, url: "/api/evaluation" },
-          { label: copy.responses, url: "/api/evaluation?artifact=responses" },
-          { label: copy.agent, url: "/api/evaluation?artifact=agent" },
-          { label: copy.humanPackets, url: "/api/evaluation?artifact=human" },
           { label: copy.registry, url: "/api/sources" },
         ].map((item) => (
           <a href={item.url} key={item.url} download>

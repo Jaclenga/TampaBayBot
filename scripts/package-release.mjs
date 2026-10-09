@@ -6,9 +6,9 @@ import { sanitizeReportValue } from "./sanitize-report.mjs";
 import { SUITE_VERSION } from "../evaluation/suite/report.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
-const SOURCE_DIRS = ["src", "scripts", "tests", "vendor"];
-const ROOT_FILES = ["README.md", "package.json", "package-lock.json", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", "playwright.source.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"];
-const GUIDE_FILES = ["README.md", "ARCHITECTURE.md", "ACCESSIBILITY.md", "DATA_SOURCES.md", "DEVELOPMENT.md", "EVALUATION.md", "PROGRAM_RECALL.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LIMITATIONS.md", "LLM.md", "METHODOLOGY.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "HISTORY.md", "RELEASE_READINESS.md", "SOURCE_UPDATES.md", "DEMO.md"];
+const SOURCE_DIRS = ["src", "scripts", "tests", "vendor", "functions", "pages-demo"];
+const ROOT_FILES = ["README.md", "CLOUDFLARE_DEPLOYMENT.md", "COST_ESTIMATE.md", "wrangler.pages.json", "package.json", "package-lock.json", "vite.config.ts", "tsconfig.json", "eslint.config.mjs", "postcss.config.mjs", "playwright.config.ts", "playwright.source.config.ts", ".gitignore", ".gitattributes", ".gitleaks.toml", ".gitleaksignore", ".env.example", "LICENSE", "NOTICE.md", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"];
+const GUIDE_FILES = ["README.md", "ARCHITECTURE.md", "ACCESSIBILITY.md", "DATA_SOURCES.md", "DEVELOPMENT.md", "EVALUATION.md", "PROGRAM_RECALL.md", "DISTRIBUTION.md", "DEPLOYMENT.md", "LIMITATIONS.md", "LLM.md", "METHODOLOGY.md", "GUARDRAIL_INSERTS.md", "EVAL_SUITE.md", "GEOSPATIAL.md", "HISTORY.md", "RELEASE_READINESS.md", "SOURCE_UPDATES.md", "DEMO.md", "AI_USAGE_LIMITS.md", "AI_FALLBACK.md", "CLOUDFLARE_COST_CONTROLS.md", "HOUSING_CRISIS_ARCHITECTURE.md", "RESOURCE_VERIFICATION.md", "SAFETY_AND_LIMITATIONS.md", "HOUSING_CRISIS_EVALUATION.md"];
 const GENERATED_FIELDS = ["retrieval_date", "source_updated_date", "content_hash", "normalized_content_hash", "raw_path", "normalized_path", "last_attempt", "last_error", "response_url", "content_type", "etag", "last_modified", "content_changed_at", "record_count", "searchable_point_count", "excluded_point_count"];
 const NOTICE = "This source-only distribution contains no downloaded evidence or historical response packets. Fetch and review sources locally before expecting cited answers. Evaluation has not run for this copy.";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -28,9 +28,11 @@ async function requiredJson(filename) {
   return JSON.parse(bytes.toString("utf8"));
 }
 
-async function sourceFiles(root, relative) {
+async function sourceFiles(root, relative, optional = false) {
   const directory = path.join(root, relative);
-  const information = await lstat(directory);
+  let information;
+  try { information = await lstat(directory); }
+  catch (error) { if (optional && error.code === "ENOENT") return []; throw error; }
   if (information.isSymbolicLink()) throw new Error(`Release inputs cannot contain symlinks: ${relative}`);
   const files = [];
   for (const entry of (await readdir(directory, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name))) {
@@ -38,8 +40,8 @@ async function sourceFiles(root, relative) {
     if (entry.isSymbolicLink()) throw new Error(`Release inputs cannot contain symlinks: ${name}`);
     if (/^\.(?:env|dev\.vars)(?:\.|$)/.test(entry.name)) continue;
     if (entry.isDirectory()) {
-      if (!["node_modules", ".git", ".openai", ".wrangler", "results", "raw", "normalized"].includes(entry.name)) files.push(...await sourceFiles(root, name));
-    } else if (/\.(?:mjs|js|cjs|ts|tsx|mts|css|md)$/.test(name) || (relative.startsWith("vendor/") && ["LICENSE", "package.json"].includes(entry.name))) {
+      if (!["node_modules", ".git", ".openai", ".wrangler", "dist", "results", "raw", "normalized"].includes(entry.name)) files.push(...await sourceFiles(root, name));
+    } else if (/\.(?:mjs|js|cjs|ts|tsx|mts|css|md|html|json|jsonc)$/.test(name) || (relative === "pages-demo/public" && entry.name === "_headers") || (relative.startsWith("vendor/") && ["LICENSE", "package.json"].includes(entry.name))) {
       files.push(name);
     }
   }
@@ -98,10 +100,10 @@ export async function createSourceRelease({ root = ROOT, output }) {
   catch (error) { if (error.code !== "ENOENT") throw error; }
 
   const inputs = new Set(ROOT_FILES);
-  for (const directory of SOURCE_DIRS) for (const name of await sourceFiles(root, directory)) inputs.add(name);
+  for (const directory of SOURCE_DIRS) for (const name of await sourceFiles(root, directory, ["functions", "pages-demo"].includes(directory))) inputs.add(name);
   for (const guide of GUIDE_FILES) inputs.add(`docs/${guide}`);
   for (const name of await sourceFiles(root, "evaluation/suite")) inputs.add(name);
-  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/recall.mjs", "evaluation/datasets/README.md", "evaluation/datasets/quality-benchmark.json", "evaluation/datasets/program-recall-benchmark.json", "evaluation/datasets/ground_truth_questions.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
+  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/recall.mjs", "evaluation/datasets/README.md", "evaluation/datasets/quality-benchmark.json", "evaluation/datasets/program-recall-benchmark.json", "evaluation/datasets/ground_truth_questions.json", "evaluation/datasets/housing-crisis-scenarios.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
   // The release gets its own source-only CI workflow, if supplied by the maintainer.
   inputs.add(".github/workflows/source-release.yml");
   inputs.add(".github/workflows/source-refresh.yml");

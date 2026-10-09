@@ -92,27 +92,34 @@ export function createHttpProvider(config, fetchImpl = globalThis.fetch, { onUsa
       const body = config.provider === 'ollama'
         ? { model, messages, stream: false, format: schema, options: { temperature: 0, num_predict: 1024 } }
         : { model, messages, stream: false, response_format: { type: 'json_object' } };
-      await reserveOutbound('model');
-      signal = operationalSignal(signal);
-      const response = await fetchImpl(config.endpoint, {
-        method: 'POST', headers, body: JSON.stringify(body), signal, redirect: 'manual',
-        credentials: 'omit', cache: 'no-store',
-      });
-      const value = await boundedJson(response, config.maxResponseBytes, signal);
-      observeUsage(onUsage, value, config.provider);
-      if (value?.error) throw new LlmFailure('provider_failure');
-      let message;
-      if (config.provider === 'ollama') {
-        if (value?.done !== true || value?.tool_calls?.length || value?.function_call) throw new LlmFailure('invalid_output');
-        message = value.message;
-      } else {
-        const choice = value?.choices?.[0];
-        if (!choice || choice.finish_reason !== 'stop' || choice.message?.refusal) throw new LlmFailure('invalid_output');
-        message = choice.message;
+      let release;
+      try { release = await reserveOutbound('model', { provider: config.provider, locality: config.locality }); }
+      catch (error) {
+        if (error?.code === 'ai_configuration') throw new LlmFailure('ai_configuration');
+        throw error;
       }
-      // Each protocol has its own completion markers; both require a text-only message.
-      if (message?.tool_calls?.length || message?.function_call || typeof message?.content !== 'string') throw new LlmFailure('invalid_output');
-      return message.content;
+      try {
+        signal = operationalSignal(signal);
+        const response = await fetchImpl(config.endpoint, {
+          method: 'POST', headers, body: JSON.stringify(body), signal, redirect: 'manual',
+          credentials: 'omit', cache: 'no-store',
+        });
+        const value = await boundedJson(response, config.maxResponseBytes, signal);
+        observeUsage(onUsage, value, config.provider);
+        if (value?.error) throw new LlmFailure('provider_failure');
+        let message;
+        if (config.provider === 'ollama') {
+          if (value?.done !== true || value?.tool_calls?.length || value?.function_call) throw new LlmFailure('invalid_output');
+          message = value.message;
+        } else {
+          const choice = value?.choices?.[0];
+          if (!choice || choice.finish_reason !== 'stop' || choice.message?.refusal) throw new LlmFailure('invalid_output');
+          message = choice.message;
+        }
+        // Each protocol has its own completion markers; both require a text-only message.
+        if (message?.tool_calls?.length || message?.function_call || typeof message?.content !== 'string') throw new LlmFailure('invalid_output');
+        return message.content;
+      } finally { await release?.(); }
     },
   };
 }

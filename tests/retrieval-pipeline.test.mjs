@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { retrieve, requestedDetails, requestedDetailScore } from '../src/lib/retrieval/search.mjs';
+import { requestedDetailScorer } from '../src/lib/retrieval/details.mjs';
 import { scopeCorpus } from '../src/lib/retrieval/scope.mjs';
 import { eligibleEvidence, evidenceSafetyReason } from '../src/lib/retrieval/eligibility.mjs';
 import { generateCandidates } from '../src/lib/retrieval/candidates.mjs';
@@ -63,6 +64,23 @@ test('candidate generation remains independent of authority and freshness rankin
   assert.ok(ranked.every(item => item.chunk === chunks.find(chunk => chunk.id === item.chunk.id)));
 });
 
+test('reused lexical index preserves scores and follows source and chunk edits', () => {
+  const resource = source('local', { title: 'Rental office', keywords: ['housing'] });
+  const passage = chunk('passage', 'local', 'Rental assistance provides moving support through this fictional public resource.');
+  const documents = [{ source: resource, chunk: passage }];
+  const snapshot = () => generateCandidates('rental assistance', documents, route).candidates
+    .map(item => [item.chunk.id, item.lexicalScore, item.preferenceScore, item.matches]);
+  const original = snapshot();
+  assert.deepEqual(snapshot(), original);
+  passage.text = 'Swimming pools require barriers around every entrance during construction.';
+  assert.notDeepEqual(snapshot(), original);
+  resource.title = 'Rental assistance office';
+  const retitled = snapshot();
+  assert.notDeepEqual(retitled, original);
+  resource.keywords = ['housing', 'rental'];
+  assert.notDeepEqual(snapshot(), retitled);
+});
+
 test('QueryPlan drives scope and requested facts while the legacy route interface stays compatible', () => {
   const sources = [source('local'), source('foreign', { jurisdiction_ids: ['clearwater'] })];
   const chunks = [chunk('amount', 'local', 'Maximum assistance: $1,234.', { section: 'Amounts' }),
@@ -75,6 +93,14 @@ test('QueryPlan drives scope and requested facts while the legacy route interfac
   assert.equal(planned.hits[0].detailScore, 1);
   assert.deepEqual(retrieve(question, { sources, chunks, queryPlan, route: { ...route, jurisdictionId: 'clearwater' }, now }), planned);
   assert.equal(requestedDetailScore(question, 'Maximum household income: $99,999.', queryPlan.requestedFacts), 0);
+});
+
+test('compiled detail scoring agrees with the public single-passage scorer', () => {
+  const question = 'What is the maximum rental assistance amount?';
+  const scorer = requestedDetailScorer(question, ['amount']);
+  for (const text of ['Maximum assistance: $1,234.', 'Maximum income: $60,000.', 'Ask the agency about eligibility.'])
+    assert.equal(scorer(text), requestedDetailScore(question, text, ['amount']));
+  assert.deepEqual(requestedDetails(question, null), []);
 });
 
 test('quarantine remains bounded by jurisdiction and detects instructions before topic filtering', () => {

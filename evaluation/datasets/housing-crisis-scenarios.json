@@ -1,0 +1,1827 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-09",
+  "fictional": true,
+  "scope": "Deterministic triage, referral, citation, actionability, freshness and safety checks. These cases are invented and do not describe real residents.",
+  "expertReviewRequired": "Automated passage does not establish legal, social-work, or domestic-violence safety. Cases with expertReview=true require qualified review before public launch.",
+  "scenarios": [
+    {
+      "id": "eviction-tampa-summons",
+      "narrative": "Fictional scenario: A Tampa renter received a court summons and has little money.",
+      "input": {
+        "situation": "eviction",
+        "location": "tampa",
+        "timeframe": "days",
+        "safe": "yes",
+        "noticeStage": "court_summons"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "legal_aid",
+        "resourceAny": [
+          "legal-bay-area",
+          "court-hillsborough-eviction"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "eviction-pinellas-notice",
+      "narrative": "Fictional scenario: A Pinellas renter received a written landlord notice but no court papers.",
+      "input": {
+        "situation": "eviction",
+        "location": "pinellas",
+        "timeframe": "unknown",
+        "safe": "yes",
+        "noticeStage": "written_notice"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "legal_aid",
+        "resourceAny": [
+          "legal-bay-area",
+          "court-pinellas-eviction"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "eviction-pasco-pay-vacate",
+      "narrative": "Fictional scenario: A Pasco renter has a pay-or-vacate notice and cannot pay immediately.",
+      "input": {
+        "situation": "eviction",
+        "location": "pasco",
+        "timeframe": "days",
+        "safe": "yes",
+        "noticeStage": "pay_or_vacate"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "legal_aid",
+        "resourceAny": [
+          "legal-bay-area",
+          "court-pasco-eviction"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "eviction-tampa-warning",
+      "narrative": "Fictional scenario: A Tampa renter heard an informal warning with no written document.",
+      "input": {
+        "situation": "eviction",
+        "location": "tampa",
+        "timeframe": "later",
+        "safe": "yes",
+        "noticeStage": "informal_warning"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "legal_aid",
+        "resourceAny": [
+          "legal-bay-area",
+          "court-hillsborough-eviction"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "eviction-hillsborough-judgment",
+      "narrative": "Fictional scenario: A Hillsborough renter says a judgment or possession order was issued.",
+      "input": {
+        "situation": "eviction",
+        "location": "hillsborough",
+        "timeframe": "unknown",
+        "safe": "yes",
+        "noticeStage": "judgment_or_possession"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "legal_aid",
+        "resourceAny": [
+          "legal-bay-area",
+          "court-hillsborough-eviction"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "eviction-clearwater-case",
+      "narrative": "Fictional scenario: A Clearwater renter has a pending eviction case and asks about the papers.",
+      "input": {
+        "situation": "eviction",
+        "location": "clearwater",
+        "timeframe": "days",
+        "safe": "yes",
+        "noticeStage": "pending_case"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "legal_aid",
+        "resourceAny": [
+          "legal-bay-area",
+          "court-pinellas-eviction"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "eviction-pasco-verbal-days",
+      "narrative": "Fictional scenario: A Pasco renter was verbally warned that a court case might start this week.",
+      "input": {
+        "situation": "eviction",
+        "location": "pasco",
+        "timeframe": "days",
+        "safe": "yes",
+        "noticeStage": "informal_warning"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "legal_aid",
+        "resourceAny": [
+          "legal-bay-area",
+          "court-pasco-eviction"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "eviction-unspecified-summons",
+      "narrative": "Fictional scenario: A renter in an unspecified Tampa Bay area has a court summons.",
+      "input": {
+        "situation": "eviction",
+        "location": "all",
+        "timeframe": "unknown",
+        "safe": "yes",
+        "noticeStage": "court_summons"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "legal_aid",
+        "resourceAny": [
+          "legal-bay-area",
+          "legal-florida-courts-self-help"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "rent-hillsborough-later",
+      "narrative": "Fictional scenario: A Hillsborough household is behind on rent and has no notice yet.",
+      "input": {
+        "situation": "rent",
+        "location": "hillsborough",
+        "timeframe": "later",
+        "safe": "yes",
+        "noticeStage": "none"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "housing-hillsborough-navigation",
+          "homeless-hillsborough-211"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "rent-pinellas-days",
+      "narrative": "Fictional scenario: A Pinellas adult without minor children is behind on rent and expects a notice.",
+      "input": {
+        "situation": "rent",
+        "location": "pinellas",
+        "timeframe": "days",
+        "safe": "yes",
+        "noticeStage": "none"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "housing-pinellas-adult-financial",
+          "homeless-pinellas-211"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "rent-pasco-days",
+      "narrative": "Fictional scenario: A Pasco household has rent arrears and wants to ask about current prevention help.",
+      "input": {
+        "situation": "rent",
+        "location": "pasco",
+        "timeframe": "days",
+        "safe": "yes",
+        "noticeStage": "none"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "housing-pasco-coalition"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "rent-tampa-notice",
+      "narrative": "Fictional scenario: A Tampa tenant with an existing lease has a written late-rent notice.",
+      "input": {
+        "situation": "rent",
+        "location": "tampa",
+        "timeframe": "days",
+        "safe": "yes",
+        "noticeStage": "written_notice"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "housing-hillsborough-navigation"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "rent-clearwater-later",
+      "narrative": "Fictional scenario: A Clearwater renter wants to discuss help before falling further behind.",
+      "input": {
+        "situation": "rent",
+        "location": "clearwater",
+        "timeframe": "later",
+        "safe": "yes",
+        "noticeStage": "none"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "housing-pinellas-adult-financial",
+          "homeless-pinellas-211"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "rent-court-date-soon",
+      "narrative": "Fictional scenario: A Hillsborough renter also has a court response date approaching.",
+      "input": {
+        "situation": "rent",
+        "location": "hillsborough",
+        "timeframe": "unknown",
+        "safe": "yes",
+        "noticeStage": "court_summons",
+        "courtDeadlineSoon": true
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "housing-hillsborough-navigation"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "loss-tampa-tonight",
+      "narrative": "Fictional scenario: A Tampa family expects to have no place to stay tonight.",
+      "input": {
+        "situation": "imminent_homelessness",
+        "location": "tampa",
+        "timeframe": "tonight",
+        "safe": "unsure",
+        "noSafePlaceTonight": true
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "loss-pinellas-days",
+      "narrative": "Fictional scenario: A Pinellas family expects to lose its current place in several days.",
+      "input": {
+        "situation": "imminent_homelessness",
+        "location": "pinellas",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-pinellas-211",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "loss-pasco-tonight",
+      "narrative": "Fictional scenario: A Pasco adult has nowhere reliable to stay tonight.",
+      "input": {
+        "situation": "imminent_homelessness",
+        "location": "pasco",
+        "timeframe": "tonight",
+        "safe": "unsure"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "housing-pasco-coalition",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "loss-hillsborough-later",
+      "narrative": "Fictional scenario: A Hillsborough household may need to leave its temporary room later.",
+      "input": {
+        "situation": "imminent_homelessness",
+        "location": "hillsborough",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "housing-hillsborough-navigation"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "loss-clearwater-unsafe",
+      "narrative": "Fictional scenario: A Clearwater renter is being displaced and does not feel safe where they are.",
+      "input": {
+        "situation": "imminent_homelessness",
+        "location": "clearwater",
+        "timeframe": "unknown",
+        "safe": "no"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-pinellas-211",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "loss-unknown-days",
+      "narrative": "Fictional scenario: A person will lose a place to stay in days but has not selected a county.",
+      "input": {
+        "situation": "imminent_homelessness",
+        "location": "all",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "homeless-pinellas-211",
+          "housing-pasco-coalition"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "homeless-hillsborough-tonight",
+      "narrative": "Fictional scenario: A Hillsborough resident is sleeping outside tonight and asks about intake.",
+      "input": {
+        "situation": "homelessness",
+        "location": "hillsborough",
+        "timeframe": "tonight",
+        "safe": "unsure",
+        "noSafePlaceTonight": true
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "homeless-pinellas-tonight",
+      "narrative": "Fictional scenario: A Pinellas resident is in a car tonight without a safe place to sleep.",
+      "input": {
+        "situation": "homelessness",
+        "location": "pinellas",
+        "timeframe": "tonight",
+        "safe": "unsure"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-pinellas-211",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "homeless-pasco-days",
+      "narrative": "Fictional scenario: A Pasco resident needs coordinated entry and has temporary shelter for a few days.",
+      "input": {
+        "situation": "homelessness",
+        "location": "pasco",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "housing-pasco-coalition",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "homeless-tampa-no-id",
+      "narrative": "Fictional scenario: A Tampa resident needs shelter and has no ID or stable phone.",
+      "input": {
+        "situation": "homelessness",
+        "location": "tampa",
+        "timeframe": "tonight",
+        "safe": "unsure"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "homeless-clearwater-navigation",
+      "narrative": "Fictional scenario: A Clearwater resident has temporary accommodation and needs housing navigation.",
+      "input": {
+        "situation": "homelessness",
+        "location": "clearwater",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-pinellas-211",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "homeless-hillsborough-no-safe",
+      "narrative": "Fictional scenario: A Hillsborough resident says their current sleeping place is unsafe.",
+      "input": {
+        "situation": "homelessness",
+        "location": "hillsborough",
+        "timeframe": "unknown",
+        "safe": "no"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "homeless-metro-ministry-intake"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "unsafe-tampa-danger",
+      "narrative": "Fictional scenario: A Tampa apartment has an immediate serious hazard and the resident cannot stay safely.",
+      "input": {
+        "situation": "unsafe_housing",
+        "location": "tampa",
+        "timeframe": "tonight",
+        "safe": "no",
+        "seriousHazard": true
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "emergency_services",
+        "resourceAny": [
+          "unsafe-tampa-code"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "unsafe-hillsborough-days",
+      "narrative": "Fictional scenario: A Hillsborough tenant whose city or unincorporated area is unknown reports a broken essential system.",
+      "input": {
+        "situation": "unsafe_housing",
+        "location": "hillsborough",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "legal-bay-area"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "unsafe-pinellas-later",
+      "narrative": "Fictional scenario: A Pinellas renter wants to ask which office handles unsafe rental conditions.",
+      "input": {
+        "situation": "unsafe_housing",
+        "location": "pinellas",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "unsafe-pinellas-routing"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "unsafe-pasco-later",
+      "narrative": "Fictional scenario: A Pasco renter asks how to route a housing-code complaint.",
+      "input": {
+        "situation": "unsafe_housing",
+        "location": "pasco",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "unsafe-pasco-routing"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "unsafe-tampa-gas",
+      "narrative": "Fictional scenario: A Tampa renter reports a gas leak creating immediate physical danger.",
+      "input": {
+        "situation": "unsafe_housing",
+        "location": "tampa",
+        "timeframe": "tonight",
+        "safe": "no",
+        "physicalDanger": true
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "emergency_services",
+        "resourceAny": [
+          "emergency-911",
+          "unsafe-tampa-code"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "unsafe-clearwater-days",
+      "narrative": "Fictional scenario: A Clearwater renter has a mold concern and wants the correct local office.",
+      "input": {
+        "situation": "unsafe_housing",
+        "location": "clearwater",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "unsafe-pinellas-routing"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "utilities-hillsborough-days",
+      "narrative": "Fictional scenario: A Hillsborough household has an electric shutoff notice for this week.",
+      "input": {
+        "situation": "utilities",
+        "location": "hillsborough",
+        "timeframe": "days",
+        "safe": "yes",
+        "shutoffImminent": true
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "emergency-hillsborough-energy"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "utilities-pinellas-days",
+      "narrative": "Fictional scenario: A Pinellas household faces a utility disconnection soon.",
+      "input": {
+        "situation": "utilities",
+        "location": "pinellas",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "emergency-pinellas-energy",
+          "housing-pinellas-adult-financial"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "utilities-pasco-later",
+      "narrative": "Fictional scenario: A Pasco household asks about a past-due electric bill before shutoff.",
+      "input": {
+        "situation": "utilities",
+        "location": "pasco",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "emergency-pasco-energy"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "utilities-tampa-imminent",
+      "narrative": "Fictional scenario: A Tampa renter received a utility shutoff notice with a date they need to verify.",
+      "input": {
+        "situation": "utilities",
+        "location": "tampa",
+        "timeframe": "unknown",
+        "safe": "yes",
+        "shutoffImminent": true
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "emergency-hillsborough-energy"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "utilities-clearwater-later",
+      "narrative": "Fictional scenario: A Clearwater resident seeks utility-assistance intake for a late bill.",
+      "input": {
+        "situation": "utilities",
+        "location": "clearwater",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "emergency-pinellas-energy"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "utilities-pasco-medical",
+      "narrative": "Fictional scenario: A Pasco renter worries that a disconnection would affect a medical device.",
+      "input": {
+        "situation": "utilities",
+        "location": "pasco",
+        "timeframe": "days",
+        "safe": "yes",
+        "shutoffImminent": true
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "emergency-pasco-energy"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "dv-tampa-unsafe",
+      "narrative": "Fictional scenario: A Tampa survivor needs confidential housing and cannot safely remain home.",
+      "input": {
+        "situation": "domestic_violence",
+        "location": "tampa",
+        "timeframe": "tonight",
+        "safe": "no"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "dv_advocate",
+        "resourceAny": [
+          "emergency-spring"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "dv-pinellas-uncertain",
+      "narrative": "Fictional scenario: A Pinellas survivor is unsure about safety and asks for advocate support.",
+      "input": {
+        "situation": "domestic_violence",
+        "location": "pinellas",
+        "timeframe": "unknown",
+        "safe": "unsure"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "dv_advocate",
+        "resourceAny": [
+          "emergency-casa"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "dv-pasco-tonight",
+      "narrative": "Fictional scenario: A Pasco survivor needs to leave tonight and asks about specialist help.",
+      "input": {
+        "situation": "domestic_violence",
+        "location": "pasco",
+        "timeframe": "tonight",
+        "safe": "unsure"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "dv_advocate",
+        "resourceAny": [
+          "emergency-sunrise"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "dv-hillsborough-safer",
+      "narrative": "Fictional scenario: A Hillsborough survivor is currently safe but needs housing safety planning.",
+      "input": {
+        "situation": "domestic_violence",
+        "location": "hillsborough",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "dv_advocate",
+        "resourceAny": [
+          "emergency-spring"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "dv-clearwater-attack",
+      "narrative": "Fictional scenario: A Clearwater survivor reports an immediate physical attack.",
+      "input": {
+        "situation": "domestic_violence",
+        "location": "clearwater",
+        "timeframe": "tonight",
+        "safe": "no",
+        "physicalDanger": true
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "emergency_services",
+        "resourceAny": [
+          "emergency-911",
+          "emergency-casa"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "dv-pasco-private",
+      "narrative": "Fictional scenario: A Pasco survivor wants a confidential advocate before planning a move.",
+      "input": {
+        "situation": "domestic_violence",
+        "location": "pasco",
+        "timeframe": "unknown",
+        "safe": "no"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "dv_advocate",
+        "resourceAny": [
+          "emergency-sunrise"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "disaster-tampa-tonight",
+      "narrative": "Fictional scenario: A Tampa family was displaced by flooding and needs a place tonight.",
+      "input": {
+        "situation": "disaster",
+        "location": "tampa",
+        "timeframe": "tonight",
+        "safe": "unsure"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "emergency-fema-disaster",
+          "homeless-hillsborough-211"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "disaster-pinellas-recovery",
+      "narrative": "Fictional scenario: A Pinellas renter seeks recovery information after storm damage.",
+      "input": {
+        "situation": "disaster",
+        "location": "pinellas",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "emergency-fema-disaster"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "disaster-pasco-days",
+      "narrative": "Fictional scenario: A Pasco renter expects to be displaced in days after a hurricane.",
+      "input": {
+        "situation": "disaster",
+        "location": "pasco",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "emergency-fema-disaster"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "disaster-hillsborough-unsafe",
+      "narrative": "Fictional scenario: A Hillsborough household is in unsafe temporary accommodation after a flood.",
+      "input": {
+        "situation": "disaster",
+        "location": "hillsborough",
+        "timeframe": "unknown",
+        "safe": "no"
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "emergency-fema-disaster",
+          "homeless-hillsborough-211"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "disaster-clearwater-later",
+      "narrative": "Fictional scenario: A Clearwater tenant needs official temporary housing application information.",
+      "input": {
+        "situation": "disaster",
+        "location": "clearwater",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "shelter_intake",
+        "resourceAny": [
+          "emergency-fema-disaster"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "disaster-tampa-danger",
+      "narrative": "Fictional scenario: A Tampa resident is in immediate physical danger during flooding.",
+      "input": {
+        "situation": "disaster",
+        "location": "tampa",
+        "timeframe": "tonight",
+        "safe": "no",
+        "physicalDanger": true
+      },
+      "expected": {
+        "urgency": "emergency",
+        "referralPath": "emergency_services",
+        "resourceAny": [
+          "emergency-911",
+          "emergency-fema-disaster"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": true,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "affordable-tampa",
+      "narrative": "Fictional scenario: A Tampa renter is searching for a more affordable apartment.",
+      "input": {
+        "situation": "affordable_housing",
+        "location": "tampa",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "housing_navigation",
+        "resourceAny": [
+          "housing-florida-search",
+          "housing-tampa-authority"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "affordable-pinellas",
+      "narrative": "Fictional scenario: A Pinellas renter wants official affordable rental listings.",
+      "input": {
+        "situation": "affordable_housing",
+        "location": "pinellas",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "housing_navigation",
+        "resourceAny": [
+          "housing-florida-search"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "affordable-pasco",
+      "narrative": "Fictional scenario: A Pasco renter asks about a statewide housing locator.",
+      "input": {
+        "situation": "affordable_housing",
+        "location": "pasco",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "housing_navigation",
+        "resourceAny": [
+          "housing-florida-search"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "affordable-hillsborough-days",
+      "narrative": "Fictional scenario: A Hillsborough household is searching and worries about a move in days.",
+      "input": {
+        "situation": "affordable_housing",
+        "location": "hillsborough",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "housing_navigation",
+        "resourceAny": [
+          "housing-florida-search",
+          "housing-tampa-authority"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "affordable-clearwater",
+      "narrative": "Fictional scenario: A Clearwater renter needs affordable listings and accessibility information.",
+      "input": {
+        "situation": "affordable_housing",
+        "location": "clearwater",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "housing_navigation",
+        "resourceAny": [
+          "housing-florida-search"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "affordable-unknown",
+      "narrative": "Fictional scenario: A renter has not selected a county and wants an affordable housing search.",
+      "input": {
+        "situation": "affordable_housing",
+        "location": "all",
+        "timeframe": "later",
+        "safe": "yes"
+      },
+      "expected": {
+        "urgency": "standard",
+        "referralPath": "housing_navigation",
+        "resourceAny": [
+          "housing-florida-search"
+        ],
+        "forbiddenResourceIds": []
+      },
+      "expertReview": false,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "rent-tampa-rmap-source-conflict",
+      "narrative": "Fictional scenario: A Tampa renter with an existing lease saw conflicting city RMAP program and portal descriptions and asks for rent-arrears help.",
+      "input": {
+        "situation": "rent",
+        "location": "tampa",
+        "timeframe": "days",
+        "safe": "yes",
+        "noticeStage": "written_notice"
+      },
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "homeless-hillsborough-211",
+          "housing-hillsborough-navigation"
+        ],
+        "forbiddenResourceIds": [
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "conflicting_source",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "utilities-pasco-stale-provider",
+      "narrative": "Fictional scenario: A Pasco resident needs energy help but the directory energy-provider record has an outdated source-check date.",
+      "input": {
+        "situation": "utilities",
+        "location": "pasco",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "resourceOverrides": [
+        {
+          "id": "emergency-pasco-energy",
+          "verifiedAt": "2026-01-01"
+        }
+      ],
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [],
+        "forbiddenResourceIds": [
+          "emergency-pasco-energy"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "source_freshness",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    },
+    {
+      "id": "rent-pinellas-closed-provider",
+      "narrative": "Fictional scenario: A Pinellas renter needs help but one listed financial-assistance program is reported temporarily closed in the test fixture.",
+      "input": {
+        "situation": "rent",
+        "location": "pinellas",
+        "timeframe": "days",
+        "safe": "yes"
+      },
+      "resourceOverrides": [
+        {
+          "id": "housing-pinellas-adult-financial",
+          "availabilityStatus": "temporarily_closed"
+        }
+      ],
+      "expected": {
+        "urgency": "urgent",
+        "referralPath": "assistance_intake",
+        "resourceAny": [
+          "homeless-pinellas-211"
+        ],
+        "forbiddenResourceIds": [
+          "housing-pinellas-adult-financial",
+          "housing-tampa-rmap"
+        ]
+      },
+      "expertReview": true,
+      "criticalSafety": false,
+      "reviewDimensions": [
+        "referral_accuracy",
+        "availability_status",
+        "geographic_relevance",
+        "citation_correctness",
+        "actionability",
+        "urgency",
+        "safety",
+        "clarity"
+      ]
+    }
+  ]
+}

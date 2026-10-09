@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "tampabaybot-housing-preview",
+  "compatibility_date": "2026-10-09",
+  "pages_build_output_dir": "./pages-demo/dist",
+  "services": [
+    {
+      "binding": "BACKEND",
+      "service": "tampabaybot-limited-api"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import type { JurisdictionId } from '../coverage.mjs';
 import type { ServiceCategory } from './routing/types.mjs';
 import type { Source, Chunk } from '../domain/types.mjs';
+import type { CrisisPlan } from '../housing/crisis.mjs';
 export type { Source, Chunk } from '../domain/types.mjs';
 
 export type { ServiceCategory } from './routing/types.mjs';
@@ -34,5 +35,6 @@ export interface ResidentAnswer {
   warnings: string[]; needsAddress: boolean; situation?: string;
   jurisdictionId: JurisdictionId; jurisdictionLabel: string; needsJurisdiction: boolean;
   requirementsToVerify?: string[];
+  crisisPlan?: CrisisPlan;
 }
 export function answerQuestion(question: string, options?: {sources?: Source[]; chunks?: Chunk[]; now?: Date | string | number; jurisdictionId?: JurisdictionId}): ResidentAnswer;

@@ -137,7 +137,8 @@ try {
     assert.equal(health.operations.reason, 'shared_controls_not_configured');
     assert.equal(health.corpus.chunks, health.chunks);
     assert.equal(health.version, manifest.package_version);
-    report.corpus = { sources: health.sources, chunks: health.chunks };
+    assert.match(health.generation, /^[a-f0-9]{64}$/);
+    report.corpus = { sources: health.sources, chunks: health.chunks, generation: health.generation };
   });
   let html;
   await check('production_html_and_security_headers', async () => {
@@ -148,6 +149,13 @@ try {
     assert.match(csp, /'nonce-[^']+'/); assert.match(csp, /frame-ancestors 'self'/);
     assert.doesNotMatch(csp.split(';').find(value => value.trim().startsWith('script-src ')), /unsafe-inline/);
     assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  });
+  await check('production_housing_help_without_inference', async () => {
+    const response = await fetch(`${base}/housing-help`, { signal: AbortSignal.timeout(10000) });
+    assert.equal(response.status, 200);
+    const page = await response.text();
+    for (const text of ['I Need Housing Help', 'Bay Area Legal Services', '911', 'Pasco County'])
+      assert.ok(page.includes(text), `Housing help is missing ${text}.`);
   });
   await check('compiled_browser_asset', async () => {
     const match = html.match(/(?:src|href)="(\/assets\/[^"\s]+\.js)"/);
@@ -166,6 +174,18 @@ try {
     if (health.chunks === 0) assert.ok(['insufficient_evidence', 'unavailable_source'].includes(answer.status), 'An empty corpus must return a conservative unavailable-evidence state.');
     else assert.equal(answer.status, 'answered');
     report.answer_status = answer.status;
+  });
+  await check('crisis_question_without_model', async () => {
+    const response = await fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: 'I received an eviction summons in Tampa and may lose my apartment. What should I do?', jurisdictionId: 'tampa' }),
+      signal: AbortSignal.timeout(10000) });
+    assert.equal(response.status, 200);
+    const answer = await response.json();
+    assert.equal(answer.generation.status, 'disabled');
+    assert.equal(answer.crisisPlan?.urgency, 'urgent');
+    assert.ok(answer.crisisPlan.resources.some(resource => resource.id === 'legal-bay-area'));
+    assert.ok(answer.crisisPlan.resources.some(resource => resource.id === 'court-hillsborough-eviction'));
+    assert.ok(answer.crisisPlan.sources.every(source => source.url.startsWith('https://')));
   });
   await check('sensitive_input_blocked', async () => {
     const response = await fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: 'Help with housing, SSN 123-45-6789' }), signal: AbortSignal.timeout(10000) });

@@ -64,6 +64,7 @@ Run from the project root and record the checks performed.
 | `npm run test:source:browser` | Chromium demo checks on port 3112, including keyboard and accessibility automation; install Chromium with `npx playwright install chromium` first |
 | `npm run release:manifest` | Regenerate a public source PR manifest after semantic distribution checks |
 | `npm run release:verify` | Verify source-only contents and manifest hashes; run after refreshing the manifest or from an unchanged source release |
+| `node scripts/check-evaluation-artifacts.mjs` | Require empty evaluation response files in the working tree and Git index before a public commit or deployment |
 | `node --test --test-isolation=none tests/source-release.test.mjs` | Source packaging, manifest and sanitization checks; no downloaded corpus needed |
 | `npm run ingest` | Stage fetched sources for review; does not replace the active corpus |
 | `npm run ingest -- --source=tampa-rmap` | Stage a refresh of one registered source; still requires review and application |
