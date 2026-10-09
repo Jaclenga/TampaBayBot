@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "0dda8ebacd9e4286c673f07e1987d07937575657876a17bf9c9f483b47ca8101",
+  "content_sha256": "e64925d5e5f33ca280eb2f36ac463b6b93065b337c50ec893e1d1276589a37b2",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -52,8 +52,8 @@
     },
     {
       "path": ".github/workflows/source-release.yml",
-      "bytes": 1355,
-      "sha256": "27f591f19b747b1d9c2dcb278c5bdeb59e3a76d80ab828d1ae9a9d3cbcffa720"
+      "bytes": 1510,
+      "sha256": "1baffaeab066bc6b3b43af62261fe64c75ce0a08a79bf9fc3f9a49e89ecda621"
     },
     {
       "path": ".gitignore",
@@ -737,8 +737,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 4921,
-      "sha256": "646b94478827b0be8ef028d3d56626fa3eee20890c4efb903986628156dccf7d"
+      "bytes": 5118,
+      "sha256": "13d3469456d7842708a8bccfa88f20489db12b1b4314c15f42844b7f91028cc0"
     },
     {
       "path": "src/app/about/page.tsx",
