@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "e2506a1d9bd861027d0f4ba3d7208d27087d80254dcbbabac2efaf0b2929ad7a",
+  "content_sha256": "0341c58da13c9bc0fa694f9dee9e9d80efb489ef0f39a1f5102f96d963afa63a",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -1687,8 +1687,8 @@
     },
     {
       "path": "tests/source-e2e/ui-accessibility.spec.ts",
-      "bytes": 12110,
-      "sha256": "e154f6866f128dd8e2d8b8f3bf19bcad8a9cc67388b747264712178910410f6f"
+      "bytes": 12081,
+      "sha256": "351dcc144bc02b6a43b89afd71cecf7fa1ea5ffedb9ad634906ab02c243839da"
     },
     {
       "path": "tests/source-fixtures.test.mjs",
