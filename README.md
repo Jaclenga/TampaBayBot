@@ -2,11 +2,7 @@
 
 TampaBayBot is an open-source project for questions about housing assistance, zoning, permits, and nearby development in the Tampa Bay Area. It retrieves public evidence and shows supporting quotations, source dates, and agency links. The default answer engine works without a language model.
 
-> **Alpha: for contributors and supervised testing.** The source release starts without downloaded evidence. Independent human review and production-readiness work remain open; see [release status](docs/RELEASE_READINESS.md).
-
-The [Cloudflare Pages preview](https://tampabaybot-housing-preview.pages.dev/) now serves the original blue-header question-and-address interface through a private source-only Worker. A separate [static housing-help directory](https://tampabaybot-housing-preview.pages.dev/housing-help/) remains available without that Worker. The backend has no AI model enabled and no reviewed source passages, so cited answers are unavailable. Public map services can return partial results. This Direct Upload preview is separate from the GitHub source release; repository pushes do not update it.
-
-[Releases](https://github.com/Jaclenga/TampaBayBot/releases) | [Issues](https://github.com/Jaclenga/TampaBayBot/issues) | [Private security reporting](https://github.com/Jaclenga/TampaBayBot/security/advisories/new)
+[Live Demo](https://tampabaybot-housing-preview.pages.dev/)
 
 ## What it does
 
