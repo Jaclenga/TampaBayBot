@@ -142,7 +142,6 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
         <div className="hero-inner">
           <h1 id="hero-title">{en.hero.title}</h1>
           <p className="hero-description">{en.hero.description}</p>
-          <p><Link href="/housing-help" className="secondary-button">{locale === 'es' ? 'Necesito ayuda de vivienda' : 'I Need Housing Help'} <ArrowRight size={16} aria-hidden="true" /></Link></p>
           {locale === 'es' && <p className="small muted">{en.language.scope}</p>}
           <form
             className="question-form"

@@ -22,7 +22,6 @@ export function Header() {
         </Link>
         <nav aria-label={en.labels.navigation}>
           <Link href="/">{en.nav.ask}</Link>
-          <Link href="/housing-help">{locale === 'es' ? 'Ayuda de vivienda' : 'I Need Housing Help'}</Link>
           <Link href="/sources">{en.nav.sources}</Link>
           <Link href="/about">{en.nav.about}</Link>
         </nav>

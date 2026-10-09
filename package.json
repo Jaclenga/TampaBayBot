@@ -17,6 +17,7 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "build:pages": "vite build --config pages-demo/vite.config.mjs --configLoader native",
+    "prepare:classic-pages": "node scripts/prepare-classic-pages.mjs",
     "start": "vinext start",
     "test": "node scripts/test-source.mjs",
     "test:pages": "node --test --test-isolation=none pages-demo/tests/*.test.mjs",
