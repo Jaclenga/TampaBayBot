@@ -134,7 +134,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
     input.current?.focus();
   }
   return (
-    <main id="main" lang={locale}>
+    <main id="main" lang={locale} tabIndex={-1}>
       <section
         className={`hero ${answer ? "hero-compact" : ""}`}
         aria-labelledby="hero-title"

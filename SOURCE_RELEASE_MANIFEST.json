@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "e64925d5e5f33ca280eb2f36ac463b6b93065b337c50ec893e1d1276589a37b2",
+  "content_sha256": "69c073c43d75bfbf9a79af3ddf7e533ada62d10f4bb3f2ce7ecddf06eee6423e",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -812,8 +812,8 @@
     },
     {
       "path": "src/app/page.tsx",
-      "bytes": 1223,
-      "sha256": "ff87b84d5c3e7328d68f25f5fd8069ff551b7a6cd886181b0788879b02894bbf"
+      "bytes": 1237,
+      "sha256": "3bc3d1ef9e634731d4b298045b12fab1e8205088d4eda61addcf8d46b7e84863"
     },
     {
       "path": "src/app/sources/page.tsx",
@@ -847,8 +847,8 @@
     },
     {
       "path": "src/components/resident-app.tsx",
-      "bytes": 15788,
-      "sha256": "29e9963f8710ae5d9e5a26ab3cdbcf6c837ca436228c33fab5c55525428ab9a5"
+      "bytes": 15802,
+      "sha256": "a877dbccee43c0f733a59922fadb6ead632e4cd4f3f433807e18decf7f9e132e"
     },
     {
       "path": "src/components/site-shell.tsx",
@@ -1672,8 +1672,8 @@
     },
     {
       "path": "tests/source-e2e/ui-accessibility.spec.ts",
-      "bytes": 11919,
-      "sha256": "ea454c1b3776159e1e04c0550e8229d0c6f06b8f0a6dcc71bc86f7348d51f341"
+      "bytes": 12110,
+      "sha256": "e154f6866f128dd8e2d8b8f3bf19bcad8a9cc67388b747264712178910410f6f"
     },
     {
       "path": "tests/source-fixtures.test.mjs",
