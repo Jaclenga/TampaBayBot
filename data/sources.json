@@ -37,6 +37,15 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [
+      "Official RMAP page limits Phase X to new move-in costs while its linked portal describes current leases and eviction prevention; city clarification is pending."
+    ],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -78,6 +87,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -122,6 +138,13 @@
       "tampa",
       "hillsborough-county"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -170,6 +193,13 @@
       "pasco-county",
       "tampa-bay"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -213,6 +243,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -257,6 +294,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -298,6 +342,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -344,6 +395,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -388,6 +446,13 @@
       "tampa",
       "hillsborough-county"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -432,6 +497,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -492,6 +564,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -533,6 +612,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -573,6 +659,13 @@
     "jurisdiction_ids": [
       "tampa"
     ],
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -616,6 +709,13 @@
     "topic_id": "st-petersburg-renters",
     "selector": "#post",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -658,6 +758,13 @@
     "topic_id": "st-petersburg-rehab",
     "selector": "#post",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -701,6 +808,13 @@
     "topic_id": "st-petersburg-zoning",
     "selector": "#post",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -743,6 +857,13 @@
     "topic_id": "st-petersburg-permits",
     "selector": "#post",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -785,6 +906,13 @@
     "topic_id": "clearwater-housing",
     "selector": "#main-content",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -827,6 +955,13 @@
     "topic_id": "clearwater-rehab",
     "selector": "#main-content",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -870,6 +1005,13 @@
     "topic_id": "clearwater-zoning",
     "selector": "#main-content",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -912,6 +1054,13 @@
     "topic_id": "clearwater-permits",
     "selector": "#main-content",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -957,6 +1106,13 @@
     "topic_id": "pinellas-housing-directory",
     "selector": "#section-content",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1002,6 +1158,13 @@
     "topic_id": "pinellas-family-housing",
     "selector": "#section-content",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1043,6 +1206,13 @@
     "topic_id": "pinellas-permits",
     "selector": "#section-content",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1087,6 +1257,13 @@
     "paragraph_container_selector": "#freeform-main .col-md-12",
     "heading_selector": "#freeform-main .col-md-12 > .subheader",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1131,6 +1308,13 @@
     "paragraph_container_selector": "#freeform-main .col-md-12",
     "heading_selector": "#freeform-main .col-md-12 > .subheader",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1174,6 +1358,13 @@
     "paragraph_container_selector": "#freeform-main .col-md-12",
     "heading_selector": "#freeform-main .col-md-12 > .subheader",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1218,6 +1409,13 @@
     "paragraph_container_selector": "#freeform-main .col-md-12",
     "heading_selector": "#freeform-main .col-md-12 > .subheader",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1262,6 +1460,13 @@
     "paragraph_container_selector": "#freeform-main .col-md-12",
     "heading_selector": "#freeform-main .col-md-12 > .subheader",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1324,6 +1529,13 @@
       }
     ],
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1376,6 +1588,13 @@
       }
     ],
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1428,6 +1647,13 @@
       }
     ],
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."
@@ -1473,6 +1699,13 @@
     "paragraph_container_selector": "#freeform-main .col-md-12",
     "heading_selector": "#freeform-main .col-md-12 > .subheader",
     "status": "unavailable",
+    "last_content_reviewed_at": null,
+    "review_status": "needs_review",
+    "next_review_at": null,
+    "last_link_checked_at": null,
+    "link_status": "not_checked",
+    "known_issues": [],
+    "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
     "last_error": "Not fetched in this source-only distribution."

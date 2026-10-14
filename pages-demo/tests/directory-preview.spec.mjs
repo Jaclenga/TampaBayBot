@@ -1,4 +1,26 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test('directory preview opens the dedicated privacy page without the API', async ({ page }) => {
+  const apiRequests = [];
+  page.on('request', request => {
+    if (new URL(request.url()).pathname.startsWith('/api/')) apiRequests.push(request.url());
+  });
+  await page.goto('/');
+  await expect(page.locator('.site-header a[href="/privacy/"]')).toBeVisible();
+  await expect(page.locator('.crisis-privacy a[href="/privacy/"]')).toBeVisible();
+  await expect(page.locator('.site-footer a[href="/privacy/"]')).toBeVisible();
+  await page.locator('.crisis-privacy a[href="/privacy/"]').click();
+  await expect(page).toHaveURL(/\/privacy\/$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Privacy information' })).toBeVisible();
+  const response = await page.reload();
+  expect(response?.status()).toBe(200);
+  await page.setViewportSize({ width: 320, height: 720 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  const accessibility = await new AxeBuilder({ page }).analyze();
+  expect(accessibility.violations).toEqual([]);
+  expect(apiRequests).toEqual([]);
+});
 
 test('directory preview provides housing help without contacting the API', async ({ page }) => {
   const apiRequests = [];
@@ -15,6 +37,9 @@ test('directory preview provides housing help without contacting the API', async
   await expect(page.locator('#crisis-situation')).toHaveValue('');
   await expect(page.locator('.immediate-help')).toContainText('911');
   await expect(page.locator('.immediate-help')).toContainText('988');
+  await expect(page.locator('.immediate-help')).toContainText('Resource information last reviewed');
+  await expect(page.locator('.housing-card').first()).toContainText('Resource information last reviewed');
+  await expect(page.locator('.housing-card').first()).not.toContainText('Link checked');
   await expect(page.getByRole('link', { name: /Ask TampaBayBot|Ask a question|Explore a place|Explore a property/ })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Search' })).toHaveCount(0);
   await expect(page.locator('#property')).toHaveCount(0);
@@ -46,6 +71,8 @@ test('directory preview provides housing help without contacting the API', async
   await page.evaluate(() => { window.print = () => { window.__housingPrintCalled = true; }; });
   await page.getByRole('button', { name: 'Print this page' }).click();
   expect(await page.evaluate(() => window.__housingPrintCalled)).toBe(true);
+  await page.locator('#housing-language').selectOption('es');
+  await expect(page.locator('.housing-card').first()).toContainText('Información del recurso revisada por última vez');
   expect(apiRequests).toEqual([]);
 });
 

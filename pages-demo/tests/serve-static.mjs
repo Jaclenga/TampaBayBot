@@ -15,7 +15,7 @@ createServer(async (request, response) => {
     response.end('{"error":"Backend deliberately disabled for housing directory test."}');
     return;
   }
-  const target = path.resolve(root, `.${pathname === '/' ? '/index.html' : pathname}`);
+  const target = path.resolve(root, `.${pathname.endsWith('/') ? `${pathname}index.html` : pathname}`);
   if (!target.startsWith(root + path.sep)) {
     response.writeHead(403); response.end(); return;
   }

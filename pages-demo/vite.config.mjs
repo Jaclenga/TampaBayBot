@@ -1,4 +1,5 @@
 import { rm } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 
 const directoryOnly = process.env.VITE_DIRECTORY_ONLY === "true";
 const pageTitle = directoryOnly
@@ -25,7 +26,16 @@ const config = {
       }
     },
   }],
-  build: { outDir: "dist", emptyOutDir: true },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL("./index.html", import.meta.url)),
+        privacy: fileURLToPath(new URL("./privacy/index.html", import.meta.url)),
+      },
+    },
+  },
 };
 
 export default config;

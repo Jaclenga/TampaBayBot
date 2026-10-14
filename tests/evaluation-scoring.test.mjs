@@ -122,6 +122,19 @@ test("handwritten exact-evidence response passes applicable checks and keeps unm
   assert.ok(checks.some((check) => check.kind === "proxy"));
 });
 
+test('deterministic same-source qualification paragraphs retain exact citation support', () => {
+  const value = fixture();
+  const secondChunk = { ...value.chunks[0], id: 'reviewed-fixture-qualification',
+    text: 'The agency must confirm current application availability.' };
+  secondChunk.content_hash = createHash('sha256').update(secondChunk.text).digest('hex');
+  value.chunks.push(secondChunk);
+  value.answer.evidence.push({ ...value.answer.evidence[0], id: 'E2',
+    chunk_id: secondChunk.id, quote: secondChunk.text,
+    content_hash: secondChunk.content_hash });
+  value.answer.answer += `\n\nThe same source gives this detail: “${secondChunk.text}” [E2]`;
+  assert.deepEqual(scoreNavigationAnswer(value).filter(item => item.passed === false), []);
+});
+
 test("fabricated quotation fails even if copied into an otherwise valid cited answer", () => {
   const value = fixture();
   value.answer.evidence[0].quote =

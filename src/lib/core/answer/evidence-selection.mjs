@@ -2,7 +2,7 @@ import { retrieve } from '../../retrieval/search.mjs';
 import { requestedDetails } from '../../retrieval/details.mjs';
 import { evidenceSafetyReason, usableChunk } from '../../retrieval/eligibility.mjs';
 import { sourceMatchesTopic } from '../../retrieval/scope.mjs';
-import { housingSituation } from '../../housing/navigation.mjs';
+import { housingNeeds, housingSituation } from '../../housing/navigation.mjs';
 import { programCandidates } from '../../housing/programs.mjs';
 import { factsForChunk } from '../../domain/facts.mjs';
 import { makeEvidence, withFactEvidence } from '../../citations/evidence.mjs';
@@ -44,12 +44,71 @@ function requiredFactHit(primary, chunk, fact, selected, question, now) {
   return covered ? { ...covered, required: true } : focused;
 }
 
+function courtProcessQuestion(text) {
+  return /\b(?:evict(?:ion|ed|ing)?|landlord|tenant)\b/.test(text) &&
+    /\b(?:court|clerk|summons|notice|deadline|legal|papers?|forms?|respond|response|filing)\b/.test(text);
+}
+
+function courtProcessSource(source) {
+  const metadata = `${source.title ?? ''} ${source.agency ?? ''} ${(source.keywords ?? []).join(' ')}`.toLowerCase();
+  return /\b(?:evict(?:ion|ed|ing)?|landlord|tenant)\b/.test(metadata) &&
+    /\b(?:court|clerk|legal aid|legal services)\b/.test(metadata);
+}
+
+function broadHousingRequest(text) {
+  return /\b(?:which|what)\s+(?:\w+\s+){0,4}(?:programs|resources|options)\b|\b(?:list|compare|multiple|several|all available)\b/.test(text);
+}
+
+function shelterOnlyPassage(text) {
+  return /\b(?:shelter|homeless|temporary housing|nowhere (?:safe )?to sleep)\b/i.test(text) &&
+    !/\b(?:rent|rental|utilit(?:y|ies)|repair|deposit|homebuy|eligib)\b/i.test(text);
+}
+
+function addRelevantExistingLeaseRestriction(selected, sources, chunks, priority, question) {
+  if (!/\b(?:behind|overdue|back rent|past.due|arrears|already live|existing lease)\b/.test(question)) return;
+  for (const sourceId of priority) {
+    if (selected.some(hit => hit.source.source_id === sourceId)) continue;
+    const source = sources.find(item => item.source_id === sourceId);
+    if (!source) continue;
+    const chunk = chunks.find(item => item.source_id === sourceId && !evidenceSafetyReason(source, item) &&
+      /\b(?:existing leases?|currently occupied units?|back rent|past.due rent)\b/i.test(item.text) &&
+      /\b(?:not eligible|not covered|does not (?:pay|cover|assist)|will not (?:pay|cover|assist))\b/i.test(item.text));
+    if (chunk) selected.push({ source, chunk, score: 1 });
+  }
+}
+
 /** Query-aware selection consumes domain metadata; it has no municipality/source IDs. */
 export function selectEvidence(hits, plan, sources, chunks, now, unsupported) {
   const question = plan.query;
-  const ranked = [...hits];
+  let ranked = [...hits];
   const named = plan.entities.filter(entity => entity.type === 'program' && entity.sourceId).map(entity => entity.sourceId);
-  const priority = [...new Set([...named, ...(plan.subjectCategory === 'housing' ? housingSituation(question, plan.route).preferredSourceIds : guidancePriorities(plan))])];
+  const family = plan.subjectCategory === 'housing' && /\bfamil(?:y|ies)\b/.test(plan.route.normalized)
+    ? sources.filter(source => /\bfamil(?:y|ies)\b/i.test(`${source.title ?? ''} ${(source.keywords ?? []).join(' ')}`)).map(source => source.source_id)
+    : [];
+  let priority = [...new Set([...named, ...family, ...(plan.subjectCategory === 'housing' ? housingSituation(question, plan.route).preferredSourceIds : guidancePriorities(plan))])];
+  // A court-process request must not be turned into a rent-program answer just
+  // because a general housing page has a standing navigation preference.
+  if (plan.subjectCategory === 'housing' && courtProcessQuestion(plan.route.normalized)) {
+    const processHits = ranked.filter(hit => courtProcessSource(hit.source));
+    if (processHits.length) {
+      ranked = processHits;
+      priority = [...new Set(processHits.map(hit => hit.source.source_id))];
+    }
+  }
+  const needs = housingNeeds(question);
+  const oneAssistanceType = needs.length <= 1 || needs.length === 2 &&
+    needs.includes('rent') && needs.includes('move') &&
+    !/\b(?:behind|overdue|back rent|past.due|arrears|existing lease)\b/.test(plan.route.normalized);
+  const multipleUtilities = /\b(?:water|sewer)\b/.test(plan.route.normalized) &&
+    /\b(?:electric(?:ity)?|energy|power|gas)\b/.test(plan.route.normalized);
+  const narrowHousing = plan.subjectCategory === 'housing' &&
+    oneAssistanceType && !multipleUtilities && !broadHousingRequest(plan.route.normalized);
+  // A generic housing question should not pick a shelter-only paragraph from
+  // an agency when that same agency has a broader assistance passage available.
+  if (plan.subjectCategory === 'housing' && !needs.includes('shelter')) {
+    const otherPassage = new Set(ranked.filter(hit => !shelterOnlyPassage(hit.chunk.text)).map(hit => hit.source.source_id));
+    ranked = ranked.filter(hit => !shelterOnlyPassage(hit.chunk.text) || !otherPassage.has(hit.source.source_id));
+  }
   if (plan.subjectCategory === 'housing') ranked.sort((a, b) => {
     const ai = priority.indexOf(a.source.source_id);
     const bi = priority.indexOf(b.source.source_id);
@@ -79,8 +138,9 @@ export function selectEvidence(hits, plan, sources, chunks, now, unsupported) {
     if (selected.some(item => item.source.source_id === hit.source.source_id)) continue;
     if (selected.length && !priority.includes(hit.source.source_id) && hit.score < ranked[0].score * 0.3) continue;
     selected.push(hit);
-    if (selected.length === 3) break;
+    if (selected.length === (narrowHousing || unsupported ? 1 : 3)) break;
   }
+  if (narrowHousing && !unsupported) addRelevantExistingLeaseRestriction(selected, sources, chunks, priority, question);
   const primary = selected[0];
   const fields = plan.requestedFacts.filter(field => ['amount', 'fee', 'duration', 'deadline'].includes(field));
   if (primary) {
@@ -125,7 +185,7 @@ export function selectEvidence(hits, plan, sources, chunks, now, unsupported) {
     const chunk = sectionChunk(source, chunks, [section], plan, true);
     if (chunk && !selected.some(hit => hit.chunk.id === chunk.id)) selected.push({ source, chunk, score: 1 });
   }
-  if (plan.subjectCategory === 'housing' && !plan.route.needsJurisdiction && !unsupported && !fields.length) {
+  if (plan.subjectCategory === 'housing' && !narrowHousing && !plan.route.needsJurisdiction && !unsupported && !fields.length) {
     for (const hit of programCandidates(question, hits, { limit: hits.length })) {
       if (selected.length >= 8) break;
       if (!selected.some(item => item.chunk.id === hit.chunk.id)) selected.push(hit);

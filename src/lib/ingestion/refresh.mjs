@@ -10,11 +10,14 @@ import { deriveFacts } from '../domain/facts.mjs';
 import { digest, json, makeCorpus, readCorpus, validateCorpus, workspacePath, writeAtomic, withPublicationLock, publishCorpus } from './generation.mjs';
 
 const generatedFields = ['retrieval_date', 'source_updated_date', 'content_hash', 'normalized_content_hash', 'raw_path', 'normalized_path', 'last_attempt', 'last_error', 'response_url', 'content_type', 'etag', 'last_modified', 'content_changed_at', 'status'];
+// Review and link-check notes describe source maintenance. They do not alter
+// the acquisition recipe or make previously reviewed evidence unusable.
+const freshnessMetadataFields = ['last_content_reviewed_at', 'review_status', 'next_review_at', 'last_link_checked_at', 'link_status', 'known_issues', 'review_notes'];
 const errorCode = error => error instanceof DownloadError || error instanceof SourceProcessingError || error instanceof NormalizationLimitError
   ? error.code : 'source_normalization_or_provenance_failed';
 const snapshot = source => ({ status: source?.status ?? 'unavailable', content_hash: source?.content_hash ?? null, normalized_content_hash: source?.normalized_content_hash ?? null, retrieval_date: source?.retrieval_date ?? null });
 const changedConfiguration = (before, after) => [...new Set([...Object.keys(before ?? {}), ...Object.keys(after)])]
-  .filter(key => !generatedFields.includes(key) && JSON.stringify(before?.[key]) !== JSON.stringify(after[key]));
+  .filter(key => !generatedFields.includes(key) && !freshnessMetadataFields.includes(key) && JSON.stringify(before?.[key]) !== JSON.stringify(after[key]));
 function withholdPreviousEvidence(source, nextChunks) {
   for (const key of generatedFields) if (!['last_attempt', 'last_error'].includes(key)) delete source[key];
   Object.assign(source, { status: 'unavailable', retrieval_date: null, source_updated_date: null, last_error: 'configuration_changed_evidence_withheld' });

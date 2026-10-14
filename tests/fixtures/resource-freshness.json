@@ -1,0 +1,59 @@
+{
+  "directory": {
+    "resources": [
+      {
+        "id": "fresh-shelter",
+        "url": "https://example.org/shelter",
+        "sourceUrl": "https://example.org/shelter",
+        "verifiedAt": "2026-10-01",
+        "verificationStatus": "source_checked",
+        "nextReviewAt": "2026-11-01",
+        "lastLinkCheckedAt": null,
+        "linkStatus": "not_checked",
+        "knownIssues": [],
+        "reviewedContentHash": null,
+        "contacts": []
+      },
+      {
+        "id": "changed-program",
+        "url": "https://example.org/program",
+        "sourceUrl": "https://example.org/program",
+        "verifiedAt": "2026-10-01",
+        "verificationStatus": "source_checked",
+        "nextReviewAt": "2026-11-01",
+        "lastLinkCheckedAt": null,
+        "linkStatus": "not_checked",
+        "knownIssues": [],
+        "reviewedContentHash": null,
+        "contacts": []
+      },
+      {
+        "id": "overdue-clinic",
+        "url": "https://example.org/overdue",
+        "sourceUrl": "https://example.org/overdue",
+        "verifiedAt": "2026-09-01",
+        "verificationStatus": "source_checked",
+        "nextReviewAt": "2026-09-30",
+        "lastLinkCheckedAt": null,
+        "linkStatus": "not_checked",
+        "knownIssues": ["Publisher details need a human recheck."],
+        "reviewedContentHash": null,
+        "contacts": []
+      }
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "official-rag-source",
+      "canonical_url": "https://example.org/rag",
+      "review_status": "needs_review",
+      "last_content_reviewed_at": null,
+      "next_review_at": null,
+      "last_link_checked_at": null,
+      "link_status": "not_checked",
+      "known_issues": []
+    }
+  ],
+  "oldHtml": "<!doctype html><html><body><nav>Menu</nav><main><h1>Program details</h1><p>Call the official provider to check current availability.</p></main><footer>Old footer</footer></body></html>",
+  "newHtml": "<!doctype html><html><body><nav>New menu</nav><main><h1>Program details</h1><p>Call the official provider to check updated eligibility and availability.</p></main><footer>New footer</footer></body></html>"
+}

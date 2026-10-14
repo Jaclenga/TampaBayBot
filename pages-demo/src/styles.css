@@ -195,3 +195,32 @@ a { color: #005d98; }
   .site-footer { padding: 22px 20px; }
 }
 @media print { .site-header, .site-footer, .hero, .ask-section, .property-section, .disclaimer, .status-banner { display: none !important; } .housing-section { width: 100%; margin: 0; padding: 0; } }
+
+/* Privacy information is a standalone static route in both Pages bundles. */
+.privacy-main { width: min(920px, calc(100% - 48px)); margin: 0 auto; padding: 48px 0 80px; }
+.privacy-heading { border-bottom: 1px solid #d5dfe5; padding-bottom: 26px; }
+.privacy-heading .eyebrow { color: #086aab; }
+.privacy-heading h1 { margin: 8px 0 15px; color: #064d78; font-size: clamp(32px, 4vw, 44px); line-height: 1.15; letter-spacing: -.035em; }
+.privacy-heading p:last-child { max-width: 74ch; margin: 0; line-height: 1.7; }
+.privacy-toc { background: #f3f7f9; border: 1px solid #d5e1e8; border-radius: 5px; padding: 20px 24px; margin: 28px 0 8px; }
+.privacy-toc strong { color: #064d78; }
+.privacy-toc ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 22px; margin: 12px 0 0; padding-left: 20px; }
+.privacy-toc li { min-width: 0; line-height: 1.45; }
+.privacy-sections section { padding: 27px 0; border-bottom: 1px solid #d5dfe5; scroll-margin-top: 18px; }
+.privacy-sections h2 { margin: 0 0 12px; color: #064d78; font-size: clamp(22px, 2.6vw, 28px); line-height: 1.25; }
+.privacy-sections p, .privacy-sections li { max-width: 76ch; margin: 0 0 12px; line-height: 1.7; }
+.privacy-sections p:last-child { margin-bottom: 0; }
+.privacy-return { margin: 30px 0 0; font-weight: 650; }
+.site-footer nav { display: flex; flex-wrap: wrap; gap: 12px 22px; }
+.site-footer a { color: #005d98; }
+@media (max-width: 680px) {
+  .privacy-main { width: calc(100% - 40px); padding: 34px 0 55px; }
+  .privacy-toc { padding: 18px; }
+  .privacy-toc ul { grid-template-columns: 1fr; }
+  .privacy-sections section { padding: 23px 0; }
+}
+@media print {
+  .privacy-main { width: 100%; padding: 0; }
+  .privacy-toc, .privacy-return { display: none; }
+  .privacy-sections section { break-inside: avoid; }
+}

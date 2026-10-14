@@ -13,6 +13,7 @@ const categories = new Set(['eviction', 'homelessness', 'legal', 'emergency']);
 const areas = new Set(['national', 'florida', 'hillsborough', 'pinellas', 'pasco']);
 const statuses = new Set(['source_checked', 'needs_recheck', 'source_unavailable']);
 const availability = new Set(['unknown', 'confirmed_open', 'temporarily_closed', 'discontinued']);
+const linkStatuses = new Set(['not_checked', 'ok', 'redirect', 'broken', 'temporary_failure', 'rate_limited', 'access_restricted', 'http_error']);
 const url = value => {
   assert.equal(typeof value, 'string');
   assert.equal(new URL(value).protocol, 'https:');
@@ -36,10 +37,24 @@ test('static resource records have explicit source-check and availability metada
     assert.ok(Array.isArray(resource.restrictions), resource.id);
     assert.match(resource.verifiedAt, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(!Number.isNaN(Date.parse(resource.verifiedAt)), resource.id);
+    assert.match(resource.nextReviewAt, /^\d{4}-\d{2}-\d{2}$/, resource.id);
+    assert.ok(Date.parse(resource.nextReviewAt) >= Date.parse(resource.verifiedAt), resource.id);
+    assert.ok(resource.lastLinkCheckedAt === null || Number.isFinite(Date.parse(resource.lastLinkCheckedAt)), resource.id);
+    assert.ok(linkStatuses.has(resource.linkStatus), resource.id);
+    assert.ok(resource.reviewedContentHash === null || /^[a-f0-9]{64}$/.test(resource.reviewedContentHash), resource.id);
+    assert.ok(Array.isArray(resource.knownIssues) && resource.knownIssues.every(issue => typeof issue === 'string' && issue.trim()), resource.id);
+    assert.ok(resource.reviewNotes === null || typeof resource.reviewNotes === 'string', resource.id);
     url(resource.url);
     url(resource.sourceUrl);
     if (resource.intakeUrl) url(resource.intakeUrl);
   }
+});
+
+test('RMAP conflict stays flagged for substantive human review', () => {
+  const rmap = resources.find(resource => resource.id === 'housing-tampa-rmap');
+  assert.ok(rmap.knownIssues.some(issue => /existing leases|eviction prevention/i.test(issue)));
+  assert.equal(rmap.availabilityStatus, 'unknown');
+  assert.equal(rmap.reviewedContentHash, null);
 });
 
 test('every crisis topic has a local route in each county without claiming capacity', () => {

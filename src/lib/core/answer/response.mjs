@@ -91,6 +91,16 @@ export function finishResponse(answer, { plan, selected, chunks, date, unsupport
     answer.coverage.citedSourceCount = 0;
     return answer;
   }
+  // A published income table is not a personal limit when the household size
+  // needed to choose a row is missing. Keep general table questions answerable.
+  if (plan.subjectCategory === 'housing' && plan.requestedFacts.includes('income_limit') &&
+      /\b(?:(?:my|our) (?:household )?(?:income|ami) limits?|(?:income|ami) limits? (?:for|of) (?:my|our) household)\b/.test(route.normalized) &&
+      !/\b(?:household (?:of|size (?:is|of))|family of) (?:\d+|one|two|three|four|five|six|seven|eight)\b/.test(route.normalized)) {
+    answer.status = 'insufficient_evidence';
+    answer.answer = 'I cannot determine a household-specific income limit without the household size and current program rules.';
+    answer.meaning = 'Confirm the program, household size, and current income table with the responsible agency. This is not an eligibility decision.';
+    return answer;
+  }
   const fields = plan.requestedFacts.filter(field => ['amount', 'fee', 'duration', 'deadline'].includes(field));
   const details = answer.evidence.filter(item => item.source_id === main.source_id && !item.stale && requestedDetailScore(query, item.quote) > 0);
   if (fields.some(field => !details.some(item => requestedDetails(query, item.quote).includes(field)))) {

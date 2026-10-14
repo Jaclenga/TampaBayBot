@@ -18,7 +18,10 @@ function SafeLink({ href, children }: { href: string; children: React.ReactNode 
 export function resourceNeedsRecheck(resource: CrisisResource, now: number): boolean {
   const checked = new Date(`${resource.verifiedAt}T00:00:00Z`).getTime();
   const ageDays = Math.floor((now - checked) / 86_400_000);
-  return resource.verificationStatus !== "source_checked" || !Number.isFinite(checked) || ageDays < -1 || ageDays > (resource.refreshDays ?? 90);
+  const scheduled = resource.nextReviewAt != null;
+  const due = scheduled ? new Date(`${resource.nextReviewAt}T23:59:59.999Z`).getTime() : NaN;
+  const overdue = ageDays > (resource.refreshDays ?? 90) || (scheduled && (!Number.isFinite(due) || now > due));
+  return resource.verificationStatus !== "source_checked" || !Number.isFinite(checked) || ageDays < -1 || overdue;
 }
 
 export function resourceCoverage(resource: CrisisResource, es: boolean): string {
@@ -46,7 +49,7 @@ export function ResourceCard({ resource, es, now }: { resource: CrisisResource; 
     <p><strong>{es ? "Disponibilidad" : "Availability"}:</strong> {resource.availability} {resource.availabilityStatus === "temporarily_closed" ? (es ? "Cierre temporal indicado." : "Listed as temporarily closed.") : resource.availabilityStatus === "discontinued" ? (es ? "Programa descontinuado." : "Listed as discontinued.") : (es ? "Confirme la disponibilidad actual." : "Confirm current availability.")}</p>
     {resource.restrictions && resource.restrictions.length > 0 && <p><strong>{es ? "Restricciones" : "Restrictions"}:</strong> {Array.isArray(resource.restrictions) ? resource.restrictions.join("; ") : resource.restrictions}</p>}
     {resource.serviceHours && <p><strong>{es ? "Horario publicado" : "Published hours"}:</strong> {resource.serviceHours}</p>}
-    <p className="small muted">{es ? "Última revisión pública" : "Last public check"}: {resource.verifiedAt}. {resource.verificationStatus === "source_unavailable" ? (es ? "La fuente no está disponible; verifique por teléfono." : "Source unavailable; verify by phone.") : stale ? (es ? "Necesita nueva verificación; contacte al proveedor." : "Needs recheck; contact the provider.") : (es ? "Confirme los detalles actuales con la organización." : "Confirm current details with the organization.")}</p>
+    <p className="small muted">{es ? "Información del recurso revisada por última vez" : "Resource information last reviewed"}: {resource.verifiedAt}. {resource.verificationStatus === "source_unavailable" ? (es ? "La fuente no estaba disponible en la última revisión; verifique por teléfono." : "Source unavailable at last review; verify by phone.") : stale ? (es ? "Necesita nueva revisión; contacte al proveedor." : "Review due; contact the provider.") : (es ? "Confirme los detalles actuales con la organización." : "Confirm current details with the organization.")}</p>
     <p><SafeLink href={resource.url}>{es ? "Sitio oficial" : "Official site"}</SafeLink> · <SafeLink href={resource.sourceUrl}>{es ? "Fuente" : "Source"}</SafeLink>{resource.intakeUrl && !["temporarily_closed", "discontinued"].includes(resource.availabilityStatus ?? "") && <> · <SafeLink href={resource.intakeUrl}>{es ? "Admisión oficial" : "Official intake"}</SafeLink></>}</p>
   </li>;
 }
@@ -65,6 +68,6 @@ export default function CrisisPlan({ plan, now }: { plan: CrisisPlanData; now: n
     {plan.documents.length > 0 && <><h4>{es ? "Información que puede preparar" : "Information you can prepare"}</h4><ul>{plan.documents.map((item) => <li key={item}>{item}</li>)}</ul></>}
     {plan.resources.length > 0 ? <><h4>{es ? "Contactos para consultar" : "Contacts to check"}</h4><ul className="crisis-resource-list">{plan.resources.map((resource) => <ResourceCard key={resource.id} resource={resource} es={es} now={now} />)}</ul></> : <p>{es ? "No hay un contacto local recién verificado para esta selección. Elija su condado o consulte el directorio." : "No recently checked local contact matches this selection. Choose your county or browse the directory."}</p>}
     <ul className="crisis-plan-notes">{plan.notes.map((note) => <li key={note}>{note}</li>)}</ul>
-    {plan.sources.length > 0 && <><h4>{es ? "Fuentes oficiales" : "Official sources"}</h4><ul>{plan.sources.map((source) => <li key={source.url}><SafeLink href={source.url}>{source.title}</SafeLink> <small>({es ? "revisada" : "checked"} {source.verifiedAt})</small></li>)}</ul></>}
+    {plan.sources.length > 0 && <><h4>{es ? "Fuentes oficiales" : "Official sources"}</h4><ul>{plan.sources.map((source) => <li key={source.url}><SafeLink href={source.url}>{source.title}</SafeLink> <small>({es ? "información revisada" : "information reviewed"} {source.verifiedAt})</small></li>)}</ul></>}
   </section>;
 }

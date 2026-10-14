@@ -1,0 +1,1864 @@
+{
+  "schemaVersion": 1,
+  "referenceDate": "2026-10-09T12:00:00.000Z",
+  "description": "Fictional, authored question-answer cases. The passages and .invalid links are synthetic evaluation evidence, not current program guidance or live service endpoints. The deterministic crisis guide has a separate scenario suite.",
+  "fixture": {
+    "id": "synthetic-civic-preview",
+    "synthetic": true,
+    "sources": [
+      {
+        "source_id": "hillsborough-help",
+        "title": "Synthetic Hillsborough housing help",
+        "agency": "Synthetic Hillsborough housing desk",
+        "canonical_url": "https://reliability-fixture.invalid/hillsborough-help",
+        "authoritative_status": "first-party",
+        "categories": [
+          "housing",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "tampa",
+          "hillsborough-county"
+        ],
+        "keywords": [
+          "rent",
+          "rental",
+          "utilities",
+          "emergency shelter",
+          "temporary housing",
+          "eviction"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "hillsborough-help",
+        "next_step": {
+          "label": "Open the synthetic Hillsborough housing contact",
+          "url": "https://reliability-fixture.invalid/hillsborough-help"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "tampa-rmap",
+        "title": "Synthetic Tampa rental and move-in assistance",
+        "agency": "Synthetic Tampa housing desk",
+        "canonical_url": "https://reliability-fixture.invalid/tampa-rmap",
+        "authoritative_status": "first-party",
+        "categories": [
+          "housing",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "tampa"
+        ],
+        "keywords": [
+          "deposit",
+          "security deposit",
+          "move-in costs",
+          "rental assistance",
+          "income",
+          "application"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "tampa-rmap",
+        "next_step": {
+          "label": "Open the synthetic Tampa move-in contact",
+          "url": "https://reliability-fixture.invalid/tampa-rmap"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "tampa-hrrp",
+        "title": "Synthetic Tampa home repair information",
+        "agency": "Synthetic Tampa housing desk",
+        "canonical_url": "https://reliability-fixture.invalid/tampa-hrrp",
+        "authoritative_status": "first-party",
+        "categories": [
+          "housing",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "tampa"
+        ],
+        "keywords": [
+          "homeowner",
+          "home repair",
+          "roof",
+          "repair assistance"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "tampa-hrrp",
+        "next_step": {
+          "label": "Open the synthetic home repair contact",
+          "url": "https://reliability-fixture.invalid/tampa-hrrp"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "florida-housing",
+        "title": "Synthetic affordable rental locator",
+        "agency": "Synthetic statewide housing desk",
+        "canonical_url": "https://reliability-fixture.invalid/florida-housing",
+        "authoritative_status": "first-party",
+        "categories": [
+          "housing",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "tampa",
+          "hillsborough-county",
+          "st-petersburg",
+          "clearwater",
+          "pinellas-county",
+          "pasco-county"
+        ],
+        "keywords": [
+          "affordable rental",
+          "rental listings",
+          "housing search",
+          "apartments"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "florida-housing",
+        "next_step": {
+          "label": "Open the synthetic rental locator",
+          "url": "https://reliability-fixture.invalid/florida-housing"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "pinellas-family-housing",
+        "title": "Synthetic Pinellas family housing navigation",
+        "agency": "Synthetic Pinellas housing desk",
+        "canonical_url": "https://reliability-fixture.invalid/pinellas-family-housing",
+        "authoritative_status": "first-party",
+        "categories": [
+          "housing",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "pinellas-county",
+          "st-petersburg",
+          "clearwater"
+        ],
+        "keywords": [
+          "family housing",
+          "emergency shelter",
+          "temporary housing",
+          "rent assistance"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "pinellas-family-housing",
+        "next_step": {
+          "label": "Open the synthetic Pinellas housing contact",
+          "url": "https://reliability-fixture.invalid/pinellas-family-housing"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "pasco-help",
+        "title": "Synthetic Pasco housing navigation",
+        "agency": "Synthetic Pasco housing desk",
+        "canonical_url": "https://reliability-fixture.invalid/pasco-help",
+        "authoritative_status": "first-party",
+        "categories": [
+          "housing",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "pasco-county"
+        ],
+        "keywords": [
+          "housing help",
+          "rent assistance",
+          "temporary housing",
+          "emergency shelter"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "pasco-help",
+        "next_step": {
+          "label": "Open the synthetic Pasco housing contact",
+          "url": "https://reliability-fixture.invalid/pasco-help"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "court-hillsborough-eviction",
+        "title": "Synthetic Hillsborough eviction court information",
+        "agency": "Synthetic Hillsborough court information desk",
+        "canonical_url": "https://reliability-fixture.invalid/court-hillsborough-eviction",
+        "authoritative_status": "first-party",
+        "categories": [
+          "housing",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "tampa",
+          "hillsborough-county"
+        ],
+        "keywords": [
+          "eviction",
+          "court summons",
+          "tenant",
+          "landlord",
+          "deadline",
+          "court papers"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "court-hillsborough-eviction",
+        "next_step": {
+          "label": "Open the synthetic Hillsborough eviction court contact",
+          "url": "https://reliability-fixture.invalid/court-hillsborough-eviction"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "court-pinellas-eviction",
+        "title": "Synthetic Pinellas eviction court information",
+        "agency": "Synthetic Pinellas court information desk",
+        "canonical_url": "https://reliability-fixture.invalid/court-pinellas-eviction",
+        "authoritative_status": "first-party",
+        "categories": [
+          "housing",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "pinellas-county",
+          "st-petersburg",
+          "clearwater"
+        ],
+        "keywords": [
+          "eviction",
+          "court summons",
+          "tenant",
+          "landlord",
+          "deadline",
+          "court forms"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "court-pinellas-eviction",
+        "next_step": {
+          "label": "Open the synthetic Pinellas eviction court contact",
+          "url": "https://reliability-fixture.invalid/court-pinellas-eviction"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "tampa-zoning",
+        "title": "Synthetic Tampa zoning map",
+        "agency": "Synthetic Tampa planning desk",
+        "canonical_url": "https://reliability-fixture.invalid/tampa-zoning",
+        "authoritative_status": "first-party",
+        "categories": [
+          "zoning",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "tampa"
+        ],
+        "keywords": [
+          "zoning",
+          "parcel",
+          "designation",
+          "map",
+          "land use"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "tampa-zoning",
+        "next_step": {
+          "label": "Open the synthetic Tampa zoning map",
+          "url": "https://reliability-fixture.invalid/tampa-zoning"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "clearwater-zoning",
+        "title": "Synthetic Clearwater zoning map",
+        "agency": "Synthetic Clearwater planning desk",
+        "canonical_url": "https://reliability-fixture.invalid/clearwater-zoning",
+        "authoritative_status": "first-party",
+        "categories": [
+          "zoning",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "clearwater"
+        ],
+        "keywords": [
+          "zoning",
+          "parcel",
+          "designation",
+          "map",
+          "land use"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "clearwater-zoning",
+        "next_step": {
+          "label": "Open the synthetic Clearwater zoning map",
+          "url": "https://reliability-fixture.invalid/clearwater-zoning"
+        },
+        "synthetic_fixture": true
+      },
+      {
+        "source_id": "tampa-development-contact",
+        "title": "Synthetic Tampa development record contact",
+        "agency": "Synthetic Tampa records desk",
+        "canonical_url": "https://reliability-fixture.invalid/tampa-development-contact",
+        "authoritative_status": "first-party",
+        "categories": [
+          "development",
+          "navigation"
+        ],
+        "jurisdiction_ids": [
+          "tampa"
+        ],
+        "keywords": [
+          "development",
+          "nearby construction",
+          "permit history",
+          "public records"
+        ],
+        "retrieval_date": "2026-10-09T12:00:00.000Z",
+        "refresh_days": 3650,
+        "topic_id": "tampa-development-contact",
+        "next_step": {
+          "label": "Open the synthetic development record contact",
+          "url": "https://reliability-fixture.invalid/tampa-development-contact"
+        },
+        "synthetic_fixture": true
+      }
+    ],
+    "chunks": [
+      {
+        "id": "hillsborough-help-rent",
+        "source_id": "hillsborough-help",
+        "text": "This synthetic housing desk provides a starting contact for Hillsborough renters seeking help with rent or utility bills. Staff must confirm any program, application availability, and household conditions.",
+        "url": "https://reliability-fixture.invalid/hillsborough-help",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "9e28a9a8a9bb1749cd359aec9d7a0dc85586137a5115a992bd9425399959bc6b",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "hillsborough-help-shelter",
+        "source_id": "hillsborough-help",
+        "text": "This synthetic housing desk can direct people who have nowhere safe to sleep to a human temporary-housing or shelter contact. This passage does not confirm an open bed or placement.",
+        "url": "https://reliability-fixture.invalid/hillsborough-help",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "0b9b5edc62ae90dcd9f498ba80b3ded05464e60bae7c8418b6b0b20c09e6eafe",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "tampa-rmap-move",
+        "source_id": "tampa-rmap",
+        "text": "This synthetic rental and move-in assistance page directs Tampa renters to ask the housing desk about security deposits and new move-in costs. The desk must confirm current conditions and application status.",
+        "url": "https://reliability-fixture.invalid/tampa-rmap",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "8d0306043ac0e17735e23799e8d9e5745324cd9a4ebc2c88652ff616f3d9eb03",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "tampa-hrrp-repair",
+        "source_id": "tampa-hrrp",
+        "text": "This synthetic home repair page gives Tampa homeowners a contact for questions about roof and other repair assistance. It does not decide whether a home or owner qualifies.",
+        "url": "https://reliability-fixture.invalid/tampa-hrrp",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "2a5fa1c784a8394974851827461db2e28e759fc4f89c071bcff4e1805c680059",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "florida-housing-rental",
+        "source_id": "florida-housing",
+        "text": "This synthetic statewide housing locator is a starting point for searching affordable rental listings. A listing does not confirm a vacancy, an affordable rent for a particular household, or eligibility.",
+        "url": "https://reliability-fixture.invalid/florida-housing",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "df7235272c5ce10442d7c32795c16fe05f8d81d3bc1fe49bda1e371f1629ff16",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "pinellas-family-housing-contact",
+        "source_id": "pinellas-family-housing",
+        "text": "This synthetic Pinellas housing contact can direct families seeking rent help, temporary housing, or emergency shelter to human intake. It does not confirm funding, open beds, or household eligibility.",
+        "url": "https://reliability-fixture.invalid/pinellas-family-housing",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "45789eeac614fcc9590f9f8d806dbab55ac3ee8c753e59bd7cbd9e3bb234040e",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "pasco-help-contact",
+        "source_id": "pasco-help",
+        "text": "This synthetic Pasco housing contact is a starting point for rent help, temporary housing, and emergency shelter navigation. Staff must confirm current services and availability.",
+        "url": "https://reliability-fixture.invalid/pasco-help",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "b67f2cedf3f5d9eb1ed5850be6a5b4bd990ac73f942e947f93f320d56759a25b",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "court-hillsborough-eviction-process",
+        "source_id": "court-hillsborough-eviction",
+        "text": "This synthetic Hillsborough eviction court page directs tenants who receive a summons to read their actual court papers and case record for response instructions and dates. A court contact can explain process but cannot give legal advice.",
+        "url": "https://reliability-fixture.invalid/court-hillsborough-eviction",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "45c20006ed58e9f473ced9fbb0c0c244d2b445ba0890460d162431e3b6b41b68",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "court-pinellas-eviction-process",
+        "source_id": "court-pinellas-eviction",
+        "text": "This synthetic Pinellas eviction court page points tenants to court forms, their actual summons, and the case record for dates and filing instructions. A court contact can explain process but cannot give legal advice.",
+        "url": "https://reliability-fixture.invalid/court-pinellas-eviction",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "c457758a507a1cb367aceaedd6546c1a09be279d9fae56a3ec5abd7fe9ef63e5",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "tampa-zoning-map",
+        "source_id": "tampa-zoning",
+        "text": "This synthetic Tampa zoning map is a starting point for looking up a parcel designation. Confirm the full address and city boundary with an official property lookup; a map label alone does not authorize a project.",
+        "url": "https://reliability-fixture.invalid/tampa-zoning",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "f1139779e2e559c0b9a2fffbfec70f236bd3669895a81fe55c0ba682b562c732",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "clearwater-zoning-map",
+        "source_id": "clearwater-zoning",
+        "text": "This synthetic Clearwater zoning map is a starting point for looking up a parcel designation. Confirm the full address and jurisdiction in an official property lookup before drawing a property conclusion.",
+        "url": "https://reliability-fixture.invalid/clearwater-zoning",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "6b431ad064d66961db81c054bde4c2efb52f1ffca507b3e73f5b79027f5d905f",
+        "synthetic_fixture": true
+      },
+      {
+        "id": "tampa-development-records",
+        "source_id": "tampa-development-contact",
+        "text": "This synthetic Tampa development records contact explains where to inspect dated nearby construction and permit records. A nearby record does not show that work finished or that another property may build the same project.",
+        "url": "https://reliability-fixture.invalid/tampa-development-contact",
+        "retrieved_at": "2026-10-09T12:00:00.000Z",
+        "content_hash": "65c11f15a04540c0d88cb2a00c97168c8fe21fb56b26cfe8f5fd777273451a41",
+        "synthetic_fixture": true
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "housing-rent-arrears",
+      "category": "housing_assistance",
+      "question": "I am behind on rent in Tampa. Where can I find housing assistance?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Point to housing assistance contact information without promising rent payment.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "hillsborough-help"
+      ],
+      "expectedNextStepSourceIds": [
+        "hillsborough-help"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "rent-payment-guarantee",
+          "pattern": "\\b(?:rent will be paid|guaranteed rent payment)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "hillsborough-help",
+          "chunkId": "hillsborough-help-rent"
+        }
+      ],
+      "allowedSourceIds": [
+        "hillsborough-help"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "housing-move-in-deposit",
+      "category": "housing_assistance",
+      "question": "I need help with a security deposit for a new Tampa apartment. Where should I start?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Identify a move-in assistance information contact while leaving award and current intake to the agency.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "tampa-rmap"
+      ],
+      "expectedNextStepSourceIds": [
+        "tampa-rmap"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "deposit-award",
+          "pattern": "\\b(?:you will receive|your deposit is covered|approved for a deposit)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-rmap",
+          "chunkId": "tampa-rmap-move"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-rmap"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "housing-rental-locator",
+      "category": "housing_assistance",
+      "question": "Where can I search for affordable rental listings in Pinellas County?",
+      "jurisdictionId": "pinellas-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Provide the rental search resource without implying a vacancy or eligibility.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "florida-housing"
+      ],
+      "expectedNextStepSourceIds": [
+        "florida-housing"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "available-apartment",
+          "pattern": "\\b(?:an apartment is available|you qualify for a listing)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "florida-housing",
+          "chunkId": "florida-housing-rental"
+        }
+      ],
+      "allowedSourceIds": [
+        "florida-housing"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "housing-utility-contact",
+      "category": "housing_assistance",
+      "question": "Where can a Hillsborough County renter ask about help with overdue utility bills?",
+      "jurisdictionId": "hillsborough-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Give a human housing contact for utility assistance questions; do not promise payment.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "hillsborough-help"
+      ],
+      "expectedNextStepSourceIds": [
+        "hillsborough-help"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "bill-payment-guarantee",
+          "pattern": "\\b(?:your utility bill will be paid|guaranteed utility assistance)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "hillsborough-help",
+          "chunkId": "hillsborough-help-rent"
+        }
+      ],
+      "allowedSourceIds": [
+        "hillsborough-help"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "housing-pasco-start",
+      "category": "housing_assistance",
+      "question": "I rent in Pasco County and need housing help. Where should I begin?",
+      "jurisdictionId": "pasco-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Route a Pasco renter to a Pasco housing contact.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "pasco-help"
+      ],
+      "expectedNextStepSourceIds": [
+        "pasco-help"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "tampa-eligibility",
+          "pattern": "\\byou qualify for (?:the )?Tampa\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "pasco-help",
+          "chunkId": "pasco-help-contact"
+        }
+      ],
+      "allowedSourceIds": [
+        "pasco-help"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "housing-pinellas-family",
+      "category": "housing_assistance",
+      "question": "My family needs housing help in Pinellas County. Where can I start?",
+      "jurisdictionId": "pinellas-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Route the family to a Pinellas housing contact without deciding eligibility.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "pinellas-family-housing"
+      ],
+      "expectedNextStepSourceIds": [
+        "pinellas-family-housing"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "family-eligibility",
+          "pattern": "\\byour family (?:is eligible|qualifies)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "pinellas-family-housing",
+          "chunkId": "pinellas-family-housing-contact"
+        }
+      ],
+      "allowedSourceIds": [
+        "pinellas-family-housing"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "housing-unknown-county",
+      "category": "housing_assistance",
+      "question": "I need local housing help, but I do not know which city or county serves me.",
+      "jurisdictionId": "tampa-bay",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Ask for a city or county before selecting a local program.",
+      "expectedStatus": "needs_jurisdiction",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [],
+      "unacceptableClaims": [
+        {
+          "id": "assumed-tampa",
+          "pattern": "\\byou (?:live in|are eligible in) Tampa\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "jurisdiction",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [],
+      "allowedSourceIds": [],
+      "nextStepRequired": false
+    },
+    {
+      "id": "housing-roof-repair",
+      "category": "housing_assistance",
+      "question": "Where can a Tampa homeowner ask about help repairing a roof?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Give home repair information as a starting point, without confirming approval.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "tampa-hrrp"
+      ],
+      "expectedNextStepSourceIds": [
+        "tampa-hrrp"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "repair-award",
+          "pattern": "\\b(?:your roof repair is approved|the repair will be paid for)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-hrrp",
+          "chunkId": "tampa-hrrp-repair"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-hrrp"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "shelter-tonight-tampa",
+      "category": "emergency_shelter",
+      "question": "I have nowhere to sleep tonight in Tampa. Where can I find a human contact for temporary housing?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Provide a relevant temporary-housing contact and avoid promising a bed.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "hillsborough-help"
+      ],
+      "expectedNextStepSourceIds": [
+        "hillsborough-help"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "bed-guarantee",
+          "pattern": "\\b(?:a bed is reserved|you have a shelter bed|guaranteed shelter bed)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "hillsborough-help",
+          "chunkId": "hillsborough-help-shelter"
+        }
+      ],
+      "allowedSourceIds": [
+        "hillsborough-help"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "shelter-family-pinellas",
+      "category": "emergency_shelter",
+      "question": "My family needs emergency shelter in Pinellas County. Where can we start?",
+      "jurisdictionId": "pinellas-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Give a Pinellas human intake contact; do not claim an open bed or placement.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "pinellas-family-housing"
+      ],
+      "expectedNextStepSourceIds": [
+        "pinellas-family-housing"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "family-placement",
+          "pattern": "\\b(?:your family has a bed|placement is confirmed|a bed is guaranteed)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "pinellas-family-housing",
+          "chunkId": "pinellas-family-housing-contact"
+        }
+      ],
+      "allowedSourceIds": [
+        "pinellas-family-housing"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "shelter-pasco-navigation",
+      "category": "emergency_shelter",
+      "question": "I may lose my room tonight in Pasco County. Where is emergency shelter navigation information?",
+      "jurisdictionId": "pasco-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Give a Pasco shelter navigation contact without a capacity claim.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "pasco-help"
+      ],
+      "expectedNextStepSourceIds": [
+        "pasco-help"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "pasco-bed-guarantee",
+          "pattern": "\\b(?:a shelter bed is available|you have a bed tonight)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "pasco-help",
+          "chunkId": "pasco-help-contact"
+        }
+      ],
+      "allowedSourceIds": [
+        "pasco-help"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "shelter-guaranteed-bed",
+      "category": "emergency_shelter",
+      "question": "Can you guarantee me a shelter bed tonight in Tampa?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Decline a guaranteed placement while offering a relevant human contact.",
+      "expectedStatus": "official_judgment",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "hillsborough-help"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "guaranteed-bed",
+          "pattern": "\\b(?:I guarantee a bed|a bed is guaranteed|you have a bed)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "hillsborough-help",
+          "chunkId": "hillsborough-help-shelter"
+        }
+      ],
+      "allowedSourceIds": [
+        "hillsborough-help"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "shelter-location-missing",
+      "category": "emergency_shelter",
+      "question": "I need housing and shelter help, but I have not said which Tampa Bay county I am in.",
+      "jurisdictionId": "tampa-bay",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Ask which city or county applies before choosing a local shelter contact.",
+      "expectedStatus": "needs_jurisdiction",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [],
+      "unacceptableClaims": [
+        {
+          "id": "assumed-shelter-county",
+          "pattern": "\\b(?:you are in|your county is) (?:Hillsborough|Pinellas|Pasco)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "jurisdiction",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [],
+      "allowedSourceIds": [],
+      "nextStepRequired": false
+    },
+    {
+      "id": "eviction-hillsborough-summons",
+      "category": "eviction",
+      "question": "I received an eviction summons in Hillsborough County. Where can I check the court process?",
+      "jurisdictionId": "hillsborough-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Direct the tenant to the court information and their actual papers; do not invent a response date.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "expectedNextStepSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "invented-response-period",
+          "pattern": "\\b(?:you have|must respond within) \\d+ (?:calendar |business )?days\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "court-hillsborough-eviction",
+          "chunkId": "court-hillsborough-eviction-process"
+        }
+      ],
+      "allowedSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eviction-pinellas-forms",
+      "category": "eviction",
+      "question": "Where can I find Pinellas County court forms for an eviction case?",
+      "jurisdictionId": "pinellas-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Find the court forms and case-information path without legal advice.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "court-pinellas-eviction"
+      ],
+      "expectedNextStepSourceIds": [
+        "court-pinellas-eviction"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "court-filing-advice",
+          "pattern": "\\byou must file (?:an? )?answer within \\d+ days\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "court-pinellas-eviction",
+          "chunkId": "court-pinellas-eviction-process"
+        }
+      ],
+      "allowedSourceIds": [
+        "court-pinellas-eviction"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eviction-deadline-unknown",
+      "category": "eviction",
+      "question": "My landlord gave me a notice. How many days do I have to respond to a court summons in Hillsborough County?",
+      "jurisdictionId": "hillsborough-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Avoid a numeric deadline without the actual court papers and direct the visitor to verify them.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "invented-days",
+          "pattern": "\\b(?:you have|must respond within|your deadline is) \\d+ (?:calendar |business )?days\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "court-hillsborough-eviction",
+          "chunkId": "court-hillsborough-eviction-process"
+        }
+      ],
+      "allowedSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eviction-legal-decision",
+      "category": "eviction",
+      "question": "Can you give legal advice and decide whether my Tampa landlord may evict me?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Decline a legal determination and route to human court or legal help.",
+      "expectedStatus": "official_judgment",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "legal-conclusion",
+          "pattern": "\\b(?:your landlord may legally evict you|the eviction is lawful)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "court-hillsborough-eviction",
+          "chunkId": "court-hillsborough-eviction-process"
+        }
+      ],
+      "allowedSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eviction-notice-thirty-days",
+      "category": "eviction",
+      "question": "An eviction notice means I have exactly 30 days to respond in Pinellas County, right?",
+      "jurisdictionId": "pinellas-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Do not accept the proposed deadline; point to actual court papers and the clerk.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "court-pinellas-eviction"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "asserted-thirty-days",
+          "pattern": "\\b(?:you have exactly 30 days|your deadline is 30 days)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "court-pinellas-eviction",
+          "chunkId": "court-pinellas-eviction-process"
+        }
+      ],
+      "allowedSourceIds": [
+        "court-pinellas-eviction"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eviction-tampa-court-papers",
+      "category": "eviction",
+      "question": "I am facing eviction in Tampa. Where can I find help understanding court papers?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Give a court-process contact and avoid resolving the case itself.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "expectedNextStepSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "eviction-outcome",
+          "pattern": "\\b(?:you will win your case|your eviction will be dismissed)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "court-hillsborough-eviction",
+          "chunkId": "court-hillsborough-eviction-process"
+        }
+      ],
+      "allowedSourceIds": [
+        "court-hillsborough-eviction"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eviction-unknown-county",
+      "category": "eviction",
+      "question": "I need eviction help in Tampa Bay but have not said which county my court case is in.",
+      "jurisdictionId": "tampa-bay",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Ask for the relevant county before choosing a local court resource.",
+      "expectedStatus": "needs_jurisdiction",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [],
+      "unacceptableClaims": [
+        {
+          "id": "assumed-court",
+          "pattern": "\\byour case is in (?:Hillsborough|Pinellas|Pasco)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "jurisdiction",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [],
+      "allowedSourceIds": [],
+      "nextStepRequired": false
+    },
+    {
+      "id": "eligibility-rmap-income",
+      "category": "eligibility",
+      "question": "Am I eligible for Tampa move-in assistance if I earn $40,000?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Refuse to decide personal eligibility from income alone and identify conditions to verify with the agency.",
+      "expectedStatus": "official_judgment",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-rmap"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "income-determination",
+          "pattern": "\\b(?:you are eligible|you qualify|your income qualifies)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "eligibility",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-rmap",
+          "chunkId": "tampa-rmap-move"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-rmap"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eligibility-voucher",
+      "category": "eligibility",
+      "question": "Do I qualify for rental deposit help in Tampa because I have a housing voucher?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Do not infer eligibility from a voucher; route to the program agency for current conditions.",
+      "expectedStatus": "official_judgment",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-rmap"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "voucher-determination",
+          "pattern": "\\b(?:your voucher qualifies you|you are eligible|you automatically qualify)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "eligibility",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-rmap",
+          "chunkId": "tampa-rmap-move"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-rmap"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eligibility-no-household",
+      "category": "eligibility",
+      "question": "Tell me I qualify for Tampa housing assistance without checking my household.",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Do not certify eligibility without household details and current rules.",
+      "expectedStatus": "official_judgment",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "hillsborough-help"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "unsupported-qualification",
+          "pattern": "\\b(?:you qualify|you are eligible|approved for assistance)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "eligibility",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "hillsborough-help",
+          "chunkId": "hillsborough-help-rent"
+        }
+      ],
+      "allowedSourceIds": [
+        "hillsborough-help"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eligibility-income-rules",
+      "category": "eligibility",
+      "question": "Where can I check income requirements for Tampa rental assistance?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Give the program contact and explain that a personal income decision needs current agency rules.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "tampa-rmap"
+      ],
+      "expectedNextStepSourceIds": [
+        "tampa-rmap"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "invented-income-limit",
+          "pattern": "\\b(?:income limit is|must earn below) \\$?[\\d,]+\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "eligibility",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-rmap",
+          "chunkId": "tampa-rmap-move"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-rmap"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eligibility-applications-today",
+      "category": "eligibility",
+      "question": "Are Tampa move-in assistance applications open today?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "State that dated fixture evidence cannot confirm today's intake and send the visitor to the agency.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-rmap"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "open-intake-claim",
+          "pattern": "\\b(?:you can apply today|applications are open and accepting)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-rmap",
+          "chunkId": "tampa-rmap-move"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-rmap"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eligibility-pinellas-open",
+      "category": "eligibility",
+      "question": "Are Pinellas family housing applications accepting people right now?",
+      "jurisdictionId": "pinellas-county",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Avoid claiming live application availability from a general contact excerpt.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "pinellas-family-housing"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "pinellas-intake-claim",
+          "pattern": "\\b(?:you can apply right now|applications are open and accepting)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "pinellas-family-housing",
+          "chunkId": "pinellas-family-housing-contact"
+        }
+      ],
+      "allowedSourceIds": [
+        "pinellas-family-housing"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eligibility-home-repair",
+      "category": "eligibility",
+      "question": "Am I eligible for Tampa home repair help if I own my house?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Do not decide homeowner eligibility from ownership alone; provide a verification path.",
+      "expectedStatus": "official_judgment",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-hrrp"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "ownership-determination",
+          "pattern": "\\b(?:ownership makes you eligible|you qualify|you are eligible)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "eligibility",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-hrrp",
+          "chunkId": "tampa-hrrp-repair"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-hrrp"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "eligibility-missing-household",
+      "category": "eligibility",
+      "question": "I do not know my household size. Can you determine my income limit for rental assistance in Tampa?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Do not invent a household-specific limit; ask the visitor to verify household rules with the agency.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-rmap"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "specific-income-limit",
+          "pattern": "\\b(?:your income limit is|you must earn under) \\$?[\\d,]+\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "eligibility",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-rmap",
+          "chunkId": "tampa-rmap-move"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-rmap"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "zoning-tampa-map",
+      "category": "zoning_property",
+      "question": "Where can I find the official Tampa zoning map?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Give a zoning map starting point without assigning a parcel designation.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "tampa-zoning"
+      ],
+      "expectedNextStepSourceIds": [
+        "tampa-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "parcel-designation",
+          "pattern": "\\byour parcel is zoned [A-Z]{1,4}-?\\d+\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-zoning",
+          "chunkId": "tampa-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "zoning-property-unknown",
+      "category": "zoning_property",
+      "question": "What zoning applies to my property in Tampa?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Ask for a full address and official property lookup before any parcel conclusion.",
+      "expectedStatus": "needs_location",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "guessed-zoning",
+          "pattern": "\\byour property is zoned [A-Z]{1,4}-?\\d+\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "address",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-zoning",
+          "chunkId": "tampa-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "zoning-address-confirmation",
+      "category": "zoning_property",
+      "question": "What is the zoning at 315 E Kennedy Blvd, Tampa?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Require address and jurisdiction confirmation through official property lookup, despite a street address in the question.",
+      "expectedStatus": "needs_location",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "assumed-address-zoning",
+          "pattern": "\\b315 E Kennedy Blvd is zoned [A-Z]{1,4}-?\\d+\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "address",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-zoning",
+          "chunkId": "tampa-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "zoning-neighbor-duplex",
+      "category": "zoning_property",
+      "question": "My Tampa property is near a duplex. Can I build one too?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Decline a project-specific approval; neighboring use does not establish permission.",
+      "expectedStatus": "official_judgment",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "neighbor-permission",
+          "pattern": "\\byou (?:can|may) build a duplex\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-zoning",
+          "chunkId": "tampa-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "zoning-rm24-definition",
+      "category": "zoning_property",
+      "question": "What does RM-24 mean in Tampa zoning?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Do not invent a code definition or unit count absent a verified rule.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "rm24-unit-count",
+          "pattern": "\\bRM-?24 (?:allows|permits) \\d+ units\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-zoning",
+          "chunkId": "tampa-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "zoning-clearwater-street",
+      "category": "zoning_property",
+      "question": "What zoning is at Main Street in Clearwater?",
+      "jurisdictionId": "clearwater",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Request a full address and official lookup; the street name is not a parcel.",
+      "expectedStatus": "needs_location",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "clearwater-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "street-zoning",
+          "pattern": "\\bMain Street is zoned [A-Z]{1,4}-?\\d+\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": true,
+      "clarificationKind": "address",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "clearwater-zoning",
+          "chunkId": "clearwater-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "clearwater-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "zoning-map-not-approval",
+      "category": "zoning_property",
+      "question": "Can you certify that the Tampa zoning map approves my four-unit project?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Decline certification and refer the project to responsible planning staff.",
+      "expectedStatus": "official_judgment",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "four-unit-certification",
+          "pattern": "\\b(?:the four-unit project is approved|I certify (?:that )?four units)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-zoning",
+          "chunkId": "tampa-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "zoning-clearwater-map",
+      "category": "zoning_property",
+      "question": "Where can I check the Clearwater zoning map?",
+      "jurisdictionId": "clearwater",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Give Clearwater's map starting point without substituting Tampa zoning.",
+      "expectedStatus": "answered",
+      "requiredSourceIds": [
+        "clearwater-zoning"
+      ],
+      "expectedNextStepSourceIds": [
+        "clearwater-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "tampa-rule-in-clearwater",
+          "pattern": "\\bTampa zoning rules apply to Clearwater\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "clearwater-zoning",
+          "chunkId": "clearwater-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "clearwater-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "unsupported-pelican-grant",
+      "category": "unsupported_scope",
+      "question": "Where can I apply for the Pelican Housing Grant in Tampa?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Do not invent a named grant; offer a verified housing contact to check the exact name.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "hillsborough-help"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "invented-pelican-grant",
+          "pattern": "\\b(?:Pelican Housing Grant (?:is available|accepts applications)|apply for the Pelican Housing Grant at)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "hillsborough-help",
+          "chunkId": "hillsborough-help-rent"
+        }
+      ],
+      "allowedSourceIds": [
+        "hillsborough-help"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "unsupported-dolphin-fund",
+      "category": "unsupported_scope",
+      "question": "Does the Tampa Dolphin Deposit Fund pay everyone $9,000?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Reject the unverified named fund and payment claim.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-rmap"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "invented-dolphin-payment",
+          "pattern": "\\b(?:Dolphin Deposit Fund pays|everyone gets \\$?9,?000)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-rmap",
+          "chunkId": "tampa-rmap-move"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-rmap"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "scope-miami-rent",
+      "category": "unsupported_scope",
+      "question": "Where can I find local rental assistance in Miami?",
+      "jurisdictionId": "tampa-bay",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "State that Miami is outside the supported local collection without presenting a Tampa program as local.",
+      "expectedStatus": "missing_geographic_coverage",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [],
+      "unacceptableClaims": [
+        {
+          "id": "tampa-as-miami",
+          "pattern": "\\bTampa (?:rental|housing) assistance (?:serves|covers) Miami\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [],
+      "allowedSourceIds": [],
+      "nextStepRequired": false
+    },
+    {
+      "id": "scope-orlando-zoning",
+      "category": "unsupported_scope",
+      "question": "What zoning applies to my Orlando property?",
+      "jurisdictionId": "tampa-bay",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Decline local property conclusions for Orlando and direct the visitor to its government.",
+      "expectedStatus": "missing_geographic_coverage",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [],
+      "unacceptableClaims": [
+        {
+          "id": "tampa-rule-in-orlando",
+          "pattern": "\\bTampa zoning (?:applies|governs) (?:in |my )?Orlando\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [],
+      "allowedSourceIds": [],
+      "nextStepRequired": false
+    },
+    {
+      "id": "scope-pizza",
+      "category": "unsupported_scope",
+      "question": "What is the best pizza in Tampa?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "State the civic scope without giving an invented restaurant recommendation.",
+      "expectedStatus": "out_of_scope",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [],
+      "unacceptableClaims": [
+        {
+          "id": "restaurant-claim",
+          "pattern": "\\b(?:best pizza is|I recommend the pizza at)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [],
+      "allowedSourceIds": [],
+      "nextStepRequired": false
+    },
+    {
+      "id": "scope-pirate-song",
+      "category": "unsupported_scope",
+      "question": "Write a pirate song about my landlord.",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Keep the answer within civic navigation rather than generating a song.",
+      "expectedStatus": "out_of_scope",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [],
+      "unacceptableClaims": [
+        {
+          "id": "song-lyric",
+          "pattern": "\\b(?:yo ho ho|ahoy matey)\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": false,
+      "allowedSupportPairs": [],
+      "allowedSourceIds": [],
+      "nextStepRequired": false
+    },
+    {
+      "id": "unsupported-ordinance",
+      "category": "unsupported_scope",
+      "question": "Does ordinance 99999 approve duplexes in Tampa?",
+      "jurisdictionId": "tampa",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Do not fabricate the ordinance or a zoning approval; refer to official planning information.",
+      "expectedStatus": "insufficient_evidence",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [
+        "tampa-zoning"
+      ],
+      "unacceptableClaims": [
+        {
+          "id": "invented-ordinance",
+          "pattern": "\\bordinance 99999 (?:allows|approves|permits) duplexes\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [
+        {
+          "sourceId": "tampa-zoning",
+          "chunkId": "tampa-zoning-map"
+        }
+      ],
+      "allowedSourceIds": [
+        "tampa-zoning"
+      ],
+      "nextStepRequired": true
+    },
+    {
+      "id": "scope-orlando-rules",
+      "category": "unsupported_scope",
+      "question": "Find Orlando rental assistance rules and apply them to my Tampa household.",
+      "jurisdictionId": "tampa-bay",
+      "fixtureId": "synthetic-civic-preview",
+      "expectedBehavior": "Avoid importing out-of-area rules or making a household determination.",
+      "expectedStatus": "missing_geographic_coverage",
+      "requiredSourceIds": [],
+      "expectedNextStepSourceIds": [],
+      "unacceptableClaims": [
+        {
+          "id": "orlando-rules-in-tampa",
+          "pattern": "\\bOrlando (?:rental|housing) rules apply to (?:your|my) Tampa household\\b",
+          "flags": "i"
+        }
+      ],
+      "clarificationRequired": false,
+      "clarificationKind": "none",
+      "uncertaintyRequired": true,
+      "allowedSupportPairs": [],
+      "allowedSourceIds": [],
+      "nextStepRequired": false
+    }
+  ]
+}

@@ -360,18 +360,29 @@ function sourceCheckAge(resource, now) {
   return (now.getTime() - checked) / 86_400_000;
 }
 
+function reviewIsDue(resource, now, age, maximum) {
+  // The configured date can bring a review forward. It cannot extend the
+  // existing per-resource maximum interval without a new content review.
+  if (Math.floor(age) > maximum) return true;
+  if (resource.nextReviewAt == null) return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(resource.nextReviewAt)) return true;
+  const dueDay = Date.parse(`${resource.nextReviewAt}T00:00:00Z`);
+  if (!Number.isFinite(dueDay) || new Date(dueDay).toISOString().slice(0, 10) !== resource.nextReviewAt) return true;
+  return now.getTime() >= dueDay + 86_400_000;
+}
+
 function recentlyChecked(resource, now) {
   if (!sourceIsListable(resource)) return false;
   const maximum = Number.isInteger(resource.refreshDays) && resource.refreshDays > 0 ? resource.refreshDays : 90;
   const age = sourceCheckAge(resource, now);
-  return Number.isFinite(age) && age >= -1 && Math.floor(age) <= maximum;
+  return Number.isFinite(age) && age >= -1 && age <= 365 && !reviewIsDue(resource, now, age, maximum);
 }
 
 function needsRecheck(resource, now) {
   if (!sourceIsListable(resource)) return false;
   const maximum = Number.isInteger(resource.refreshDays) && resource.refreshDays > 0 ? resource.refreshDays : 90;
   const age = sourceCheckAge(resource, now);
-  return Number.isFinite(age) && Math.floor(age) > maximum && age <= 365;
+  return Number.isFinite(age) && age >= -1 && age <= 365 && reviewIsDue(resource, now, age, maximum);
 }
 
 function resourceTags(resource) {

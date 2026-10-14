@@ -28,6 +28,9 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test:source
+      - run: npm run resource:freshness -- --output work/resource-freshness/ci-offline
+      # Synthetic answer-reliability cases run with outbound fetch disabled.
+      - run: npm run eval:reliability
       - run: npx playwright install --with-deps chromium
       - run: npm run test:source:browser
       - run: npm run build:standalone -- --name tampabaybot-source-alpha --outdir work/standalone/ci-alpha
@@ -41,3 +44,4 @@ jobs:
             work/standalone/ci-alpha/verification.json
             work/standalone/ci-alpha/artifact.json
             work/source-browser-report/
+            work/evals/reliability/

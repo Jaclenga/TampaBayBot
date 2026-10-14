@@ -48,8 +48,8 @@ function assertEmptyReport(name, report) {
   assert.deepEqual(report.humanEvaluation, { status: 'not_run' });
   assert.deepEqual(report.limitations, [NOTICE]);
   assert.deepEqual(report.cases, [], `Historical cases in ${name}`);
-  const suites = Object.fromEntries(['navigation', 'guardrails', 'providers', 'metamorphic', 'jurisdiction', 'quality'].map(suite => [suite, { cases: 0, passed: 0, failed: 0, checks: EMPTY_CHECKS }]));
-  assert.deepEqual(report.summary, { cases: 0, passed: 0, failed: 0, checks: EMPTY_CHECKS, suites }, `Historical suite summary in ${name}`);
+  const suites = Object.fromEntries(['navigation', 'guardrails', 'providers', 'metamorphic', 'jurisdiction', 'quality', 'reliability'].map(suite => [suite, { cases: 0, passed: 0, failed: 0, checks: EMPTY_CHECKS }]));
+  assert.deepEqual(report.summary, { cases: 0, passed: 0, failed: 0, checks: EMPTY_CHECKS, suites, reliabilityByCategory: null }, `Historical suite summary in ${name}`);
 }
 
 export const EMPTY_ARRAY_FILES = [
@@ -86,7 +86,7 @@ export function assertAllowedReleasePath(name) {
   assert.ok(!/^docs\/(?:BUG_FIX_FOLLOWUP_2026-09-12|OLLAMA_TESTING|COVERAGE_EXPANSION|RISK_ENUMERATION|RISKS|ASSETS)\.md$/i.test(name), `Archived document is not release content: ${name}`);
   if (name.startsWith('data/')) assert.ok(['data/sources.json', 'data/chunks.json', 'data/corpus.json', 'data/ingestion-report.json', 'data/verification-report.json', 'data/gis-config.json', 'data/development-config.json'].includes(name), `Unreviewed data artifact: ${name}`);
   if (name.startsWith('evaluation/') && name.endsWith('.json')) assert.ok([
-    ...EMPTY_ARRAY_FILES, ...EMPTY_REPORT_FILES, 'evaluation/datasets/quality-benchmark.json', 'evaluation/datasets/program-recall-benchmark.json', 'evaluation/datasets/ground_truth_questions.json', 'evaluation/datasets/housing-crisis-scenarios.json',
+    ...EMPTY_ARRAY_FILES, ...EMPTY_REPORT_FILES, 'evaluation/datasets/quality-benchmark.json', 'evaluation/datasets/program-recall-benchmark.json', 'evaluation/datasets/ground_truth_questions.json', 'evaluation/datasets/housing-crisis-scenarios.json', 'evaluation/datasets/answer-reliability.json',
   ].includes(name), `Historical evaluation artifact: ${name}`);
 }
 

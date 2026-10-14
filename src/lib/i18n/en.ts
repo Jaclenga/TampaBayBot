@@ -24,7 +24,7 @@ export const en = {
     submit: "Search",
     busy: "Searching...",
     privacy:
-      "Leave out names, account numbers, and private details. This app does not save questions.",
+      "Leave out names, account numbers, and private details. Requests pass through the hosting service.",
     empty: "Enter a housing question or a Tampa Bay street address.",
     error: "We couldn’t complete that search. Please try again.",
     max: "Keep your question under 1,000 characters.",
@@ -141,13 +141,13 @@ export const en = {
       "Each answer keeps its evidence close. We show the source, explain uncertainty, and route important decisions to the responsible agency. This first release offers source-backed navigation, not personalized legal or eligibility decisions.",
     privacyTitle: "Privacy",
     privacy:
-      "The app does not save questions, addresses, conversations, or personal profiles. Requests pass through the hosting provider. Address lookups go to public GIS services; an optional map goes to OpenStreetMap. Avoid entering sensitive personal information.",
+      "The inspected app code does not save questions, addresses, or conversations in browser storage or its application database. Requests pass through the hosting provider, which may keep logs. Address lookups go to public GIS services; an optional map goes to OpenStreetMap. Avoid entering sensitive personal information.",
     languageTitle: "Language",
     language:
       "Questions, property tools, and reference pages support English and Spanish. Source quotations, official names, record descriptions, and source notes remain in their original language, with the recorded source language shown when available.",
     limitsTitle: "What this release can and cannot do",
     limits:
-      "This is a v0.1 review build. It uses saved source snapshots and live property lookups, which can fail or return multiple matches. It cannot guarantee complete development records or decide what is legally permitted. Human audits and assistive-technology testing are still required before a public release.",
+      "This is a v0.1 review build. It uses saved source snapshots and live property lookups, which can fail or return multiple matches. It cannot guarantee complete development records or decide what is legally permitted. Human audits and assistive-technology testing are still required before unrestricted resident use.",
     accessTitle: "Accessibility",
     access:
       "Use the entire service with a keyboard. Every property and activity result has a text view; opening a map is optional. The layout supports small screens, visible focus, larger text, and reduced motion. Automated checks help us find issues, but they do not establish full WCAG conformance.",

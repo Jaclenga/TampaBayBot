@@ -49,6 +49,7 @@ export default function AboutContent({ modelNotice }: { modelNotice: string }) {
             <div>
               <h2>{section.title}</h2>
               <p>{section.text}</p>
+              {section.id === "privacy" && <p><a href="/privacy/">{en.footer.privacy}</a></p>}
             </div>
           </section>
         ))}

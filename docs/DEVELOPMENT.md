@@ -72,6 +72,7 @@ Run from the project root and record the checks performed.
 | `npm run ingest -- --check` | Check acquired source regeneration and provenance; writes `data/verification-report.json` |
 | `npm run evaluate` | Strict legacy benchmark and associated review packets; needs evidence |
 | `npm run eval:suite` | Offline navigation, guardrail, provider, variation, jurisdiction and claim-quality cases; public-snapshot cases need reviewed evidence |
+| `npm run eval:reliability` | Offline synthetic answer-reliability cases with category failures in `work/evals/reliability/`; works with the empty source-only corpus and makes no model/network call |
 | `npm run eval:recall -- --strict` | Offline program-recall checks against reviewed, hash-matched evidence; reports stay under `work/` |
 | `npm run test:llm-runtime` | Local Worker wiring with synthetic provider responses; needs the expected, ready corpus; writes `evaluation/llm-runtime/latest.json` |
 | `npm run build` | Compile the production application |
@@ -79,7 +80,7 @@ Run from the project root and record the checks performed.
 | `npm run build:standalone -- --name my-tampabaybot` | Compile an isolated Worker artifact under `work/standalone/`; no account or deployment required |
 | `npm run test:standalone -- --directory work/standalone/<artifact-directory>` | Check a generated standalone artifact with a Wrangler dry run and local HTTP smoke; no external deployment |
 
-`npm run check` combines typecheck, lint, source regressions and build. `npm run check:corpus` combines typecheck, lint, complete corpus regressions, legacy evaluation, the offline suite and build. Neither includes source regeneration, program-recall evaluation, browser checks or real-model tests. Source-release CI separately checks the manifest, secret scanning, dependencies, source tests, browser flows and standalone artifact smoke.
+`npm run check` combines typecheck, lint, source regressions and build. `npm run check:corpus` combines typecheck, lint, complete corpus regressions, legacy evaluation, the offline suite and build. Neither includes source regeneration, program-recall evaluation, browser checks or real-model tests. Source-release CI separately checks the manifest, secret scanning, dependencies, source tests, the synthetic answer-reliability suite, browser flows and standalone artifact smoke. The [evaluation guide](EVAL_SUITE.md#source-only-answer-reliability) explains its reports and limits.
 
 For a focused regression, run `node --test --test-isolation=none tests/program-context-regressions.test.mjs` and replace the path with the relevant test file. `npm test` discovers the source test files through `scripts/test-source.mjs`; historical corpus-dependent tests are excluded there. Do not run acquisition or live-provider commands to satisfy an offline source check.
 

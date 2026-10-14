@@ -63,7 +63,7 @@ test('AI outage and app limits give distinct notices while housing help stays op
   await page.route('**/api/usage', route => route.fulfill({ json: { ai: usage } }));
   await page.goto('/');
   await expect(page.locator('.ai-usage')).toContainText('AI questions remaining today: 12 of 15');
-  await expect(page.locator('.chat-panel .ai-fallback-note')).toContainText("TampaBayBot's AI chat is temporarily unavailable. You can still browse verified housing assistance resources.");
+  await expect(page.locator('.chat-panel .ai-fallback-note')).toContainText("TampaBayBot's AI chat is temporarily unavailable. You can still browse housing assistance contacts and official links.");
   await expect(page.getByRole('button', { name: 'Search' })).toBeEnabled();
   await expect(page.getByRole('heading', { name: 'Housing help', exact: true })).toBeVisible();
 
@@ -116,25 +116,25 @@ test('an exhausted chat tab refreshes its allowance after the UTC reset', async 
   expect(usageCalls).toBe(2);
 });
 
-test('emergency contacts and Spanish copied details expose expired source checks', async ({ page }) => {
+test('emergency contacts and Spanish copied details expose overdue reviews', async ({ page }) => {
   await page.clock.install({ time: new Date('2026-11-11T12:00:00.000Z') });
   await page.goto('/');
   const hotline = page.locator('.immediate-links > div').filter({ hasText: 'Domestic violence crisis hotline' });
   await expect(hotline).toContainText('Hillsborough');
-  await expect(hotline).toContainText('Needs recheck');
+  await expect(hotline).toContainText('Review due');
   await expect(hotline).toContainText('2026-10-09');
   await page.getByLabel('What housing problem are you facing?').selectOption('domestic_violence');
   await expect(page.locator('.crisis-plan-resources')).toContainText('Domestic violence crisis hotline');
   await expect(page.locator('.crisis-plan-resources')).toContainText('Coverage: Hillsborough County');
-  await expect(page.locator('.crisis-plan-resources')).toContainText('Source check expired; verify directly');
+  await expect(page.locator('.crisis-plan-resources')).toContainText('Review due; verify directly');
   await page.getByLabel('Language').selectOption('es');
-  await expect(hotline).toContainText('Necesita nueva verificación');
-  await expect(page.locator('.crisis-plan-resources')).toContainText('La comprobación de la fuente venció');
+  await expect(hotline).toContainText('Necesita nueva revisión');
+  await expect(page.locator('.crisis-plan-resources')).toContainText('Necesita nueva revisión');
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.getByRole('button', { name: 'Copiar detalles' }).first().click();
   const copied = await page.evaluate(() => navigator.clipboard.readText());
-  expect(copied).toContain('Estado de la fuente:');
-  expect(copied).toContain('Última comprobación: 2026-10-09');
+  expect(copied).toContain('Estado de revisión:');
+  expect(copied).toContain('Información revisada por última vez: 2026-10-09');
   expect(copied).not.toContain('Source status:');
 });
 
@@ -157,7 +157,7 @@ test('optional crisis guide creates a cited eviction plan entirely from static d
   await expect(page.locator('.crisis-plan')).toContainText('Coverage:');
   await expect(page.locator('.crisis-plan')).toContainText('Who can use this:');
   await expect(page.locator('.crisis-plan')).toContainText('Service availability:');
-  await expect(page.locator('.crisis-plan')).toContainText('Public details last source-checked: 2026-10-09');
+  await expect(page.locator('.crisis-plan')).toContainText('Resource information last reviewed: 2026-10-09');
   await expect(page.locator('.crisis-plan-support').last().getByRole('link').first()).toHaveAttribute('href', /^https:\/\//);
   expect(apiRequests).toBe(initialRequests);
   await page.getByLabel('Language').selectOption('es');
@@ -178,7 +178,7 @@ test('optional crisis guide creates a cited eviction plan entirely from static d
   const copiedPlan = await page.evaluate(() => navigator.clipboard.readText());
   expect(copiedPlan).toContain('existing leases are ineligible');
   expect(copiedPlan).toContain('Only these cities: City of Tampa');
-  expect(copiedPlan).toContain('Public details last source-checked: 2026-10-09');
+  expect(copiedPlan).toContain('Resource information last reviewed: 2026-10-09');
   expect(apiRequests).toBe(initialRequests);
 });
 

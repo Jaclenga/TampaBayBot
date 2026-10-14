@@ -96,12 +96,28 @@ test('expired local safety contacts remain clearly marked as needing recheck whe
   const closed = resources.map(item => item.id === 'emergency-spring' ? { ...item, availabilityStatus: 'temporarily_closed' } : item);
   assert.ok(!buildCrisisPlan({ situation: 'domestic_violence', location: 'tampa' }, closed,
     { now: new Date('2026-11-10T12:00:00Z') }).resources.some(item => item.id === 'emergency-spring'));
-  const partialFresh = resources.map(item => item.id === 'emergency-spring' ? { ...item, verifiedAt: '2026-11-09' } : item);
+  const partialFresh = resources.map(item => item.id === 'emergency-spring' ? { ...item, verifiedAt: '2026-11-09', nextReviewAt: '2026-12-09' } : item);
   const unknownArea = buildCrisisPlan({ situation: 'domestic_violence', location: 'all' }, partialFresh,
     { now: new Date('2026-11-10T12:00:00Z') });
   assert.equal(unknownArea.resources.find(item => item.id === 'emergency-spring').verificationStatus, 'source_checked');
   assert.equal(unknownArea.resources.find(item => item.id === 'emergency-casa').verificationStatus, 'needs_recheck');
   assert.equal(unknownArea.resources.find(item => item.id === 'emergency-sunrise').verificationStatus, 'needs_recheck');
+});
+
+test('an earlier next-review date removes a contact from fresh referrals despite a later link check', () => {
+  const legal = resources.find(item => item.id === 'legal-bay-area');
+  const dueEarly = { ...legal, nextReviewAt: '2026-10-10', lastLinkCheckedAt: '2026-10-11T08:00:00Z', linkStatus: 'ok' };
+  const input = { situation: 'eviction', location: 'tampa', noticeStage: 'court_summons' };
+  assert.deepEqual(selectCrisisResources(input, [dueEarly], { now: new Date('2026-10-10T23:59:59Z') }).map(item => item.id), [legal.id]);
+  assert.deepEqual(selectCrisisResources(input, [dueEarly], { now: new Date('2026-10-11T00:00:00Z') }), []);
+  const plan = buildCrisisPlan(input, [dueEarly], { now: new Date('2026-10-11T12:00:00Z') });
+  assert.equal(plan.resources[0].id, legal.id);
+  assert.equal(plan.resources[0].verificationStatus, 'needs_recheck');
+  assert.equal(plan.resources[0].verifiedAt, legal.verifiedAt);
+  const overlyLateDue = { ...dueEarly, refreshDays: 1, nextReviewAt: '2026-12-31' };
+  assert.deepEqual(selectCrisisResources(input, [overlyLateDue], { now: new Date('2026-10-11T00:00:00Z') }), []);
+  const tooOld = { ...dueEarly, verifiedAt: '2025-09-01' };
+  assert.deepEqual(buildCrisisPlan(input, [tooOld], { now: new Date('2026-10-11T12:00:00Z') }).resources, []);
 });
 
 test('unrelated hidden notice stages cannot change other housing plans', () => {

@@ -232,7 +232,7 @@ export default function PropertyLookup({
           </button>
         </div>
         <p className="small muted" id="address-disclosure">
-          {copy.disclosure} {copy.jurisdictionHint}
+          {copy.disclosure} {copy.jurisdictionHint} <a href="/privacy/">{en.footer.privacy}</a>
         </p>
       </form>
       {error && (

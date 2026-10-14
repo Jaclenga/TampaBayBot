@@ -17,6 +17,11 @@ export interface HousingResource {
   verifiedAt: string;
   sourceUrl: string;
   verificationStatus?: "source_checked" | "needs_recheck" | "source_unavailable";
+  nextReviewAt?: string;
+  lastLinkCheckedAt?: string | null;
+  linkStatus?: string;
+  knownIssues?: string[];
+  reviewNotes?: string | null;
   availabilityStatus?: "unknown" | "confirmed_open" | "temporarily_closed" | "discontinued";
   refreshDays?: number;
   intakeUrl?: string;
@@ -42,9 +47,14 @@ export function filterHousingResources(resources: HousingResource[], category: H
   });
 }
 
-export function resourceSourceStatus(resource: Pick<HousingResource, "verifiedAt" | "verificationStatus" | "refreshDays">, now = Date.now()): "source_checked" | "needs_recheck" | "source_unavailable" {
-  const checked = Date.parse(`${resource.verifiedAt}T00:00:00Z`);
-  const stale = resource.verificationStatus !== "source_checked" || !Number.isFinite(checked) || Math.floor((now - checked) / 86_400_000) > (resource.refreshDays ?? 90);
+export function resourceSourceStatus(resource: Pick<HousingResource, "verifiedAt" | "verificationStatus" | "refreshDays" | "nextReviewAt">, now = Date.now()): "source_checked" | "needs_recheck" | "source_unavailable" {
+  const reviewed = Date.parse(`${resource.verifiedAt}T00:00:00Z`);
+  const scheduled = resource.nextReviewAt != null;
+  const nextReview = scheduled ? Date.parse(`${resource.nextReviewAt}T23:59:59.999Z`) : NaN;
+  const intervalOverdue = !Number.isFinite(reviewed) || Math.floor((now - reviewed) / 86_400_000) > (resource.refreshDays ?? 90);
+  const scheduledOverdue = scheduled && (!Number.isFinite(nextReview) || now > nextReview);
+  const overdue = intervalOverdue || scheduledOverdue;
+  const stale = resource.verificationStatus !== "source_checked" || !Number.isFinite(reviewed) || overdue;
   return resource.verificationStatus === "source_unavailable" ? "source_unavailable" : stale ? "needs_recheck" : "source_checked";
 }
 
@@ -52,14 +62,14 @@ export function resourceCopyText(resource: HousingResource, now = Date.now(), la
   const label = language === "es" ? {
     coverage: "Cobertura", limited: "limitado a", contact: "Contacto", eligibility: "Requisitos", availability: "Disponibilidad",
     availabilityStatus: "Estado de disponibilidad", restrictions: "Restricciones", hours: "Horario publicado", intake: "Solicitud o admisión oficial",
-    sourceStatus: "Estado de la fuente", checked: "Última comprobación", website: "Sitio oficial", source: "Fuente oficial",
-    statusChecked: "Fuente comprobada en la fecha indicada", statusRecheck: "Necesita nueva verificación; confirme directamente", statusUnavailable: "Fuente no disponible; verifique por teléfono",
+    sourceStatus: "Estado de revisión", checked: "Información revisada por última vez", website: "Sitio oficial", source: "Fuente oficial",
+    statusChecked: "Información pública revisada en la fecha indicada", statusRecheck: "Necesita nueva revisión; confirme directamente", statusUnavailable: "Fuente no disponible en la última revisión; verifique por teléfono",
     unknown: "no verificada", open: "abierto según la última comprobación", closed: "temporalmente cerrado", discontinued: "descontinuado",
   } : {
     coverage: "Coverage", limited: "limited to", contact: "Contact", eligibility: "Eligibility", availability: "Availability",
     availabilityStatus: "Availability status", restrictions: "Restrictions", hours: "Published hours", intake: "Official intake",
-    sourceStatus: "Source status", checked: "Last checked", website: "Official website", source: "Source",
-    statusChecked: "Source checked on the date shown", statusRecheck: "Needs recheck", statusUnavailable: "Source unavailable; verify by phone",
+    sourceStatus: "Review status", checked: "Resource information last reviewed", website: "Official website", source: "Source",
+    statusChecked: "Public details reviewed on the date shown", statusRecheck: "Review due; confirm directly", statusUnavailable: "Source unavailable at last review; verify by phone",
     unknown: "not verified", open: "open at last check", closed: "temporarily closed", discontinued: "discontinued",
   };
   const status = resourceSourceStatus(resource, now);

@@ -1046,6 +1046,13 @@ input::placeholder {
   max-width: 840px;
   margin: 0;
 }
+.privacy-page .about-sections p + p {
+  margin-top: 14px;
+}
+.privacy-page .about-sections ul {
+  margin: 14px 0 0;
+  padding-left: 24px;
+}
 .about-action {
   padding: 24px 0 0;
   border-top: 1px solid var(--line);

@@ -23,6 +23,7 @@ export function Header() {
         <nav aria-label={en.labels.navigation}>
           <Link href="/">{en.nav.ask}</Link>
           <Link href="/sources">{en.nav.sources}</Link>
+          <a href="/privacy/">{en.footer.privacy}</a>
           <Link href="/about">{en.nav.about}</Link>
         </nav>
         <label className="small" htmlFor="interface-language">
@@ -43,7 +44,7 @@ export function Footer() {
       <p>{en.footer.statement}</p>
       <nav className="footer-bottom" aria-label={en.footer.navigation}>
         <Link href="/about#accessibility">{en.footer.access}</Link>
-        <Link href="/about#privacy">{en.footer.privacy}</Link>
+        <a href="/privacy/">{en.footer.privacy}</a>
         <Link href="/sources">{en.nav.sources}</Link>
         <Link href="/evaluation">{en.nav.evaluation}</Link>
       </nav>

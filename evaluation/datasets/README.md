@@ -7,6 +7,7 @@ JSON inputs for evaluation live in this directory. Narrative navigation cases ar
 | [ground_truth_questions.json](ground_truth_questions.json) | The 20 user-provided questions, in their original order. This is a question-only list with no reference answers or scoring labels; it is not yet wired into an automated suite. | Preserve the question text as supplied. |
 | [quality-benchmark.json](quality-benchmark.json) | Authored reference claims, exact claim hashes and allowed source/chunk support for the quality suite. | Review labels against the retained corpus before changing expectations. |
 | [program-recall-benchmark.json](program-recall-benchmark.json) | A bounded program inventory, questions and expected applicable-program sets for `npm run eval:recall`. | Review program evidence and applicability labels together. |
+| [answer-reliability.json](answer-reliability.json) | Forty-four fictional question-answer cases and a self-contained synthetic source fixture for offline answer reliability checks. Each case records expected behavior, permitted supporting passages, prohibited claims, clarification, uncertainty, and next-step expectations. | Review the authored support and negative claims when changing retrieval or answer policy; `.invalid` fixture links are never live resources. |
 
 Generated reports remain in `../results/`, `../suite/results/` and, for program recall, `work/evals/recall/` at the project root. Human review materials remain in `../human-audit/`.
 

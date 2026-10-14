@@ -21,6 +21,7 @@ export interface EvaluationCase {
     | "metamorphic"
     | "jurisdiction"
     | "quality"
+    | "reliability"
     | "live";
   title: string;
   fixture:

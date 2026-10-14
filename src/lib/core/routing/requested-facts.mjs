@@ -21,11 +21,21 @@ function requestsApplicationStatus(text) {
   return !method.test(text) && /\bcan i apply\b/.test(text);
 }
 
+function requestsEvictionResponseDeadline(text) {
+  // A question about an eviction response window needs the actual notice or
+  // court paper. A generic process page cannot establish a personal deadline,
+  // even when the resident supplies a proposed number of days.
+  if (!/\b(?:evict(?:ion|ed)?|summons|court papers?|landlord notice|notice to (?:pay|vacate|quit)|writ of possession)\b/.test(text)) return false;
+  return /\b(?:how many days?|exactly \d+ days?|deadline|due date|respond by|response time|time to respond|time to file)\b/.test(text) ||
+    /\b\d+\s+days?\s+to\s+(?:respond|file|vacate|leave)\b/.test(text);
+}
+
 /** Keep factual intent explicit. Numeric IDs remain compatible with retrieval;
  * semantic IDs match the structured fact layer. Neither supplies factual values. */
 export function detectRequestedFacts(question, normalized) {
   return [...new Set([
     ...requestedDetails(question),
+    ...(requestsEvictionResponseDeadline(normalized) ? ['deadline'] : []),
     ...(requestsApplicationStatus(normalized) ? ['application_status'] : []),
     ...SEMANTIC_FIELDS.filter(([, pattern]) => pattern.test(normalized)).map(([id]) => id),
   ])];

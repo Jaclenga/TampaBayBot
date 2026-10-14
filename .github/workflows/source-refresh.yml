@@ -11,7 +11,7 @@ concurrency:
 jobs:
   acquire-review:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -20,7 +20,11 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Stage source updates without applying them
+        id: source_stage
         run: npm run source:stage -- --output work/source-refresh/scheduled
+      - name: Check official resource links and review dates
+        if: ${{ always() && (steps.source_stage.outcome == 'success' || steps.source_stage.outcome == 'failure') }}
+        run: npm run resource:freshness -- --live --allow-network --source-stage-report work/source-refresh/scheduled/report.json --output work/resource-freshness/scheduled
       - name: Retain metadata-only review report
         if: always()
         uses: actions/upload-artifact@v4
@@ -29,5 +33,16 @@ jobs:
           path: work/source-refresh/scheduled/report.json
           if-no-files-found: error
           retention-days: 14
-      # Raw snapshots, excerpts, corpus.json, local diffs, builds, and credentials
-      # never enter the public artifact. No commit, apply, or deploy step runs here.
+      - name: Retain resource freshness attention report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resource-freshness-attention
+          path: |
+            work/resource-freshness/scheduled/report.json
+            work/resource-freshness/scheduled/report.md
+          if-no-files-found: warn
+          retention-days: 14
+      # Both artifacts contain metadata only. Raw snapshots, excerpts,
+      # corpus.json, local diffs, builds, credentials, and resident inputs are
+      # excluded. No commit, apply, or deploy step runs here.

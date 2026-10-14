@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       return json({ error: error.message, code: error.code }, error.status);
     if (error instanceof TypeError && ["Invalid temporary question context.", "Unsupported interface language."].includes(error.message))
       return inputErrorJson(error, "Enter a valid question.");
-    return json({ error: "TampaBayBot's AI chat is temporarily unavailable. You can still browse verified housing assistance resources.",
+    return json({ error: "TampaBayBot's AI chat is temporarily unavailable. You can still browse housing assistance contacts and official links.",
       code: "service_unavailable" }, 503);
   }
 }

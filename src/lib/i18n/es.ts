@@ -9,7 +9,7 @@ export const es: typeof en = {
     label: 'Pregunta o dirección', area: 'Su zona', region: 'Región de Tampa Bay',
     areaHint: 'Elija una ciudad o condado para información local. Use Región de Tampa Bay si no está seguro o busca recursos regionales.',
     placeholder: '¿Cómo puedo obtener ayuda para la vivienda?', submit: 'Buscar', busy: 'Buscando…',
-    privacy: 'No incluya nombres, números de cuenta ni datos privados. Esta aplicación no guarda las preguntas.',
+    privacy: 'No incluya nombres, números de cuenta ni datos privados. Las solicitudes pasan por el servicio de alojamiento.',
     empty: 'Escriba una pregunta sobre vivienda o una dirección de Tampa Bay.',
     error: 'No pudimos completar la búsqueda. Inténtelo de nuevo.', max: 'Limite su pregunta a 1.000 caracteres.',
   },
@@ -66,14 +66,14 @@ export const es: typeof en = {
   about: {
     title: 'Acerca de TampaBayBot', intro: 'TampaBayBot reúne recursos de vivienda, información de propiedades y registros públicos de desarrollo para ayudar a los residentes de Tampa Bay a encontrar un siguiente paso comprensible. Se indica la cobertura de las fuentes para cada jurisdicción.',
     approachTitle: 'Cómo funcionan las respuestas', approach: 'Cada respuesta incluye sus fuentes. Mostramos la información que la respalda, explicamos la incertidumbre y remitimos las decisiones importantes a la agencia responsable. Esta primera versión ofrece orientación con fuentes, sin emitir decisiones legales ni de elegibilidad personalizadas.',
-    privacyTitle: 'Privacidad', privacy: 'La aplicación no guarda preguntas, direcciones, conversaciones ni perfiles personales. Las solicitudes pasan por el proveedor de alojamiento. Las búsquedas de direcciones se envían a servicios GIS públicos; el mapa opcional utiliza OpenStreetMap. Evite introducir información personal sensible.',
+    privacyTitle: 'Privacidad', privacy: 'El código de la aplicación revisado no guarda preguntas, direcciones ni conversaciones en el almacenamiento del navegador ni en su base de datos. Las solicitudes pasan por el proveedor de alojamiento, que puede conservar registros. Las búsquedas de direcciones se envían a servicios GIS públicos; el mapa opcional utiliza OpenStreetMap. Evite introducir información personal sensible.',
     languageTitle: 'Idioma', language: 'Las preguntas, las herramientas de propiedades y las páginas de referencia están disponibles en inglés y español. Las citas, los nombres oficiales, las descripciones de registros y las notas de fuentes se conservan en su idioma original, que se indica cuando está registrado.',
-    limitsTitle: 'Qué puede y qué no puede hacer esta versión', limits: 'Esta es una versión v0.1 para revisión. Utiliza copias guardadas de fuentes y consultas de propiedades en directo, que pueden fallar o devolver varias coincidencias. No puede garantizar registros completos de desarrollo ni decidir lo permitido legalmente. Todavía se requieren auditorías humanas y pruebas con tecnologías de asistencia antes de una publicación para el público.',
+    limitsTitle: 'Qué puede y qué no puede hacer esta versión', limits: 'Esta es una versión v0.1 para revisión. Utiliza copias guardadas de fuentes y consultas de propiedades en directo, que pueden fallar o devolver varias coincidencias. No puede garantizar registros completos de desarrollo ni decidir lo permitido legalmente. Todavía se requieren auditorías humanas y pruebas con tecnologías de asistencia antes de un uso sin restricciones por parte de residentes.',
     accessTitle: 'Accesibilidad', access: 'Puede utilizar el servicio con un teclado. Los resultados de propiedades y actividad incluyen una vista de texto; abrir un mapa es opcional. El diseño admite pantallas pequeñas, foco visible, texto ampliado y movimiento reducido. Las comprobaciones automáticas ayudan a detectar problemas, pero no demuestran el cumplimiento completo de las WCAG.',
   },
   footer: {
     statement: 'TampaBayBot es un proyecto independiente de código abierto, sin afiliación con ningún gobierno municipal o de condado. Verifique las decisiones importantes con la agencia responsable.',
-    access: 'Accesibilidad', privacy: 'Privacidad', navigation: 'Navegación del pie de página',
+    access: 'Accesibilidad', privacy: 'Privacidad (en inglés)', navigation: 'Navegación del pie de página',
   },
   common: { skip: 'Saltar al contenido principal', opens: 'se abre en otra pestaña' },
   labels: {

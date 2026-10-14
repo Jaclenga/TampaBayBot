@@ -9,6 +9,7 @@ import { runProviderSuite } from "./providers.mjs";
 import { runMetamorphicSuite } from "./metamorphic.mjs";
 import { runJurisdictionSuite } from "./jurisdiction.mjs";
 import { runQualitySuite } from "./quality.mjs";
+import { runReliabilitySuite, reliabilityDataset } from "./reliability.mjs";
 import {
   makeReport,
   reportMarkdown,
@@ -29,6 +30,7 @@ export const OFFLINE_SUITES = Object.freeze({
   metamorphic: runMetamorphicSuite,
   jurisdiction: runJurisdictionSuite,
   quality: runQualitySuite,
+  reliability: runReliabilitySuite,
 });
 const sha = (text) => createHash("sha256").update(text).digest("hex");
 
@@ -100,6 +102,8 @@ export async function loadEvaluationContext(root = PROJECT_ROOT) {
         await fs.readFile(path.join(root, "evaluation/scenarios.mjs")),
       ),
       qualityBenchmarkHash: sha(qualityBenchmarkText),
+      reliabilityBenchmarkHash: sha(JSON.stringify(reliabilityDataset)),
+      reliabilityReferenceDate: reliabilityDataset.referenceDate,
       gitCommit: commit,
       workingTreeDirty: dirty,
       nodeVersion: process.version,
@@ -161,6 +165,8 @@ async function executeOfflineSuite({
     completedAt: new Date().toISOString(),
     provenance: {
       ...context.provenance,
+      ...(selected.length === 1 && selected[0] === 'reliability'
+        ? { evaluatedAsOf: reliabilityDataset.referenceDate } : {}),
       selectedSuites: selected,
       outboundFetch: "disabled",
     },

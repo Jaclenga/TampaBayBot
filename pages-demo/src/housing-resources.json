@@ -31,7 +31,13 @@
       "verificationStatus": "source_checked",
       "availabilityStatus": "unknown",
       "refreshDays": 90,
-      "restrictions": []
+      "restrictions": [],
+      "nextReviewAt": "2027-01-07",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "court-pasco-eviction",
@@ -68,7 +74,13 @@
       "verificationStatus": "source_checked",
       "availabilityStatus": "unknown",
       "refreshDays": 90,
-      "restrictions": []
+      "restrictions": [],
+      "nextReviewAt": "2027-01-07",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "court-pinellas-eviction",
@@ -100,7 +112,15 @@
       "verificationStatus": "source_checked",
       "availabilityStatus": "unknown",
       "refreshDays": 90,
-      "restrictions": []
+      "restrictions": [],
+      "nextReviewAt": "2027-01-07",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [
+        "The official tenant PDF was checked through a search index on 2026-10-09; the indexed copy was about six months old. Confirm case-specific process with the clerk."
+      ],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-911",
@@ -133,7 +153,13 @@
       "verificationStatus": "source_checked",
       "availabilityStatus": "unknown",
       "refreshDays": 90,
-      "restrictions": []
+      "restrictions": [],
+      "nextReviewAt": "2027-01-07",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-988",
@@ -171,7 +197,15 @@
       "availabilityStatus": "unknown",
       "refreshDays": 30,
       "restrictions": [],
-      "serviceHours": "Call, text, and chat are listed as 24/7."
+      "serviceHours": "Call, text, and chat are listed as 24/7.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [
+        "The SAMHSA page could not be opened directly during the 2026-10-09 source review; official indexed content was used."
+      ],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-casa",
@@ -204,7 +238,13 @@
       "availabilityStatus": "unknown",
       "refreshDays": 30,
       "restrictions": [],
-      "serviceHours": "Provider lists the hotline as 24 hours."
+      "serviceHours": "Provider lists the hotline as 24 hours.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-fema-disaster",
@@ -238,7 +278,15 @@
       "refreshDays": 30,
       "restrictions": [
         "Aid depends on a qualifying declaration and current application rules; no open window is confirmed here."
-      ]
+      ],
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [
+        "The FEMA page could not be opened directly during the 2026-10-09 source review; official indexed content was used. No current disaster application window was established."
+      ],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-hillsborough-energy",
@@ -271,7 +319,13 @@
       "refreshDays": 30,
       "restrictions": [
         "Assistance depends on available funding and eligibility review."
-      ]
+      ],
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-pasco-energy",
@@ -304,7 +358,13 @@
       "refreshDays": 30,
       "restrictions": [
         "Funding and individual approval are not verified."
-      ]
+      ],
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-pinellas-energy",
@@ -337,7 +397,13 @@
       "refreshDays": 30,
       "restrictions": [
         "Funding and individual approval are not verified."
-      ]
+      ],
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-spring",
@@ -375,7 +441,13 @@
       "availabilityStatus": "unknown",
       "refreshDays": 30,
       "restrictions": [],
-      "serviceHours": "Provider lists the hotline as 24 hours."
+      "serviceHours": "Provider lists the hotline as 24 hours.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "emergency-sunrise",
@@ -408,7 +480,13 @@
       "availabilityStatus": "unknown",
       "refreshDays": 30,
       "restrictions": [],
-      "serviceHours": "Provider lists the hotline as 24 hours."
+      "serviceHours": "Provider lists the hotline as 24 hours.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "homeless-hillsborough-211",
@@ -447,7 +525,13 @@
       "availabilityStatus": "unknown",
       "refreshDays": 30,
       "restrictions": [],
-      "serviceHours": "211 line is listed as 24/7."
+      "serviceHours": "211 line is listed as 24/7.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -481,7 +565,13 @@
       ],
       "eligibility": "People seeking homelessness resources in Hillsborough County; each listed provider has separate rules.",
       "availability": "Directory and map links checked; individual meal sites and supplies are not verified.",
-      "sourceUrl": "https://www.thhi.org/homelessresources"
+      "sourceUrl": "https://www.thhi.org/homelessresources",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "homeless-hillsborough-thhi",
@@ -513,7 +603,13 @@
       "verificationStatus": "source_checked",
       "availabilityStatus": "unknown",
       "refreshDays": 30,
-      "restrictions": []
+      "restrictions": [],
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "homeless-metro-ministry-intake",
@@ -561,7 +657,13 @@
         "The provider portal requires registration and collects application details. Call the county intake number if online access is difficult.",
         "Submitting an application does not reserve a shelter bed."
       ],
-      "intakeUrl": "https://metrominintake.powerappsportals.com/"
+      "intakeUrl": "https://metrominintake.powerappsportals.com/",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "homeless-pinellas-211",
@@ -605,7 +707,13 @@
       "availabilityStatus": "unknown",
       "refreshDays": 30,
       "restrictions": [],
-      "serviceHours": "211 line is listed as 24/7."
+      "serviceHours": "211 line is listed as 24/7.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "homeless-tampa-hope",
@@ -645,7 +753,13 @@
       "verificationStatus": "source_checked",
       "availabilityStatus": "unknown",
       "refreshDays": 30,
-      "restrictions": []
+      "restrictions": [],
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "homeless-tampa-outreach",
@@ -680,7 +794,13 @@
       "verificationStatus": "source_checked",
       "availabilityStatus": "unknown",
       "refreshDays": 30,
-      "restrictions": []
+      "restrictions": [],
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -716,7 +836,13 @@
       ],
       "eligibility": "Anyone searching for rental housing in Florida; each property has its own qualifications.",
       "availability": "The state links to the locator; individual listings and vacancies are not verified by this directory.",
-      "sourceUrl": "https://www.floridahousing.org/programs/renters"
+      "sourceUrl": "https://www.floridahousing.org/programs/renters",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -754,7 +880,13 @@
           "kind": "phone"
         }
       ],
-      "sourceUrl": "https://www.metromin.org/get-help/"
+      "sourceUrl": "https://www.metromin.org/get-help/",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -792,7 +924,13 @@
       ],
       "eligibility": "Hillsborough County residents seeking housing or social-service navigation; each program has its own rules.",
       "availability": "Public navigation page and call center checked; existing-lease rental funding is not verified.",
-      "sourceUrl": "https://hcfl.gov/departments/social-services"
+      "sourceUrl": "https://hcfl.gov/departments/social-services",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "housing-pasco-coalition",
@@ -833,7 +971,13 @@
       "refreshDays": 30,
       "restrictions": [
         "Financial help and housing placement depend on eligibility, referrals, and funding; none is guaranteed."
-      ]
+      ],
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -876,7 +1020,13 @@
           "kind": "phone"
         }
       ],
-      "sourceUrl": "https://www.metromin.org/get-help/"
+      "sourceUrl": "https://www.metromin.org/get-help/",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "housing-pinellas-adult-financial",
@@ -914,7 +1064,13 @@
       "restrictions": [
         "For adults without minor children in their household; county screening and eligibility rules apply."
       ],
-      "serviceHours": "Financial-assistance phone screening: Monday-Friday, 7:30 a.m.-6 p.m.; 211 access is listed as 24/7."
+      "serviceHours": "Financial-assistance phone screening: Monday-Friday, 7:30 a.m.-6 p.m.; 211 access is listed as 24/7.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -953,7 +1109,13 @@
       ],
       "eligibility": "Pinellas County families experiencing homelessness and referred by Coordinated Entry; the county determines program eligibility.",
       "availability": "Program page and referral route checked; slots, funding, and enrollment are not verified.",
-      "sourceUrl": "https://pinellas.gov/programs/family-housing-assistance-program"
+      "sourceUrl": "https://pinellas.gov/programs/family-housing-assistance-program",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -991,7 +1153,13 @@
           "kind": "phone"
         }
       ],
-      "sourceUrl": "https://www.metromin.org/get-help/"
+      "sourceUrl": "https://www.metromin.org/get-help/",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -1027,7 +1195,13 @@
       "eligibility": "The authority serves Tampa and listed Hillsborough County communities; each housing program has separate eligibility and wait-list rules.",
       "availability": "Public program and wait-list pages checked; open applications and units are not verified.",
       "sourceUrl": "https://www.tampaha.org/",
-      "serviceHours": "Help Center office hours listed as Monday-Friday, 8 a.m.-5 p.m."
+      "serviceHours": "Help Center office hours listed as Monday-Friday, 8 a.m.-5 p.m.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "housing-tampa-rmap",
@@ -1066,7 +1240,15 @@
         "The city program page says Phase X is for new move-in costs only and existing leases are ineligible. Its linked portal still mentions current-lease and eviction-prevention assistance; contact the city to resolve this conflict before relying on either description.",
         "An approved unit inside Tampa city limits and other program conditions are required."
       ],
-      "serviceHours": "Housing Information Line: Monday-Friday, 9 a.m.-3 p.m."
+      "serviceHours": "Housing Information Line: Monday-Friday, 9 a.m.-3 p.m.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [
+        "The City of Tampa program page and its linked portal describe conflicting help for existing leases and eviction prevention. City staff confirmation is still needed."
+      ],
+      "reviewNotes": "Keep this listing out of eviction and rent-arrears routing until the city resolves the conflicting descriptions.",
+      "reviewedContentHash": null
     },
     {
       "id": "legal-bay-area",
@@ -1104,7 +1286,13 @@
       "availabilityStatus": "unknown",
       "refreshDays": 30,
       "restrictions": [],
-      "serviceHours": "Legal Aid Line: Monday-Friday, 9 a.m.-4:30 p.m.; online application link on provider page is available anytime for non-emergency matters."
+      "serviceHours": "Legal Aid Line: Monday-Friday, 9 a.m.-4:30 p.m.; online application link on provider page is available anytime for non-emergency matters.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -1138,7 +1326,13 @@
       ],
       "eligibility": "Public court information for Florida residents and court users.",
       "availability": "Public self-help page checked; form access and legal outcomes are not guaranteed.",
-      "sourceUrl": "https://www.flcourts.gov/Services/Family-Courts/self-help-information"
+      "sourceUrl": "https://www.flcourts.gov/Services/Family-Courts/self-help-information",
+      "nextReviewAt": "2027-01-07",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "legal-florida-tenant-rights",
@@ -1171,7 +1365,13 @@
       "verificationStatus": "source_checked",
       "availabilityStatus": "unknown",
       "refreshDays": 90,
-      "restrictions": []
+      "restrictions": [],
+      "nextReviewAt": "2027-01-07",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -1209,7 +1409,13 @@
       ],
       "eligibility": "Property in unincorporated Hillsborough County; city properties use their own code office.",
       "availability": "Official reporting page and phone checked; response and inspection timing are not verified.",
-      "sourceUrl": "https://hcfl.gov/residents/property-owners-and-renters/code-violations/report-a-code-violation"
+      "sourceUrl": "https://hcfl.gov/residents/property-owners-and-renters/code-violations/report-a-code-violation",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -1244,7 +1450,13 @@
       ],
       "eligibility": "People with a concern about property in Pasco County; staff should confirm jurisdiction and complaint process.",
       "availability": "County 311 contact page checked; code enforcement jurisdiction and inspection timing require confirmation.",
-      "sourceUrl": "https://pascocountyfl.qscend.com/311/contact"
+      "sourceUrl": "https://pascocountyfl.qscend.com/311/contact",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -1279,7 +1491,13 @@
       ],
       "eligibility": "Pinellas County tenants; county enforcement applies only to unincorporated property, while cities have their own offices.",
       "availability": "County renter guidance and routing phone checked; inspection timing is not verified.",
-      "sourceUrl": "https://rent.pinellas.gov/help-with-housing/"
+      "sourceUrl": "https://rent.pinellas.gov/help-with-housing/",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "verifiedAt": "2026-10-09",
@@ -1318,7 +1536,13 @@
       "eligibility": "Properties within the City of Tampa; staff can help determine whether a reported condition is in their jurisdiction.",
       "availability": "City contact and inspection guidance checked; inspection timing and outcome are not verified.",
       "sourceUrl": "https://www.tampa.gov/neighborhood-enhancement/contact-us",
-      "serviceHours": "Office hours listed as Monday-Friday, 8 a.m.-4:30 p.m."
+      "serviceHours": "Office hours listed as Monday-Friday, 8 a.m.-4:30 p.m.",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     },
     {
       "id": "homeless-metro-mobile-outreach",
@@ -1364,7 +1588,13 @@
       "restrictions": [
         "Calling mobile outreach does not reserve a shelter bed or guarantee an appointment."
       ],
-      "sourceUrl": "https://www.metromin.org/get-help/"
+      "sourceUrl": "https://www.metromin.org/get-help/",
+      "nextReviewAt": "2026-11-08",
+      "lastLinkCheckedAt": null,
+      "linkStatus": "not_checked",
+      "knownIssues": [],
+      "reviewNotes": null,
+      "reviewedContentHash": null
     }
   ]
 }

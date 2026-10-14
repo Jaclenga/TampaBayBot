@@ -22,7 +22,7 @@ await cp(join(root, 'pages-demo', 'dist'), output, { recursive: true });
 await cp(join(root, 'dist', 'client'), output, { recursive: true });
 await writeFile(join(output, 'housing-help', 'index.html'), directoryHtml);
 await writeFile(join(output, '_routes.json'), JSON.stringify({
-  version: 1, include: ['/*'], exclude: ['/assets/*', '/housing-help', '/housing-help/*'],
+  version: 1, include: ['/*'], exclude: ['/assets/*', '/housing-help', '/housing-help/*', '/privacy', '/privacy/*'],
 }));
 await cp(join(root, 'functions'), join(stage, 'functions'), { recursive: true });
 const config = JSON.parse(await readFile(join(root, 'wrangler.pages.json'), 'utf8'));

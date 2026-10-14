@@ -207,7 +207,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
               </p>
             )}
             <p className="privacy-hint" id="question-privacy">
-              {en.form.privacy} {privacyNotice}
+              {en.form.privacy} {privacyNotice} <a href="/privacy/">{en.footer.privacy}</a>
             </p>
             {conversation && <p className="small muted">{en.answer.followup}</p>}
           </form>

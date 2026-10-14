@@ -18,6 +18,17 @@ const previous = passage('previous', 'Harbor Housing Support income limits for 2
 const query = 'What are the current 2026 income limits for Harbor Housing Support?';
 const answer = (question, chunks) => answerQuestion(question, { sources: [source], chunks, now, jurisdictionId: 'tampa' });
 
+test('personal income limit needs household size while a specified table row remains answerable', () => {
+  const missing = answer('I do not know my household size. Can you determine my income limit for Harbor Housing Support?', [current]);
+  assert.equal(missing.status, 'insufficient_evidence');
+  assert.match(missing.answer, /household size/);
+  assert.doesNotMatch(missing.answer, /\$65,000/);
+  assert.ok(missing.requirementsToVerify?.length);
+  const specified = answer('What are the 2026 Harbor Housing Support income limits for a household of two?', [current]);
+  assert.equal(specified.status, 'answered');
+  assert.match(specified.answer, /\$65,000/);
+});
+
 function assertLiteralEvidence(result, chunks) {
   const ids = new Set(result.evidence.map(item => item.id));
   assert.equal(ids.size, result.evidence.length, 'Each citation must have a unique identifier.');

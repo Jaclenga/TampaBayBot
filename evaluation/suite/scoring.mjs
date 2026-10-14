@@ -306,7 +306,7 @@ export function scoreNavigationAnswer({
   const bodyMarkers = [...text.matchAll(/\[(E\d+)\]/g)].map(
     (match) => match[1],
   );
-  const rendered = bodyMarkers
+  const renderedSelection = bodyMarkers
     .map((id, index) => {
       const item = evidence.find((entry) => entry?.id === id);
       if (!item) return null;
@@ -315,10 +315,22 @@ export function scoreNavigationAnswer({
         : `${item.title}: “${item.quote}” [${id}]`;
     })
     .join("\n\n");
+  // The deterministic renderer labels additional qualifications from the
+  // primary source differently from the constrained model-selection renderer.
+  // Both formats still require every complete, registered quotation in order.
+  const renderedBaseline = bodyMarkers
+    .map((id, index) => {
+      const item = evidence.find((entry) => entry?.id === id);
+      if (!item || (index > 0 && item.source_id !== evidence[0]?.source_id)) return null;
+      return index === 0
+        ? `Start with ${item.title}. The source says: “${item.quote}” [${id}]`
+        : `The same source gives this detail: “${item.quote}” [${id}]`;
+    })
+    .join("\n\n");
   add(
     "answer_extractive_rendering",
     output.status === "answered"
-      ? bodyMarkers.length > 0 && text === rendered
+      ? bodyMarkers.length > 0 && (text === renderedSelection || text === renderedBaseline)
       : null,
     "integrity",
   );

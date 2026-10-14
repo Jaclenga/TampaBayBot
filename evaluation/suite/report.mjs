@@ -1,6 +1,6 @@
 import { normalizePricing, summarizeModelUsage } from "./usage.mjs";
 
-export const SUITE_VERSION = "1.3.0";
+export const SUITE_VERSION = "1.4.0";
 const kinds = new Set([
   "behavior",
   "integrity",
@@ -17,6 +17,7 @@ const suites = new Set([
   "metamorphic",
   "jurisdiction",
   "quality",
+  "reliability",
   "live",
 ]);
 const fixtures = new Set([
@@ -177,6 +178,19 @@ export function makeReport(
     }),
   );
   const allChecks = rows.flatMap((row) => row.checks);
+  const reliabilityRows = rows.filter((row) => row.suite === "reliability");
+  const reliabilityByCategory = reliabilityRows.length
+    ? Object.fromEntries([...new Set(reliabilityRows.map((row) => row.details?.category ?? "uncategorized"))]
+      .sort().map((category) => {
+        const selected = reliabilityRows.filter((row) => (row.details?.category ?? "uncategorized") === category);
+        return [category, {
+          cases: selected.length,
+          passed: selected.filter((row) => row.passed).length,
+          failed: selected.filter((row) => !row.passed).length,
+          failedCaseIds: selected.filter((row) => !row.passed).map((row) => row.id),
+        }];
+      }))
+    : null;
   const qualityChecks = rows
     .filter((row) => row.suite === "quality")
     .flatMap((row) => row.checks);
@@ -203,6 +217,7 @@ export function makeReport(
       failed: rows.filter((row) => !row.passed).length,
       checks: counts(allChecks),
       suites: grouped,
+      reliabilityByCategory,
       modelUsage: usageForRows(rows, mode, pricing),
     },
     metrics: Object.fromEntries(
@@ -293,6 +308,13 @@ export function reportMarkdown(report) {
       `| ${markdown(name)} | ${value.passed} | ${value.failed} | ${value.checks.applicable} |`,
     );
   lines.push("", ...modelUsageMarkdown(report.summary.modelUsage, report.pricing));
+  if (report.summary.reliabilityByCategory) {
+    lines.push("", "## Answer reliability by category", "",
+      "These cases use synthetic evidence and offline answer generation. HTTPS checks validate fixture URL structure and registration; they do not check live destinations.", "",
+      "| Category | Passed | Failed | Failed cases |", "| --- | ---: | ---: | --- |");
+    for (const [category, value] of Object.entries(report.summary.reliabilityByCategory))
+      lines.push(`| ${markdown(category)} | ${value.passed} | ${value.failed} | ${markdown(value.failedCaseIds.join(", ") || "None")} |`);
+  }
   if (report.mode === "live") {
     lines.push("", "### Per-case model usage", "",
       "| Case | Calls | Input tokens | Output tokens | Total tokens | Estimated USD | Usage status | Cost status |",
@@ -410,6 +432,8 @@ export function compareReports(
     "scenarioHash",
     "qualityBenchmarkHash",
   ];
+  if ([baseline, candidate].some((report) => report.cases.some((row) => row.suite === "reliability")))
+    significant.push("reliabilityBenchmarkHash", "reliabilityReferenceDate");
   if (
     [baseline, candidate].some((report) =>
       significant.some(

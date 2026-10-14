@@ -24,6 +24,24 @@ test('navigation intent retains the underlying domain for retrieval', () => {
   assert.ok(plan.requestedFacts.includes('contact'));
 });
 
+test('shelter and homeowner repair requests retain housing intent', () => {
+  for (const question of [
+    'My family needs emergency shelter in Pinellas County. Where can we start?',
+    'I may lose my room tonight in Pasco County. Where is emergency shelter navigation information?',
+    'Where can a Tampa homeowner ask about help repairing a roof?',
+  ]) assert.equal(createQueryPlan(question).subjectCategory, 'housing', question);
+  assert.equal(createQueryPlan('What permit is needed to construct a shelter building?').subjectCategory, 'permitting');
+  assert.equal(createQueryPlan('What roof repair permit does a homeowner need?').subjectCategory, 'permitting');
+});
+
+test('an unverified ordinance about duplexes routes to zoning without accepting the premise', () => {
+  const question = 'Does ordinance 99999 approve duplexes in Tampa?';
+  const plan = createQueryPlan(question);
+  assert.equal(plan.subjectCategory, 'zoning');
+  assert.equal(plan.route.jurisdictionId, 'tampa');
+  assert.equal(plan.route.officialJudgment, false);
+});
+
 test('location hints preserve city names in streets without asserting property boundaries', () => {
   const plan = createQueryPlan('What zoning applies to 123 St. Petersburg Road, Clearwater?');
   assert.equal(plan.jurisdiction.jurisdictionId, 'clearwater');

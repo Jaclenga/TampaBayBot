@@ -10,6 +10,7 @@ test("the Next housing guide works without any API and keeps county eviction ref
   await page.goto("/housing-help");
   await expect(page.getByRole("heading", { name: "I Need Housing Help", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Immediate help" })).toBeVisible();
+  await expect(page.locator(".crisis-directory li").first()).toContainText("Resource information last reviewed");
   await page.getByLabel("Housing problem").selectOption("eviction");
   await page.getByLabel("City or county (optional)").selectOption("tampa");
   await page.getByLabel("What document did you receive?").selectOption("court_summons");
@@ -38,6 +39,7 @@ test("the Next housing guide offers Spanish without sending selections or critic
   await page.getByLabel("¿Cuándo necesita ayuda?").selectOption("tonight");
   const plan = page.locator(".crisis-plan");
   await expect(plan).toContainText("Ayuda inmediata");
+  await expect(plan).toContainText("Información del recurso revisada por última vez");
   await expect(plan).toContainText("First Contact");
   await expect(plan).not.toContainText("911.gov");
   expect(apiCalls).toEqual([]);

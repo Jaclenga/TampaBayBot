@@ -2,7 +2,7 @@
 
 Command, report-format and scorer reference for offline evaluation, optional live-model runs and regression comparison. See [EVALUATION.md](EVALUATION.md) for interpretation and human review, and [release readiness](RELEASE_READINESS.md) for dated results.
 
-The offline suite has 236 hand-authored cases using preserved public evidence and synthetic fixtures; it requires no model server, credentials or paid inference. In a source-only checkout, [load and review a corpus](DISTRIBUTION.md#populate-and-validate-locally) first. Empty `not_run` reports are not successful evaluations, and fresh evidence may require revised expectations.
+The existing offline suites have 236 hand-authored cases using preserved public evidence and synthetic fixtures; they require no model server, credentials or paid inference. Most of those cases need a [reviewed corpus](DISTRIBUTION.md#populate-and-validate-locally). The separate answer-reliability suite below uses a committed synthetic fixture and runs in a source-only checkout. Empty `not_run` reports are not successful evaluations, and fresh public evidence may require revised expectations.
 
 ## Run offline
 
@@ -36,6 +36,20 @@ The offline runner disables global outbound `fetch`; provider cases inject synth
 
 Development CI runs against the retained corpus and uploads evaluation, benchmark, browser and runtime reports. That workflow is excluded from source releases; public source-only CI checks the unpopulated distribution and cannot certify corpus-dependent cases. Both avoid paid inference.
 
+### Source-only answer reliability
+
+Run the dedicated deterministic suite from the project root:
+
+```sh
+npm run eval:reliability
+```
+
+This selects only `reliability` from the offline runner. It uses committed synthetic evidence, disables outbound `fetch`, makes no model call, and does not require the active corpus to contain downloaded source text. Source-release CI runs this command as a separate gate. A nonzero exit identifies failed checks; the command prints a short summary and writes `work/evals/reliability/latest.json`, `latest.md` and `junit.xml`. The Markdown and JSON reports group failures by question category. This ignored output directory keeps the tracked source-release placeholder in `evaluation/suite/results/` unchanged. For a second saved run, use `npm run eval:suite -- --suite reliability --output work/evals/reliability-after`.
+
+The 44 answer-case definitions record expected behavior, required support sources, unacceptable claims, and whether clarification or an uncertainty statement is needed. Checks inspect answer status, whether required sources were cited, source/chunk support allowlists, exact quotation and citation integrity, registered links, authored patterns for unacceptable program or eligibility claims, missing-information handling, and an official next step. One separate case checks the checked-in housing directory and guide links. Categories cover housing and shelter, eviction and deadlines, eligibility, property and zoning, unsupported premises, and out-of-area requests. Checks compare behavior and evidence rather than exact answer wording. The synthetic fixture uses `.invalid` domains; URL checks prove structure and registration, not live reachability. Authored source/chunk allowlists provide bounded relevance checks, not a semantic proof that every implied claim is supported or that an unlisted false claim is absent. Synthetic source text tests the answer pipeline's handling of evidence; it does not establish that a real program is current, that a live address has a particular zoning designation, or that model-generated prose is sound. Review substantive claims against original public sources and use the optional live evaluation only with explicit opt-in.
+
+The deterministic housing-crisis guide has its own [59-scenario regression set](../tests/housing-crisis-evaluation.test.mjs), runnable with `node --test --test-isolation=none tests/housing-crisis-evaluation.test.mjs`; it is not a model answer. Reliability cases exercise the question-answering path; guide scenario results should be reported separately. Neither run verifies the hosted Cloudflare preview or certifies the service for unrestricted resident use.
+
 ## Narrative benchmark and human packets
 
 ```sh
@@ -56,6 +70,7 @@ The three `responses.json` placeholders remain tracked for the application build
 | `metamorphic` | 28 | Fixed-seed case/spacing/punctuation changes, corpus shuffling and duplicate chunks, instruction attacks, and decision preservation across synthetic provider selections |
 | `jurisdiction` | 19 | City/county source isolation, locality aliases, unincorporated/excluded city wording, missing/conflicting areas, city names inside street addresses, and rejection of cross-city model selections |
 | `quality` | 12 | Authored exact claims across Tampa, St. Petersburg, Clearwater, Hillsborough, Pinellas and Pasco; case-level factual accuracy, citation-to-claim correctness and claim citation coverage |
+| `reliability` | 45 | 44 synthetic housing assistance, emergency shelter, eviction, eligibility, zoning/property and unsupported-scope questions, plus one directory/guide integrity case; bounded citation support, clarification, uncertainty and next-step checks |
 
 Cases identify their data as `public_snapshot`, `synthetic`, or `public_snapshot_with_synthetic_input`. Titles use safe labels or checked-in public questions; reports omit private probes, raw answers, credentials and raw provider errors.
 

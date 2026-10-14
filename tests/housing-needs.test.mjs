@@ -45,6 +45,12 @@ test('inability to pay and uncertainty do not negate a request', () => {
   assert.deepEqual(housingNeeds('Can you help with overdue electricity bills?'), ['utilities']);
 });
 
+test('eviction process alone does not imply an immediate shelter need', () => {
+  assert.deepEqual(housingNeeds('I received an eviction summons.'), ['rent']);
+  assert.deepEqual(housingNeeds('I was evicted and have nowhere to sleep.'), ['rent', 'shelter']);
+  assert.deepEqual(housingNeeds('I may lose my room tonight.'), ['shelter']);
+});
+
 test('Spanish needs preserve compound requests and explicit negation', () => {
   assert.deepEqual(housingNeeds('Necesito reparar mi techo y ayuda para pagar la renta atrasada.'), ['repair', 'rent']);
   assert.deepEqual(housingNeeds('No estoy sin hogar. Necesito ayuda con el alquiler atrasado.'), ['rent']);

@@ -10,7 +10,7 @@ const NEED_PATTERNS = {
   rental: /\b(?:affordable (?:apartments?|rental|rent)|(?:find|finding|search|searching|looking for) (?:an? |an? affordable |affordable )?(?:apartments?|rental|rentals)|cheaper place|rent an? (?:apartment|home)|rental search)\b/,
   move: /\b(?:move|moving|relocat(?:e|ing|ion)|deposits?|new lease|move.in)\b/,
   utilities: /\b(?:utilities|utility|electricity|electric|water|gas|power|energy|servicios publicos|electricidad|luz)\b/,
-  shelter: /\b(?:homeless|homelessness|shelter|sleep tonight|place to sleep|no (?:safe )?place to (?:live|stay|sleep)|sleep(?:ing)? (?:in (?:my |a |the )?(?:car|vehicle)|outside|rough)|nowhere to (?:live|stay|sleep)|eviction|evicted)\b/,
+  shelter: /\b(?:homeless|homelessness|shelter|sleep tonight|place to sleep|no (?:safe )?place to (?:live|stay|sleep)|sleep(?:ing)? (?:in (?:my |a |the )?(?:car|vehicle)|outside|rough)|nowhere to (?:live|stay|sleep)|(?:lose|losing) (?:my |our |a |the )?(?:room|housing|place to stay) (?:tonight|soon))\b/,
 };
 
 function requestedClauses(question) {

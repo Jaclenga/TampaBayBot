@@ -8,7 +8,7 @@ import type {
 import HousingHelp from "./HousingHelp";
 import { resourceSourceStatus } from "./housing-help";
 
-const AI_UNAVAILABLE_MESSAGE = "TampaBayBot's AI chat is temporarily unavailable. You can still browse verified housing assistance resources.";
+const AI_UNAVAILABLE_MESSAGE = "TampaBayBot's AI chat is temporarily unavailable. You can still browse housing assistance contacts and official links.";
 const DIRECTORY_ONLY = import.meta.env.VITE_DIRECTORY_ONLY === "true";
 const inferenceFailures = new Set(["provider_quota", "provider_capacity", "timeout", "provider_failure", "invalid_model", "model_unavailable", "invalid_config", "invalid_output", "response_too_large", "ai_configuration", "ai_unavailable"]);
 
@@ -76,7 +76,7 @@ function ChatCrisisResource({ resource }: { resource: NonNullable<ResidentAnswer
     <strong>{resource.organization} — {resource.program}</strong>
     <p className="small">Coverage: {coverage}{restriction}. {resource.eligibility}</p>
     <p className="small">Service availability: {resource.availability} Confirm current openings or funding directly.</p>
-    <p className={sourceStatus === "source_checked" ? "small muted" : "small alert"}>Source status: {sourceStatus === "source_unavailable" ? "Source unavailable; verify directly before relying on this contact" : sourceStatus === "needs_recheck" ? "Source check expired; verify directly before relying on this contact" : "Source checked on the date shown"}. Last checked: {resource.verifiedAt}.</p>
+    <p className={sourceStatus === "source_checked" ? "small muted" : "small alert"}>Review status: {sourceStatus === "source_unavailable" ? "Source unavailable at last review; verify directly before relying on this contact" : sourceStatus === "needs_recheck" ? "Review due; verify directly before relying on this contact" : "Public details reviewed on the date shown"}. Resource information last reviewed: {resource.verifiedAt}.</p>
     <span>{resource.contacts.map((contact) => `${contact.label}: ${contact.value}`).join(" · ")}</span>
     <SourceLink url={resource.url}>Official website</SourceLink> · <SourceLink url={resource.sourceUrl}>Official source</SourceLink>
   </li>;
@@ -194,7 +194,7 @@ function PropertyExplorer() {
       <form className="address-form" onSubmit={(event) => void search(event)}>
         <label htmlFor="address">Street address</label>
         <div className="input-row"><input id="address" type="text" autoComplete="street-address" maxLength={200} value={address} onChange={(event) => setAddress(event.target.value)} placeholder="315 E Kennedy Blvd, Tampa" /><button type="submit" disabled={lookingUp}>{lookingUp ? "Finding…" : "Find address"}</button></div>
-        <p className="small muted">Address lookups contact public GIS services. A match is a candidate, not a property determination.</p>
+        <p className="small muted">Address lookups contact public GIS services. A match is a candidate, not a property determination. <a href="/privacy/">Privacy information</a></p>
       </form>
       {error && <p className="alert" role="alert">{error}</p>}
       {lookup && !selected && <div className="match-list"><h3>Choose a matched address</h3><p className="small muted">{lookup.message}</p>{lookup.warnings?.map((warning, index) => <p className="small muted" key={index}>{warning}</p>)}{lookup.candidates?.map((point) => <button type="button" className="match-option" onClick={() => void choose(point)} key={point.id}><span>{point.address}<small>{point.latitude.toFixed(5)}, {point.longitude.toFixed(5)}</small></span><span aria-hidden="true">→</span></button>)}</div>}
@@ -215,12 +215,12 @@ function DirectoryPreview() {
   return <>
     <a className="skip-link" href="#main">Skip to content</a>
     <div className="site-wrap">
-      <header className="site-header"><a className="brand" href="#top" aria-label="TampaBayBot home">TampaBayBot</a><nav aria-label="Main navigation"><a href="#housing-help">Housing help</a><a href="#housing-resources">Public resources</a><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a></nav></header>
+      <header className="site-header"><a className="brand" href="#top" aria-label="TampaBayBot home">TampaBayBot</a><nav aria-label="Main navigation"><a href="#housing-help">Housing help</a><a href="#housing-resources">Public resources</a><a href="/privacy/">Privacy information</a><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a></nav></header>
       <div className="status-banner" role="status"><strong>Housing assistance directory preview.</strong> Question search and property tools are unavailable while the service is being set up. The contact directory remains available.</div>
       <main id="main"><section className="hero" id="top"><div className="hero-copy"><h1>Tampa Bay housing information</h1><p>Find official contacts for eviction, shelter referrals, legal aid, and urgent housing needs.</p><div className="hero-actions"><a className="hero-button" href="#housing-help">I Need Housing Help</a><a className="hero-secondary" href="#housing-resources">Browse public resources</a></div></div></section>
         <HousingHelp />
         <section className="disclaimer"><h2>Check details with the provider</h2><p>TampaBayBot is an independent, unofficial project. It does not provide legal advice or establish eligibility. Confirm hours, eligibility, and availability with the responsible agency.</p><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a></section>
-      </main><footer className="site-footer"><span>TampaBayBot · An open source civic information project</span><span>Independent and unofficial</span></footer>
+      </main><footer className="site-footer"><span>TampaBayBot · An open source civic information project</span><nav aria-label="Footer navigation"><a href="/privacy/">Privacy information</a></nav><span>Independent and unofficial</span></footer>
     </div>
   </>;
 }
@@ -337,6 +337,7 @@ function FullApp() {
           <a href="#ask">Ask a question</a>
           <a href="#housing-help">Housing help</a>
           <a href="#property">Property details</a>
+          <a href="/privacy/">Privacy information</a>
           <a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a>
         </nav>
       </header>
@@ -368,7 +369,7 @@ function FullApp() {
                   <textarea id="question" maxLength={1000} rows={2} value={question} onChange={(event) => { setQuestion(event.target.value); setError(""); }} placeholder="Where can I find rental assistance in Tampa?" aria-describedby="question-hint" />
                   <button type="submit" disabled={busy || quotaReached}>{busy ? "Searching…" : "Search"}</button>
                 </div>
-                <p className="privacy-hint" id="question-hint">Leave out names, account numbers, and private details. Up to 1,000 characters.</p>
+                <p className="privacy-hint" id="question-hint">Leave out names, account numbers, and private details. Up to 1,000 characters. <a href="/privacy/">Privacy information</a></p>
               </form>
               {aiUsage?.reason !== "ai_configuration" && <p className="ai-usage" role="status">{aiUsage?.remaining !== null && aiUsage?.remaining !== undefined ? `AI questions remaining today: ${aiUsage.remaining} of ${aiUsage.limit}` : "AI question allowance status unavailable."}{aiUsage?.remaining !== null && aiUsage?.remaining !== undefined && knownReset && <span> {knownReset}</span>}</p>}
               {aiStatusUnavailable && <p className="ai-fallback-note">{AI_UNAVAILABLE_MESSAGE} <a href="#housing-help">Find Housing Help Without AI</a></p>}
@@ -383,7 +384,7 @@ function FullApp() {
         <PropertyExplorer />
         <section className="disclaimer"><h2>Check official sources</h2><p>TampaBayBot is independent and unofficial. It does not provide legal advice, establish eligibility, verify permits, or make property decisions. Public records can be incomplete or outdated; confirm details with the responsible agency.</p><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a></section>
       </main>
-      <footer className="site-footer"><span>TampaBayBot · An open source civic information project</span><span>Independent and unofficial</span></footer>
+      <footer className="site-footer"><span>TampaBayBot · An open source civic information project</span><nav aria-label="Footer navigation"><a href="/privacy/">Privacy information</a></nav><span>Independent and unofficial</span></footer>
     </div>
   </>;
 }

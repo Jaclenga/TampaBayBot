@@ -27,6 +27,7 @@
     "ingest": "node --use-system-ca scripts/ingest.mjs",
     "evaluate": "node scripts/evaluate.mjs --strict",
     "eval:suite": "node scripts/eval-suite.mjs",
+    "eval:reliability": "node scripts/eval-suite.mjs --suite reliability --output work/evals/reliability",
     "eval:recall": "node scripts/eval-recall.mjs",
     "eval:live": "node scripts/eval-suite.mjs --mode live",
     "eval:compare": "node scripts/eval-suite.mjs --mode compare",
@@ -54,7 +55,8 @@
     "source:apply": "node scripts/source-refresh.mjs apply",
     "source:deploy": "node scripts/source-refresh.mjs deploy",
     "source:rollback": "node scripts/source-refresh.mjs rollback",
-    "source:recover": "node scripts/source-refresh.mjs recover"
+    "source:recover": "node scripts/source-refresh.mjs recover",
+    "resource:freshness": "node scripts/resource-freshness.mjs"
   },
   "dependencies": {
     "cheerio": "^1.2.0",

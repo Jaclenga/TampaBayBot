@@ -31,6 +31,11 @@ export interface CrisisResource {
   verifiedAt: string;
   sourceUrl: string;
   verificationStatus?: 'source_checked' | 'needs_recheck' | 'source_unavailable';
+  nextReviewAt?: string;
+  lastLinkCheckedAt?: string | null;
+  linkStatus?: string;
+  knownIssues?: string[];
+  reviewNotes?: string | null;
   availabilityStatus?: 'unknown' | 'confirmed_open' | 'temporarily_closed' | 'discontinued';
   refreshDays?: number;
   intakeUrl?: string;

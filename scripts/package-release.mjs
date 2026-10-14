@@ -65,8 +65,8 @@ function emptyLegacyReport(template) {
 
 function emptySuiteReport() {
   const checks = { passed: 0, failed: 0, applicable: 0, notApplicable: 0, rate: null };
-  const suites = Object.fromEntries(["navigation", "guardrails", "providers", "metamorphic", "jurisdiction", "quality"].map((name) => [name, { cases: 0, passed: 0, failed: 0, checks }]));
-  return { schemaVersion: 1, suiteVersion: SUITE_VERSION, mode: "not_run", status: "not_run", startedAt: null, completedAt: "", provenance: {}, summary: { cases: 0, passed: 0, failed: 0, checks, suites }, metrics: {}, automatedQuality: null, humanEvaluation: { status: "not_run" }, limitations: [NOTICE], cases: [] };
+  const suites = Object.fromEntries(["navigation", "guardrails", "providers", "metamorphic", "jurisdiction", "quality", "reliability"].map((name) => [name, { cases: 0, passed: 0, failed: 0, checks }]));
+  return { schemaVersion: 1, suiteVersion: SUITE_VERSION, mode: "not_run", status: "not_run", startedAt: null, completedAt: "", provenance: {}, summary: { cases: 0, passed: 0, failed: 0, checks, suites, reliabilityByCategory: null }, metrics: {}, automatedQuality: null, humanEvaluation: { status: "not_run" }, limitations: [NOTICE], cases: [] };
 }
 
 export function omitUnavailableMarkdownLinks(markdown, filename, availableFiles) {
@@ -103,7 +103,7 @@ export async function createSourceRelease({ root = ROOT, output }) {
   for (const directory of SOURCE_DIRS) for (const name of await sourceFiles(root, directory, ["functions", "pages-demo"].includes(directory))) inputs.add(name);
   for (const guide of GUIDE_FILES) inputs.add(`docs/${guide}`);
   for (const name of await sourceFiles(root, "evaluation/suite")) inputs.add(name);
-  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/recall.mjs", "evaluation/datasets/README.md", "evaluation/datasets/quality-benchmark.json", "evaluation/datasets/program-recall-benchmark.json", "evaluation/datasets/ground_truth_questions.json", "evaluation/datasets/housing-crisis-scenarios.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
+  for (const name of ["evaluation/benchmarks.mjs", "evaluation/scenarios.mjs", "evaluation/recall.mjs", "evaluation/datasets/README.md", "evaluation/datasets/quality-benchmark.json", "evaluation/datasets/program-recall-benchmark.json", "evaluation/datasets/ground_truth_questions.json", "evaluation/datasets/housing-crisis-scenarios.json", "evaluation/datasets/answer-reliability.json", "evaluation/human-audit/RUBRIC.md", "evaluation/security/gitleaks-report.tmpl", "evaluation/security/SECRET_SCAN.md", "src/worker/index.ts", "data/gis-config.json", "data/development-config.json"]) inputs.add(name);
   // The release gets its own source-only CI workflow, if supplied by the maintainer.
   inputs.add(".github/workflows/source-release.yml");
   inputs.add(".github/workflows/source-refresh.yml");
@@ -137,7 +137,7 @@ export async function createSourceRelease({ root = ROOT, output }) {
     "evaluation/agent-audit/responses.json": "[]\n",
     "evaluation/human-audit/responses.json": "[]\n",
     "evaluation/suite/results/latest.json": json(emptySuiteReport()),
-    "docs/DATA_SOURCES.md": "# Source registry\n\n" + NOTICE + "\n\nPublisher URLs, source categories and fetch configuration are in [`data/sources.json`](../data/sources.json); retrieval dates are unset until you fetch. See [distribution and terms](DISTRIBUTION.md) and [geographic methods](GEOSPATIAL.md).\n",
+    "docs/DATA_SOURCES.md": "# Source registry\n\n" + NOTICE + "\n\nPublisher URLs, source categories and fetch configuration are in [`data/sources.json`](../data/sources.json); retrieval dates are unset until you fetch. See [distribution and terms](DISTRIBUTION.md) and [geographic methods](GEOSPATIAL.md).\n\nEach retrieval source keeps its stable `source_id` and official `canonical_url`. The registry also separates automated link observations (`last_link_checked_at`, `link_status`) from human content review (`last_content_reviewed_at`, `review_status`, `next_review_at`, `known_issues`, `review_notes`). The source-only checkout starts without a substantive review date for these retrieval records; a successful fetch or HTTP response cannot create one. Run the [resource freshness report](RESOURCE_VERIFICATION.md#automated-freshness-report), then use the [reviewed source-update pipeline](SOURCE_UPDATES.md) before changing evidence or citations.\n",
   };
   for (const [name, value] of Object.entries(generated)) payload.set(name, Buffer.from(value));
   const extraIgnores = ["/data/raw/", "/data/normalized/", "/data/chunks.json", "/data/corpus.json", "/data/generations/", "/data/ingestion-report.json", "/data/verification-report.json", "/evaluation/results/", "/evaluation/agent-audit/responses.json", "/evaluation/human-audit/responses.json", "/evaluation/suite/results/"];

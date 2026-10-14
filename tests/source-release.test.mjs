@@ -61,6 +61,8 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     await writeFile(path.join(root, "evaluation/datasets/quality-benchmark.json"), JSON.stringify({ schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] }));
     const recallBenchmark = { schema_version: 1, cases: [{ case_id: "fixture-program-recall" }] };
     await writeFile(path.join(root, "evaluation/datasets/program-recall-benchmark.json"), JSON.stringify(recallBenchmark));
+    const reliabilityBenchmark = { schemaVersion: 1, fixture: { synthetic: true }, cases: [{ id: "fixture-answer-reliability" }] };
+    await writeFile(path.join(root, "evaluation/datasets/answer-reliability.json"), JSON.stringify(reliabilityBenchmark));
     await writeFile(path.join(root, "evaluation/recall.mjs"), 'import { readFile } from "node:fs/promises";\nexport async function evaluateProgramRecall() { return JSON.parse(await readFile(new URL("./datasets/program-recall-benchmark.json", import.meta.url), "utf8")); }\n');
     await writeFile(path.join(root, "scripts/eval-recall.mjs"), 'export { evaluateProgramRecall } from "../evaluation/recall.mjs";\n');
     const recallGuide = "# Program recall\n\n[Benchmark](../evaluation/datasets/program-recall-benchmark.json) [Evaluator](../evaluation/recall.mjs)\n";
@@ -90,6 +92,7 @@ test("source packaging excludes snapshots, history and secrets, and refuses repl
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "data/chunks.json"), "utf8")), []);
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/results/responses.json"), "utf8")), []);
     assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/datasets/quality-benchmark.json"), "utf8")), { schema_version: 1, cases: [{ text_sha256: "fixture-hash-only" }] });
+    assert.deepEqual(JSON.parse(await readFile(path.join(output, "evaluation/datasets/answer-reliability.json"), "utf8")), reliabilityBenchmark);
     const packagedRecall = await import(pathToFileURL(path.join(output, "scripts/eval-recall.mjs")).href);
     assert.deepEqual(await packagedRecall.evaluateProgramRecall(), recallBenchmark, "The packaged recall entrypoint must resolve its evaluator and benchmark");
     assert.equal(await readFile(path.join(output, "docs/PROGRAM_RECALL.md"), "utf8"), recallGuide, "The recall guide and its dependency links must survive packaging");

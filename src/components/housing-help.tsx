@@ -59,12 +59,12 @@ function planText(plan: NonNullable<ReturnType<typeof buildCrisisPlan>>, now: nu
     coverage: "Área", contact: "Contacto", eligibility: "Requisitos", availability: "Disponibilidad",
     availabilityStatus: "Estado de disponibilidad", sourceStatus: "Estado de la fuente",
     restrictions: "Restricciones", hours: "Horario publicado", intake: "Admisión oficial",
-    website: "Sitio oficial", source: "Fuente", checked: "Fuente revisada", recheck: "Necesita nueva verificación",
+    website: "Sitio oficial", source: "Fuente", checked: "Información del recurso revisada por última vez", recheck: "Necesita nueva revisión",
   } : {
     coverage: "Coverage", contact: "Contact", eligibility: "Eligibility", availability: "Availability",
     availabilityStatus: "Availability status", sourceStatus: "Source status",
     restrictions: "Restrictions", hours: "Published hours", intake: "Official intake",
-    website: "Official website", source: "Source", checked: "Source checked", recheck: "Needs recheck",
+    website: "Official website", source: "Source", checked: "Resource information last reviewed", recheck: "Review due",
   };
   return [plan.title, plan.immediatePriority, ...plan.steps.map((step, i) => `${i + 1}. ${step}`),
     plan.deadline, plan.humanAssistance, ...plan.documents, ...plan.resources.map((resource) => [
@@ -130,11 +130,12 @@ export default function HousingHelpPage() {
     <aside className="crisis-immediate" aria-labelledby="crisis-immediate-title">
       <h2 id="crisis-immediate-title">{es ? "Ayuda inmediata" : "Immediate help"}</h2>
       <p>{es ? "Si alguien está en peligro físico inmediato, llame al 911. Para refugio o asistencia, contacte al servicio de admisión o al 211. Nadie aquí puede confirmar cupos actuales." : "If someone is in immediate physical danger, call 911. For shelter or assistance, contact intake or 211. This site cannot confirm current openings."}</p>
-      <ul>{immediate.map((resource) => <li key={resource.id}><strong>{resource.organization} — {resource.program}</strong> ({resourceCoverage(resource, es)}): {resource.contacts.map((contact) => contact.value).join(" · ")} {external(resource.url) && <a href={resource.url} target="_blank" rel="noopener noreferrer">{es ? "Sitio oficial" : "Official site"}</a>} <small>{es ? "Fuente revisada" : "Source checked"}: {resource.verifiedAt}. {resourceNeedsRecheck(resource, referenceTime) ? (es ? "Necesita nueva verificación; confirme con el proveedor." : "Needs recheck; confirm with the provider.") : (es ? "Confirme la disponibilidad actual." : "Confirm current availability.")}</small></li>)}</ul>
+      <ul>{immediate.map((resource) => <li key={resource.id}><strong>{resource.organization} — {resource.program}</strong> ({resourceCoverage(resource, es)}): {resource.contacts.map((contact) => contact.value).join(" · ")} {external(resource.url) && <a href={resource.url} target="_blank" rel="noopener noreferrer">{es ? "Sitio oficial" : "Official site"}</a>} <small>{es ? "Información del recurso revisada por última vez" : "Resource information last reviewed"}: {resource.verifiedAt}. {resourceNeedsRecheck(resource, referenceTime) ? (es ? "Necesita nueva revisión; confirme con el proveedor." : "Review due; confirm with the provider.") : (es ? "Confirme la disponibilidad actual." : "Confirm current availability.")}</small></li>)}</ul>
     </aside>
     <div className="crisis-exit"><span>{es ? "Salir rápido abre un sitio del clima; no borra el historial." : "Quick exit opens a weather site; it cannot erase browser history."}</span> <a href="https://www.weather.gov/" onClick={(event) => { event.preventDefault(); window.location.replace("https://www.weather.gov/"); }}>{es ? "Salir rápido" : "Quick exit"}</a></div>
     <section className="crisis-intake" aria-labelledby="crisis-intake-title">
       <h2 id="crisis-intake-title">{es ? "Crear un plan" : "Make a plan"}</h2>
+      <p className="small"><a href="/privacy/">{es ? "Información de privacidad (en inglés)" : "Privacy information"}</a></p>
       <p>{es ? "Solo se usan sus selecciones en esta página. No se envían ni guardan detalles personales." : "Your selections stay on this page. No personal details are sent or stored."}</p>
       <div className="crisis-form-grid"><label>{es ? "Problema de vivienda" : "Housing problem"}<select disabled={!ready} value={situation} onChange={(event) => chooseSituation(event.target.value as CrisisSituation | "")}><option value="">{es ? "Elegir o consultar contactos" : "Choose or browse contacts"}</option>{situations.map((option) => <option key={option.value} value={option.value}>{option[locale]}</option>)}</select></label>
       <label>{es ? "Ciudad o condado (opcional)" : "City or county (optional)"}<select disabled={!ready} value={location} onChange={(event) => setLocation(event.target.value as CrisisLocation)}>{locations.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label></div>
