@@ -5,6 +5,22 @@ import { buildCrisisPlan } from '../../src/lib/housing/crisis.mjs';
 
 const staticResources = JSON.parse(readFileSync(new URL('../src/housing-resources.json', import.meta.url), 'utf8')).resources;
 
+async function expectHousingFitsViewport(page) {
+  const layout = await page.evaluate(() => ({
+    overflow: document.documentElement.scrollWidth - window.innerWidth,
+    overflowingCards: [...document.querySelectorAll('.housing-card-title, .housing-contacts')]
+      .filter((element) => element.scrollWidth > element.clientWidth + 1)
+      .map((element) => ({
+        className: element.className,
+        text: (element.textContent || '').trim().slice(0, 80),
+        scrollWidth: element.scrollWidth,
+        clientWidth: element.clientWidth,
+      })),
+  }));
+  expect(layout.overflow, JSON.stringify(layout)).toBeLessThanOrEqual(0);
+  expect(layout.overflowingCards).toEqual([]);
+}
+
 test('essential directory works with every API route disabled', async ({ page }) => {
   let apiRequests = 0;
   page.on('request', (request) => { if (new URL(request.url()).pathname.startsWith('/api/')) apiRequests++; });
@@ -248,7 +264,7 @@ test('site and guide language switches keep an in-progress housing workflow and 
   await expect(page.locator('#crisis-situation')).toHaveValue('eviction');
   await expect(page.locator('#crisis-notice')).toHaveValue('court_summons');
   await expect(page.getByLabel('Question or address')).toHaveValue('I need help with rent');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await expectHousingFitsViewport(page);
   expect((await new AxeBuilder({ page }).include('#housing-help').analyze()).violations).toEqual([]);
 });
 
@@ -265,7 +281,7 @@ test('mobile Pages controls keep visible focus and practical pointer targets', a
     const box = await page.locator(selector).first().boundingBox();
     expect(box?.height, selector).toBeGreaterThanOrEqual(24);
   }
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await expectHousingFitsViewport(page);
 });
 
 test('unsafe sleep tonight routes to shelter intake, while quick exit is available', async ({ page }) => {

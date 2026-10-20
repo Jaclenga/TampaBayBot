@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "a6a88ebf4fe94bebc2c7aeae6905036bd8ab8b43bfd09dc114ed4c921a6d7eb4",
+  "content_sha256": "0d0d425099d05d20a2884650564dc831f409b5627a8eeb7a2c22cc547e029f5d",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -602,8 +602,8 @@
     },
     {
       "path": "pages-demo/src/styles.css",
-      "bytes": 36354,
-      "sha256": "93caf569f7e0f9dd482bab3f03bbd55a02c79ab542480db045aa223d82c82b1c"
+      "bytes": 36449,
+      "sha256": "50b49babed965e6c3b47ecafd860ba090cbd0ae33ec998134b261d7b387e98b7"
     },
     {
       "path": "pages-demo/src/vite-env.d.ts",
@@ -622,8 +622,8 @@
     },
     {
       "path": "pages-demo/tests/housing-browser.spec.mjs",
-      "bytes": 23627,
-      "sha256": "da63e250631ede96e45e340c96001dc958762292a4c056698e430a3e85dcaaad"
+      "bytes": 24185,
+      "sha256": "9b7308b90ee8dc2f727df4bee6d5b8c27dc0fe41d8d3ed785b4195d98ecfae01"
     },
     {
       "path": "pages-demo/tests/housing-help.test.mjs",
