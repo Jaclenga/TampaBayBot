@@ -1,6 +1,6 @@
 # Accessibility
 
-TampaBayBot targets WCAG 2.1 AA; conformance has not been established. This guide documents implemented support, browser-test commands and the manual review checklist. Automated rules can find common issues, but assistive-technology and resident review remain necessary. Dated results and environments are maintained in [release readiness](RELEASE_READINESS.md).
+TampaBayBot targets WCAG 2.2 AA; conformance has not been established. This guide documents implemented support, browser-test commands and the manual review checklist. Automated rules can find common issues, but assistive-technology and resident review remain necessary. Dated results and environments are maintained in [release readiness](RELEASE_READINESS.md).
 
 ## Implemented
 
@@ -9,9 +9,47 @@ TampaBayBot targets WCAG 2.1 AA; conformance has not been established. This guid
 - Associated form errors, live status messages and busy/disabled states. Errors distinguish unavailable data from an empty successful result. Important uncertainty appears in words, not color alone.
 - Responsive layouts with wrapping controls, system fonts, browser zoom, reduced-motion styles and print support. Interface font sizes use relative `rem` units so increasing the browser's default font size enlarges text.
 - Property identifiers, land-use labels, jurisdiction, record distances, dates, caveats and source links are available as text. The optional OpenStreetMap frame requires an explicit button press and has a title. It provides location context; it is never the only place to obtain essential information.
-- English and Spanish UI messages live in `src/lib/i18n/`, including property tools and reference pages. Source excerpts stay in their source language, with language attributes on quotations and original record text. English legal/regulatory text is not silently machine-translated.
+- The classic interface's English and Spanish UI messages live in `src/lib/i18n/`, including property tools and reference pages. Source excerpts stay in their source language, with language attributes on quotations and original record text. English legal/regulatory text is not silently machine-translated.
+
+## WCAG 2.2 AA audit scope
+
+This is an engineering audit of the classic interface, reference pages and deterministic housing guide. The automated checks exercise these criteria; they do not establish conformance with every success criterion.
+
+| Criteria | Current check | Human work still needed |
+| --- | --- | --- |
+| 1.3.1, 3.3.2: structure and labels | Semantic regions and associated labels are inspected by axe on English and Spanish flows. | Confirm reading order and labels with screen readers, especially long source cards. |
+| 1.4.3, 1.4.10, 1.4.11, 1.4.4: contrast, reflow, non-text contrast and text resizing | Axe rules, 320px/375px overflow checks and the separate actual Chromium zoom/font preference suite. | Check visual clipping, contrast in real devices and browsers, including forced colors and 400% zoom after each layout change. |
+| 2.1.1, 2.4.3, 2.4.7, 2.4.11: keyboard, focus order, visible focus and unobscured focus | Skip-link and guide/question keyboard flows, focus assertions, and focus style checks. | Navigate every card, disclosure, link and control with keyboard and screen reader on the deployed site. |
+| 2.5.8: target size | axe `wcag22aa` rules run on mobile home, guide and reference pages. | Check closely spaced touch targets on actual phones; automated rules do not cover all target-size exceptions. |
+| 2.5.7, 3.2.6, 3.3.7: dragging, consistent help and redundant entry | Code inspection found no drag-only resident task or repeated personal-information entry. The emergency/help links remain visible in the guide. | Manually check consistency across every public route and reassess if workflows gain dragging or repeated entry. Installed axe has no `wcag22a` tag for the new A criteria. |
+| 3.3.8: accessible authentication | The public question, directory and housing guide require no account or authentication. | Reassess if a resident login is introduced; staff operations access is a separate interface. |
+| 3.1.1, 3.1.2: page language and language of parts | Language-switch tests check the document language and original-language attributes on source material. | Have fluent reviewers inspect spoken pronunciation and language tags in a screen reader. |
+| 3.3.1, 4.1.3: errors and status messages | Browser tests check associated form errors, focus and named status regions. | Verify announcement timing and repetition with assistive technology. |
+
+The deterministic guide and directory are available without an AI service. Their catalog's provider names, descriptions, eligibility and source notes are in English; linked agency pages may have other language options that this project has not verified. The Spanish UI explicitly marks that boundary; a translated interface is not a translated official source. The general source registry also has records with no language metadata; the UI labels those as unrecorded instead of claiming they are English. The public resident tasks have no account authentication or dragging interaction; the WCAG 2.2 criteria for those features need reassessment if they are added. See [W3C's WCAG 2.2 changes](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/) and [target-size explanation](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum).
+
+### Translation maintenance for safety guidance
+
+Keep English and Spanish crisis instructions as authored, version-controlled copy. `tests/translation-coverage.test.mjs` checks for distinct Spanish UI strings and compares all nine deterministic crisis routes and eviction stages across languages for the same routing, urgency, referrals, resources and official source URLs. A change to an emergency instruction, eviction notice distinction, deadline caution, eligibility caveat, quick-exit notice or contact referral must receive review by a fluent Spanish reviewer **and** a housing or safety subject-matter reviewer before a resident-facing release. Review the two languages together, the exact scenario and county, the official source, and any copied/printed plan text. Record reviewer, date, source checked and changed strings in the release record. If review is unavailable, do not publish the new high-stakes wording as reviewed; retain existing approved copy only when its review is documented. Never silently use machine translation for legal or emergency directions. Current Spanish wording still awaits that independent review, so this process is a release requirement, not a claim that it has occurred.
+
+Run the local translation coverage check with `npm run test:translations`; the dedicated accessibility-language CI workflow runs it too. This check detects missing or accidentally shared copy and changed routing relationships. It cannot judge Spanish clarity, legal meaning or current source accuracy.
 
 ## Automated checks
+
+The focused browser command also runs `tests/e2e/source-language-accessibility.spec.ts`, which checks source-library search state, keyboard focus, unknown-language notices, mobile reflow and axe rules.
+
+The current `tests/e2e/accessibility-language.spec.ts` suite runs axe with WCAG 2.0/2.1 A/AA and WCAG 2.2 AA tags on the classic mobile home, housing guide and reference pages. Installed axe has no `wcag22a` tag; the new A criteria still need manual assessment. The suite also checks first-tab skip navigation, visible focus indicators, Spanish errors and status regions, preserved question and crisis-guide selections, official-source language notice, 320px reflow and that guide selections make no API call. It uses only local app routes and does not require a production credential, downloaded corpus or live AI service. The dedicated `.github/workflows/accessibility-language.yml` workflow runs this focused suite in CI. Run it locally with:
+
+```sh
+npx playwright install chromium
+npm run test:accessibility:browser
+```
+
+Playwright JSON/HTML results are generated locally. Inspect axe `incomplete` entries as well as violations; zero violations means only that the tested automated rules found none in those rendered states.
+
+The Pages preview has its own static browser suite: run `npm run test:pages:browser` after installing Chromium. It exercises the directory and guide without a backend service and includes mobile and axe checks. The dedicated accessibility-language CI workflow runs that Pages suite alongside the focused classic checks. Review the hosted Pages URL separately after deployment; local static tests do not establish hosted accessibility.
+
+For the directory-only preview, build with `VITE_DIRECTORY_ONLY=true npm run build:pages` and run `npx playwright test --config pages-demo/playwright.preview.config.mjs`. In PowerShell, set `$env:VITE_DIRECTORY_ONLY = 'true'` before the build and remove it afterward. CI runs this preview configuration as a separate regression check.
 
 Historical complete production-browser runs on Windows and later Ubuntu Linux failed after an abandoned upload poisoned Miniflare's local static-assets transport. The retained Windows production-browser run passed all 15 application cases. It used the built static-assets route for resident, accessibility, asset and response-policy checks and the exact same compiled Worker through a direct route for stalled-upload deadlines. These are local runtime checks, not hosted Cloudflare tests. [Release readiness](RELEASE_READINESS.md) records the current scope, and [the transport follow-up](HISTORY.md#runtime-investigation) preserves the earlier failure.
 
@@ -90,14 +128,16 @@ Record reviewer, date, browser/OS, assistive technology, observed result and iss
 4. Test 320px and 375px widths, touch use, high contrast/forced colors, reduced motion and increased default font settings.
 5. Confirm property and activity tasks can be completed without opening the map. Test optional map dismissal/navigation with a keyboard and external link announcements.
 6. Ask residents with varied housing/government knowledge to perform a task and explain the evidence, uncertainty and next step in their own words.
+7. Have fluent Spanish readers and housing/safety reviewers verify crisis, eviction and emergency guidance against the current official source; check language switching while a plan is in progress and confirm the guide's English provider fields and the source registry's unrecorded languages are identified accurately.
 
 ## Known limitations
 
 - No human screen-reader audit, accessibility expert sign-off or resident usability study has been completed. The prepared human answer audit contains no fabricated accessibility scores.
 - The historical production suite's CSS zoom remains an approximation. Actual browser zoom and default-font resizing are covered by the separate Chromium fictional-demo suite; Firefox, Safari, mobile assistive technology and resident readability still need review.
 - Original government documents and OpenStreetMap are outside project control and may have their own accessibility problems. The application exposes text evidence and direct alternatives but cannot repair the original source sites.
-- Question, property and reference interfaces support English and Spanish. Official source titles, quotations and record content retain their original language. Spanish wording still needs independent fluent-speaker and resident review. Source acronyms and some quoted regulatory wording remain technical; a verified plain-language glossary needs further work.
+- The classic question, property and reference interfaces support English and Spanish. The separate Cloudflare Pages preview has a Spanish shell, directory and deterministic guide, while its question, answer and property tools and privacy page remain English and are labeled accordingly. Official source titles, quotations and record content retain their original language; some general source records have unrecorded language rather than a verified English label. Spanish wording still needs independent fluent-speaker and resident review. Source acronyms and some quoted regulatory wording remain technical; a verified plain-language glossary needs further work.
 - Screen-reader announcement order, long source-disclosure navigation, mobile assistive technology and forced-color support need human validation.
+- WCAG 2.2 success criteria that axe cannot reliably judge, including focus not obscured, consistent help, redundant entry and accessible authentication where applicable, require manual assessment. No WCAG 2.2 AA conformance claim is made.
 
 On 2026-09-13, the local Windows environment had Narrator available but no active screen-reader session or usable speech-output inspection interface; NVDA was absent from its usual installation paths. No screen-reader session, human audit or resident study was performed by these checks.
 

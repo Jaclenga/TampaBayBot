@@ -34,6 +34,9 @@ function setup(t, overrides = {}) {
 function request(path = '/api/ask', ip = '192.0.2.1') {
   return new Request(`https://synthetic.invalid${path}`, { headers: { 'CF-Connecting-IP': ip } });
 }
+function loopbackRequest(path = '/api/ask') {
+  return new Request(`http://127.0.0.1:3000${path}`);
+}
 async function run(env, dispatch, req = request()) {
   const tasks = [];
   const response = await withOperations(req, env, { waitUntil: promise => tasks.push(promise) }, dispatch);
@@ -142,6 +145,24 @@ test('shared configuration and database failures fail closed without leaking exc
   }
 });
 
+test('public APIs fail closed without shared controls while loopback development remains available', async () => {
+  for (const env of [{}, { TAMPABAYBOT_OPERATIONS_MODE: 'local' }]) {
+    for (const path of ['/api/ask', '/api/property', '/api/usage', '/api/health', '/api/ready']) {
+      let dispatched = false;
+      const denied = await run(env, async () => { dispatched = true; return new Response('private answer'); }, request(path));
+      assert.equal(denied.status, 503, path);
+      assert.equal((await denied.json()).code, 'shared_controls_required');
+      assert.equal(denied.headers.get('Cache-Control'), 'no-store');
+      assert.equal(dispatched, false, path);
+    }
+    const local = await run(env, async () => Response.json({ ok: true }), loopbackRequest());
+    assert.equal(local.status, 200);
+  }
+  const spoofed = await run({ TAMPABAYBOT_OPERATIONS_MODE: 'local' }, async () => new Response('wrong'),
+    new Request('https://public.example/api/ask', { headers: { Origin: 'http://localhost:3000' } }));
+  assert.equal(spoofed.status, 503);
+});
+
 test('encoded API paths cannot bypass production limits and maintenance leaves health reachable', async t => {
   const { env } = setup(t, { TAMPABAYBOT_MAINTENANCE: '1' });
   for (const path of ['/api/ask', '/%61pi/ask', '/api%2fask', '/%2561pi/ask', '//api/ask']) {
@@ -226,7 +247,7 @@ test('late timer scheduling cannot turn an overdue dispatch into success', async
   const response = await run({ TAMPABAYBOT_OPERATIONS_MODE: 'local' }, async () => {
     Date.now = () => clock() + 31000;
     return Response.json({ status: 'answered' });
-  });
+  }, loopbackRequest());
   assert.equal(response.status, 504);
 });
 
@@ -454,7 +475,7 @@ test('Workers AI cannot run in implicit or explicit unmetered local mode', async
       });
       return Response.json({ generation: answer.generation, answer: answer.answer,
         ai: await aiUsage({ provider: 'workers-ai' }) });
-    });
+    }, loopbackRequest());
     assert.equal(result.status, 200);
     const body = await result.json();
     assert.equal(body.generation.reason, 'ai_configuration');
@@ -479,7 +500,7 @@ test('HTTP model providers cannot run in implicit or explicit unmetered API mode
           fetchImpl: async () => { calls++; throw new Error('must not run'); } });
         return Response.json({ generation: answer.generation, answer: answer.answer,
           ai: await aiUsage({ provider }) });
-      });
+      }, loopbackRequest());
       assert.equal(response.status, 200);
       const body = await response.json();
       assert.equal(body.generation.reason, 'ai_configuration');
@@ -524,6 +545,11 @@ test('explicit local model opt-in works only with a loopback app URL and loopbac
   assert.equal(calls, 1);
   for (const [config, req] of [[localConfig, publicRequest], [remoteConfig, localRequest]]) {
     const denied = await run(env, dispatch(config), req);
+    if (req === publicRequest) {
+      assert.equal(denied.status, 503);
+      assert.equal((await denied.json()).code, 'shared_controls_required');
+      continue;
+    }
     assert.equal(denied.status, 200);
     const body = await denied.json();
     assert.equal(body.generation.reason, 'ai_configuration');

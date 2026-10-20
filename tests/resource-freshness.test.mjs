@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { auditResourceFreshness, checkResourceUrl, freshnessMarkdown, semanticHtmlFingerprint } from '../src/lib/ingestion/resource-freshness.mjs';
+import { auditResourceFreshness, checkResourceUrl, freshnessMarkdown, resourceRecords, semanticHtmlFingerprint } from '../src/lib/ingestion/resource-freshness.mjs';
 import { sourceChange } from '../src/lib/ingestion/refresh.mjs';
 
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/resource-freshness.json', import.meta.url), 'utf8'));
@@ -148,4 +148,87 @@ test('freshness metadata edits do not count as retrieval configuration changes',
   const before = { source_id: 'official-rag-source', canonical_url: 'https://example.org/rag', review_status: 'needs_review', last_link_checked_at: null };
   const after = { ...before, review_status: 'reviewed', last_content_reviewed_at: '2026-10-14', last_link_checked_at: '2026-10-14T12:00:00.000Z' };
   assert.deepEqual(sourceChange(before, after, [], []).configuration_fields_changed, []);
+});
+
+test('the normalized registry retains organization, category, jurisdiction and human review state', async () => {
+  const records = resourceRecords(fixture.directory, fixture.sources);
+  const housing = records.find(item => item.resource_id === 'fresh-shelter');
+  assert.equal(housing.organization, 'Example Shelter');
+  assert.deepEqual(housing.categories, ['emergency']);
+  assert.deepEqual(housing.jurisdiction, ['hillsborough']);
+  assert.equal(housing.last_content_reviewed_at, '2026-10-01');
+  assert.equal(housing.review_status, 'source_checked');
+  const report = await auditResourceFreshness({ ...fixture, now });
+  const entry = report.resources.find(item => item.resource_id === 'fresh-shelter');
+  assert.equal(report.schema_version, 2);
+  assert.equal(entry.url, 'https://example.org/shelter');
+  assert.equal(entry.factual_verification.status, 'source_checked');
+  assert.equal(entry.factual_verification.eligibility, 'not_checked_by_monitor');
+  assert.equal(entry.factual_verification.hours, 'not_checked_by_monitor');
+  assert.equal(entry.factual_verification.contact_details, 'not_checked_by_monitor');
+  assert.equal(report.summary.actionable_findings, 0, 'offline metadata alone does not create issues');
+});
+
+test('live actionable findings separate broken links, redirects and overdue reviews from transient failures', async () => {
+  const directory = structuredClone(fixture.directory);
+  directory.resources[0].intakeUrl = 'https://example.org/intake?private=TOKEN';
+  directory.resources[1].sourceUrl = 'https://example.org/program-source';
+  const report = await auditResourceFreshness({ directory, sources: fixture.sources, live: true, now,
+    hostIntervalMs: 0, checkOptions: { maxAttempts: 1 },
+    fetchImpl: async url => {
+      if (url.pathname === '/intake') return result(404);
+      if (url.pathname === '/program-source') return result(301, { location: 'https://example.org/new-program?private=TOKEN' });
+      if (url.pathname === '/rag') return result(503);
+      return html(fixture.oldHtml);
+    } });
+  assert.deepEqual(report.actionable.map(item => item.code).sort(),
+    ['link_broken', 'link_redirect_review', 'review_overdue']);
+  assert.equal(report.summary.actionable_findings, 3);
+  assert.equal(report.actionable.find(item => item.code === 'link_broken').url, 'https://example.org/intake');
+  assert.ok(!JSON.stringify(report).includes('TOKEN'));
+  assert.equal(report.resources.find(item => item.resource_id === 'official-rag-source').link_status, 'temporary_failure');
+  assert.match(freshnessMarkdown(report), /## Actionable findings/);
+});
+
+test('host rate limit spaces requests to the same publisher even with concurrent workers', async () => {
+  let time = 0;
+  const starts = [];
+  const report = await auditResourceFreshness({ ...fixture, live: true, now, concurrency: 4,
+    hostIntervalMs: 200, rateClock: () => time, wait: async delay => { time += delay; },
+    fetchImpl: async () => { starts.push(time); return result(204); } });
+  assert.deepEqual(starts, [0, 200, 400, 600]);
+  assert.equal(report.summary.unique_links_checked, 4);
+  assert.equal(report.check_policy.per_host_interval_ms, 200);
+  assert.equal(report.check_policy.max_attempts, 3);
+  assert.equal(report.check_policy.timeout_ms, 8000);
+});
+
+test('retry attempts also respect the per-host interval', async () => {
+  let time = 0;
+  const starts = [];
+  const directory = { resources: [structuredClone(fixture.directory.resources[0])] };
+  const report = await auditResourceFreshness({ directory, sources: [], live: true, now,
+    hostIntervalMs: 500, rateClock: () => time, wait: async delay => { time += delay; },
+    checkOptions: { maxAttempts: 2 }, fetchImpl: async () => {
+      starts.push(time);
+      return starts.length === 1 ? result(503) : result(204);
+    } });
+  assert.deepEqual(starts, [0, 500]);
+  assert.equal(report.resources[0].link_status, 'ok');
+});
+
+test('link-only operational records do not acquire a fabricated factual verification', async () => {
+  const operationalRecords = [{ catalog: 'operational', resource_id: 'county-map',
+    organization: 'Example County GIS', categories: ['property'], jurisdiction: ['pasco'],
+    authority: 'official', official_url: 'https://gis.example.org/MapServer/0', link_only: true,
+    last_content_reviewed_at: null, review_status: 'needs_review', next_review_at: null,
+    review_interval_days: null, last_link_checked_at: null, link_status: 'not_checked',
+    known_issues: [], reviewed_content_hash: null,
+    links: [{ role: 'gis_parcel', url: 'https://gis.example.org/MapServer/0' }] }];
+  const report = await auditResourceFreshness({ directory: { resources: [] }, sources: [], operationalRecords, now });
+  const entry = report.resources[0];
+  assert.equal(entry.factual_verification.status, 'not_applicable');
+  assert.equal(entry.factual_verification.last_verified_at, null);
+  assert.ok(!entry.attention.some(item => item.code === 'human_review_needed'));
+  assert.equal(report.actionable.length, 0);
 });

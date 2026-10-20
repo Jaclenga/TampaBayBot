@@ -21,13 +21,31 @@ import housingCatalog from "../../pages-demo/src/housing-resources.json";
 const subscribeToReady = () => () => {};
 const clientReady = () => true;
 const serverReady = () => false;
+type ServerErrorCode = "sensitive_input" | "guard_blocked" | "guard_unavailable" |
+  "invalid_input" | "request_timeout" | "request_aborted" | "service_unavailable";
+type FormErrorCode = "empty" | "max" | "error" | ServerErrorCode;
+function serverErrorCode(value: unknown): ServerErrorCode | "error" {
+  switch (value) {
+    case "sensitive_input":
+    case "guard_blocked":
+    case "guard_unavailable":
+    case "invalid_input":
+    case "request_timeout":
+    case "request_aborted":
+    case "service_unavailable":
+      return value;
+    default:
+      return "error";
+  }
+}
 function CitedText({ answer }: { answer: ResidentAnswer }) {
   const { copy: en } = useLocale();
   return (
     <>
       {answer.answer.split(/(\[E\d+\])/).map((text, index) => {
         const id = text.match(/^\[(E\d+)\]$/)?.[1];
-        return id && answer.evidence.some((item) => item.id === id) ? (
+        const source = id ? answer.evidence.find((item) => item.id === id) : null;
+        return source ? (
           <a
             key={index}
             className="citation-link"
@@ -44,6 +62,8 @@ function CitedText({ answer }: { answer: ResidentAnswer }) {
           >
             {text}
           </a>
+        ) : id ? (
+          <span key={index} className="unverified-reference">{en.answer.unverifiedReference}</span>
         ) : (
           quotedSegments(text, answer.evidence).map((segment, part) => segment.language
             ? <span key={`${index}-${part}`} lang={segment.language}>{segment.text}</span>
@@ -77,7 +97,11 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
   }, [rawAnswer, locale, referenceTime]);
   const [conversation, setConversation] = useState<ConversationContext | null>(null);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [errorCode, setErrorCode] = useState<FormErrorCode | null>(null);
+  const error = errorCode === "empty" ? en.form.empty :
+    errorCode === "max" ? en.form.max :
+    errorCode === "error" ? en.form.error :
+    errorCode ? en.form.serverErrors[errorCode] : "";
   const input = useRef<HTMLTextAreaElement>(null);
   const answerTitle = useRef<HTMLHeadingElement>(null);
   const controller = useRef<AbortController | null>(null);
@@ -87,12 +111,12 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
   }, [rawAnswer]);
   async function ask(text = question) {
     if (!text.trim()) {
-      setError(en.form.empty);
+      setErrorCode("empty");
       input.current?.focus();
       return;
     }
     if (text.length > 1000) {
-      setError(en.form.max);
+      setErrorCode("max");
       input.current?.focus();
       return;
     }
@@ -101,25 +125,29 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
     controller.current = request;
     setQuestion(text);
     setBusy(true);
-    setError("");
+    setErrorCode(null);
     setAnswer(null);
     try {
       const response = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: text, jurisdictionId, locale, ...(conversation ? { conversation } : {}) }),
+        // Keep the response canonical so an interface-language change can
+        // re-render it in either language without translating an earlier translation.
+        body: JSON.stringify({ question: text, jurisdictionId, locale: "en", ...(conversation ? { conversation } : {}) }),
         signal: request.signal,
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || en.form.error);
+      if (!response.ok) {
+        if (!request.signal.aborted) setErrorCode(serverErrorCode(result?.code));
+        return;
+      }
       if (!request.signal.aborted) {
         setAnswer(result);
         setConversation(result.conversation ?? null);
         if (!result.needsJurisdiction && result.jurisdictionId) setJurisdictionId(result.jurisdictionId);
       }
-    } catch (err) {
-      if (!request.signal.aborted)
-        setError(err instanceof Error ? err.message : en.form.error);
+    } catch {
+      if (!request.signal.aborted) setErrorCode("error");
     } finally {
       if (!request.signal.aborted) setBusy(false);
     }
@@ -130,7 +158,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
     setAnswer(null);
     setConversation(null);
     setQuestion("");
-    setError("");
+    setErrorCode(null);
     input.current?.focus();
   }
   return (
@@ -163,7 +191,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                   setBusy(false);
                   if (!answer?.needsJurisdiction) setConversation(null);
                   setAnswer(null);
-                  setError("");
+                  setErrorCode(null);
                   setJurisdictionId(event.target.value as JurisdictionId);
                 }}
               >
@@ -183,7 +211,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                 value={question}
                 onChange={(e) => {
                   setQuestion(e.target.value);
-                  setError("");
+                  setErrorCode(null);
                 }}
                 maxLength={1000}
                 placeholder={en.form.placeholder}
@@ -224,6 +252,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
           <div className="answer-main">
             <div className="section-topline">
               <span
+                id="answer-status"
                 className={`status-label ${answer.status === "answered" ? "positive" : ""}`}
               >
                 {en.status[answer.status] || answer.status.replaceAll("_", " ")}
@@ -233,7 +262,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                 {en.answer.clear}
               </button>
             </div>
-            <h2 id="answer-title" tabIndex={-1} ref={answerTitle}>
+            <h2 id="answer-title" tabIndex={-1} ref={answerTitle} aria-describedby="answer-status">
               {en.answer.title}
             </h2>
             <p className="answer-lead">
@@ -248,7 +277,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
               <p className="muted small">{en.answer.modelUsed}</p>
             )}
             {answer.generation?.status === "fallback" && (
-              <p className="muted small">{en.answer.modelFallback}</p>
+              <p className="muted small">{answer.generation.reason === "invalid_evidence" ? en.answer.citationFallback : en.answer.modelFallback}</p>
             )}
             {answer.meaning && (
               <section className="meaning">
@@ -260,11 +289,12 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
               <p className="small muted">{answer.coverage.statement}</p>
             )}
             {answer.warnings.length > 0 && (
-              <ul className="warning-list">
-                {answer.warnings.map((w) => (
-                  <li key={w}>{w}</li>
-                ))}
-              </ul>
+              <section className="answer-uncertainty" aria-label={en.answer.uncertainty}>
+                <h3>{en.answer.uncertainty}</h3>
+                <ul className="warning-list">
+                  {answer.warnings.map((w) => <li key={w}>{w}</li>)}
+                </ul>
+              </section>
             )}
             {!!answer.requirementsToVerify?.length && (
               <details className="verification">
@@ -293,28 +323,39 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                       open={index === 0}
                     >
                       <summary>
-                        <span className="evidence-number">{index + 1}</span>
+                        <span className="evidence-number">{item.id}</span>
                         <span>
-                          <strong>{item.title}</strong>
-                          <small>{item.agency}</small>
+                          <strong lang={item.language ?? 'und'}>{item.title}</strong>
+                          <small lang={item.language ?? 'und'}>{item.publisher || item.agency}</small>
                         </span>
                         <ChevronRight size={16} aria-hidden="true" />
                       </summary>
                       <div className="evidence-body">
+                        <p className="source-statement-label"><strong>{en.answer.sourceStatement}</strong></p>
                         <blockquote lang={item.language ?? 'und'}>{item.quote}</blockquote>
+                        {item.previewStatus === 'permitted' && item.preview && item.preview.length <= 200 && item.quote.includes(item.preview) && item.preview !== item.quote && (
+                          <details className="source-preview">
+                            <summary>{en.answer.preview}</summary>
+                            <p lang={item.language ?? 'und'}>{item.preview}</p>
+                          </details>
+                        )}
                         <dl>
                           <div>
+                            <dt>{en.answer.publisher}</dt>
+                            <dd>{item.publisher || item.agency}</dd>
+                          </div>
+                          <div>
                             <dt>{en.answer.sourceLanguage}</dt>
-                            <dd>{item.language === 'en' ? 'English' : item.language === 'es' ? 'Español' : en.answer.languageUnknown}</dd>
+                            <dd>{item.language === 'en' ? <span lang="en">English</span> : item.language === 'es' ? <span lang="es">Español</span> : en.answer.languageUnknown}</dd>
                           </div>
                           <div>
                             <dt>{en.answer.retrieved}</dt>
                             <dd>{dateLabel(item.retrieved_at, locale)}</dd>
                           </div>
-                          <div>
-                            <dt>{en.answer.updated}</dt>
-                            <dd>{dateLabel(item.source_updated_date, locale)}</dd>
-                          </div>
+                          {(item.source_date || item.source_updated_date) && <div>
+                            <dt>{en.answer.sourceDate}</dt>
+                            <dd>{dateLabel(item.source_date || item.source_updated_date, locale)}</dd>
+                          </div>}
                           {item.section && (
                             <div>
                               <dt>{en.labels.section}</dt>
@@ -345,9 +386,7 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                             {en.status.potentially_outdated}
                           </p>
                         )}
-                        <SourceLink url={item.url}>
-                          {en.answer.source}
-                        </SourceLink>
+                        <div className="source-url"><strong>{en.answer.sourceUrl}:</strong> <SourceLink url={item.url}>{item.url}</SourceLink></div>
                       </div>
                     </details>
                   ))}

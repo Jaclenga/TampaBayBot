@@ -3,6 +3,9 @@
     "resources": [
       {
         "id": "fresh-shelter",
+        "organization": "Example Shelter",
+        "categories": ["emergency"],
+        "geography": ["hillsborough"],
         "url": "https://example.org/shelter",
         "sourceUrl": "https://example.org/shelter",
         "verifiedAt": "2026-10-01",
@@ -16,6 +19,9 @@
       },
       {
         "id": "changed-program",
+        "organization": "Example Program",
+        "categories": ["housing"],
+        "geography": ["pinellas"],
         "url": "https://example.org/program",
         "sourceUrl": "https://example.org/program",
         "verifiedAt": "2026-10-01",
@@ -29,6 +35,9 @@
       },
       {
         "id": "overdue-clinic",
+        "organization": "Example Clinic",
+        "categories": ["legal"],
+        "geography": ["pasco"],
         "url": "https://example.org/overdue",
         "sourceUrl": "https://example.org/overdue",
         "verifiedAt": "2026-09-01",
@@ -45,6 +54,9 @@
   "sources": [
     {
       "source_id": "official-rag-source",
+      "agency": "Example Agency",
+      "categories": ["housing"],
+      "jurisdiction_ids": ["tampa"],
       "canonical_url": "https://example.org/rag",
       "review_status": "needs_review",
       "last_content_reviewed_at": null,

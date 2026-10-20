@@ -61,6 +61,25 @@ a:hover{color:#073d45}
 @media(max-width:680px){.site-header{padding:18px 20px;align-items:flex-start}.site-header nav{gap:12px;font-size:11px;flex-wrap:wrap;justify-content:flex-end}.site-header nav a:nth-child(2){display:none}.brand{font-size:16px}.brand-mark{width:35px;height:35px}.hero,.ask-section,.property-section,.disclaimer{padding-left:20px;padding-right:20px}.hero{padding-top:20px}.hero h1{font-size:52px}.hero p{font-size:15px}.hero-art{height:220px;min-height:220px}.map-card{padding:15px}.map-card strong{font-size:18px}.capabilities{grid-template-columns:1fr;padding:16px 20px}.capabilities>div{border:0;border-bottom:1px solid #d3dfd5;padding:15px 0}.capabilities>div:last-child{border:0}.capabilities p{margin-left:25px}.ask-section,.property-section{padding-top:70px;padding-bottom:70px}.chat-panel,.examples-panel,.property-panel{padding:20px}.form-footer,.input-row,.place-heading,.development-title{align-items:stretch;flex-direction:column}.form-footer button,.input-row button{width:100%}.layer-grid{grid-template-columns:1fr}.site-footer{flex-direction:column}.answer-card{padding:22px 20px}.development-records article>div{flex-direction:column;gap:4px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.answer-card .muted{color:#526a68}
+.answer-card .source-meta{color:#526a68}
+.unverified-reference{color:#76521a;font-size:12px;font-weight:700}
+.answer-uncertainty h3{font-size:13px;margin:17px 0 8px}
+.answer-uncertainty .warning-list{margin-top:0}
+.source-card:focus{outline:3px solid #f6bd59;outline-offset:3px}
+.source-statement-label{font-size:12px;margin:10px 0 2px}
+.sources-list h3,.next-steps h3{margin:0;font-size:14px}
+.sources-list h3 span{border-radius:99px;background:#e8f2ee;padding:3px 7px;color:#296b65;font-size:10px}
+.source-card h4{font-size:14px;margin:8px 0}
+.meaning-card h3,.verification-list h3{font-size:13px;margin:0 0 7px}
+.source-details{font-size:12px;line-height:1.5;margin:10px 0;display:grid;gap:5px}
+.source-details div{display:flex;gap:6px;flex-wrap:wrap}
+.source-details dt{color:#526a68}.source-details dd{margin:0}
+.source-url{font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.source-url a{word-break:break-word}
+.source-preview{font-size:12px;line-height:1.6;margin:12px 0}
+.source-preview summary{cursor:pointer;font-weight:700}
+.source-preview p{border-left:2px solid #d8b579;padding-left:12px;white-space:pre-wrap;overflow-wrap:anywhere}
 .status-banner a{color:inherit;font-weight:800}
 .housing-section{padding:86px clamp(24px,5.5vw,88px);background:#fff9ef}
 .housing-section .muted{color:#49635e}
@@ -118,7 +137,7 @@ a:hover{color:#073d45}
 .crisis-priority strong{font-size:12px;text-transform:uppercase;letter-spacing:.08em}
 .crisis-plan-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:23px}
 .crisis-plan h5{font-size:14px;margin:16px 0 8px}.crisis-plan ol,.crisis-plan ul{padding-left:22px;margin:8px 0;font-size:13px}.crisis-plan li{margin:0 0 9px}.crisis-plan p{font-size:13px}
-.crisis-plan-resources{list-style:none!important;padding:0!important}.crisis-plan-resources li{border-bottom:1px solid #d7e4d8;padding:0 0 10px}.crisis-plan-resources strong,.crisis-plan-resources span{display:block}.crisis-plan-resources span{color:#49645e;margin:4px 0}.crisis-plan a{font-weight:800;word-break:break-word}
+.crisis-plan-resources{list-style:none!important;padding:0!important}.crisis-plan-resources > li{border-bottom:1px solid #d7e4d8;padding:0 0 10px}.crisis-plan-resources > li > strong,.crisis-plan-resources > li > span{display:block}.crisis-plan-resources span{color:#49645e;margin:4px 0}.crisis-plan-resources .housing-contacts{padding:11px 13px}.crisis-plan a{font-weight:800;word-break:break-word}
 .crisis-plan-support{border-top:1px solid #d9e7dd;margin-top:13px;padding-top:5px}
 .crisis-plan-support p{margin:7px 0}.crisis-privacy{border-top:1px solid #e2e7de;margin-top:25px;padding-top:18px;color:#4b5f5b;font-size:12px;line-height:1.6}.crisis-privacy p{margin:3px 0 0}
 .chat-crisis-plan{border:1px solid #9fbea9;border-radius:8px;background:#f8fcf8;padding:20px;margin:20px 0;line-height:1.6}.chat-crisis-plan h3{font-family:Georgia,serif;font-size:25px;font-weight:500;margin:8px 0}.chat-crisis-plan h4{font-size:13px;margin:17px 0 7px}.chat-crisis-plan p,.chat-crisis-plan li{font-size:13px}.chat-crisis-plan ul,.chat-crisis-plan ol{padding-left:20px}.chat-crisis-plan li{margin-bottom:8px}.chat-crisis-plan li span{display:block}.chat-crisis-plan a{font-weight:800}
@@ -223,4 +242,28 @@ a { color: #005d98; }
   .privacy-main { width: 100%; padding: 0; }
   .privacy-toc, .privacy-return { display: none; }
   .privacy-sections section { break-inside: avoid; }
+}
+
+/* Keep focus visible at narrow widths and give standalone controls a touch target. */
+html { scroll-padding-top: 16px; }
+[id] { scroll-margin-top: 16px; }
+:focus-visible { outline: 3px solid #005d98; outline-offset: 3px; box-shadow: 0 0 0 5px #fff; }
+.site-header :focus-visible { outline-color: #fff; box-shadow: 0 0 0 5px #003d68; }
+.site-header { flex-wrap: wrap; }
+.site-header nav { flex-wrap: wrap; }
+.site-header nav a, .site-footer nav a, .hero-actions a, .hero .quick-help a, .crisis-guide-heading a { display: inline-flex; align-items: center; min-height: 32px; }
+.site-language { display: flex; flex-direction: column; gap: 4px; margin-left: auto; flex: none; }
+.site-language label { color: #fff; font-size: 12px; font-weight: 700; }
+.site-language select { min-width: 140px; min-height: 44px; border: 2px solid #fff; border-radius: 3px; background: #fff; color: #172b3a; padding: 7px 9px; }
+.housing-card-actions a, .housing-card-actions button, .crisis-plan-actions button, .crisis-safe-exit button, .housing-results-heading button, .immediate-links > div > a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 3px; }
+.crisis-plan-actions button, .crisis-safe-exit button, .housing-results-heading button { padding-inline: 12px; }
+.language-scope-note { margin-top: 15px !important; max-width: 72ch !important; font-size: 13px !important; }
+@media (max-width: 680px) {
+  .site-language { width: 100%; margin-left: 0; }
+  .site-language select { width: min(100%, 220px); }
+  .housing-language { max-width: none; width: 100%; }
+  .housing-card-actions a, .housing-card-actions button { min-height: 44px; }
+}
+@media (forced-colors: active) {
+  :focus-visible, .site-header :focus-visible { outline: 3px solid Highlight; box-shadow: none; }
 }

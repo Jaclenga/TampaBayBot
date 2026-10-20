@@ -1,0 +1,9 @@
+# Dependency advisory audit
+
+Run `npm run security:deps` with Node 24 and npm installed. The command needs access to the public npm advisory service, but no production credentials or live AI service. It copies only `package.json` and `package-lock.json` into a temporary directory, uses an empty project/user npm configuration, filters credential-like environment variables, and queries the public npm registry. The temporary files are removed after the scan. No resident question or evidence corpus is involved.
+
+The scan produces ignored `work/security/dependency-audit.json` and `.md` reports. Only package names, severity, direct dependency status, fix availability, and allowlisted public advisory links are retained from npm's response. Registry diagnostics are never written to these reports. Both the production-only and full dependency scans must complete with consistent npm vulnerability counts; otherwise the report says `incomplete` and the command fails.
+
+The CI gate fails on **high or critical production dependency** findings. Development and build dependency findings remain visible in the full report and require review; they do not fail that gate. See [SECURITY.md](../../SECURITY.md#known-development-dependency-advisory) for the tracked build-tool advisory. The source release workflow runs the command on pushes and pull requests and retains both reports as artifacts, even when the gate fails. Exit code 0 means the production gate passed, 1 means a blocking production finding, and 2 means the audit could not establish a result.
+
+The npm advisory feed can miss undisclosed or newly published vulnerabilities, and an advisory result does not show whether a particular application path is exploitable. Review build dependency findings as well as production findings; do not treat a passing gate as proof of complete security. Secret scanning is separate; see [SECRET_SCAN.md](SECRET_SCAN.md).

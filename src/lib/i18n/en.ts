@@ -24,16 +24,25 @@ export const en = {
     submit: "Search",
     busy: "Searching...",
     privacy:
-      "Leave out names, account numbers, and private details. Requests pass through the hosting service.",
+      "Your question goes to the app backend through the hosting service. Leave out names, account numbers, and private details; questions are not automatically redacted.",
     empty: "Enter a housing question or a Tampa Bay street address.",
     error: "We couldn’t complete that search. Please try again.",
     max: "Keep your question under 1,000 characters.",
+    serverErrors: {
+      sensitive_input: "Remove Social Security numbers, payment or bank account details, and access keys, then ask again. A street address is okay.",
+      guard_blocked: "This question could not pass the service checks. Rephrase it without private identifiers, or use the official source library.",
+      guard_unavailable: "The service checks could not finish. Try again or use the official source library.",
+      invalid_input: "We could not accept this request. Check the question and try again.",
+      request_timeout: "The request took too long to upload. Please try again.",
+      request_aborted: "The request was interrupted. Please try again.",
+      service_unavailable: "The question service is temporarily unavailable. You can still browse housing assistance contacts and official links.",
+    },
   },
   modelPrivacy: {
     disabled:
-      "Model assistance is off. Your question is not sent to a language model.",
+      "Model assistance is off for this request path. Your question is not sent to a language model, but it still goes to the app backend.",
     enabled:
-      "Model assistance is on. Your question and selected public-source passages are sent to this site's configured model service, which may process or retain them.",
+      "Model assistance is enabled. For eligible answers, your question and selected public-source passages may be sent to this site's configured model service, which may process or retain them.",
   },
   answer: {
     title: "Answer",
@@ -42,7 +51,16 @@ export const en = {
       "A language model selected these source excerpts. Their wording was checked against the saved evidence.",
     modelFallback:
       "Model assistance could not provide a verified result. This answer uses the standard source search.",
-    meaning: "What this means",
+    citationFallback:
+      "Source references could not be verified. Confirm details with the responsible agency through an official resource.",
+    meaning: "Interpretation",
+    uncertainty: "What remains uncertain",
+    sourceStatement: "Source statement",
+    publisher: "Publisher",
+    sourceDate: "Source date",
+    sourceUrl: "Source URL",
+    preview: "Permitted source preview",
+    unverifiedReference: "[unverified reference]",
     evidence: "Sources",
     next: "Next steps",
     verify: "Requirements to verify",
@@ -57,6 +75,11 @@ export const en = {
     updated: "Source updated",
     snapshot:
       "Answers use saved public-source snapshots. Follow the official link for the latest information.",
+  },
+  housing: {
+    planUpdated: (title: string) => `Plan updated: ${title}`,
+    sourceEnglishNotice:
+      "Resource descriptions, eligibility, availability, and official text below are in English. Confirm details with the provider; this site does not translate official instructions.",
   },
   property: {
     title: "Add a property to your question",
@@ -111,6 +134,8 @@ export const en = {
     frequency: "Expected refresh",
     retrieved: "Last retrieved",
     original: "Original source descriptions and terms are shown in their recorded language.",
+    englishOnly: "Original source text is available in English only.",
+    languageUnrecorded: "The source language is not recorded; read the original linked source.",
     coverage: "Areas covered",
     search: "Search sources",
     searchPlaceholder: "Title, agency or area",

@@ -23,6 +23,7 @@ jobs:
         id: source_stage
         run: npm run source:stage -- --output work/source-refresh/scheduled
       - name: Check official resource links and review dates
+        id: freshness
         if: ${{ always() && (steps.source_stage.outcome == 'success' || steps.source_stage.outcome == 'failure') }}
         run: npm run resource:freshness -- --live --allow-network --source-stage-report work/source-refresh/scheduled/report.json --output work/resource-freshness/scheduled
       - name: Retain metadata-only review report
@@ -43,6 +44,46 @@ jobs:
             work/resource-freshness/scheduled/report.md
           if-no-files-found: warn
           retention-days: 14
-      # Both artifacts contain metadata only. Raw snapshots, excerpts,
+      - name: Make completed report available to issue triage
+        if: ${{ always() && steps.freshness.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: actionable-source-monitor-report
+          path: work/resource-freshness/scheduled/report.json
+          if-no-files-found: error
+          retention-days: 14
+      # All report artifacts contain metadata only. Raw snapshots, excerpts,
       # corpus.json, local diffs, builds, credentials, and resident inputs are
       # excluded. No commit, apply, or deploy step runs here.
+  triage-actionable:
+    needs: acquire-review
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        id: monitor_report
+        continue-on-error: true
+        with:
+          name: actionable-source-monitor-report
+          path: work/resource-freshness/scheduled
+      - name: Require the completed report from a successful review job
+        if: ${{ needs.acquire-review.result == 'success' && steps.monitor_report.outcome != 'success' }}
+        run: exit 1
+      - name: Check issue deduplication logic
+        if: ${{ steps.monitor_report.outcome == 'success' }}
+        run: node --test --test-isolation=none .github/scripts/source-monitor-issues.test.mjs
+      - name: Create or update issues for actionable findings
+        if: ${{ steps.monitor_report.outcome == 'success' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/scripts/source-monitor-issues.mjs work/resource-freshness/scheduled/report.json

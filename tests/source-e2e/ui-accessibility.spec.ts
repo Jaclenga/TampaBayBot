@@ -41,7 +41,7 @@ async function answer(page: Page) {
 
 test('keyboard-only question, error correction, citation and reset preserve focus and accessible names', async ({ page }, testInfo) => {
   await page.goto('/');
-  await expect(page.locator('.site-header nav a')).toHaveText(['Ask a question', 'Public sources', 'About']);
+  await expect(page.locator('.site-header nav a')).toHaveText(['Ask a question', 'Public sources', 'Privacy', 'About']);
   await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeEnabled();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();

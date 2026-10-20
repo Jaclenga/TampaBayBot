@@ -176,7 +176,7 @@ test('normal JSON input APIs retain their operation admission and bounded body r
     const input = { question: 'Synthetic housing question' };
     const tasks = [];
     let dispatched = false;
-    const response = await withResponseSecurity(new Request(`${site}${path}?test=1`, {
+    const response = await withResponseSecurity(new Request(`http://localhost:3000${path}?test=1`, {
       method: 'POST', body: JSON.stringify(input), headers: { 'Content-Type': 'Application/JSON; charset=utf-8' },
     }), secured => withOperations(secured, { TAMPABAYBOT_OPERATIONS_MODE: 'local' },
       { waitUntil: task => tasks.push(task) }, async bounded => {

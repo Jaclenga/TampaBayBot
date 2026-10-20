@@ -4,11 +4,15 @@ export interface Evidence {
   id: string;
   title: string;
   agency: string;
+  publisher?: string;
   quote: string;
   url: string;
   section: string | null;
   retrieved_at: string | null;
   source_updated_date: string | null;
+  source_date?: string | null;
+  previewStatus?: "permitted" | "not_permitted";
+  preview?: string | null;
   stale: boolean;
 }
 

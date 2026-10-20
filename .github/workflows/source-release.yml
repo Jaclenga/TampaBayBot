@@ -21,10 +21,14 @@ jobs:
       # A missing manifest is a failed release check, never a successful skip.
       - run: npm run release:verify
       - run: npm run security:scan
+        if: always()
+      # Retain both production and build-tool advisory results. High/critical
+      # production findings fail the release gate; see SECURITY.md for the
+      # tracked development-only advisory. Run even when the secret gate fails
+      # so both sanitized reports are available for remediation.
+      - run: npm run security:deps
+        if: always()
       - run: npm ci
-      # The deployed dependency set is the release gate. A known, unpatched
-      # development-only braces advisory is tracked in SECURITY.md.
-      - run: npm audit --omit=dev --audit-level=high
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test:source
@@ -41,6 +45,8 @@ jobs:
           name: source-alpha-verification
           path: |
             evaluation/security/release-secret-scan.json
+            work/security/dependency-audit.json
+            work/security/dependency-audit.md
             work/standalone/ci-alpha/verification.json
             work/standalone/ci-alpha/artifact.json
             work/source-browser-report/

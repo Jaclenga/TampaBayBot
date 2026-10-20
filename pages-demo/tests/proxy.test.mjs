@@ -43,6 +43,48 @@ test('Pages blocks a foreign Origin without invoking the backend', async () => {
   assert.equal(response.headers.get('Access-Control-Allow-Origin'), null);
 });
 
+test('Pages refuses invalid or declared oversized JSON before invoking the backend', async () => {
+  let calls = 0;
+  const env = backend(() => { calls++; return new Response('wrong'); });
+  for (const [headers, status] of [
+    [{ 'Content-Type': 'text/plain' }, 400],
+    [{}, 400],
+    [{ 'Content-Type': 'application/json', 'Content-Length': '8193' }, 413],
+    [{ 'Content-Type': 'application/json', 'Content-Length': 'not-a-number' }, 400],
+  ]) {
+    const request = new Request(`${url}/api/ask`, { method: 'POST', headers, body: '{}' });
+    const response = await onRequest({ request, env });
+    assert.equal(response.status, status);
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  }
+  assert.equal(calls, 0);
+  const valid = await onRequest({ request: new Request(`${url}/api/ask`, {
+    method: 'POST', headers: { 'Content-Type': 'Application/JSON; charset=utf-8', 'Content-Length': '2' }, body: '{}',
+  }), env });
+  assert.equal(valid.status, 200);
+  assert.equal(calls, 1);
+});
+
+test('Pages rejects a stalled upload promptly without reading or awaiting cancellation', { timeout: 2000 }, async () => {
+  for (const [path, method, headers, status] of [
+    ['/api/ask', 'POST', { 'Content-Type': 'application/json', 'Content-Length': '8193' }, 413],
+    ['/api/ask', 'PUT', { 'Content-Type': 'application/json' }, 405],
+    ['/api/hidden', 'POST', { 'Content-Type': 'application/json' }, 404],
+  ]) {
+    let reads = 0;
+    let cancellations = 0;
+    const body = new ReadableStream({
+      pull() { reads++; return new Promise(() => {}); },
+      cancel() { cancellations++; return new Promise(() => {}); },
+    }, { highWaterMark: 0 });
+    const request = new Request(`${url}${path}`, { method, headers, body, duplex: 'half' });
+    const response = await onRequest({ request, env: backend(() => assert.fail('backend reached')) });
+    assert.equal(response.status, status);
+    assert.equal(reads, 0);
+    assert.equal(cancellations, 1);
+  }
+});
+
 test('Pages passes request body and monitor authorization while preserving backend status', async () => {
   const request = new Request(`${url}/api/operations`, { headers: { Authorization: 'Bearer test-monitor-token' } });
   const response = await onRequest({ request, env: backend(async forwarded => {
@@ -52,6 +94,31 @@ test('Pages passes request body and monitor authorization while preserving backe
   }) });
   assert.equal(response.status, 401);
   assert.equal(response.headers.get('Cache-Control'), 'no-store');
+});
+
+test('Pages removes resident credentials and referring URLs without buffering JSON', async () => {
+  for (const path of ['/api/ask', '/api/location', '/api/property', '/api/development']) {
+    const request = new Request(`${url}${path}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', Origin: url,
+        Cookie: 'session=private-value', Authorization: 'Bearer private-value',
+        Referer: `${url}/search?address=private-value`, 'CF-Connecting-IP': '192.0.2.8',
+      },
+      body: JSON.stringify({ question: 'Housing help?' }),
+    });
+    const response = await onRequest({ request, env: backend(async forwarded => {
+      assert.equal(forwarded.headers.get('Cookie'), null);
+      assert.equal(forwarded.headers.get('Authorization'), null);
+      assert.equal(forwarded.headers.get('Referer'), null);
+      assert.equal(forwarded.headers.get('Origin'), url);
+      assert.equal(forwarded.headers.get('CF-Connecting-IP'), '192.0.2.8');
+      assert.deepEqual(await forwarded.json(), { question: 'Housing help?' });
+      return Response.json({ ok: true });
+    }) });
+    assert.equal(response.status, 200, path);
+    assert.equal(request.headers.get('Authorization'), 'Bearer private-value');
+  }
 });
 
 test('Pages gives safe errors when binding is absent or fails', async () => {

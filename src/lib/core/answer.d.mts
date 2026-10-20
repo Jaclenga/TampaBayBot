@@ -9,6 +9,8 @@ export type AnswerStatus = 'answered' | 'insufficient_evidence' | 'conflicting_e
 export interface Evidence {
   language?: 'en' | 'es' | 'und';
   id: string; chunk_id: string; source_id: string; title: string; agency: string;
+  publisher: string | null; source_date: string | null;
+  previewStatus: 'permitted' | 'not_permitted'; preview: string | null;
   quote: string; section: string | null; page: number | null; record_id: string | null;
   layer: string | null; url: string; retrieved_at: string | null;
   source_updated_date: string | null; authoritative_status: string; stale: boolean;

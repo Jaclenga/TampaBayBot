@@ -16,6 +16,8 @@ test('privacy page loads directly and explains the separate preview data flows',
   await expect(page.getByRole('main')).toContainText(/question/i);
   await expect(page.getByRole('main')).toContainText(/address/i);
   await expect(page.getByRole('main')).toContainText(/model provider/i);
+  await expect(page.getByRole('main')).toContainText(/question is not automatically redacted/i);
+  await expect(page.getByRole('main')).toContainText(/hosted question and property tools use the backend/i);
   await expect(page.getByRole('main')).toContainText(/logs/i);
   await expect(page.getByRole('main')).toContainText(/preview/i);
   expect(apiRequests).toEqual([]);
@@ -25,7 +27,10 @@ test('privacy links are available beside the relevant inputs and in site navigat
   await page.goto('/');
   await expect(page.locator('.site-header a[href="/privacy/"]')).toBeVisible();
   await expect(page.locator('.chat-panel a[href="/privacy/"]')).toBeVisible();
+  await expect(page.locator('.chat-panel #question-hint')).toContainText(/question goes to the hosted backend/i);
+  await expect(page.locator('.chat-panel #question-hint')).toContainText(/model service may receive your question/i);
   await expect(page.locator('.crisis-privacy a[href="/privacy/"]')).toBeVisible();
+  await expect(page.locator('.crisis-privacy')).toContainText(/guide does not send selections to the API/i);
   await expect(page.locator('.address-form a[href="/privacy/"]')).toBeVisible();
   await expect(page.locator('.site-footer a[href="/privacy/"]')).toBeVisible();
 

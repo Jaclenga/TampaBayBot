@@ -1,6 +1,6 @@
 /** Shared copy for the static Pages privacy page and the local Next route. */
 export const privacyIntroduction =
-  "This page describes the TampaBayBot preview code reviewed for October 2026. Available tools vary by deployment, and a repository change does not verify what is running on the hosted site. Please avoid entering names, account numbers, case numbers, or other sensitive details.";
+  "This page describes the TampaBayBot preview code reviewed in October 2026. Available tools vary by deployment, and a repository change does not verify what is running on the hosted site. Please avoid entering names, account numbers, case numbers, or other sensitive details.";
 
 export type PrivacySection = {
   id: string;
@@ -23,15 +23,23 @@ export const privacySections: readonly PrivacySection[] = [
     title: "Housing guide and public resources",
     paragraphs: [
       "The housing-crisis guide applies fixed rules in your browser to its selections and builds a plan there. Its selections and plan are held in page memory; the guide does not send them to an application endpoint or write them to browser local or session storage. Browsing and filtering the included resource directory also happens in the page.",
-      "Copying a plan, saving a text file, or printing can leave a copy on your device, clipboard, printer, or shared computer. Opening a resource link takes you to another website with its own practices.",
+      "Copying a plan, saving a text file, or printing can leave a copy on your device, clipboard, printer, or shared computer. Quick exit opens another website but cannot erase browser history. Opening a resource link takes you to another website with its own practices.",
     ],
   },
   {
     id: "questions-and-ai",
     title: "Questions and optional AI",
     paragraphs: [
-      "When the question form is available, submitting it sends the current question, selected area, and limited conversation context to TampaBayBot's API through the hosting service. The page keeps displayed turns in memory while it is open. A source-based response or an unavailable message may appear when AI cannot be used.",
-      "If an operator enables an AI model and a request is eligible, the backend may send the current question and selected public-source excerpts to that model provider. The question is not automatically redacted before this transfer. The deterministic housing guide does not use this AI path. AI availability in one deployment does not establish its status in another.",
+      "When the question form is available, submitting it sends the current question, selected area, and a short topic/area/source context token to TampaBayBot's backend. That token contains no prior question text, address, or model response. In the hosted Pages preview, a Pages Function forwards the request through a service binding to a Worker. The page keeps displayed turns in memory while it is open. A source-based response or an unavailable message may appear when a model cannot be used. On the hosted preview, the question path is not device-local even when model assistance is off.",
+      "If an operator enables a model and the answer is eligible, the backend may send the current question and selected public-source excerpts to the configured model service. It does not send raw prior conversation turns or the whole source library to the model. The question is not automatically redacted before transfer. The deterministic housing guide does not use this path. The static Pages form cannot independently confirm which model, if any, is enabled on a hosted backend.",
+    ],
+  },
+  {
+    id: "what-local-means",
+    title: "What stays on this page",
+    paragraphs: [
+      "The housing guide and directory filters run on your device after the page loads. That does not make the hosted Pages preview offline or private from its host: Cloudflare receives the page request, and outside sites receive traffic when you open their links. The hosted question and property tools use the backend and are not device-local.",
+      "An operator can run the app and an Ollama model on the same computer for local development. A hosted Pages preview cannot use a visitor's local model through the visitor's browser. A configured remote model, including Cloudflare Workers AI, processes eligible questions outside the visitor's device; a local model daemon may also forward work depending on its own settings.",
     ],
   },
   {
@@ -46,8 +54,8 @@ export const privacySections: readonly PrivacySection[] = [
     id: "storage-and-logging",
     title: "Storage, caches, and logging",
     paragraphs: [
-      "The inspected application code does not save guide selections, question text, conversation history, or street addresses in browser local or session storage or in its application database. The operational database keeps keyed usage controls and aggregate service metrics without those text fields. API responses are marked not to be stored by HTTP caches.",
-      "An address request can be held briefly in a Worker memory cache used for geocoding. Cloudflare hosting, public GIS services, optional model providers, and other network intermediaries may have their own logs or transient caches. Their retention settings are outside this application's code and have not been verified for the hosted preview. Do not assume a request is confidential or immediately erased.",
+      "The inspected application code does not save guide selections, question text, conversation history, or street addresses in browser local or session storage or in its application database. The operational database keeps rotating keyed client identifiers, usage counters, and aggregate metrics; it does not store raw client IP addresses or those text fields. API responses are marked not to be stored by HTTP caches.",
+      "An address request can be held briefly in a Worker memory cache used for geocoding. Expired operational rows are removed during later requests or monitoring, so the retention target is not an immediate-deletion promise. Cloudflare hosting, public GIS services, optional model providers, and network intermediaries may have separate logs or transient caches. Their retention settings have not been verified for the hosted preview. Do not assume a request is confidential or immediately erased.",
     ],
   },
   {

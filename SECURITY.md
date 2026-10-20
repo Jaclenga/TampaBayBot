@@ -14,19 +14,23 @@ Reports are handled on a best-effort basis, without a guaranteed response time. 
 
 ## Data flow and privacy
 
-The application does not persist resident questions, conversation histories, or addresses in its database or browser storage. Operational storage holds temporary client identifiers and aggregate service metrics. Hosting logs, transient caches, upstream services, and model providers have separate retention policies; operators must review them and avoid logging resident input.
+The inspected application code does not persist resident questions, conversation histories, guide selections, or addresses in its database or browser local/session storage. They can remain in page memory while the tab is open. Operational D1 storage holds rotating HMAC-derived client identifiers, usage counters, and aggregate service metrics, without raw client IPs or request text. Expired rows are removed by later requests or monitoring, not at a guaranteed deletion instant. Hosting logs, transient caches, upstream services, and model providers have separate retention policies; operators must review them and avoid logging resident input.
 
-- Answers use a local public-source evidence corpus by default. An enabled model provider receives the current question and selected evidence; operators must disclose that transfer and review the provider's privacy settings.
+- Answers use the backend's bundled public-source evidence corpus by default. A configured model receives the current question and selected public-source excerpts only for eligible answers. The question is not generally redacted before transfer; operators must disclose that path and review the provider's privacy settings. A hosted Worker is not local processing on a visitor's device.
 - Address and property searches send address text or selected location information to the configured government and GIS services.
 - Opening the optional map sends selected coordinates to OpenStreetMap after the interface's disclosure.
 
 Retrieved content and model responses are treated as untrusted input. Input validation, access controls, browser protections, and resource limits support the service's security; they do not guarantee complete protection or the accuracy of external information.
 
-## Known development dependency advisory
+The [preview threat model](docs/THREAT_MODEL.md) maps these data flows to controls, tests, and remaining risks. It does not verify the hosted preview's deployed version, provider settings, or platform logs.
 
-As of October 9, 2026, the lockfile contains `braces@3.0.3` through development-only ESLint and vinext build dependencies. [GitHub advisory GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) lists this version as affected by stack exhaustion on deeply nested brace patterns and lists no patched release. The package is not part of the deployed static directory assets or the production dependency set. Build and lint inputs must remain trusted while upstream packages work toward a fix. GitHub CI reported this high-severity development-tool advisory even though a local full `npm audit` response reported zero findings; neither result resolves the advisory. The release CI gate uses `npm audit --omit=dev --audit-level=high` for the deployed dependency set, and this exception must be revisited when a patched build dependency is available.
+## Dependency audit and build-tool advisories
+
+The October 9, 2026 review found `braces@3.0.3` in development-only ESLint and vinext build dependencies. [GitHub advisory GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) describes stack exhaustion for deeply nested brace patterns and still lists no patched `braces` version as checked October 20. Keep build and lint inputs trusted. An October 20 `npm run security:deps` report found zero affected production packages and eight high-severity development/build packages; npm marked fixes available for those dependency paths. That flag does not establish a patched `braces` release, and no proposed dependency changes have been validated in this repository. The command writes production and full-dependency JSON/Markdown reports under ignored `work/security/`. CI blocks on high or critical production-dependency findings and reports development/build findings for review. A scan can be incomplete or disagree with another advisory source; do not treat a passing production gate as approval of build dependencies or absence of vulnerabilities.
 
 The Worker rejects unsupported page/form/action uploads before framework parsing and routes supported JSON uploads through bounded API readers and operational controls. Source acquisition refuses redirects, bounds normalized evidence and chunk output, and terminates parsing workers that exceed their deadline. See [request controls](docs/OPERATIONS.md#shared-controls) and [source-processing limits](docs/SOURCE_UPDATES.md#acquire-a-candidate) for the exact behavior and operator recovery steps.
+
+An October 20 stable Gitleaks run found zero current-tree detector matches and 27 matches in reachable Git history. Its status is `findings_require_review`, so the release secret gate fails pending review of each historical match; a match is not proof that a credential is valid, and zero current-tree matches do not clear past commits. If review confirms an exposed credential, revoke or rotate it through the owner account. Do not copy candidate values into issues, logs, or public reports.
 
 ## Safe deployment
 

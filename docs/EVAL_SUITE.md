@@ -50,6 +50,10 @@ The 44 answer-case definitions record expected behavior, required support source
 
 The deterministic housing-crisis guide has its own [59-scenario regression set](../tests/housing-crisis-evaluation.test.mjs), runnable with `node --test --test-isolation=none tests/housing-crisis-evaluation.test.mjs`; it is not a model answer. Reliability cases exercise the question-answering path; guide scenario results should be reported separately. Neither run verifies the hosted Cloudflare preview or certifies the service for unrestricted resident use.
 
+### Routing and citation regression benchmark
+
+Run `npm run eval:regression` for the separate, versioned routing and citation benchmark. It produces category pass rates in JSON and Markdown, defaults to strict thresholds, and runs in CI without production credentials or model calls. The [regression evaluation guide](REGRESSION_EVALUATION.md) explains threshold flags, CI variables, report interpretation, and the optional semantic evaluator.
+
 ## Narrative benchmark and human packets
 
 ```sh

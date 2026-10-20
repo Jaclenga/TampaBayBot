@@ -26,6 +26,7 @@ function validOfficialUrl(value) {
   try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password; }
   catch { return false; }
 }
+function validText(value) { return typeof value === 'string' && Boolean(value.trim()); }
 function validateRecords(records) {
   const ids = new Set();
   for (const record of records) {
@@ -33,6 +34,13 @@ function validateRecords(records) {
     if (!/^[a-z0-9-]+$/.test(record.resource_id ?? '') || ids.has(key)) throw new Error(`Invalid or duplicate resource ID: ${key}`);
     ids.add(key);
     if (!validOfficialUrl(record.official_url)) throw new Error(`Invalid official source URL: ${key}`);
+    if (!validText(record.organization)) throw new Error(`Missing organization: ${key}`);
+    if (!Array.isArray(record.categories) || !record.categories.length || record.categories.some(category => !validText(category))) {
+      throw new Error(`Invalid categories: ${key}`);
+    }
+    if (!Array.isArray(record.jurisdiction) || !record.jurisdiction.length || record.jurisdiction.some(area => !validText(area))) {
+      throw new Error(`Invalid jurisdiction: ${key}`);
+    }
     if (record.last_content_reviewed_at !== null && record.last_content_reviewed_at !== undefined &&
         !(validCalendarDate(record.last_content_reviewed_at) ||
           record.catalog === 'rag' && validCalendarDate(dateOnly(record.last_content_reviewed_at)) &&
@@ -61,6 +69,9 @@ function uniqueLinks(links) {
 export function resourceRecords(directory, sources) {
   const housing = directory.resources.map(resource => ({
     catalog: 'housing', resource_id: resource.id, official_url: resource.sourceUrl,
+    organization: resource.organization, categories: resource.categories,
+    jurisdiction: resource.municipalities?.length ? resource.municipalities : resource.geography,
+    authority: 'provider_or_government', link_only: false,
     last_content_reviewed_at: resource.verifiedAt,
     review_status: resource.verificationStatus,
     next_review_at: resource.nextReviewAt,
@@ -78,6 +89,9 @@ export function resourceRecords(directory, sources) {
   }));
   const rag = sources.map(source => ({
     catalog: 'rag', resource_id: source.source_id, official_url: source.canonical_url,
+    organization: source.agency, categories: source.categories,
+    jurisdiction: source.jurisdiction_ids?.length ? source.jurisdiction_ids : [source.jurisdiction],
+    authority: source.authoritative_status, link_only: false,
     last_content_reviewed_at: source.last_content_reviewed_at,
     review_status: source.review_status,
     next_review_at: source.next_review_at,
@@ -142,6 +156,7 @@ export async function checkResourceUrl(input, {
   fetchImpl = fetch, now = () => new Date().toISOString(), wait = sleep,
   maxAttempts = 3, timeoutMs = 8000, totalTimeoutMs = 30000,
   maxHtmlBytes = 1024 * 1024, clock = () => performance.now(), wallClock = Date.now,
+  beforeAttempt = async () => {},
 } = {}) {
   const checkedAt = now();
   let url;
@@ -154,6 +169,7 @@ export async function checkResourceUrl(input, {
   const deadline = clock() + totalTimeoutMs;
   let last = { status: 'temporary_failure', checked_at: checkedAt, attempts: 0, reason: 'not_attempted' };
   for (let index = 0; index < maxAttempts; index++) {
+    await beforeAttempt(url);
     const remaining = deadline - clock();
     if (remaining <= 0) return { ...last, reason: 'retry_budget_exhausted' };
     const controller = new AbortController();
@@ -214,6 +230,32 @@ async function mapLimited(values, limit, operation) {
   return result;
 }
 
+/** Keep requests to one publisher sequential and space attempts, including retries. */
+function hostLimitedCheck({ wait, clock, intervalMs, check }) {
+  const tails = new Map();
+  const nextStart = new Map();
+  return async url => {
+    let host;
+    try { host = new URL(url).host; }
+    catch { return check(url, async () => {}); }
+    const previous = tails.get(host) ?? Promise.resolve();
+    let release;
+    const tail = new Promise(resolve => { release = resolve; });
+    tails.set(host, tail);
+    await previous;
+    try {
+      return await check(url, async () => {
+        const delay = Math.max(0, (nextStart.get(host) ?? 0) - clock());
+        if (delay) await wait(delay);
+        nextStart.set(host, clock() + intervalMs);
+      });
+    } finally {
+      release();
+      if (tails.get(host) === tail) tails.delete(host);
+    }
+  };
+}
+
 function stageChanges(report) {
   const byId = new Map();
   for (const source of report?.sources ?? []) byId.set(source.source_id, source);
@@ -223,17 +265,56 @@ function stageChanges(report) {
 function reason(code, role) { return role ? { code, role } : { code }; }
 function mostSevere(statuses) { return LINK_PRIORITY.find(status => statuses.includes(status)) ?? 'not_checked'; }
 
-export async function auditResourceFreshness({ directory, sources, sourceStageReport = null,
-  live = false, now = () => new Date().toISOString(), fetchImpl, wait, checkOptions = {}, concurrency = 4 } = {}) {
+function actionableFindings(resources, today, graceDays, live) {
+  if (!live) return [];
+  const findings = [];
+  const add = (resource, code, severity, summary, link = null) => {
+    const role = link?.role ?? null;
+    const fingerprint = hash(`${resource.catalog}\0${resource.resource_id}\0${code}\0${role ?? ''}`).slice(0, 20);
+    findings.push({ fingerprint, catalog: resource.catalog, resource_id: resource.resource_id,
+      code, role, severity, summary, ...(link ? { url: link.url, http_status: link.http_status ?? null,
+        redirect_target: link.redirect_target ?? null } : {}) });
+  };
+  for (const resource of resources) {
+    for (const link of resource.links) {
+      if (link.status === 'broken') {
+        add(resource, 'link_broken', 'high', `Resource URL returned HTTP ${link.http_status}.`, link);
+      } else if (link.status === 'http_error' && link.reason === 'invalid_url') {
+        add(resource, 'link_invalid_url', 'high', 'Configured resource URL is invalid or does not use HTTPS.', link);
+      } else if (link.status === 'redirect' &&
+          ([301, 308].includes(link.http_status) || !link.redirect_target || !link.redirect_target.startsWith('https://'))) {
+        add(resource, 'link_redirect_review', 'medium', 'Resource link redirects and its destination needs publisher review.', link);
+      }
+    }
+    if (resource.content.status === 'potential_change') {
+      add(resource, 'potential_content_change', 'medium', 'Source content changed since the previous baseline; public claims need human review.');
+    }
+    if (!resource.link_only && resource.effective_review_due_at &&
+        (Date.parse(`${today}T00:00:00.000Z`) - Date.parse(`${resource.effective_review_due_at}T00:00:00.000Z`)) > graceDays * 86_400_000) {
+      add(resource, 'review_overdue', 'medium', 'Substantive review is overdue; link availability does not update this date.');
+    }
+  }
+  return findings.sort((a, b) => a.catalog.localeCompare(b.catalog) || a.resource_id.localeCompare(b.resource_id) ||
+    a.code.localeCompare(b.code) || String(a.role).localeCompare(String(b.role)));
+}
+
+export async function auditResourceFreshness({ directory, sources, operationalRecords = [], sourceStageReport = null,
+  live = false, now = () => new Date().toISOString(), fetchImpl, wait = sleep, checkOptions = {},
+  concurrency = 4, hostIntervalMs = 1000, rateClock = Date.now, reviewGraceDays = 7 } = {}) {
   if (!Array.isArray(directory?.resources) || !Array.isArray(sources)) throw new Error('Housing catalog and source registry are required');
   if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 8) throw new Error('Resource check concurrency must be 1–8');
-  const records = resourceRecords(directory, sources);
+  if (!Array.isArray(operationalRecords)) throw new Error('Operational registry must be an array');
+  if (!Number.isInteger(hostIntervalMs) || hostIntervalMs < 0 || hostIntervalMs > 10000) throw new Error('Host interval must be 0–10000 ms');
+  if (!Number.isInteger(reviewGraceDays) || reviewGraceDays < 0 || reviewGraceDays > 365) throw new Error('Review grace period must be 0–365 days');
+  const records = [...resourceRecords(directory, sources), ...operationalRecords];
   validateRecords(records);
   const generatedAt = now(); const today = dateOnly(generatedAt);
   const checked = new Map();
   if (live) {
     const urls = [...new Set(records.flatMap(record => record.links.map(link => link.url)))];
-    const results = await mapLimited(urls, concurrency, url => checkResourceUrl(url, { fetchImpl, wait, now, ...checkOptions }));
+    const limited = hostLimitedCheck({ wait, clock: rateClock, intervalMs: hostIntervalMs,
+      check: (url, beforeAttempt) => checkResourceUrl(url, { fetchImpl, wait, now, ...checkOptions, beforeAttempt }) });
+    const results = await mapLimited(urls, concurrency, limited);
     urls.forEach((url, index) => checked.set(url, results[index]));
   }
   const staged = stageChanges(sourceStageReport);
@@ -245,7 +326,7 @@ export async function auditResourceFreshness({ directory, sources, sourceStageRe
     }));
     const linkStatus = mostSevere(links.map(link => link.status));
     const attention = [];
-    if (record.review_status !== 'source_checked' && record.review_status !== 'reviewed') attention.push(reason('human_review_needed'));
+    if (!record.link_only && record.review_status !== 'source_checked' && record.review_status !== 'reviewed') attention.push(reason('human_review_needed'));
     if (effectiveDue && effectiveDue < today) attention.push(reason('review_overdue'));
     if (!record.next_review_at && record.review_status === 'reviewed') attention.push(reason('next_review_date_missing'));
     if ((record.known_issues ?? []).length) attention.push(reason('known_issue'));
@@ -275,30 +356,46 @@ export async function auditResourceFreshness({ directory, sources, sourceStageRe
       }
       else if (change?.result === 'acquired') content.status = 'unchanged';
     }
-    return { catalog: record.catalog, resource_id: record.resource_id, official_url: publicUrl(record.official_url),
+    return { catalog: record.catalog, resource_id: record.resource_id,
+      organization: record.organization, categories: record.categories, jurisdiction: record.jurisdiction,
+      authority: record.authority ?? null, link_only: Boolean(record.link_only),
+      url: publicUrl(record.official_url), official_url: publicUrl(record.official_url),
       last_content_reviewed_at: record.last_content_reviewed_at ?? null, review_status: record.review_status,
+      factual_verification: { status: record.link_only ? 'not_applicable' : record.review_status,
+        last_verified_at: record.last_content_reviewed_at ?? null,
+        eligibility: 'not_checked_by_monitor', hours: 'not_checked_by_monitor',
+        contact_details: 'not_checked_by_monitor' },
       next_review_at: record.next_review_at ?? null, effective_review_due_at: effectiveDue,
       previous_link_check_at: record.last_link_checked_at ?? null,
-      link_status: linkStatus, links, content, attention };
+      link_status: linkStatus, links, content, known_issues: record.known_issues, attention };
   });
   const byReason = {};
   for (const resource of resources) for (const item of resource.attention) byReason[item.code] = (byReason[item.code] ?? 0) + 1;
-  return { schema_version: 1, mode: live ? 'live' : 'offline', generated_at: generatedAt,
+  const actionable = actionableFindings(resources, today, reviewGraceDays, live);
+  const byActionableCode = {};
+  for (const item of actionable) byActionableCode[item.code] = (byActionableCode[item.code] ?? 0) + 1;
+  return { schema_version: 2, mode: live ? 'live' : 'offline', generated_at: generatedAt,
+    check_policy: { concurrency, per_host_interval_ms: hostIntervalMs,
+      max_attempts: checkOptions.maxAttempts ?? 3, timeout_ms: checkOptions.timeoutMs ?? 8000,
+      total_timeout_ms: checkOptions.totalTimeoutMs ?? 30000, review_grace_days: reviewGraceDays },
     summary: { resources: resources.length, unique_links_checked: checked.size,
       resources_needing_attention: resources.filter(resource => resource.attention.length).length,
-      by_reason: Object.fromEntries(Object.entries(byReason).sort(([a], [b]) => a.localeCompare(b))) },
+      actionable_findings: actionable.length,
+      by_reason: Object.fromEntries(Object.entries(byReason).sort(([a], [b]) => a.localeCompare(b))),
+      by_actionable_code: Object.fromEntries(Object.entries(byActionableCode).sort(([a], [b]) => a.localeCompare(b))) },
     limitations: [
       'HTTP success checks link availability only. Program accuracy, eligibility, funding, deadlines, contacts and current capacity require human review.',
       'Potential content changes are comparison signals, not verified updates. A missing reviewed baseline cannot establish unchanged content.',
       'The report contains only public registry URLs, IDs, dates, status codes and hashes; it does not read resident requests.',
       ...(sourceStageReport?.status && sourceStageReport.status !== 'awaiting_review'
         ? ['Source staging was incomplete; RAG content-change comparison may be partial.'] : []),
-    ], resources };
+    ], resources, actionable };
 }
 
 export function freshnessMarkdown(report) {
   const lines = [`# Resource freshness attention`, '', `Mode: ${report.mode}; generated: ${report.generated_at}.`,
     `Resources needing attention: ${report.summary.resources_needing_attention}/${report.summary.resources}. Unique links checked: ${report.summary.unique_links_checked}.`, '',
+    `Check limits: ${report.check_policy.max_attempts} attempts per URL; ${report.check_policy.timeout_ms} ms per attempt; ${report.check_policy.total_timeout_ms} ms total per URL; ${report.check_policy.per_host_interval_ms} ms between requests to one host.`, '',
     'A successful link check does not verify program details or availability.', '', '## Reasons', ''];
   for (const [code, count] of Object.entries(report.summary.by_reason)) lines.push(`- ${code}: ${count}`);
   if (!Object.keys(report.summary.by_reason).length) lines.push('- None');
@@ -308,6 +405,11 @@ export function freshnessMarkdown(report) {
     lines.push(`| ${resource.catalog} | ${resource.resource_id} | ${reasons.join(', ')} |`);
   }
   if (!report.summary.resources_needing_attention) lines.push('| — | — | None |');
+  lines.push('', '## Actionable findings', '',
+    `Actionable findings: ${report.summary.actionable_findings}. Temporary failures, rate limits, and unchecked links do not create issues.`, '',
+    '| Catalog | Resource ID | Finding | Severity | Role |', '| --- | --- | --- | --- | --- |');
+  for (const item of report.actionable) lines.push(`| ${item.catalog} | ${item.resource_id} | ${item.code} | ${item.severity} | ${item.role ?? '—'} |`);
+  if (!report.actionable.length) lines.push('| — | — | None | — | — |');
   lines.push('', 'Review the JSON report for URL, HTTP status, redirect target, check time, and content hash details.', '');
   return lines.join('\n');
 }

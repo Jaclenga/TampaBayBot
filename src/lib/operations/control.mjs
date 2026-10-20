@@ -324,12 +324,26 @@ export async function withOperations(request, env, ctx, dispatch) {
     try { path = decodeURIComponent(path); } catch { return failure(new OperationsError('invalid_path', 400)); }
   }
   path = new URL(path.replaceAll('\\', '/').replace(/\/{2,}/g, '/'), 'https://route.invalid').pathname;
-  if (!path.startsWith('/api/') || ['/api/health', '/api/ready'].includes(path)) return dispatch(request);
+  if (!path.startsWith('/api/')) return dispatch(request);
+  if (['/api/health', '/api/ready'].includes(path)) {
+    // Keep liveness available when shared D1 is degraded, but never expose
+    // unmetered local-mode API handlers on a public URL.
+    try {
+      const settings = operationsConfig(env);
+      if (settings.mode === 'local' && !loopbackHttpRequest(request))
+        return failure(new OperationsError('shared_controls_required'));
+    } catch (error) { return failure(error); }
+    return dispatch(request);
+  }
   let settings, state, response, timer;
   const started = Date.now();
   try {
     settings = operationsConfig(env);
     if (settings.maintenance) throw new OperationsError('maintenance');
+    // Local mode has no cross-instance visitor budget. It is suitable only
+    // for development on a loopback URL; a public API requires shared D1.
+    if (settings.mode === 'local' && !loopbackHttpRequest(request))
+      throw new OperationsError('shared_controls_required');
     state = settings.mode === 'shared' ? await acquireRequest(request, env, { limits: settings.limits })
       : { limits: settings.limits, expires: started + settings.limits.deadlineMs,
         outbound: 0, aiAttempted: false, aiOutcome: null,

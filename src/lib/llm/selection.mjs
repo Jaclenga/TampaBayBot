@@ -16,7 +16,8 @@ export function selectionRequest(baseline, { modelAnswer = false } = {}) {
   const evidence = baseline.evidence.map(item => {
     if (!record(item) || typeof item.id !== 'string' || !/^E\d+$/.test(item.id) || ids.has(item.id) ||
       typeof item.quote !== 'string' || !item.quote.trim() || new TextEncoder().encode(item.quote).length > MAX_QUOTE_BYTES ||
-      typeof item.title !== 'string' || item.title.length > 500 || isInstructionText(item.quote)) throw new LlmFailure('invalid_evidence');
+      typeof item.title !== 'string' || item.title.length > 500 || isInstructionText(item.title) ||
+      isInstructionText(item.quote)) throw new LlmFailure('invalid_evidence');
     ids.add(item.id);
     // No address lookup result, hidden registry metadata, endpoint, or credential is sent.
     return { id: item.id, title: item.title, quote: item.quote };

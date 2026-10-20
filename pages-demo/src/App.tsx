@@ -7,6 +7,9 @@ import type {
 } from "./api";
 import HousingHelp from "./HousingHelp";
 import { resourceSourceStatus } from "./housing-help";
+import type { HousingLanguage } from "./housing-help";
+import ResourceWarnings from "./ResourceWarnings";
+import { siteText } from "./site-language";
 
 const AI_UNAVAILABLE_MESSAGE = "TampaBayBot's AI chat is temporarily unavailable. You can still browse housing assistance contacts and official links.";
 const DIRECTORY_ONLY = import.meta.env.VITE_DIRECTORY_ONLY === "true";
@@ -48,22 +51,25 @@ function CitedText({ answer, turnId }: { answer: ResidentAnswer; turnId: number 
   return <>{answer.answer.split(/(\[E\d+\])/).map((part, index) => {
     const id = /^\[(E\d+)\]$/.exec(part)?.[1];
     return id && answer.evidence.some((item) => item.id === id)
-      ? <a key={index} className="inline-citation" href={`#source-${turnId}-${id}`}>{part}</a>
-      : <span key={index}>{part}</span>;
+      ? <a key={index} className="inline-citation" href={`#source-${turnId}-${id}`} aria-label={`Read source ${id}`}>{part}</a>
+      : <span key={index} className={id ? "unverified-reference" : undefined}>{id ? "[unverified reference]" : part}</span>;
   })}</>;
 }
 
 function EvidenceList({ evidence, turnId }: { evidence: Evidence[]; turnId: number }) {
   if (!evidence.length) return null;
   return <div className="sources-list">
-    <h4>Sources <span>{evidence.length}</span></h4>
-    <p className="muted small">These are captured passages. Check each original source for current details.</p>
-    {evidence.map((source) => <article className="source-card" id={`source-${turnId}-${source.id}`} key={source.id}>
-      <div className="source-meta"><span className="source-id">{source.id}</span><span>{source.agency}</span></div>
-      <h5>{source.title}</h5>
+    <h3>Sources <span>{evidence.length}</span></h3>
+    <p className="muted small">These are saved source statements. Check each original source for current details.</p>
+    {evidence.map((source) => <article className="source-card" id={`source-${turnId}-${source.id}`} key={source.id} tabIndex={-1}>
+      <div className="source-meta"><span className="source-id">{source.id}</span><span>{source.publisher || source.agency}</span></div>
+      <h4>{source.title}</h4>
+      <p className="source-statement-label"><strong>Source statement</strong></p>
       <blockquote>{source.quote}</blockquote>
-      <p className="small muted">{source.section ? `${source.section} · ` : ""}Retrieved {dateLabel(source.retrieved_at)}{source.source_updated_date ? ` · Source updated ${dateLabel(source.source_updated_date)}` : ""}{source.stale ? " · May be outdated" : ""}</p>
-      <SourceLink url={source.url}>Open source</SourceLink>
+      {source.previewStatus === "permitted" && source.preview && source.preview.length <= 200 && source.quote.includes(source.preview) && source.preview !== source.quote && <details className="source-preview"><summary>Permitted source preview</summary><p>{source.preview}</p></details>}
+      <dl className="source-details"><div><dt>Publisher</dt><dd>{source.publisher || source.agency}</dd></div>{source.section && <div><dt>Section</dt><dd>{source.section}</dd></div>}{source.retrieved_at && <div><dt>Retrieved</dt><dd>{dateLabel(source.retrieved_at)}</dd></div>}{(source.source_date || source.source_updated_date) && <div><dt>Source date</dt><dd>{dateLabel(source.source_date || source.source_updated_date)}</dd></div>}</dl>
+      {source.stale && <p className="small alert">This saved source statement may be outdated. Confirm with the publisher.</p>}
+      <p className="source-url"><strong>Source URL:</strong> <SourceLink url={source.url}>{source.url}</SourceLink></p>
     </article>)}
   </div>;
 }
@@ -77,6 +83,7 @@ function ChatCrisisResource({ resource }: { resource: NonNullable<ResidentAnswer
     <p className="small">Coverage: {coverage}{restriction}. {resource.eligibility}</p>
     <p className="small">Service availability: {resource.availability} Confirm current openings or funding directly.</p>
     <p className={sourceStatus === "source_checked" ? "small muted" : "small alert"}>Review status: {sourceStatus === "source_unavailable" ? "Source unavailable at last review; verify directly before relying on this contact" : sourceStatus === "needs_recheck" ? "Review due; verify directly before relying on this contact" : "Public details reviewed on the date shown"}. Resource information last reviewed: {resource.verifiedAt}.</p>
+    <ResourceWarnings resource={resource} language="en" />
     <span>{resource.contacts.map((contact) => `${contact.label}: ${contact.value}`).join(" · ")}</span>
     <SourceLink url={resource.url}>Official website</SourceLink> · <SourceLink url={resource.sourceUrl}>Official source</SourceLink>
   </li>;
@@ -87,18 +94,19 @@ function AnswerCard({ item, showUnavailableNotice }: { item: { id: number; quest
   return <article className="answer-card">
     <div className="question-bubble"><span className="eyebrow">You asked</span><p>{item.question}</p></div>
     <div className="answer-heading"><span className="eyebrow">TampaBayBot</span><span className={`status-pill ${answer.status === "answered" ? "status-good" : ""}`}>{answer.status.replaceAll("_", " ")}</span></div>
+    <h2 className="sr-only">Answer</h2>
     <p className="answer-text"><CitedText answer={answer} turnId={item.id} /></p>
     {answer.crisisPlan && <section className="chat-crisis-plan" aria-label="Housing crisis next steps"><span className="eyebrow">Housing help · {answer.crisisPlan.urgency}</span><h3>{answer.crisisPlan.title}</h3><p><strong>Do this first:</strong> {answer.crisisPlan.immediatePriority}</p><h4>Next steps</h4><ol>{answer.crisisPlan.steps.map((step, index) => <li key={index}>{step}</li>)}</ol><h4>People and offices to contact</h4><ul>{answer.crisisPlan.resources.map((resource) => <ChatCrisisResource key={resource.id} resource={resource} />)}</ul>{answer.crisisPlan.documents.length > 0 && <><h4>Information to prepare, if available</h4><ul>{answer.crisisPlan.documents.map((document, index) => <li key={index}>{document}</li>)}</ul></>}<p><strong>Check deadlines:</strong> {answer.crisisPlan.deadline}</p><p><strong>Human help:</strong> {answer.crisisPlan.humanAssistance}</p><h4>Official sources</h4><ul>{answer.crisisPlan.sources.map((source, index) => <li key={`${source.url}-${index}`}><SourceLink url={source.url}>{source.title}</SourceLink></li>)}</ul><p className="small muted">This plan is public navigation, not legal advice. Program capacity and deadlines require direct confirmation. <a href="#housing-help">Use the private, no-AI guide</a></p></section>}
-    {answer.meaning && <div className="meaning-card"><h4>What this means</h4><p>{answer.meaning}</p></div>}
+    {answer.meaning && <div className="meaning-card"><h3>Interpretation</h3><p>{answer.meaning}</p></div>}
     {answer.generation?.status === "used" && <p className="small muted">{answer.generation.provider === "workers-ai" ? "AI assembled this answer from the cited source quotes." : "AI helped select these source passages."}</p>}
-    {answer.generation?.status === "fallback" && <p className="small muted">AI was unavailable; this answer uses the source-based fallback.</p>}
+    {answer.generation?.status === "fallback" && <p className="small muted">{answer.generation.reason === "invalid_evidence" ? "Source references could not be verified. Confirm details with the responsible agency through an official resource." : "AI was unavailable; this answer uses the source-based fallback."}</p>}
     {showUnavailableNotice && inferenceUnavailable(answer.generation) && <p className="ai-fallback-note">{AI_UNAVAILABLE_MESSAGE} <a href="#housing-help">Find Housing Help Without AI</a></p>}
     {answer.jurisdictionLabel && <p className="small muted">Area: {answer.jurisdictionLabel}</p>}
     {answer.coverage?.statement && answer.evidence.length > 0 && <p className="small muted">{answer.coverage.statement}</p>}
-    {answer.warnings?.length > 0 && <ul className="warning-list">{answer.warnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul>}
-    {answer.requirementsToVerify && answer.requirementsToVerify.length > 0 && <div className="verification-list"><h4>Verify with the agency</h4><ul>{answer.requirementsToVerify.map((requirement, index) => <li key={index}>{requirement}</li>)}</ul></div>}
+    {answer.warnings?.length > 0 && <section className="answer-uncertainty" aria-label="What remains uncertain"><h3>What remains uncertain</h3><ul className="warning-list">{answer.warnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul></section>}
+    {answer.requirementsToVerify && answer.requirementsToVerify.length > 0 && <div className="verification-list"><h3>Verify with the agency</h3><ul>{answer.requirementsToVerify.map((requirement, index) => <li key={index}>{requirement}</li>)}</ul></div>}
     <EvidenceList evidence={answer.evidence || []} turnId={item.id} />
-    {answer.nextSteps?.length > 0 && <div className="next-steps"><h4>Official next steps</h4><ul>{answer.nextSteps.map((step, index) => <li key={`${step.url}-${index}`}><SourceLink url={step.url}>{step.label}</SourceLink><span className="small muted">{step.agency}</span></li>)}</ul></div>}
+    {answer.nextSteps?.length > 0 && <div className="next-steps"><h3>Official next steps</h3><ul>{answer.nextSteps.map((step, index) => <li key={`${step.url}-${index}`}><SourceLink url={step.url}>{step.label}</SourceLink><span className="small muted">{step.agency}</span></li>)}</ul></div>}
   </article>;
 }
 
@@ -211,25 +219,35 @@ function PropertyExplorer() {
   </section>;
 }
 
-function DirectoryPreview() {
+type LanguageProps = { language: HousingLanguage; onLanguageChange: (language: HousingLanguage) => void };
+
+function SiteLanguageSelect({ language, onLanguageChange }: LanguageProps) {
+  return <div className="site-language"><label htmlFor="site-language">{siteText[language].language}</label><select id="site-language" value={language} onChange={(event) => onLanguageChange(event.target.value as HousingLanguage)}><option value="en">English</option><option value="es">Español</option></select></div>;
+}
+
+function DirectoryPreview({ language, onLanguageChange }: LanguageProps) {
+  const t = siteText[language];
   return <>
-    <a className="skip-link" href="#main">Skip to content</a>
+    <a className="skip-link" href="#main">{t.skip}</a>
     <div className="site-wrap">
-      <header className="site-header"><a className="brand" href="#top" aria-label="TampaBayBot home">TampaBayBot</a><nav aria-label="Main navigation"><a href="#housing-help">Housing help</a><a href="#housing-resources">Public resources</a><a href="/privacy/">Privacy information</a><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a></nav></header>
-      <div className="status-banner" role="status"><strong>Housing assistance directory preview.</strong> Question search and property tools are unavailable while the service is being set up. The contact directory remains available.</div>
-      <main id="main"><section className="hero" id="top"><div className="hero-copy"><h1>Tampa Bay housing information</h1><p>Find official contacts for eviction, shelter referrals, legal aid, and urgent housing needs.</p><div className="hero-actions"><a className="hero-button" href="#housing-help">I Need Housing Help</a><a className="hero-secondary" href="#housing-resources">Browse public resources</a></div></div></section>
-        <HousingHelp />
-        <section className="disclaimer"><h2>Check details with the provider</h2><p>TampaBayBot is an independent, unofficial project. It does not provide legal advice or establish eligibility. Confirm hours, eligibility, and availability with the responsible agency.</p><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a></section>
-      </main><footer className="site-footer"><span>TampaBayBot · An open source civic information project</span><nav aria-label="Footer navigation"><a href="/privacy/">Privacy information</a></nav><span>Independent and unofficial</span></footer>
+      <header className="site-header"><a className="brand" href="#top" aria-label={t.home}>TampaBayBot</a><nav aria-label={t.navigation}><a href="#housing-help">{t.housing}</a><a href="#housing-resources">{t.resources}</a><a href="/privacy/">{t.privacy}</a><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">{t.about}</a></nav><SiteLanguageSelect language={language} onLanguageChange={onLanguageChange} /></header>
+      <div className="status-banner" role="status"><strong>{t.previewTitle}</strong> {t.previewStatus}</div>
+      <main id="main" tabIndex={-1}><section className="hero" id="top"><div className="hero-copy"><h1>{t.title}</h1><p>{t.previewIntro}</p><div className="hero-actions"><a className="hero-button" href="#housing-help">{t.help}</a><a className="hero-secondary" href="#housing-resources">{t.browse}</a></div></div></section>
+        <HousingHelp language={language} onLanguageChange={onLanguageChange} />
+        <section className="disclaimer"><h2>{t.previewDisclaimerTitle}</h2><p>{t.previewDisclaimer}</p><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">{t.about}</a></section>
+      </main><footer className="site-footer"><span>{t.project}</span><nav aria-label={t.footerNavigation}><a href="/privacy/">{t.privacy}</a></nav><span>{t.unofficial}</span></footer>
     </div>
   </>;
 }
 
 export default function App() {
-  return DIRECTORY_ONLY ? <DirectoryPreview /> : <FullApp />;
+  const [language, setLanguage] = useState<HousingLanguage>("en");
+  useEffect(() => { document.documentElement.lang = language; }, [language]);
+  return DIRECTORY_ONLY ? <DirectoryPreview language={language} onLanguageChange={setLanguage} /> : <FullApp language={language} onLanguageChange={setLanguage} />;
 }
 
-function FullApp() {
+function FullApp({ language, onLanguageChange }: LanguageProps) {
+  const t = siteText[language];
   const [area, setArea] = useState("tampa");
   const [question, setQuestion] = useState("");
   const [conversation, setConversation] = useState<Record<string, unknown> | null>(null);
@@ -329,31 +347,33 @@ function FullApp() {
   const knownReset = aiUsage?.reason === null || aiUsage?.reason === "ai_visitor_limit" ? resetLabel(aiUsage?.resetAt ?? null) : null;
 
   return <>
-    <a className="skip-link" href="#main">Skip to content</a>
+    <a className="skip-link" href="#main">{t.skip}</a>
     <div className="site-wrap">
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="TampaBayBot home">TampaBayBot</a>
-        <nav aria-label="Main navigation">
-          <a href="#ask">Ask a question</a>
-          <a href="#housing-help">Housing help</a>
-          <a href="#property">Property details</a>
-          <a href="/privacy/">Privacy information</a>
-          <a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a>
+        <a className="brand" href="#top" aria-label={t.home}>TampaBayBot</a>
+        <nav aria-label={t.navigation}>
+          <a href="#ask">{t.ask}</a>
+          <a href="#housing-help">{t.housing}</a>
+          <a href="#property">{t.property}</a>
+          <a href="/privacy/">{t.privacy}</a>
+          <a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">{t.about}</a>
         </nav>
+        <SiteLanguageSelect language={language} onLanguageChange={onLanguageChange} />
       </header>
-      {health === "empty" && <div className="status-banner" role="status"><strong>Source library unavailable.</strong> This installation has no reviewed source passages, so cited answers are unavailable. Housing contacts remain available. Address and public map lookups may still work.</div>}
-      {health === "unavailable" && <div className="status-banner" role="status"><strong>Service unavailable.</strong> {AI_UNAVAILABLE_MESSAGE} Property lookups are also unavailable. <a href="#housing-help">Find Housing Help Without AI</a></div>}
-      {health === "degraded" && <div className="status-banner" role="status"><strong>Some searches may be unavailable.</strong> Check answers against their original agency sources.</div>}
-      {aiUsage?.reason === "ai_global_limit" && <div className="status-banner" role="status"><strong>Today&apos;s application AI budget is reached.</strong> Housing assistance resources are still available. <a href="#housing-help">Find Housing Help Without AI</a></div>}
-      <main id="main">
+      {health === "empty" && <div className="status-banner" role="status"><strong>{t.sourceLibraryTitle}</strong> {t.sourceLibrary}</div>}
+      {health === "unavailable" && <div className="status-banner" role="status"><strong>{t.unavailableTitle}</strong> {t.aiUnavailable} {t.unavailableMore} <a href="#housing-help">{t.findWithoutAi}</a></div>}
+      {health === "degraded" && <div className="status-banner" role="status"><strong>{t.degradedTitle}</strong> {t.degraded}</div>}
+      {aiUsage?.reason === "ai_global_limit" && <div className="status-banner" role="status"><strong>{t.globalLimitTitle}</strong> {t.globalLimit} <a href="#housing-help">{t.findWithoutAi}</a></div>}
+      <main id="main" tabIndex={-1}>
         <section className="hero" id="top" aria-labelledby="home-title">
           <div className="hero-copy">
-            <h1 id="home-title">Tampa Bay housing information</h1>
-            <p>Find housing help, property details, permits, and public records.</p>
-            <p className="quick-help"><a className="hero-button" href="#housing-help">I Need Housing Help</a></p>
+            <h1 id="home-title">{t.title}</h1>
+            <p>{t.fullIntro}</p>
+            <p className="quick-help"><a className="hero-button" href="#housing-help">{t.help}</a></p>
+            {language === "es" && <p className="language-scope-note">{t.englishTools}</p>}
           </div>
         </section>
-        <section className="ask-section" id="ask" aria-label="Ask a question">
+        <section className="ask-section" id="ask" aria-label="Ask a question" lang="en">
           <div className="ask-layout">
             <div className="chat-panel">
               <div className="chat-panel-header">
@@ -369,7 +389,7 @@ function FullApp() {
                   <textarea id="question" maxLength={1000} rows={2} value={question} onChange={(event) => { setQuestion(event.target.value); setError(""); }} placeholder="Where can I find rental assistance in Tampa?" aria-describedby="question-hint" />
                   <button type="submit" disabled={busy || quotaReached}>{busy ? "Searching…" : "Search"}</button>
                 </div>
-                <p className="privacy-hint" id="question-hint">Leave out names, account numbers, and private details. Up to 1,000 characters. <a href="/privacy/">Privacy information</a></p>
+                <p className="privacy-hint" id="question-hint">Your question goes to the hosted backend. If model help is enabled and evidence is sufficient, a model service may receive your question and selected public passages. The question is not automatically redacted. Leave out names, account numbers, and private details. Up to 1,000 characters. <a href="/privacy/">Privacy information</a></p>
               </form>
               {aiUsage?.reason !== "ai_configuration" && <p className="ai-usage" role="status">{aiUsage?.remaining !== null && aiUsage?.remaining !== undefined ? `AI questions remaining today: ${aiUsage.remaining} of ${aiUsage.limit}` : "AI question allowance status unavailable."}{aiUsage?.remaining !== null && aiUsage?.remaining !== undefined && knownReset && <span> {knownReset}</span>}</p>}
               {aiStatusUnavailable && <p className="ai-fallback-note">{AI_UNAVAILABLE_MESSAGE} <a href="#housing-help">Find Housing Help Without AI</a></p>}
@@ -378,13 +398,13 @@ function FullApp() {
               {error && aiUsage?.reason !== "ai_visitor_limit" && aiUsage?.reason !== "ai_global_limit" && !(health === "unavailable" && error === AI_UNAVAILABLE_MESSAGE) && <p className="alert" role="alert">{error} <a href="#housing-help">Find Housing Help Without AI</a></p>}
             </div>
           </div>
-          <div className="answers" aria-live="polite">{turns.map((item) => <AnswerCard key={item.id} item={item} showUnavailableNotice={!aiStatusUnavailable && health !== "unavailable"} />)}</div>
+          <div className="answers" aria-live="polite" lang="en">{turns.map((item) => <AnswerCard key={item.id} item={item} showUnavailableNotice={!aiStatusUnavailable && health !== "unavailable"} />)}</div>
         </section>
-        <HousingHelp />
-        <PropertyExplorer />
-        <section className="disclaimer"><h2>Check official sources</h2><p>TampaBayBot is independent and unofficial. It does not provide legal advice, establish eligibility, verify permits, or make property decisions. Public records can be incomplete or outdated; confirm details with the responsible agency.</p><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">About the project</a></section>
+        <HousingHelp language={language} onLanguageChange={onLanguageChange} />
+        <div lang="en"><PropertyExplorer /></div>
+        <section className="disclaimer"><h2>{t.fullDisclaimerTitle}</h2><p>{t.fullDisclaimer}</p><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">{t.about}</a></section>
       </main>
-      <footer className="site-footer"><span>TampaBayBot · An open source civic information project</span><nav aria-label="Footer navigation"><a href="/privacy/">Privacy information</a></nav><span>Independent and unofficial</span></footer>
+      <footer className="site-footer"><span>{t.project}</span><nav aria-label={t.footerNavigation}><a href="/privacy/">{t.privacy}</a></nav><span>{t.unofficial}</span></footer>
     </div>
   </>;
 }

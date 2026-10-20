@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main id="main" lang="en" className="document-page about-page privacy-page content-width">
+    <main id="main" lang="en" className="document-page about-page privacy-page content-width" tabIndex={-1}>
       <div className="page-intro">
         <h1>Privacy information</h1>
         <p>{privacyIntroduction}</p>

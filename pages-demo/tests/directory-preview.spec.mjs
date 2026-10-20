@@ -92,3 +92,33 @@ test('mobile visitors can reach emergency contacts before choosing any options',
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect(apiRequests).toEqual([]);
 });
+
+test('directory preview language switch preserves guide choices and labels English source details', async ({ page }) => {
+  const apiRequests = [];
+  page.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/')) apiRequests.push(request.url()); });
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('/');
+  await page.locator('#crisis-situation').selectOption('homelessness');
+  await page.locator('#crisis-timeframe').selectOption('tonight');
+  await page.locator('#crisis-location').selectOption('pinellas');
+  await page.locator('#site-language').focus();
+  await page.locator('#site-language').selectOption('es');
+  await expect(page.locator('#site-language')).toBeFocused();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  await expect(page.getByRole('heading', { name: 'Información de vivienda en Tampa Bay' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '¿Necesita ayuda ahora?' })).toBeVisible();
+  await expect(page.locator('.crisis-plan')).toContainText(/esta noche/i);
+  await expect(page.locator('.crisis-plan')).toContainText('están en inglés');
+  await expect(page.locator('.immediate-help .housing-translation-note')).toContainText('están en inglés');
+  await expect(page.locator('#crisis-situation')).toHaveValue('homelessness');
+  await expect(page.locator('#crisis-timeframe')).toHaveValue('tonight');
+  await expect(page.locator('#crisis-location')).toHaveValue('pinellas');
+  await page.locator('#housing-language').focus();
+  await page.locator('#housing-language').selectOption('en');
+  await expect(page.locator('#housing-language')).toBeFocused();
+  await expect(page.locator('#site-language')).toHaveValue('en');
+  await expect(page.locator('#crisis-situation')).toHaveValue('homelessness');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(apiRequests).toEqual([]);
+  expect((await new AxeBuilder({ page }).include('#housing-help').analyze()).violations).toEqual([]);
+});

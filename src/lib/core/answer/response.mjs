@@ -87,6 +87,7 @@ export function finishResponse(answer, { plan, selected, chunks, date, unsupport
     answer.status = 'insufficient_evidence';
     answer.answer = 'Tell me what you are trying to do, such as finding housing help, checking a property, or applying for a permit. I need that detail to identify the right agency.';
     answer.evidence = [];
+    delete answer.requiredEvidenceIds;
     answer.nextSteps = [];
     answer.coverage.citedSourceCount = 0;
     return answer;

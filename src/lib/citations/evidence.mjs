@@ -68,10 +68,16 @@ export function makeEvidence(hit, question, index, now = new Date()) {
     focusedQuote = chunk.text.slice(focus.start, focus.end).trim();
     if (!focusedQuote) return null;
   }
+  const quote = focusedQuote || selectQuote(chunk.text, question);
+  // Preview permission is an explicit registry decision. Public reachability or
+  // a preserved snapshot alone never grants permission to republish more text.
+  const previewStatus = source.preview_policy === 'short_excerpt' ? 'permitted' : 'not_permitted';
   return {
     id: `E${index + 1}`, chunk_id: chunk.id, source_id: source.source_id,
-    title: source.title, agency: source.agency,
-    quote: focusedQuote || selectQuote(chunk.text, question), section: chunk.section ?? null,
+    title: source.title, agency: source.agency, publisher: source.agency ?? null,
+    source_date: source.source_updated_date ?? null,
+    previewStatus, preview: previewStatus === 'permitted' ? quote.slice(0, 200) : null,
+    quote, section: chunk.section ?? null,
     page: chunk.page ?? null, record_id: chunk.record_id ?? null,
     layer: chunk.layer ?? null, url,
     retrieved_at: chunk.retrieved_at ?? source.retrieval_date ?? null,
@@ -79,6 +85,95 @@ export function makeEvidence(hit, question, index, now = new Date()) {
     authoritative_status: source.authoritative_status,
     stale: sourceIsStale(source, chunk, now), content_hash: chunk.content_hash ?? null,
   };
+}
+
+/** Check the final citation contract against the scoped, retrieved corpus.
+ * A passing marker must resolve to a literal passage of its registered source;
+ * answer text alone is never trusted as provenance. */
+export function validateCitationIntegrity(answer, { sources = [], chunks = [], now } = {}) {
+  const errors = [];
+  if (!answer || typeof answer !== 'object' || !Array.isArray(answer.evidence) || typeof answer.answer !== 'string') {
+    return { valid: false, errors: ['invalid_answer'] };
+  }
+  const bySource = new Map();
+  for (const source of sources) {
+    const id = source?.source_id;
+    if (typeof id !== 'string') continue;
+    const entries = bySource.get(id) ?? [];
+    entries.push(source);
+    bySource.set(id, entries);
+  }
+  const byChunk = new Map();
+  for (const chunk of chunks) {
+    if (typeof chunk?.source_id !== 'string' || typeof chunk?.id !== 'string') continue;
+    const sourceChunks = byChunk.get(chunk.source_id) ?? new Map();
+    const entries = sourceChunks.get(chunk.id) ?? [];
+    entries.push(chunk);
+    sourceChunks.set(chunk.id, entries);
+    byChunk.set(chunk.source_id, sourceChunks);
+  }
+  const byEvidenceId = new Map();
+  for (const [index, item] of answer.evidence.entries()) {
+    const id = item?.id;
+    if (id !== `E${index + 1}` || byEvidenceId.has(id)) errors.push('invalid_evidence_id');
+    else byEvidenceId.set(id, item);
+    const registered = bySource.get(item?.source_id) ?? [];
+    if (registered.length !== 1) { errors.push(`source_not_unique:${id}`); continue; }
+    const source = registered[0];
+    const matches = byChunk.get(item.source_id)?.get(item.chunk_id) ?? [];
+    if (matches.length !== 1) { errors.push(`chunk_not_unique:${id}`); continue; }
+    const chunk = matches[0];
+    if (evidenceSafetyReason(source, chunk) || typeof item.quote !== 'string' || !item.quote.trim() ||
+      item.quote.length > 720 || !chunk.text.includes(item.quote)) errors.push(`unsupported_quote:${id}`);
+    const url = safeSourceUrl(chunk.url, source.canonical_url);
+    if (!url || item.url !== url) errors.push(`source_url_mismatch:${id}`);
+    if (item.title !== source.title || item.agency !== source.agency ||
+      item.publisher !== (source.agency ?? null) ||
+      item.source_date !== (source.source_updated_date ?? null) ||
+      item.source_updated_date !== (source.source_updated_date ?? null) ||
+      item.authoritative_status !== source.authoritative_status ||
+      item.section !== (chunk.section ?? null) || item.page !== (chunk.page ?? null) ||
+      item.record_id !== (chunk.record_id ?? null) || item.layer !== (chunk.layer ?? null) ||
+      item.retrieved_at !== (chunk.retrieved_at ?? source.retrieval_date ?? null) ||
+      item.content_hash !== (chunk.content_hash ?? null)) errors.push(`source_metadata_mismatch:${id}`);
+    if (now !== undefined && item.stale !== sourceIsStale(source, chunk, new Date(now))) {
+      errors.push(`stale_status_mismatch:${id}`);
+    }
+    const allowed = source.preview_policy === 'short_excerpt';
+    if (item.previewStatus !== (allowed ? 'permitted' : 'not_permitted') ||
+      item.preview !== (allowed ? item.quote?.slice(0, 200) : null)) errors.push(`preview_policy_mismatch:${id}`);
+  }
+  const markers = [...answer.answer.matchAll(/\[(E\d+)\]/g)];
+  // These fields describe interpretation and uncertainty. Their UI treatment
+  // is plain text, so citation-shaped tokens here would be misleading.
+  if (typeof answer.meaning === 'string' && /\[E\d+\]/.test(answer.meaning) ||
+    Array.isArray(answer.warnings) && answer.warnings.some(warning => typeof warning === 'string' && /\[E\d+\]/.test(warning))) {
+    errors.push('unclickable_citation');
+  }
+  for (const marker of markers) {
+    const item = byEvidenceId.get(marker[1]);
+    if (!item) { errors.push(`unknown_citation:${marker[1]}`); continue; }
+    if (answer.status === 'answered') {
+      const preceding = answer.answer.slice(0, marker.index).trimEnd();
+      if (!preceding.endsWith(item.quote) && !preceding.endsWith(`“${item.quote}”`)) {
+        errors.push(`unsupported_claim:${marker[1]}`);
+      }
+    }
+  }
+  if (answer.status === 'answered' && !markers.length) errors.push('missing_citation');
+  if (answer.status === 'conflicting_evidence') {
+    const cited = new Set(markers.map(marker => marker[1]));
+    if (answer.evidence.length < 2 || answer.evidence.some(item => !cited.has(item.id))) {
+      errors.push('incomplete_conflict_citations');
+    }
+  }
+  if (answer.requiredEvidenceIds !== undefined) {
+    if (!Array.isArray(answer.requiredEvidenceIds) || answer.requiredEvidenceIds.some(id =>
+      !byEvidenceId.has(id) || answer.status === 'answered' && !markers.some(marker => marker[1] === id))) {
+      errors.push('required_citation_missing');
+    }
+  }
+  return { valid: errors.length === 0, errors: [...new Set(errors)] };
 }
 
 /** Narrow contradiction rule: same named program, opposite application availability.

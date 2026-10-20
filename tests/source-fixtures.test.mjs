@@ -11,7 +11,11 @@ test('redistributable demo answers preserve exact citations and local scope', as
   const answer = await answerWithGuardrails('Where can I find rental assistance?', { ...corpus, now, jurisdictionId: 'tampa' });
   assert.ok(answer.evidence.length);
   assert.ok(answer.evidence.every(e => e.source_id === 'demo-housing'));
-  for (const evidence of answer.evidence) assert.ok(corpus.chunks.find(c => c.id === evidence.chunk_id).text.includes(evidence.quote));
+  for (const evidence of answer.evidence) {
+    assert.ok(corpus.chunks.find(c => c.id === evidence.chunk_id).text.includes(evidence.quote));
+    assert.equal(evidence.previewStatus, 'permitted');
+    assert.ok(evidence.preview && evidence.preview.length <= 200 && evidence.quote.startsWith(evidence.preview));
+  }
   assert.ok(answer.answer.includes('fictional') || answer.answer.includes('Fictional'));
   assert.equal(answer.generation.status, 'disabled');
 });

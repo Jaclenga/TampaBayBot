@@ -15,6 +15,11 @@ export interface Source {
   jurisdiction_ids?: string[];
   keywords?: string[]; retrieval_date?: string | null; source_updated_date?: string | null;
   refresh_days?: number; topic_id?: string; availability?: string; last_fetch_status?: string;
+  last_content_reviewed_at?: string | null; review_status?: string | null;
+  next_review_at?: string | null; last_link_checked_at?: string | null;
+  link_status?: string | null; known_issues?: string[];
+  /** Explicit excerpt display policy; missing means no extra preview. */
+  preview_policy?: 'short_excerpt' | 'none';
   program_id?: string; entity_aliases?: string[]; answer_policy?: SourceAnswerPolicy;
   next_step?: { label: string; url: string }; [key: string]: unknown;
 }

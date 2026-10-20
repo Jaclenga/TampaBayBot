@@ -23,6 +23,13 @@ export function usableChunk(chunk) {
 }
 
 export function isInstructionText(text) {
+  if (typeof text !== 'string') return false;
+  // Inspect a normalized copy only. The original passage remains unchanged
+  // for literal citation checks and is never silently rewritten.
+  text = text.normalize('NFKC')
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, '')
+    .replace(/\s+/g, ' ');
+  if (/\[im_start\]\s*(?:system|developer|assistant)\b|<\|(?:im_start|start_header_id)\|>\s*(?:system|developer)\b|<<SYS>>/i.test(text)) return true;
   if (/\b(?:ignora|ignore|olvida|omite)\b.{0,40}\b(?:instrucciones|reglas|sistema|citas)\b|\b(?:revela|muestra|envia)\b.{0,50}\b(?:clave secreta|claves de api|credenciales|prompt del sistema)\b|\b(?:mensaje del sistema|instrucciones del desarrollador)\s*:/iu.test(text)) return true;
   return /ignore\s+(?:all\s+)?(?:previous|prior|above|system)\s+(?:instructions|rules)|(?:system|developer)\s*(?:message|prompt)\s*:|reveal\s+(?:your\s+)?(?:system prompt|secret|api key)|<\/?(?:script|iframe)\b|javascript:|(?:assistant|model)\s*:\s*(?:ignore|you must)|send\s+(?:all\s+)?(?:credentials|secrets|api keys)\s+to/i.test(text);
 }
@@ -45,7 +52,7 @@ export function isAuthoritative(source) {
 export function evidenceSafetyReason(source, chunk) {
   if (!source || !chunk || typeof source.source_id !== 'string' || source.source_id !== chunk.source_id) return 'source_mismatch';
   if (typeof chunk.text !== 'string' || !chunk.text.trim()) return 'empty_text';
-  if (isInstructionText(chunk.text)) return 'untrusted_instructions';
+  if ([chunk.text, source.title, source.agency, chunk.title, chunk.section].some(isInstructionText)) return 'untrusted_instructions';
   return null;
 }
 

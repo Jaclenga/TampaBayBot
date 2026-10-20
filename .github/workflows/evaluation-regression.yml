@@ -1,0 +1,48 @@
+name: Offline evaluation regression
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Evaluate routing, citations, refusals, and unsupported claims
+        env:
+          LLM_PROVIDER: none
+          EVAL_MIN_OVERALL: ${{ vars.EVAL_MIN_OVERALL || '1' }}
+          EVAL_MIN_CATEGORIES: ${{ vars.EVAL_MIN_CATEGORIES || '' }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { spawnSync } from 'node:child_process';
+
+          const args = [
+            'run', 'eval:regression', '--',
+            '--output', 'work/evals/regression',
+            '--min-overall', process.env.EVAL_MIN_OVERALL,
+          ];
+          for (const entry of process.env.EVAL_MIN_CATEGORIES.split(',')) {
+            if (entry.trim()) args.push('--min-category', entry.trim());
+          }
+          const result = spawnSync('npm', args, { stdio: 'inherit' });
+          process.exit(result.status ?? 2);
+          NODE
+      - name: Upload evaluation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-evaluation-regression
+          path: work/evals/regression/
+          if-no-files-found: warn

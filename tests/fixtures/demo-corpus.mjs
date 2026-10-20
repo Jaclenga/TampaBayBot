@@ -24,6 +24,7 @@ export function makeDemoCorpus(now = new Date()) {
     retrieval_date: retrievedAt, source_updated_date: null, refresh_days: 30,
     status: 'available', demo: true,
     license_or_terms_status: 'Original synthetic MIT-licensed fixture. No downloaded third-party content.',
+    preview_policy: 'short_excerpt',
     next_step: { label: 'Fictional example link (not a real service)', url: `https://example.invalid/${id}` },
   }));
   const chunks = definitions.flatMap(([id, , title, , passages]) => passages.map((text, index) => ({

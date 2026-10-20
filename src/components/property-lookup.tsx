@@ -103,6 +103,7 @@ export default function PropertyLookup({
   const [showMap, setShowMap] = useState(false);
   const request = useRef<AbortController | null>(null);
   const activityRequest = useRef<AbortController | null>(null);
+  const addressInput = useRef<HTMLInputElement>(null);
   const matchesRef = useRef<HTMLHeadingElement>(null);
   const propertyRef = useRef<HTMLHeadingElement>(null);
   useEffect(
@@ -133,6 +134,7 @@ export default function PropertyLookup({
   async function searchAddress() {
     if (!address.trim()) {
       setError(en.form.empty);
+      addressInput.current?.focus();
       return;
     }
     resetSelection();
@@ -217,11 +219,16 @@ export default function PropertyLookup({
         <div className="address-input">
           <input
             id="address"
+            ref={addressInput}
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) => {
+              setAddress(e.target.value);
+              setError("");
+            }}
             placeholder={copy.placeholder}
             maxLength={200}
             autoComplete="off"
+            aria-invalid={!!error}
             aria-describedby={
               error ? "address-disclosure address-error" : "address-disclosure"
             }

@@ -46,7 +46,7 @@ function requiredFactHit(primary, chunk, fact, selected, question, now) {
 
 function courtProcessQuestion(text) {
   return /\b(?:evict(?:ion|ed|ing)?|landlord|tenant)\b/.test(text) &&
-    /\b(?:court|clerk|summons|notice|deadline|legal|papers?|forms?|respond|response|filing)\b/.test(text);
+    /\b(?:court|clerk|summons|notice|deadline|legal|papers?|paperwork|forms?|respond|response|filing|file|hearing|case record)\b/.test(text);
 }
 
 function courtProcessSource(source) {

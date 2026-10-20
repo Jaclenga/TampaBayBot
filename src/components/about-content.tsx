@@ -8,7 +8,7 @@ export default function AboutContent({ modelNotice }: { modelNotice: string }) {
   usePageTitle(en.about.title);
   const privacyNotice = modelNotice === english.modelPrivacy.enabled ? en.modelPrivacy.enabled : en.modelPrivacy.disabled;
   return (
-    <main id="main" lang={locale} className="document-page about-page content-width">
+    <main id="main" lang={locale} className="document-page about-page content-width" tabIndex={-1}>
       <Link href="/" className="back-link">
         <ArrowLeft size={16} aria-hidden="true" />
         {en.sourcePage.back}

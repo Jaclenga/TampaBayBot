@@ -2,7 +2,7 @@
 
 The separate [Cloudflare Pages preview](https://tampabaybot-housing-preview.pages.dev/) was verified on October 9, 2026 with a private source-only backend, no model, and an empty reviewed corpus. The live housing directory, API binding, synthetic eviction guide, address lookup, partial property layers, and dated development response were checked. This guide below describes a different standalone Worker deployment path; its own public URL and full cited-answer behavior have not been verified. See [the Pages deployment record](../CLOUDFLARE_DEPLOYMENT.md) for the current preview.
 
-Build a Worker artifact and deploy it through your own Cloudflare account. A Sites account, database and model account are not required. The generated configuration uses `LLM_PROVIDER=none`.
+Build a Worker artifact locally without a Sites account, database or model account. The generated configuration uses `LLM_PROVIDER=none` and local operations mode. **A public question or property API requires shared D1 controls even when model assistance is off.** Without them, non-loopback `/api/*` requests return a safe 503. The separate static Pages housing directory remains usable without that backend.
 
 The independent build, Wrangler upload dry-run and local production HTTP path have been tested. Deployment to an independently authenticated Cloudflare account and smoke tests on its public URL remain unverified. [Release readiness](RELEASE_READINESS.md) records the dated results and remaining work.
 
@@ -21,7 +21,7 @@ npm run build:standalone -- --name tampabaybot-independent-alpha --outdir work/s
 npm run test:standalone -- --directory work/standalone/independent-alpha
 ```
 
-The builder compiles an isolated source copy and writes compiled server modules, public client assets, a minimal Wrangler config and an artifact manifest. It excludes local environment files, source maps, Sites metadata, operator account IDs and tool state. Model calls and request logging are disabled in the generated configuration.
+The builder compiles an isolated source copy and writes compiled server modules, public client assets, a minimal Wrangler config and an artifact manifest. It excludes local environment files, source maps, Sites metadata, operator account IDs and tool state. Model calls and Worker observability are disabled in the generated configuration; Cloudflare platform logs and access records are a separate deployment setting.
 
 The verifier runs `wrangler deploy --dry-run`, then serves unchanged copies of the artifact with `wrangler dev --local` on a loopback port. It checks artifact isolation, production responses/security headers, browser assets and bounded API behavior, then stops its process and writes `verification.json` beside `artifact.json`. Copying keeps Wrangler's temporary state outside the upload directory. No login, cloud upload or real-model call occurs. See Wrangler's [dry-run documentation](https://developers.cloudflare.com/workers/wrangler/commands/workers/).
 
@@ -38,21 +38,43 @@ npx wrangler whoami
 
 Review `work/standalone/independent-alpha/server/wrangler.json`. It has no account ID or custom-domain route. Set `account_id` to your own account ID if you have multiple accounts and want explicit selection.
 
-The generated `workers_dev: true` makes the main application publicly reachable after deployment. The app has no resident login or administrator UI. Wrangler login authorizes deployment administration; it does not authenticate visitors. `preview_urls: false` disables version preview URLs, not the main Worker URL. For restricted testing, configure and verify access on every exposed hostname; see [Cloudflare Access for Worker URLs](https://developers.cloudflare.com/workers/versions-and-deployments/preview-urls/#manage-access-to-preview-urls).
+The generated `workers_dev: true` makes the main application publicly reachable after deployment. The app has no resident login or administrator UI. Wrangler login authorizes deployment administration; it does not authenticate visitors. `preview_urls: false` disables version preview URLs, not the main Worker URL. The generated local-mode config allows loopback development only: all public `/api/*` routes, including health and readiness, refuse service until shared D1 is configured. Restrict access on every exposed hostname while setting up and testing; see [Cloudflare Access for Worker URLs](https://developers.cloudflare.com/workers/versions-and-deployments/preview-urls/#manage-access-to-preview-urls).
+
+## Configure shared controls before public API use
+
+Create a D1 database in your account and apply the idempotent operations schema:
+
+```sh
+npx wrangler d1 create tampabaybot-independent-ops
+npx wrangler d1 execute tampabaybot-independent-ops --remote --file drizzle/0000_operations.sql
+```
+
+In the ignored deployment copy of `server/wrangler.json`, add a `DB` D1 binding with the returned database UUID and set `TAMPABAYBOT_OPERATIONS_MODE` to `shared` under `vars`; keep `LLM_PROVIDER=none` unless separately reviewed. The relevant JSON fields are:
+
+```json
+{
+  "d1_databases": [{ "binding": "DB", "database_name": "tampabaybot-independent-ops", "database_id": "UUID_FROM_CREATE" }],
+  "vars": { "LLM_PROVIDER": "none", "TAMPABAYBOT_OPERATIONS_MODE": "shared" }
+}
+```
+
+Merge these fields into the existing config rather than replacing its `main`, assets and other settings. Review [operations](OPERATIONS.md#deployment-configuration) for request budgets and a minimum 32-character `TAMPABAYBOT_LIMIT_SECRET`. Keep that secret and the separate monitor token in Worker secrets, never in `vars`, public build variables, or source. Re-run `npx wrangler deploy --dry-run --config work/standalone/independent-alpha/server/wrangler.json` after editing the deployment config. The original standalone verification receipt covers its original local config, not the edited hosted configuration.
 
 Deploy the reviewed artifact:
 
 ```sh
 npx wrangler deploy --config work/standalone/independent-alpha/server/wrangler.json
+npx wrangler secret put TAMPABAYBOT_LIMIT_SECRET --config work/standalone/independent-alpha/server/wrangler.json
+npx wrangler secret put TAMPABAYBOT_MONITOR_TOKEN --config work/standalone/independent-alpha/server/wrangler.json
 ```
 
-Wrangler prints the URL and deployment version. Verify the deployed home, source, evaluation and about pages; health and artifact downloads; a cited question; address selection, property context and development lookups; and failure states. Confirm HTTPS, response security headers, source dates and outbound access. Record the observed version and results. Local smoke does not verify cloud account permissions, DNS, plan limits or hosted behavior.
+Each secret command prompts for a distinct, random value of at least 32 characters and can deploy a new Worker version. The API may return 503 between the first deploy and successful secret configuration; keep access restricted and do not announce the service until shared controls pass a hosted smoke. Wrangler prints the URL and deployment version. Verify the deployed home, source, evaluation and about pages; authenticated health/readiness and aggregate metrics; a cited question if the corpus has reviewed evidence, or an honest unavailable-source answer if it is empty; address selection, property context and development lookups; rate-limit responses and failure states. Confirm HTTPS, response security headers, source dates and outbound access. Record the observed version and results. Local smoke does not verify cloud account permissions, DNS, plan limits or hosted behavior.
 
 For CI, keep a narrowly scoped API token and account ID in the CI secret store as `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Use the same reviewed artifact and explicit config path. See [Wrangler configuration](https://developers.cloudflare.com/workers/wrangler/configuration/) for account, name, binding and route settings.
 
 ## Optional model provider
 
-[LLM.md](LLM.md) is canonical for provider settings, localhost/LAN/hosted connectivity, model data flow and evaluation. A hosted Worker needs a reachable HTTP provider or a Workers AI binding; its localhost cannot reach Ollama on a resident's PC. Before exposing any model provider publicly, configure a shared D1 binding, `TAMPABAYBOT_OPERATIONS_MODE=shared`, a private limit secret, and visitor/global/model-concurrency limits in the [Pages and Workers AI demo guide](../CLOUDFLARE_DEPLOYMENT.md). The generated standalone config uses local mode and refuses inference by default. The explicit loopback-only development opt-in has no shared AI budget and is unsuitable for a public deployment. See [AI usage limits](AI_USAGE_LIMITS.md) and [cost controls](CLOUDFLARE_COST_CONTROLS.md).
+[LLM.md](LLM.md) is canonical for provider settings, localhost/LAN/hosted connectivity, model data flow and evaluation. A hosted Worker needs a reachable HTTP provider or a Workers AI binding; its localhost cannot reach Ollama on a resident's PC. Shared D1 controls are required for the public API regardless of provider choice. Before enabling a model, review visitor/global/model-concurrency limits in the [Pages and Workers AI demo guide](../CLOUDFLARE_DEPLOYMENT.md). The generated standalone config refuses inference by default. The explicit loopback-only development opt-in has no shared AI budget and is unsuitable for a public deployment. See [AI usage limits](AI_USAGE_LIMITS.md) and [cost controls](CLOUDFLARE_COST_CONTROLS.md).
 
 To enable a provider, set its non-secret `LLM_*` values in the generated config's `vars`. After the first default deployment, enter any required key through the prompt and deploy the reviewed config:
 

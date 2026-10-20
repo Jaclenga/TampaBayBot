@@ -29,7 +29,7 @@ export default function EvaluationContent({ result, suiteReport, agentReviewCoun
   const copy = locale === "es" ? evaluationEs : evaluationEn;
   usePageTitle(`${copy.title} | TampaBayBot`);
   if (result.benchmark_count === 0) return (
-    <main id="main" lang={locale} className="document-page content-width">
+    <main id="main" lang={locale} className="document-page content-width" tabIndex={-1}>
       <Link href="/" className="back-link">{copy.back}</Link>
       <h1>{copy.title}</h1>
       <p>{copy.noEvaluation}</p>
@@ -39,7 +39,7 @@ export default function EvaluationContent({ result, suiteReport, agentReviewCoun
   const offlineReport = suiteReport.mode === "offline" ? suiteReport : null;
   const automatedQuality = offlineReport?.automatedQuality as AutomatedQuality | null;
   return (
-    <main id="main" lang={locale} className="document-page content-width">
+    <main id="main" lang={locale} className="document-page content-width" tabIndex={-1}>
       <Link href="/" className="back-link">
         <ArrowLeft size={16} aria-hidden="true" />
         {copy.back}

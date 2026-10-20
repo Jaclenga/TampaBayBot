@@ -1,6 +1,8 @@
 // Translate application-authored navigation only. Quotes, source titles, agencies,
 // URLs and recorded facts remain exact original evidence, never model translations.
 const MESSAGES = new Map([
+  ['If someone is hurt or there is immediate physical danger, move to safety and call emergency services now. This site cannot dispatch help.', 'Si alguien está herido o hay peligro físico inmediato, vaya a un lugar seguro y llame a los servicios de emergencia ahora. Este sitio no puede enviar ayuda.'],
+  ['The housing crisis guide can show local contacts after you are safe.', 'La guía para crisis de vivienda puede mostrar contactos locales cuando usted esté a salvo.'],
   ['I found relevant guidance, but the available quotations cannot preserve all application conditions or restrictions.', 'Encontré orientación pertinente, pero las citas disponibles no pueden conservar todas las condiciones o restricciones de solicitud.'],
   ['Ask the responsible agency to confirm the application conditions and restrictions before relying on this resource.', 'Pida a la agencia responsable que confirme las condiciones y restricciones de solicitud antes de confiar en este recurso.'],
   ['I found income information, but the available quotations do not establish the income limits for the requested year.', 'Encontré información sobre ingresos, pero las citas disponibles no confirman los límites de ingresos para el año solicitado.'],

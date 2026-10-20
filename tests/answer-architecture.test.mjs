@@ -39,6 +39,17 @@ test('a new registry source can declare its primary section without built-in sou
   assert.equal(result.evidence[0].quote, instructions.text);
 });
 
+test('a cited resource with a known issue carries its warning into the answer', () => {
+  const resource = source('known-issue-program', { known_issues: [
+    'The provider lists conflicting eligibility conditions; confirm before applying.',
+  ] });
+  const overview = chunk('known-issue-overview', resource.source_id,
+    'Rental assistance provides help with moving costs and rental deposits. Contact the provider for current eligibility.');
+  const result = answer('What rental assistance does this program offer?', [resource], [overview]);
+  assert.ok(result.evidence.some(item => item.source_id === resource.source_id));
+  assert.ok(result.warnings.some(item => item.includes('Known issue with cited source known-issue-program: The provider lists conflicting eligibility conditions')));
+});
+
 test('a declared primary section cannot admit a bare heading rejected by retrieval', () => {
   const resource = source('new-heading-program', {
     entity_aliases: ['Heading Help'],

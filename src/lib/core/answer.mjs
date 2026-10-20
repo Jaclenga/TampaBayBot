@@ -9,6 +9,7 @@ import { scopeAnswerCorpus, answerCoverage } from './answer/coverage.mjs';
 import { selectEvidence } from './answer/evidence-selection.mjs';
 import { selectIncomeEvidence } from './answer/qualifications.mjs';
 import { finishResponse, jurisdictionResponse, officialJudgmentResponse, unsupportedResponse } from './answer/response.mjs';
+import { inferCrisisInput } from '../housing/crisis.mjs';
 
 /** Deterministic, extractive retrieval and resident navigation. No model/API key. */
 export function answerQuestion(question, { sources = [], chunks = [], now = new Date(), jurisdictionId = 'tampa-bay' } = {}) {
@@ -43,14 +44,24 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
     answer.meaning = 'Use the government serving that property to confirm local information.';
     return answer;
   }
+  const crisis = route.subjectCategory === 'housing'
+    ? inferCrisisInput(query, { jurisdictionId: route.jurisdictionId }) : null;
+  if (crisis?.physicalDanger) {
+    answer.answer = 'If someone is hurt or there is immediate physical danger, move to safety and call emergency services now. This site cannot dispatch help.';
+    answer.meaning = 'The housing crisis guide can show local contacts after you are safe.';
+    return answer;
+  }
   const retrieval = retrieve(query, { sources, chunks, queryPlan: plan, now: date, limit: ANSWER_RETRIEVAL_LIMIT });
   if (retrieval.quarantined.length) answer.warnings.push('Some source text was excluded because it contained instructions aimed at an assistant or executable markup.');
   const unsupported = unknownSpecificClaim(query, sources, chunks);
+  // A secondary passage can explain why we are uncertain, but residents still
+  // need an in-scope official path to verify the missing or changing detail.
+  // Every fallback comes from the scoped registry, never from free-form text.
+  const relevantSources = sources.filter(source => source.categories?.includes(route.subjectCategory));
   let selected = selectEvidence(retrieval.hits, plan, sources, chunks, date, unsupported);
   selected = selectIncomeEvidence(plan, selected, chunks, date);
   if (!selected.length) {
-    const relevantSources = sources.filter(source => source.categories?.includes(route.subjectCategory));
-    answer.nextSteps = nextSteps(relevantSources);
+    answer.nextSteps = nextSteps([...retrieval.hits.map(hit => hit.source), ...relevantSources]);
     if (unsupported) return unsupportedResponse(answer, unsupported);
     if (route.officialJudgment) return officialJudgmentResponse(answer);
     if (route.needsJurisdiction && route.subjectCategory !== 'navigation') return jurisdictionResponse(answer, route);
@@ -68,12 +79,21 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
   if (citations.some(item => item.hit.required)) answer.requiredEvidenceIds = [...new Set([
     answer.evidence[0].id, ...citations.filter(item => item.hit.required).map(item => item.evidence.id),
   ])];
-  answer.nextSteps = nextSteps(selected.map(hit => hit.source));
+  const selectedOfficialSteps = nextSteps(selected.map(hit => hit.source));
+  answer.nextSteps = selectedOfficialSteps.length ? selectedOfficialSteps :
+    nextSteps([...retrieval.hits.map(hit => hit.source), ...relevantSources]);
   answer.coverage = answerCoverage(plan, sources, answer.evidence);
   if (!answer.evidence.length) return answer;
   const unavailable = selected.some(hit => /unavailable|failed|error/i.test(String(hit.source.availability ?? hit.source.last_fetch_status ?? hit.source.status ?? '')));
   if (answer.evidence.some(item => item.stale)) answer.warnings.push('One or more snapshots are older than their planned refresh interval. Check the live official page before acting.');
   if (unavailable) answer.warnings.push('A source could not be refreshed; this response uses a previously preserved snapshot.');
+  const citedIds = new Set(answer.evidence.map(item => item.source_id));
+  for (const source of sources) {
+    if (!citedIds.has(source.source_id) || !Array.isArray(source.known_issues)) continue;
+    for (const issue of source.known_issues.filter(value => typeof value === 'string' && value.trim())) {
+      answer.warnings.push(`Known issue with cited source ${source.source_id}: ${issue}`);
+    }
+  }
   if (answer.evidence.some(item => !isAuthoritative(sources.find(source => source.source_id === item.source_id) ?? {}))) answer.warnings.push('Independent or secondary evidence is labeled. It is not an official government determination.');
   return finishResponse(answer, { plan, selected, chunks, date, unsupported, conflict });
 }

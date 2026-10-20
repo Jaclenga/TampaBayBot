@@ -1,4 +1,8 @@
 import { answerQuestion } from "../core/answer.mjs";
+import { createQueryPlan } from "../core/query-plan.mjs";
+import { scopeAnswerCorpus } from "../core/answer/coverage.mjs";
+import { nextSteps } from "../core/answer/next-steps.mjs";
+import { validateCitationIntegrity } from "../citations/evidence.mjs";
 import {
   synthesizeAnswer,
   parseLlmConfig,
@@ -18,6 +22,23 @@ function containsCredential(value, credential, visited = new WeakSet()) {
   return Object.values(value).some((item) =>
     containsCredential(item, credential, visited),
   );
+}
+
+function unverifiedCitationResponse(answer, scoped) {
+  // A broken reference must not leave a plausible but unsupported claim on
+  // screen. Offer only safe official links from this request's scoped registry.
+  const safe = { ...answer };
+  delete safe.requiredEvidenceIds;
+  safe.status = "insufficient_evidence";
+  safe.answer = "I could not determine this reliably from the available public information.";
+  safe.meaning = null;
+  safe.evidence = [];
+  safe.warnings = [];
+  safe.nextSteps = nextSteps(scoped.sources.filter((source) =>
+    source.categories?.includes(answer.category),
+  ));
+  if (safe.coverage) safe.coverage = { ...safe.coverage, citedSourceCount: 0 };
+  return safe;
 }
 
 /** Guarded application entrypoint; the pure deterministic engine stays reusable. */
@@ -52,12 +73,20 @@ export async function answerWithGuardrails(
   let skipModel =
     (await guards.run("question", { question }, { signal })).action ===
     "skip_model";
-  const baseline = answerQuestion(question, {
+  const verificationDate = now === undefined ? new Date() : new Date(now);
+  const generatedBaseline = answerQuestion(question, {
     sources,
     chunks,
     jurisdictionId,
-    ...(now !== undefined ? { now } : {}),
+    now: verificationDate,
   });
+  const scoped = scopeAnswerCorpus(sources, chunks,
+    createQueryPlan(generatedBaseline.query, { jurisdictionId, sources }));
+  const citationContext = { ...scoped, now: verificationDate };
+  const baselineIsVerified = validateCitationIntegrity(generatedBaseline, citationContext).valid;
+  const baseline = baselineIsVerified
+    ? generatedBaseline
+    : unverifiedCitationResponse(generatedBaseline, scoped);
   const check = async (stage, answer) => {
     // Inspect string values, not serialized JSON: credentials may contain quotes
     // or backslashes. Source labels, URLs and next steps reach hooks/output too.
@@ -101,6 +130,22 @@ export async function answerWithGuardrails(
     answer = skipped();
     // A response veto of model output must also check the replacement baseline.
     await check("response", answer);
+  }
+  if (!validateCitationIntegrity(answer, citationContext).valid) {
+    answer = baselineIsVerified ? { ...baseline } : unverifiedCitationResponse(answer, scoped);
+    answer.generation = {
+      mode: "extractive",
+      provider: info.provider,
+      status: "fallback",
+      reason: "invalid_evidence",
+    };
+  } else if (!baselineIsVerified) {
+    answer.generation = {
+      mode: "extractive",
+      provider: info.provider,
+      status: "fallback",
+      reason: "invalid_evidence",
+    };
   }
   return {
     ...answer,

@@ -1,6 +1,101 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+test("classic answer switches Spanish to English and back from canonical text", async ({ page }) => {
+  const requests: Array<{ locale: string; question: string; jurisdictionId: string }> = [];
+  await page.route("**/api/ask", route => {
+    requests.push(route.request().postDataJSON());
+    return route.fulfill({ json: {
+      status: "answered",
+      category: "housing",
+      query: "Necesito ayuda con la vivienda",
+      answer: "Start with the official program notice. [E1]",
+      meaning: "Use the government serving that property to confirm local information.",
+      warnings: ["One or more snapshots are older than their planned refresh interval. Check the live official page before acting."],
+      evidence: [{ id: "E1", source_id: "fixture-one", chunk_id: "one", title: "Program notice", agency: "Agency One", publisher: "Agency One", language: "en", quote: "Applications are open.", url: "https://agency.example/program", section: null, retrieved_at: "2026-10-01", source_date: null, source_updated_date: null, stale: false, previewStatus: "not_permitted", preview: null }],
+      nextSteps: [], jurisdictionId: "tampa", jurisdictionLabel: "City of Tampa", needsAddress: false,
+    } });
+  });
+  await page.goto("/");
+  await page.locator("#interface-language").selectOption("es");
+  await page.getByLabel("Su zona", { exact: true }).selectOption("tampa");
+  await page.getByLabel("Pregunta o dirección", { exact: true }).fill("Necesito ayuda con la vivienda");
+  await page.getByRole("button", { name: "Buscar", exact: true }).click();
+  await expect(page.locator(".answer-lead")).toContainText("Empiece por Program notice");
+  await expect(page.locator(".meaning")).toContainText("Confirme la información local");
+  await expect(page.locator(".answer-uncertainty")).toContainText("Consulte la página oficial actual");
+  await expect(page.locator(".citation-link")).toHaveCount(1);
+  expect(requests).toEqual([{ locale: "en", question: "Necesito ayuda con la vivienda", jurisdictionId: "tampa" }]);
+
+  await page.locator("#interface-language").selectOption("en");
+  await expect(page.locator(".answer-lead")).toContainText("Start with the official program notice.");
+  await expect(page.locator(".meaning")).toContainText("Use the government serving that property");
+  await expect(page.locator(".answer-uncertainty")).toContainText("Check the live official page");
+  await expect(page.locator(".citation-link")).toHaveCount(1);
+  await page.locator("#interface-language").selectOption("es");
+  await expect(page.locator(".answer-lead")).toContainText("Empiece por Program notice");
+  await expect(page.locator("#evidence-E1 blockquote")).toHaveAttribute("lang", "en");
+  expect(requests).toHaveLength(1);
+});
+
+test("classic privacy errors use safe localized codes and change with the interface", async ({ page }) => {
+  await page.route("**/api/ask", route => route.fulfill({ status: 422, json: {
+    code: "sensitive_input",
+    error: "Untrusted server message with an identifier 000-00-0000",
+  } }));
+  await page.goto("/");
+  await page.locator("#interface-language").selectOption("es");
+  const input = page.getByLabel("Pregunta o dirección", { exact: true });
+  await input.fill("Mi SSN es 000-00-0000. ¿Dónde puedo encontrar ayuda?");
+  await page.getByRole("button", { name: "Buscar", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("Quite los números de Seguro Social");
+  await expect(page.getByRole("alert")).not.toContainText("Untrusted server message");
+  await expect(page.getByRole("alert")).not.toContainText("000-00-0000");
+  await expect(input).toHaveAttribute("aria-invalid", "true");
+  await page.locator("#interface-language").selectOption("en");
+  await expect(page.getByRole("alert")).toContainText("Remove Social Security numbers");
+  await expect(page.getByRole("alert")).not.toContainText("Untrusted server message");
+});
+
+test("answer separates source statements, interpretation, and uncertainty with accessible citations", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.route("**/api/ask", route => route.fulfill({ json: {
+    status: "conflicting_evidence",
+    answer: "The available statements conflict. [E1] [E2] [E9]",
+    meaning: "Ask the publisher to confirm the current rule.",
+    warnings: ["These snapshots cannot establish the current rule."],
+    evidence: [
+      { id: "E1", source_id: "fixture-one", chunk_id: "one", title: "Program notice", agency: "Agency One", publisher: "Agency One", quote: "Applications are open.", url: "https://agency.example/program", section: null, retrieved_at: "2026-10-01", source_date: "2026-09-20", source_updated_date: "2026-09-20", stale: false, previewStatus: "permitted", preview: "Applications are" },
+      { id: "E2", source_id: "fixture-two", chunk_id: "two", title: "Second notice", agency: "Agency Two", publisher: "Agency Two", quote: "Applications are closed.", url: "https://second.example/program", section: null, retrieved_at: null, source_date: null, source_updated_date: null, stale: false, previewStatus: "not_permitted", preview: "Do not show this preview." },
+    ],
+    nextSteps: [], jurisdictionId: "tampa", jurisdictionLabel: "City of Tampa", needsAddress: false,
+    generation: { status: "fallback", provider: "none", reason: "invalid_evidence" },
+  } }));
+  await page.goto("/");
+  await page.getByLabel("Your area").selectOption("tampa");
+  await page.getByLabel("Question or address").fill("Are applications open?");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await expect(page.locator(".citation-link")).toHaveCount(2);
+  await expect(page.locator(".unverified-reference")).toHaveText("[unverified reference]");
+  await expect(page.locator(".answer-lead")).not.toContainText("[E9]");
+  await page.getByRole("link", { name: "Read evidence E2" }).click();
+  await expect(page.locator("#evidence-E2 summary")).toBeFocused();
+  await expect(page.locator("#evidence-E1 .source-statement-label")).toHaveText("Source statement");
+  await expect(page.locator("#evidence-E1")).toContainText("Publisher");
+  await expect(page.locator("#evidence-E1")).toContainText("Source date");
+  await expect(page.locator("#evidence-E1 .source-url a")).toHaveAttribute("href", "https://agency.example/program");
+  await expect(page.locator("#evidence-E1 .source-preview")).toContainText("Applications are");
+  await expect(page.locator("#evidence-E2 .source-preview")).toHaveCount(0);
+  await expect(page.getByText("Do not show this preview.")).toHaveCount(0);
+  await expect(page.locator("#evidence-E2")).not.toContainText("Source date");
+  await expect(page.getByRole("heading", { name: "Interpretation" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "What remains uncertain" })).toBeVisible();
+  await expect(page.getByText("Source references could not be verified.", { exact: false })).toBeVisible();
+  await expect(page.getByText("invalid_evidence")).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect((await new AxeBuilder({ page }).include(".answer-layout").analyze()).violations).toEqual([]);
+});
+
 test("regional questions require an area and city changes keep evidence in the selected jurisdiction", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Tampa Bay housing information" })).toBeVisible();

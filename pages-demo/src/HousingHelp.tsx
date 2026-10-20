@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import rawDirectory from "./housing-resources.json";
-import { filterHousingResources, resourceCopyText, resourceSourceStatus } from "./housing-help";
-import type { HousingCategory, HousingLocation, HousingResource } from "./housing-help";
+import { contactHref, filterHousingResources, resourceCopyText, resourceSourceStatus, safeHttps } from "./housing-help";
+import type { HousingCategory, HousingLanguage, HousingLocation, HousingResource } from "./housing-help";
 import CrisisGuide from "./CrisisGuide";
+import ResourceWarnings from "./ResourceWarnings";
 
 // The static catalog is schema-checked in pages-demo/tests/resources-data.test.mjs.
 const resources = rawDirectory.resources as unknown as HousingResource[];
-type Language = "en" | "es";
+type Language = HousingLanguage;
 const categories: { id: HousingCategory; en: string; es: string }[] = [
   { id: "all", en: "All housing help", es: "Toda la ayuda de vivienda" },
   { id: "eviction", en: "Eviction or rent", es: "Desalojo o alquiler" },
@@ -29,13 +30,6 @@ const labels = {
   es: { title: "Ayuda de vivienda", intro: "Consulte contactos públicos de fuentes oficiales. Este directorio funciona cuando el servicio de preguntas está limitado o no disponible. Puede ver los contactos de emergencia de inmediato.", emergency: "¿Necesita ayuda ahora?", emergencyIntro: "Si alguien está en peligro físico inmediato, llame al 911. Los cupos de refugio y los fondos pueden cambiar; confirme con cada proveedor.", info: "Información oficial", problem: "¿Con qué necesita ayuda?", location: "¿Dónde está?", urgent: "Necesito ayuda urgente", resources: "Recursos", shown: "recursos mostrados", print: "Imprimir esta página", noMatch: "Ningún recurso coincide con estos filtros. Elija toda el área de Tampa Bay u otro tipo de ayuda. Los contactos de emergencia siguen disponibles arriba.", countyScope: "Los filtros por condado muestran contactos para todo el condado. Los contactos solo de una ciudad o zona no incorporada aparecen en Toda el área de Tampa Bay; elija una ciudad para sus servicios.", who: "Quién puede usarlo", availability: "Disponibilidad del servicio", checked: "Información del recurso revisada por última vez", confirm: "Confirme horarios, requisitos y disponibilidad con el proveedor.", website: "Abrir sitio oficial", source: "Ver fuente", intake: "Solicitud o admisión oficial", details: "Copiar detalles", copied: "Información del recurso copiada.", copyFailed: "No se pudo copiar. Abra el sitio oficial o imprima esta página.", restrictions: "Restricciones", hours: "Horario publicado", sourceStatus: "Estado de revisión", needsRecheck: "Necesita nueva revisión; confirme directamente", sourceUnavailable: "Fuente no disponible; verifique por teléfono", sourceChecked: "Revisado en la fecha indicada", capacity: "No se han verificado cupos ni fondos actuales.", closed: "Este programa está marcado como temporalmente cerrado.", discontinued: "Este programa está marcado como descontinuado.", quickExit: "Salir rápido al sitio del clima", exitNote: "Si alguien puede ver su pantalla, Salir rápido abre un sitio del clima. No borra el historial del navegador." },
 } as const;
 
-function safeHttps(value: string): string | null {
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
-  } catch { return null; }
-}
-
 function areaLabel(resource: HousingResource, language: Language): string {
   return resource.geography.map((area) => {
     if (area === "national") return language === "en" ? "United States" : "Estados Unidos";
@@ -44,21 +38,13 @@ function areaLabel(resource: HousingResource, language: Language): string {
   }).join(", ");
 }
 
-function contactHref(contact: HousingResource["contacts"][number]): string | null {
-  const hasExtension = /\b(?:ext\.?|extension|x)\s*\d+\b/i.test(contact.value);
-  const number = hasExtension ? "" : contact.value.replace(/[^\d+]/g, "");
-  return contact.kind === "phone" && number ? `tel:${number}`
-    : contact.kind === "text" && number ? `sms:${number}`
-    : contact.kind === "web" ? safeHttps(contact.value) : null;
-}
-
 function Contact({ contact }: { contact: HousingResource["contacts"][number] }) {
   const href = contactHref(contact);
   return <li><strong>{contact.label}:</strong> {href ? <a href={href}>{contact.value}</a> : contact.value}</li>;
 }
 
 function ResourceCard({ resource, language, now }: { resource: HousingResource; language: Language; now: number }) {
-  const [copyStatus, setCopyStatus] = useState("");
+  const [copyStatus, setCopyStatus] = useState<{ language: Language; text: string }>({ language, text: "" });
   const t = labels[language];
   const website = safeHttps(resource.url);
   const source = safeHttps(resource.sourceUrl);
@@ -69,27 +55,27 @@ function ResourceCard({ resource, language, now }: { resource: HousingResource; 
   async function copy() {
     try {
       await navigator.clipboard.writeText(resourceCopyText(resource, now, language));
-      setCopyStatus(t.copied);
+      setCopyStatus({ language, text: t.copied });
     } catch {
-      setCopyStatus(t.copyFailed);
+      setCopyStatus({ language, text: t.copyFailed });
     }
   }
   return <article className="housing-card">
-    <div className="housing-card-title"><div><span className="eyebrow">{resource.organization}</span><h4>{resource.program}</h4></div><span className="housing-area">{resource.municipalities?.length ? `${resource.municipalities.map((place) => place.replaceAll("-", " ")).join(", ")} only` : resource.geography.map((place) => place.replaceAll("-", " ")).join(" · ")}</span></div>
-    <p>{resource.description}</p>
-    <ul className="housing-contacts">{resource.contacts.map((contact, index) => <Contact key={`${contact.label}-${index}`} contact={contact} />)}</ul>
-    <p className="small"><strong>{t.who}:</strong> {resource.eligibility}</p>
-    <p className="small"><strong>{t.availability}:</strong> {resource.availabilityStatus === "temporarily_closed" ? `${t.closed} ` : resource.availabilityStatus === "discontinued" ? `${t.discontinued} ` : ""}{resource.availability} {capacityRelevant && resource.availabilityStatus !== "confirmed_open" && resource.availabilityStatus !== "temporarily_closed" && resource.availabilityStatus !== "discontinued" ? t.capacity : ""}</p>
-    {resource.serviceHours && <p className="small"><strong>{t.hours}:</strong> {resource.serviceHours}</p>}
-    {resource.restrictions && resource.restrictions.length > 0 && <p className="small"><strong>{t.restrictions}:</strong> {resource.restrictions.join("; ")}</p>}
-    <p className="small muted"><strong>{t.sourceStatus}:</strong> {sourceStatus}. {t.checked} {resource.verifiedAt}. {t.confirm}</p>
+    <div className="housing-card-title"><div><span className="eyebrow" lang="en">{resource.organization}</span><h4 lang="en">{resource.program}</h4></div><span className="housing-area">{resource.municipalities?.length ? `${resource.municipalities.map((place) => locations.find((item) => item.id === place)?.[language] ?? place.replaceAll("-", " ")).join(", ")} ${language === "es" ? "solamente" : "only"}` : areaLabel(resource, language)}</span></div>
+    <p lang="en">{resource.description}</p>
+    <ul className="housing-contacts" lang="en">{resource.contacts.map((contact, index) => <Contact key={`${contact.label}-${index}`} contact={contact} />)}</ul>
+    <p className="small"><strong>{t.who}:</strong> <span lang="en">{resource.eligibility}</span></p>
+    <p className="small"><strong>{t.availability}:</strong> {resource.availabilityStatus === "temporarily_closed" ? `${t.closed} ` : resource.availabilityStatus === "discontinued" ? `${t.discontinued} ` : ""}<span lang="en">{resource.availability}</span> {capacityRelevant && resource.availabilityStatus !== "confirmed_open" && resource.availabilityStatus !== "temporarily_closed" && resource.availabilityStatus !== "discontinued" ? t.capacity : ""}</p>
+    {resource.serviceHours && <p className="small"><strong>{t.hours}:</strong> <span lang="en">{resource.serviceHours}</span></p>}
+    {resource.restrictions && resource.restrictions.length > 0 && <p className="small"><strong>{t.restrictions}:</strong> <span lang="en">{resource.restrictions.join("; ")}</span></p>}
+    <p className={sourceCheck === "source_checked" ? "small muted" : "small alert"}><strong>{t.sourceStatus}:</strong> {sourceStatus}. {t.checked} {resource.verifiedAt}. {t.confirm}</p>
+    <ResourceWarnings resource={resource} language={language} />
     <div className="housing-card-actions">{website && <a href={website} target="_blank" rel="noopener noreferrer">{t.website} <span aria-hidden="true">↗</span></a>}{intake && <a href={intake} target="_blank" rel="noopener noreferrer">{t.intake} <span aria-hidden="true">↗</span></a>}{source && <a href={source} target="_blank" rel="noopener noreferrer">{t.source} <span aria-hidden="true">↗</span></a>}<button type="button" onClick={() => void copy()}>{t.details}</button></div>
-    <span className="sr-only" role="status">{copyStatus}</span>
+    <span className="sr-only" role="status">{copyStatus.language === language ? copyStatus.text : ""}</span>
   </article>;
 }
 
-export default function HousingHelp() {
-  const [language, setLanguage] = useState<Language>("en");
+export default function HousingHelp({ language, onLanguageChange }: { language: Language; onLanguageChange: (language: Language) => void }) {
   const [category, setCategory] = useState<HousingCategory>("all");
   const [location, setLocation] = useState<HousingLocation>("all");
   const [urgent, setUrgent] = useState(false);
@@ -111,19 +97,19 @@ export default function HousingHelp() {
   const immediate = resources.filter((resource) => ["emergency-911", "emergency-988", "emergency-spring", "emergency-casa", "emergency-sunrise", "homeless-hillsborough-211", "homeless-pinellas-211", "housing-pasco-coalition"].includes(resource.id));
   const sorted = urgent ? [...results].sort((a, b) => Number(b.categories.includes("emergency")) - Number(a.categories.includes("emergency"))) : results;
   return <section id="housing-help" className="housing-section" aria-labelledby="housing-title" lang={language}>
-    <div className="housing-header-row"><div className="section-intro"><span className="eyebrow">{language === "en" ? "Public contacts. No account needed" : "Contactos publicos. No necesita cuenta"}</span><h2 id="housing-title">{t.title}</h2><p>{t.intro}</p></div><div className="housing-language"><label htmlFor="housing-language">{language === "en" ? "Language" : "Idioma"}</label><select id="housing-language" value={language} onChange={(event) => setLanguage(event.target.value as Language)}><option value="en">English</option><option value="es">Español</option></select></div></div>
+    <div className="housing-header-row"><div className="section-intro"><span className="eyebrow">{language === "en" ? "Public contacts. No account needed" : "Contactos públicos. No necesita cuenta"}</span><h2 id="housing-title">{t.title}</h2><p>{t.intro}</p></div><div className="housing-language"><label htmlFor="housing-language">{language === "en" ? "Language" : "Idioma"}</label><select id="housing-language" value={language} onChange={(event) => onLanguageChange(event.target.value as Language)}><option value="en">English</option><option value="es">Español</option></select></div></div>
     <div className="crisis-safe-exit"><p>{t.exitNote}</p><button type="button" onClick={() => window.location.replace("https://www.weather.gov/")}>{t.quickExit}</button></div>
-    <aside className="immediate-help" aria-labelledby="immediate-title"><h3 id="immediate-title">{t.emergency}</h3><p>{t.emergencyIntro}</p><div className="immediate-links">{immediate.map((resource) => {
+    <aside className="immediate-help" aria-labelledby="immediate-title"><h3 id="immediate-title">{t.emergency}</h3><p>{t.emergencyIntro}</p>{language === "es" && <p className="housing-translation-note">Los nombres y datos de los contactos que se muestran abajo están en inglés. Confirme la información actual con el proveedor.</p>}<div className="immediate-links">{immediate.map((resource) => {
       const status = resourceSourceStatus(resource, sourceCheckTime);
       const website = safeHttps(resource.url);
-      return <div key={resource.id}><strong>{resource.program}</strong><small>{areaLabel(resource, language)}</small><span>{resource.contacts.map((contact, index) => <span key={`${contact.kind}-${index}`}>{index > 0 ? " · " : ""}{contactHref(contact) ? <a href={contactHref(contact) || undefined}>{contact.value}</a> : contact.value}</span>)}</span><small>{t.sourceStatus}: {status === "source_unavailable" ? t.sourceUnavailable : status === "needs_recheck" ? t.needsRecheck : t.sourceChecked}. {t.checked}: {resource.verifiedAt}. {t.confirm}</small>{website && <a href={website} target="_blank" rel="noopener noreferrer">{t.info} <span aria-hidden="true">↗</span></a>}</div>;
+      return <div key={resource.id}><strong lang="en">{resource.program}</strong><small>{areaLabel(resource, language)}</small><span>{resource.contacts.map((contact, index) => <span key={`${contact.kind}-${index}`}>{index > 0 ? " · " : ""}{contactHref(contact) ? <a href={contactHref(contact) || undefined}>{contact.value}</a> : contact.value}</span>)}</span><p className={status === "source_checked" ? "small muted" : "small alert"}>{t.sourceStatus}: {status === "source_unavailable" ? t.sourceUnavailable : status === "needs_recheck" ? t.needsRecheck : t.sourceChecked}. {t.checked}: {resource.verifiedAt}. {t.confirm}</p><ResourceWarnings resource={resource} language={language} />{website && <a href={website} target="_blank" rel="noopener noreferrer">{t.info} <span aria-hidden="true">↗</span></a>}</div>;
     })}</div></aside>
     <CrisisGuide language={language} resources={resources} location={location} onLocationChange={setLocation} now={sourceCheckTime} />
-    <div className="housing-directory-heading" id="housing-resources"><h3>{t.resources}</h3><p>{language === "en" ? "Browse every listing without completing the guide." : "Consulte todos los recursos sin completar la guía."}</p>{language === "es" && <p className="housing-translation-note">Los nombres, descripciones y páginas oficiales de abajo están en inglés, salvo que el proveedor ofrezca español. El plan en español ofrece orientación general; prevalecen las fuentes oficiales.</p>}</div>
+    <div className="housing-directory-heading" id="housing-resources"><h3>{t.resources}</h3><p>{language === "en" ? "Browse every listing without completing the guide." : "Consulte todos los recursos sin completar la guía."}</p>{language === "es" && <p className="housing-translation-note">Los nombres, las descripciones, los requisitos y las notas de las fuentes que se muestran aquí están en inglés. No hemos comprobado si las páginas externas ofrecen español. Confirme los detalles con el proveedor.</p>}</div>
     <div className="housing-controls" role="group" aria-label={language === "en" ? "Filter housing assistance" : "Filtrar ayuda de vivienda"}><div><label htmlFor="housing-problem">{t.problem}</label><select id="housing-problem" value={category} onChange={(event) => setCategory(event.target.value as HousingCategory)}>{categories.map((option) => <option key={option.id} value={option.id}>{option[language]}</option>)}</select></div><div><label htmlFor="housing-location">{t.location}</label><select id="housing-location" value={location} onChange={(event) => setLocation(event.target.value as HousingLocation)}>{locations.map((option) => <option key={option.id} value={option.id}>{option[language]}</option>)}</select></div><label className="urgent-control"><input type="checkbox" checked={urgent} onChange={(event) => setUrgent(event.target.checked)} /> {t.urgent}</label></div>
     <p className="small muted">{language === "en" ? "These filters work in your browser." : "Estos filtros funcionan en su navegador."} <a href="/privacy/">{language === "en" ? "Privacy information" : "Información de privacidad (en inglés)"}</a></p>
     <p className="small muted">{t.countyScope}</p>
     <div className="housing-results-heading"><div><h3>{t.resources}</h3><p className="small muted" role="status">{sorted.length} {t.shown}.</p></div><button type="button" onClick={() => window.print()}>{t.print}</button></div>
-    {sorted.length ? <div className="housing-grid">{sorted.map((resource) => <ResourceCard key={resource.id} resource={resource} language={language} now={sourceCheckTime} />)}</div> : <p className="housing-empty">{t.noMatch}</p>}
+    {sorted.length ? <div className="housing-grid">{sorted.map((resource) => <ResourceCard key={`${resource.id}-${language}`} resource={resource} language={language} now={sourceCheckTime} />)}</div> : <p className="housing-empty">{t.noMatch}</p>}
   </section>;
 }

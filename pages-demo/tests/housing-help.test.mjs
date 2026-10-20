@@ -1,9 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { filterHousingResources, resourceCopyText, resourceSourceStatus } from '../src/housing-help.ts';
+import { contactHref, filterHousingResources, resourceCopyText, resourceLinkNotice, resourceSourceStatus } from '../src/housing-help.ts';
 
 const resources = JSON.parse(readFileSync(new URL('../src/housing-resources.json', import.meta.url), 'utf8')).resources;
+
+test('contact links retain phone and text routing without accepting URI markup or extensions', () => {
+  assert.equal(contactHref({ kind: 'phone', value: '911' }), 'tel:911');
+  assert.equal(contactHref({ kind: 'phone', value: '(813) 247-7233' }), 'tel:8132477233');
+  assert.equal(contactHref({ kind: 'text', value: '898211' }), 'sms:898211');
+  assert.equal(contactHref({ kind: 'web', value: 'https://example.org/help' }), 'https://example.org/help');
+  for (const value of ['tel:911', 'javascript:911', '911?body=hello', '911#oops', '911\n988', '(727) 842-8605 ext. 7', '1234567890123456']) {
+    assert.equal(contactHref({ kind: 'phone', value }), null, value);
+  }
+  assert.equal(contactHref({ kind: 'web', value: 'javascript:alert(1)' }), null);
+  assert.equal(contactHref({ kind: 'web', value: 'https://user:pass@example.org/' }), null);
+});
 
 test('housing filter scopes municipal programs while retaining statewide and national help', () => {
   const tampa = filterHousingResources(resources, 'eviction', 'tampa');
@@ -57,4 +69,21 @@ test('explicit next-review date controls review warning without advancing the re
   assert.equal(resourceSourceStatus(withSchedule, Date.parse('2026-10-16T00:00:00Z')), 'needs_recheck');
   assert.equal(resourceSourceStatus({ ...withSchedule, refreshDays: 1, nextReviewAt: '2026-12-31' }, Date.parse('2026-10-11T00:00:00Z')), 'needs_recheck');
   assert.match(resourceCopyText(withSchedule, Date.parse('2026-10-16T00:00:00Z')), /Resource information last reviewed: 2026-10-09/);
+});
+
+test('link warnings stay separate from factual review and preserve known source issues in copied details', () => {
+  const rmap = resources.find(resource => resource.id === 'housing-tampa-rmap');
+  const today = Date.parse('2026-10-20T12:00:00Z');
+  assert.equal(resourceSourceStatus(rmap, today), 'source_checked');
+  assert.equal(resourceLinkNotice({ linkStatus: 'ok' }), null);
+  assert.equal(resourceLinkNotice({ linkStatus: 'redirect' }), 'redirect');
+  assert.equal(resourceLinkNotice({ linkStatus: 'http_error' }), 'error');
+  assert.equal(resourceLinkNotice({ linkStatus: 'rate_limited' }), 'inconclusive');
+  const checkedLink = { ...rmap, linkStatus: 'ok', lastLinkCheckedAt: '2026-10-20T12:00:00Z' };
+  assert.match(resourceCopyText(checkedLink, today), /Known source issues: .*conflicting help for existing leases/);
+  assert.doesNotMatch(resourceCopyText(checkedLink, today), /link verified|link checked/i);
+  const failedLink = { ...checkedLink, linkStatus: 'http_error' };
+  assert.equal(resourceSourceStatus(failedLink, today), 'source_checked');
+  assert.match(resourceCopyText(failedLink, today), /Automated link check: An official link returned an error/);
+  assert.match(resourceCopyText(failedLink, today, 'es'), /Comprobación automática del enlace: Un enlace oficial devolvió un error/);
 });

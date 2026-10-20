@@ -22,12 +22,14 @@ Start with the [project overview and quick start](../README.md). Each guide belo
 | Retrieval, quotations, provenance and uncertainty | [Methodology](METHODOLOGY.md) |
 | Metric definitions and independent human review | [Evaluation](EVALUATION.md) |
 | Evaluation commands, reports and comparisons | [Evaluation suite](EVAL_SUITE.md) |
+| Routing and citation regression cases and CI thresholds | [Regression evaluation](REGRESSION_EVALUATION.md) |
 | Applicable-program omissions and dated measurements | [Program recall](PROGRAM_RECALL.md) |
 | Browser checks and manual accessibility review | [Accessibility](ACCESSIBILITY.md) |
 | Coverage and decision boundaries | [Limitations](LIMITATIONS.md) |
 | Housing-crisis safety and human review | [Safety and limitations](SAFETY_AND_LIMITATIONS.md) |
 | Housing-crisis fictional scenarios | [Housing-crisis evaluation](HOUSING_CRISIS_EVALUATION.md) |
 | Privacy and vulnerability reporting | [Security](../SECURITY.md) |
+| Preview data flows, threats and residual risks | [Threat model](THREAT_MODEL.md) |
 | Trusted prompt and runtime checks | [Guardrail extensions](GUARDRAIL_INSERTS.md) |
 | External information and software licensing | [Notices](../NOTICE.md) |
 

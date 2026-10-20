@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { buildCrisisPlan } from "../../src/lib/housing/crisis.mjs";
-import { resourceSourceStatus } from "./housing-help";
+import { contactHref, resourceSourceStatus, safeHttps } from "./housing-help";
+import ResourceWarnings from "./ResourceWarnings";
 import type { HousingLocation, HousingResource } from "./housing-help";
 
 type Language = "en" | "es";
@@ -59,21 +60,21 @@ const locations: { id: HousingLocation; en: string; es: string }[] = [
 
 const labels = {
   en: {
-    eyebrow: "Optional, private guide", title: "I Need Housing Help", intro: "Choose the problem that fits best. Every other question is optional. You can browse resources without answering anything.",
+    eyebrow: "Optional on-page guide", title: "I Need Housing Help", intro: "Choose the problem that fits best. Every other question is optional. You can browse resources without answering anything.",
     problem: "What housing problem are you facing?", choose: "Choose a housing problem", details: "Optional details for a more useful plan", skipNote: "Skip any answer you do not want to give. Your plan updates on this page.",
     time: "How soon do you need help?", place: "What city or county are you in?", safe: "Are you somewhere safe right now?", notice: "Have you received a notice or court document?", documentNote: "Choose the type only. Do not upload or paste a document or personal details.",
-    skip: "Skip questions and browse all resources", priority: "Do this first", steps: "Next steps", resources: "People and offices to contact", documents: "Information to prepare, if available", deadline: "Check deadlines", human: "Human help", notes: "Keep in mind", sources: "Official sources", official: "Open official website", copy: "Copy plan", print: "Print plan", save: "Save text file", copied: "Plan copied. A clipboard copy may remain on this device.", copyFailed: "Copy unavailable. You can print or save a text file.", saveFailed: "Save unavailable. You can copy or print the plan.", privacyTitle: "Your privacy", privacy: "Your answers in this guide stay on this page. The guide does not send them to a server or save them in this browser. Copying, downloading, or printing can leave a copy on a shared device.", limit: "This guide is not legal advice or an emergency response service. Confirm current program details and court deadlines with the official source.", emergency: "Emergency", urgent: "Urgent", standard: "Standard",
+    skip: "Skip questions and browse all resources", priority: "Do this first", steps: "Next steps", resources: "People and offices to contact", documents: "Information to prepare, if available", deadline: "Check deadlines", human: "Human help", notes: "Keep in mind", sources: "Official sources", official: "Open official website", copy: "Copy plan", print: "Print plan", save: "Save text file", copied: "Plan copied. A clipboard copy may remain on this device.", copyFailed: "Copy unavailable. You can print or save a text file.", saved: "Text file download started. A copy may remain on this device.", saveFailed: "Save unavailable. You can copy or print the plan.", printOpened: "Print dialog opened. Printing may leave a copy on this device.", planUpdated: "Housing plan updated", privacyTitle: "Your privacy", privacy: "Your guide selections and plan stay in this page's memory. The guide does not send selections to the API or save them in browser storage. Copying, downloading, or printing can leave a copy on a shared device.", limit: "This guide is not legal advice or an emergency response service. Confirm current program details and court deadlines with the official source.", emergency: "Emergency", urgent: "Urgent", standard: "Standard",
   },
   es: {
-    eyebrow: "Guía opcional y privada", title: "Necesito ayuda de vivienda", intro: "Elija el problema que mejor describa su situación. Las demás preguntas son opcionales. Puede ver los recursos sin responder.",
+    eyebrow: "Guía opcional en esta página", title: "Necesito ayuda de vivienda", intro: "Elija el problema que mejor describa su situación. Las demás preguntas son opcionales. Puede ver los recursos sin responder.",
     problem: "¿Qué problema de vivienda tiene?", choose: "Elija un problema de vivienda", details: "Detalles opcionales para personalizar los pasos", skipNote: "Puede omitir cualquier respuesta. Su plan se actualiza en esta página.",
     time: "¿Cuándo necesita ayuda?", place: "¿En qué ciudad o condado está?", safe: "¿Está en un lugar seguro ahora?", notice: "¿Recibió un aviso o documento judicial?", documentNote: "Seleccione solo el tipo. No cargue ni copie documentos o datos personales aquí.",
-    skip: "Omitir preguntas y ver todos los recursos", priority: "Haga esto primero", steps: "Próximos pasos", resources: "Personas y oficinas a contactar", documents: "Información para preparar, si la tiene", deadline: "Verifique los plazos", human: "Ayuda de una persona", notes: "Tenga en cuenta", sources: "Fuentes oficiales", official: "Abrir sitio oficial", copy: "Copiar plan", print: "Imprimir plan", save: "Guardar archivo de texto", copied: "Plan copiado. Puede quedar una copia en el portapapeles.", copyFailed: "No se pudo copiar. Puede imprimir o guardar un archivo de texto.", saveFailed: "No se pudo guardar. Puede copiar o imprimir el plan.", privacyTitle: "Su privacidad", privacy: "Sus respuestas en esta guía quedan en esta página. La guía no las envía a un servidor ni las guarda en el navegador. Copiar, descargar o imprimir puede dejar una copia en un dispositivo compartido.", limit: "Esta guía no es asesoría legal ni un servicio de emergencias. Confirme los detalles y los plazos judiciales con la fuente oficial.", emergency: "Emergencia", urgent: "Urgente", standard: "Normal",
+    skip: "Omitir preguntas y ver todos los recursos", priority: "Haga esto primero", steps: "Próximos pasos", resources: "Personas y oficinas a contactar", documents: "Información para preparar, si la tiene", deadline: "Verifique los plazos", human: "Ayuda de una persona", notes: "Tenga en cuenta", sources: "Fuentes oficiales", official: "Abrir sitio oficial", copy: "Copiar plan", print: "Imprimir plan", save: "Guardar archivo de texto", copied: "Plan copiado. Puede quedar una copia en el portapapeles.", copyFailed: "No se pudo copiar. Puede imprimir o guardar un archivo de texto.", saved: "Se inició la descarga del archivo de texto. Puede quedar una copia en este dispositivo.", saveFailed: "No se pudo guardar. Puede copiar o imprimir el plan.", printOpened: "Se abrió el cuadro de impresión. Imprimir puede dejar una copia en este dispositivo.", planUpdated: "Se actualizó el plan de vivienda", privacyTitle: "Su privacidad", privacy: "Sus selecciones y el plan quedan en la memoria de esta página. La guía no envía las selecciones a la API ni las guarda en el almacenamiento del navegador. Copiar, descargar o imprimir puede dejar una copia en un dispositivo compartido.", limit: "Esta guía no es asesoría legal ni un servicio de emergencias. Confirme los detalles y los plazos judiciales con la fuente oficial.", emergency: "Emergencia", urgent: "Urgente", standard: "Normal",
   },
 } as const;
 const resourceLabels = {
   en: { coverage: "Coverage", cities: "Only these cities", eligibility: "Who can use this", availability: "Service availability", restrictions: "Restrictions and source caveats", checked: "Resource information last reviewed", sourceStatus: "Review status", needsRecheck: "Review due; verify directly before relying on this contact.", sourceUnavailable: "Source unavailable at last review; verify directly before relying on this contact.", sourceChecked: "Public details reviewed on the date shown; confirm current availability directly.", website: "Official website", source: "Official source", names: "Official program names and linked pages may be in English. Check the provider's own wording." },
-  es: { coverage: "Cobertura", cities: "Solo estas ciudades", eligibility: "Quién puede usarlo", availability: "Disponibilidad del servicio", restrictions: "Restricciones y advertencias de la fuente", checked: "Información del recurso revisada por última vez", sourceStatus: "Estado de revisión", needsRecheck: "Necesita nueva revisión; confirme directamente antes de usar este contacto.", sourceUnavailable: "La fuente no estaba disponible en la última revisión; confirme directamente antes de usar este contacto.", sourceChecked: "Información pública revisada en la fecha indicada; confirme la disponibilidad actual directamente.", website: "Sitio oficial", source: "Fuente oficial", names: "Los nombres de programas y las páginas oficiales pueden estar en inglés. Consulte la información del proveedor." },
+  es: { coverage: "Cobertura", cities: "Solo estas ciudades", eligibility: "Quién puede usarlo", availability: "Disponibilidad del servicio", restrictions: "Restricciones y advertencias de la fuente", checked: "Información del recurso revisada por última vez", sourceStatus: "Estado de revisión", needsRecheck: "Necesita nueva revisión; confirme directamente antes de usar este contacto.", sourceUnavailable: "La fuente no estaba disponible en la última revisión; confirme directamente antes de usar este contacto.", sourceChecked: "Información pública revisada en la fecha indicada; confirme la disponibilidad actual directamente.", website: "Sitio oficial", source: "Fuente oficial", names: "Los nombres, descripciones, requisitos y notas de las fuentes que se muestran aquí están en inglés. No hemos comprobado si las páginas externas ofrecen español. Confirme los detalles con el proveedor." },
 } as const;
 
 function sourceStatusText(resource: HousingResource, language: Language, now: number): string {
@@ -92,17 +93,10 @@ function coverageText(resource: HousingResource, language: Language): string {
   return `${areas.join(", ")}${cities?.length ? `; ${resourceLabels[language].cities}: ${cities.join(", ")}` : ""}`;
 }
 
-function safeHttps(value: string): string | null {
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
-  } catch { return null; }
-}
-
 function planText(plan: Plan, language: Language, now: number): string {
   const t = labels[language];
   const r = resourceLabels[language];
-  return [plan.title, `${t.priority}: ${plan.immediatePriority}`, `${t.steps}:\n${plan.steps.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
+  return [plan.title, ...(language === "es" ? [r.names] : []), `${t.priority}: ${plan.immediatePriority}`, `${t.steps}:\n${plan.steps.map((step, index) => `${index + 1}. ${step}`).join("\n")}`,
     `${t.deadline}: ${plan.deadline}`, `${t.human}: ${plan.humanAssistance}`,
     ...(plan.documents.length ? [`${t.documents}:\n${plan.documents.map((item) => `- ${item}`).join("\n")}`] : []),
     `${t.resources}:\n${plan.resources.map((resource) => [
@@ -112,13 +106,15 @@ function planText(plan: Plan, language: Language, now: number): string {
       `${r.eligibility}: ${resource.eligibility}`,
       `${r.availability}: ${resource.availability}`,
       `${r.sourceStatus}: ${sourceStatusText(resource, language, now)}`,
+      ...(resource.knownIssues?.length ? [`${language === "es" ? "Advertencias conocidas de la fuente (en inglés)" : "Known source issues"}: ${resource.knownIssues.join("; ")}`] : []),
+      ...(resource.linkStatus && !["not_checked", "ok"].includes(resource.linkStatus) ? [`${language === "es" ? "Comprobación automática del enlace" : "Automated link check"}: ${resource.linkStatus}; ${language === "es" ? "confirme el enlace con el proveedor" : "confirm the link with the provider"}`] : []),
       ...(resource.restrictions?.length ? [`${r.restrictions}: ${resource.restrictions.join("; ")}`] : []),
       resource.contacts.map((contact) => `${contact.label}: ${contact.value}`).join("; "),
       `${r.checked}: ${resource.verifiedAt}`,
       `${r.website}: ${resource.url}`,
       `${r.source}: ${resource.sourceUrl}`,
     ].join("\n")).join("\n\n")}`,
-    `${t.sources}:\n${plan.sources.map((source) => `${source.title}: ${source.url} (${r.checked}: ${source.verifiedAt})`).join("\n")}`, ...plan.notes, t.limit, ...(language === "es" ? [r.names] : [])].join("\n\n");
+    `${t.sources}:\n${plan.sources.map((source) => `${source.title}: ${source.url} (${r.checked}: ${source.verifiedAt})`).join("\n")}`, ...plan.notes, t.limit].join("\n\n");
 }
 
 function PlanResource({ resource, language, now }: { resource: HousingResource; language: Language; now: number }) {
@@ -126,14 +122,18 @@ function PlanResource({ resource, language, now }: { resource: HousingResource; 
   const website = safeHttps(resource.url);
   const source = safeHttps(resource.sourceUrl);
   return <li>
-    <strong>{resource.organization} — {resource.program}</strong>
-    <p>{resource.description}</p>
+    <strong lang="en">{resource.organization} — {resource.program}</strong>
+    <p lang="en">{resource.description}</p>
     <p><b>{r.coverage}:</b> {coverageText(resource, language)}</p>
-    <p><b>{r.eligibility}:</b> {resource.eligibility}</p>
-    <p><b>{r.availability}:</b> {resource.availability}</p>
+    <p><b>{r.eligibility}:</b> <span lang="en">{resource.eligibility}</span></p>
+    <p><b>{r.availability}:</b> <span lang="en">{resource.availability}</span></p>
     <p className={resourceSourceStatus(resource, now) === "source_checked" ? "small muted" : "small alert"}><b>{r.sourceStatus}:</b> {sourceStatusText(resource, language, now)} {r.checked}: {resource.verifiedAt}.</p>
-    {resource.restrictions?.length ? <p><b>{r.restrictions}:</b> {resource.restrictions.join("; ")}</p> : null}
-    <span>{resource.contacts.map((contact) => `${contact.label}: ${contact.value}`).join(" · ")}</span>
+    <ResourceWarnings resource={resource} language={language} />
+    {resource.restrictions?.length ? <p><b>{r.restrictions}:</b> <span lang="en">{resource.restrictions.join("; ")}</span></p> : null}
+    <ul className="housing-contacts" lang="en">{resource.contacts.map((contact, index) => {
+      const href = contactHref(contact);
+      return <li key={`${contact.label}-${index}`}><strong>{contact.label}:</strong> {href ? <a href={href}>{contact.value}</a> : contact.value}</li>;
+    })}</ul>
     {website && <a href={website} target="_blank" rel="noopener noreferrer">{r.website}</a>}
     {source && <> · <a href={source} target="_blank" rel="noopener noreferrer">{r.source}</a></>}
   </li>;
@@ -144,7 +144,8 @@ export default function CrisisGuide({ language, resources, location, onLocationC
   const [timeframe, setTimeframe] = useState<Timeframe>("unknown");
   const [safe, setSafe] = useState<Safety>("unsure");
   const [noticeStage, setNoticeStage] = useState<NoticeStage>("unknown");
-  const [actionStatus, setActionStatus] = useState("");
+  const [actionStatus, setActionStatus] = useState<{ language: Language; text: string }>({ language: "en", text: "" });
+  function setStatus(text: string) { setActionStatus({ language, text }); }
   const t = labels[language];
   const plan = situation ? buildCrisisPlan({ situation, location, timeframe, safe, noticeStage }, resources as Parameters<typeof buildCrisisPlan>[1], { now: new Date(now), locale: language }) as Plan | null : null;
   function chooseSituation(value: Situation | "") {
@@ -152,12 +153,12 @@ export default function CrisisGuide({ language, resources, location, onLocationC
     setTimeframe("unknown");
     setSafe("unsure");
     setNoticeStage("unknown");
-    setActionStatus("");
+    setStatus("");
   }
   async function copyPlan() {
     if (!plan) return;
-    try { await navigator.clipboard.writeText(planText(plan, language, now)); setActionStatus(t.copied); }
-    catch { setActionStatus(t.copyFailed); }
+    try { await navigator.clipboard.writeText(planText(plan, language, now)); setStatus(t.copied); }
+    catch { setStatus(t.copyFailed); }
   }
   function savePlan() {
     if (!plan) return;
@@ -170,9 +171,11 @@ export default function CrisisGuide({ language, resources, location, onLocationC
       anchor.click();
       anchor.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-    } catch { setActionStatus(t.saveFailed); }
+      setStatus(t.saved);
+    } catch { setStatus(t.saveFailed); }
   }
   function printPlan() {
+    setStatus(t.printOpened);
     document.body.classList.add("print-crisis-plan");
     window.addEventListener("afterprint", () => document.body.classList.remove("print-crisis-plan"), { once: true });
     window.print();
@@ -180,20 +183,21 @@ export default function CrisisGuide({ language, resources, location, onLocationC
   return <section className="crisis-guide" id="housing-guide" aria-labelledby="crisis-guide-title">
     <div className="crisis-guide-heading"><div><span className="eyebrow">{t.eyebrow}</span><h3 id="crisis-guide-title">{t.title}</h3><p>{t.intro}</p></div><a href="#housing-resources">{t.skip} ↓</a></div>
     <div className="crisis-question"><label htmlFor="crisis-situation">{t.problem}</label><select id="crisis-situation" value={situation} onChange={(event) => chooseSituation(event.target.value as Situation | "")}><option value="">{t.choose}</option>{situations.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select></div>
-    {situation && <fieldset className="crisis-details"><legend>{t.details}</legend><p className="small muted">{t.skipNote}</p><div className="crisis-detail-grid"><div><label htmlFor="crisis-timeframe">{t.time}</label><select id="crisis-timeframe" value={timeframe} onChange={(event) => setTimeframe(event.target.value as Timeframe)}>{timeframes.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select></div><div><label htmlFor="crisis-location">{t.place}</label><select id="crisis-location" value={location} onChange={(event) => onLocationChange(event.target.value as HousingLocation)}>{locations.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select></div><div><label htmlFor="crisis-safe">{t.safe}</label><select id="crisis-safe" value={safe} onChange={(event) => setSafe(event.target.value as Safety)}>{safety.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select></div>{(situation === "eviction" || situation === "rent") && <div><label htmlFor="crisis-notice">{t.notice}</label><select id="crisis-notice" value={noticeStage} onChange={(event) => setNoticeStage(event.target.value as NoticeStage)}>{notices.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select><p className="small muted">{t.documentNote}</p></div>}</div></fieldset>}
-    {plan && <article className="crisis-plan" aria-live="polite">
+    {situation && <fieldset className="crisis-details"><legend>{t.details}</legend><p className="small muted">{t.skipNote}</p><div className="crisis-detail-grid"><div><label htmlFor="crisis-timeframe">{t.time}</label><select id="crisis-timeframe" value={timeframe} onChange={(event) => setTimeframe(event.target.value as Timeframe)}>{timeframes.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select></div><div><label htmlFor="crisis-location">{t.place}</label><select id="crisis-location" value={location} onChange={(event) => onLocationChange(event.target.value as HousingLocation)}>{locations.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select></div><div><label htmlFor="crisis-safe">{t.safe}</label><select id="crisis-safe" value={safe} onChange={(event) => setSafe(event.target.value as Safety)}>{safety.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select></div>{(situation === "eviction" || situation === "rent") && <div><label htmlFor="crisis-notice">{t.notice}</label><select id="crisis-notice" aria-describedby="crisis-document-note" value={noticeStage} onChange={(event) => setNoticeStage(event.target.value as NoticeStage)}>{notices.map((item) => <option key={item.id} value={item.id}>{item[language]}</option>)}</select><p id="crisis-document-note" className="small muted">{t.documentNote}</p></div>}</div></fieldset>}
+    <p className="sr-only" role="status" aria-atomic="true">{plan ? `${t.planUpdated}: ${plan.title}. ${t[plan.urgency]}. ${timeframes.find((item) => item.id === timeframe)?.[language]}. ${locations.find((item) => item.id === location)?.[language]}. ${safety.find((item) => item.id === safe)?.[language]}. ${(situation === "eviction" || situation === "rent") ? notices.find((item) => item.id === noticeStage)?.[language] : ""}` : ""}</p>
+    {plan && <article className="crisis-plan">
       <div className="crisis-plan-top"><div><span className={`crisis-urgency crisis-${plan.urgency}`}>{t[plan.urgency]}</span><h4>{plan.title}</h4></div><div className="crisis-plan-actions"><button type="button" onClick={() => void copyPlan()}>{t.copy}</button><button type="button" onClick={printPlan}>{t.print}</button><button type="button" onClick={savePlan}>{t.save}</button></div></div>
       <p className="crisis-priority"><strong>{t.priority}</strong>{plan.immediatePriority}</p>
+      {language === "es" && <p className="housing-translation-note">{resourceLabels.es.names}</p>}
       <div className="crisis-plan-columns"><div><h5>{t.steps}</h5><ol>{plan.steps.map((step, index) => <li key={index}>{step}</li>)}</ol></div><div><h5>{t.resources}</h5><ul className="crisis-plan-resources">{plan.resources.map((resource) => <PlanResource key={resource.id} resource={resource} language={language} now={now} />)}</ul></div></div>
       {plan.documents.length > 0 && <div className="crisis-plan-support"><h5>{t.documents}</h5><ul>{plan.documents.map((item, index) => <li key={index}>{item}</li>)}</ul></div>}
       <div className="crisis-plan-support"><h5>{t.deadline}</h5><p>{plan.deadline}</p><h5>{t.human}</h5><p>{plan.humanAssistance}</p></div>
       {plan.notes.length > 0 && <div className="crisis-plan-support"><h5>{t.notes}</h5><ul>{plan.notes.map((note, index) => <li key={index}>{note}</li>)}</ul></div>}
       <div className="crisis-plan-support"><h5>{t.sources}</h5><ul>{plan.sources.map((source, index) => {
         const href = safeHttps(source.url);
-        return <li key={`${source.url}-${index}`}>{href ? <a href={href} target="_blank" rel="noopener noreferrer">{source.title}</a> : source.title} <span className="small muted">({resourceLabels[language].checked}: {source.verifiedAt})</span></li>;
+        return <li key={`${source.url}-${index}`}>{href ? <a href={href} target="_blank" rel="noopener noreferrer" lang="en">{source.title}</a> : <span lang="en">{source.title}</span>} <span className="small muted">({resourceLabels[language].checked}: {source.verifiedAt})</span></li>;
       })}</ul></div>
-      {language === "es" && <p className="small muted">{resourceLabels.es.names}</p>}
-      <p className="small muted">{t.limit}</p><p role="status" className="small">{actionStatus}</p>
+      <p className="small muted">{t.limit}</p><p role="status" className="small">{actionStatus.language === language ? actionStatus.text : ""}</p>
     </article>}
     <aside className="crisis-privacy"><strong>{t.privacyTitle}</strong><p>{t.privacy} <a href="/privacy/">{language === "en" ? "Privacy information" : "Información de privacidad (en inglés)"}</a></p></aside>
   </section>;
