@@ -157,6 +157,12 @@ try {
     for (const text of ['I Need Housing Help', 'Bay Area Legal Services', '911', 'Pasco County'])
       assert.ok(page.includes(text), `Housing help is missing ${text}.`);
   });
+  await check('production_privacy_page', async () => {
+    const response = await fetch(`${base}/privacy`, { signal: AbortSignal.timeout(10000) });
+    assert.equal(response.status, 200);
+    const page = await response.text();
+    assert.match(page, /Privacy information/);
+  });
   await check('compiled_browser_asset', async () => {
     const match = html.match(/(?:src|href)="(\/assets\/[^"\s]+\.js)"/);
     assert.ok(match, 'HTML must reference the compiled client.');

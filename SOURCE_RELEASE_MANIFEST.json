@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "338127fb70437391a2a50e8731cd6aadd93b6a78d20192075a0e282ce42d2753",
+  "content_sha256": "a6a88ebf4fe94bebc2c7aeae6905036bd8ab8b43bfd09dc114ed4c921a6d7eb4",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -702,13 +702,13 @@
     },
     {
       "path": "scripts/build-source-refresh.mjs",
-      "bytes": 11515,
-      "sha256": "5d9e725c43247ebfcdb533b5e051df09a8eb1b255c8cbd53d7fae9e094f06764"
+      "bytes": 11911,
+      "sha256": "ea6b24efb781c058beba20aa49d6f5e9b30374bb5a42722cace650b39aa88baa"
     },
     {
       "path": "scripts/build-standalone.mjs",
-      "bytes": 6990,
-      "sha256": "c819f5bace1a9e8c901ec5e17ada2904277427f7255fea8494cfffeb01168604"
+      "bytes": 6978,
+      "sha256": "8d6e32a14cdc01188a1c497f7f58b3a22c768975c30e084bbc595db7f43d9a1e"
     },
     {
       "path": "scripts/build/sites-vite-plugin.ts",
@@ -797,8 +797,8 @@
     },
     {
       "path": "scripts/runtime-harness.mjs",
-      "bytes": 6484,
-      "sha256": "289d8ac123607d331efbd24fe822c8ab74da8251fb93931b45c094a962dddefc"
+      "bytes": 6498,
+      "sha256": "4425eabd74b2001345f9e63f6a783c2f5dcd2cbef4aa2991eeb90b5d84fae491"
     },
     {
       "path": "scripts/sanitize-report.mjs",
@@ -852,8 +852,8 @@
     },
     {
       "path": "scripts/test-standalone.mjs",
-      "bytes": 13476,
-      "sha256": "2ca0b02ae4360263940ca6033d300211595ad963f4c0969c9a61b3c82de24d18"
+      "bytes": 13757,
+      "sha256": "debd778befc039f7f45e075a4ea1aac765ddab74197699e70f833564e4ba2354"
     },
     {
       "path": "scripts/update-source-manifest.mjs",
@@ -1882,8 +1882,8 @@
     },
     {
       "path": "tests/runtime-harness.test.mjs",
-      "bytes": 6431,
-      "sha256": "03b43cf4f2cb0c77c36df3a6dc13a98f88c12a174eaab754c32c1fc2fcc5fc59"
+      "bytes": 6696,
+      "sha256": "2c57ed0336c4dc5e50b3710c4445f7c6bea27d9d358f93514cf6508808572047"
     },
     {
       "path": "tests/short-instruction-regressions.test.mjs",

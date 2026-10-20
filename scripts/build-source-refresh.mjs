@@ -23,6 +23,12 @@ export async function buildReviewedCandidate(root, candidate, { workerName = 'ta
   for (const name of ['src', 'scripts', 'tests', 'evaluation', 'vendor', 'public']) {
     await cp(join(root, name), join(fixture, name), { recursive: true, filter: source => !relative(root, source).split(sep).some(part => part.startsWith('.')) });
   }
+  // The reviewed build and source tests import these checked public Pages inputs.
+  // Keep hosting settings and environment files out of the fixture.
+  await mkdir(join(fixture, 'pages-demo', 'src'), { recursive: true });
+  for (const name of ['housing-resources.json', 'privacy-content.ts']) {
+    await cp(join(root, 'pages-demo', 'src', name), join(fixture, 'pages-demo', 'src', name));
+  }
   for (const name of ['package.json', 'package-lock.json', 'tsconfig.json', 'vite.config.ts', 'eslint.config.mjs', 'postcss.config.mjs', 'playwright.config.ts']) {
     await cp(join(root, name), join(fixture, name));
   }

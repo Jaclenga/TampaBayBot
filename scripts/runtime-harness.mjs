@@ -20,11 +20,13 @@ export async function createRuntimeFixture(project, prefix) {
   for (const name of ['src', 'scripts', 'public', 'evaluation', 'vendor']) {
     await cp(join(actualProject, name), join(actual, name), { recursive: true });
   }
-  // The resident entrypoint imports the static housing directory at build time.
-  // Copy only that public data file, not Pages build settings or environment files.
+  // Next routes import these public inputs from Pages. Keep Pages build settings
+  // and environment files outside the isolated fixture.
   await mkdir(join(actual, 'pages-demo', 'src'), { recursive: true });
-  await cp(join(actualProject, 'pages-demo', 'src', 'housing-resources.json'),
-    join(actual, 'pages-demo', 'src', 'housing-resources.json'));
+  for (const name of ['housing-resources.json', 'privacy-content.ts']) {
+    await cp(join(actualProject, 'pages-demo', 'src', name),
+      join(actual, 'pages-demo', 'src', name));
+  }
   await mkdir(join(actual, 'data'));
   for (const entry of await readdir(join(actualProject, 'data'), { withFileTypes: true })) {
     if (entry.isFile() && entry.name.endsWith('.json')) await cp(join(actualProject, 'data', entry.name), join(actual, 'data', entry.name));
