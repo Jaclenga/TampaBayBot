@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "a95ce5dcc16ed08afcf8cc216b52a29793311ec9e00d7ad39c3019fe9cc6c5bd",
+  "content_sha256": "16b5d53694c708ea3e1fedb99f70fdcfb5362ba6471159d4160012110d873a82",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -602,8 +602,8 @@
     },
     {
       "path": "pages-demo/src/styles.css",
-      "bytes": 37077,
-      "sha256": "be4809a6148794a1a0b9e1e3a15668d078debf6eb8246c7fd652600c41cebdc9"
+      "bytes": 37085,
+      "sha256": "8209754618378e24663219af855ab8591905f1e5af587a420dbeabf9d8d2194d"
     },
     {
       "path": "pages-demo/src/vite-env.d.ts",
@@ -927,8 +927,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "bytes": 28849,
-      "sha256": "dc7116638bfb2bd395d95fbad11c0714cdd854905cfdbc86550d175222457ca3"
+      "bytes": 28857,
+      "sha256": "74a6769814a2fb717f7f41828f584859fbd3ab2d29f3c549c76efe94559b3a7a"
     },
     {
       "path": "src/app/housing-help/page.tsx",
@@ -1907,8 +1907,8 @@
     },
     {
       "path": "tests/source-e2e/ui-accessibility.spec.ts",
-      "bytes": 12140,
-      "sha256": "8c743de0047cb7ae41c8c264291768996d78ad89f465311f7d91014a3873bf12"
+      "bytes": 12800,
+      "sha256": "785bee643ef507de696ccca7baeb9b05a8a0887397d976b44bee6d58dc9efec0"
     },
     {
       "path": "tests/source-fixtures.test.mjs",

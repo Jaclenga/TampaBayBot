@@ -54,8 +54,22 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.keyboard.press('ArrowDown');
   await expect(area).toHaveValue('tampa');
   await page.keyboard.press('Tab');
+  const examples = page.getByRole('group', { name: /Try a question/ }).getByRole('button');
+  await expect(examples).toHaveCount(4);
+  for (let index = 0; index < await examples.count(); index++) {
+    await expect(examples.nth(index)).toBeFocused();
+    await page.keyboard.press('Tab');
+  }
   const input = page.getByRole('textbox', { name: 'What do you need help with?', exact: true });
   await expect(input).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  const example = await examples.last().innerText();
+  await page.keyboard.press('Enter');
+  await expect(input).toBeFocused();
+  await expect(input).toHaveValue(example);
+  await expect(page.locator('.answer-layout')).toHaveCount(0);
+  await page.keyboard.press('ControlOrMeta+A');
+  await page.keyboard.press('Backspace');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('alert')).toBeVisible();
