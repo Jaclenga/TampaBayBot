@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "0d0d425099d05d20a2884650564dc831f409b5627a8eeb7a2c22cc547e029f5d",
+  "content_sha256": "a95ce5dcc16ed08afcf8cc216b52a29793311ec9e00d7ad39c3019fe9cc6c5bd",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -493,12 +493,12 @@
     {
       "path": "package-lock.json",
       "bytes": 330581,
-      "sha256": "d4a9363261fa3072596163fc11b15e33d28846b92aa18ef0464e295e38beb54f"
+      "sha256": "642a2eebed04b0991a727b7042c5afc4d7ad6ef4d896d7276dd7d07a72767cb7"
     },
     {
       "path": "package.json",
-      "bytes": 4511,
-      "sha256": "ee6431850806f7645317fba2886899178e4ce30cb6dcc9a98bda6d1a8c74e948"
+      "bytes": 4535,
+      "sha256": "610fe6d937a9bf5f9c17a3bfd8f2e604555af1aa766286f80f052fead400ec67"
     },
     {
       "path": "pages-demo/index.html",
@@ -542,8 +542,8 @@
     },
     {
       "path": "pages-demo/src/App.tsx",
-      "bytes": 33050,
-      "sha256": "6b41e38423b9e4ec4a2a5cb6208ab713e8d2484486175b91656c5838643c335f"
+      "bytes": 33810,
+      "sha256": "91768584e559aedc8f2b6fa777d743c192b6819f6c2f2e63bbd87ba7dc12f0ed"
     },
     {
       "path": "pages-demo/src/CrisisGuide.tsx",
@@ -597,13 +597,13 @@
     },
     {
       "path": "pages-demo/src/site-language.ts",
-      "bytes": 6143,
-      "sha256": "e2391e3f00764987ef5bbc46c9d906f6f1bd237537d04342b8a68a0e37538bfb"
+      "bytes": 6601,
+      "sha256": "c004ad2de5824711f9f65b94e90fd21241714cb97015f828c74642e1e5a8d356"
     },
     {
       "path": "pages-demo/src/styles.css",
-      "bytes": 36449,
-      "sha256": "50b49babed965e6c3b47ecafd860ba090cbd0ae33ec998134b261d7b387e98b7"
+      "bytes": 37077,
+      "sha256": "be4809a6148794a1a0b9e1e3a15668d078debf6eb8246c7fd652600c41cebdc9"
     },
     {
       "path": "pages-demo/src/vite-env.d.ts",
@@ -617,13 +617,13 @@
     },
     {
       "path": "pages-demo/tests/directory-preview.spec.mjs",
-      "bytes": 7634,
-      "sha256": "e73e01895393c96d06a19790c6552c358eb1c36813a663a3ee7eacb841146e58"
+      "bytes": 7834,
+      "sha256": "03cb85153416e118df3f9b2d75708d9041f720936c2995f7804a7eb9ae10cb43"
     },
     {
       "path": "pages-demo/tests/housing-browser.spec.mjs",
-      "bytes": 24185,
-      "sha256": "9b7308b90ee8dc2f727df4bee6d5b8c27dc0fe41d8d3ed785b4195d98ecfae01"
+      "bytes": 24512,
+      "sha256": "662de251514d9717786395251bdda9fc2b8dffb0fea92659e64e52b99b9d636f"
     },
     {
       "path": "pages-demo/tests/housing-help.test.mjs",
@@ -867,8 +867,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 6462,
-      "sha256": "7fb7af3ac13cf3dacba079337a9b860bc7cef0a51a8bd8c0f3d5f3693a1d16f4"
+      "bytes": 6961,
+      "sha256": "0e9030a02f33a22aac571f7d445448d7dccd1f30844b058c640ec7df45d16b34"
     },
     {
       "path": "src/app/about/page.tsx",
@@ -927,8 +927,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "bytes": 28221,
-      "sha256": "db65302ecc8e796a8d2cc8284ff1d9c1d27e6871804e2112f4f87669a308fbbe"
+      "bytes": 28849,
+      "sha256": "dc7116638bfb2bd395d95fbad11c0714cdd854905cfdbc86550d175222457ca3"
     },
     {
       "path": "src/app/housing-help/page.tsx",
@@ -982,8 +982,8 @@
     },
     {
       "path": "src/components/resident-app.tsx",
-      "bytes": 18049,
-      "sha256": "f1442365f56d586e93e976585d9371b612cbad4bda8367ea549c43384cdb26a9"
+      "bytes": 18560,
+      "sha256": "1db62c343a2c89f07b58b1d7de41afc0b477e37154af294a4babe96b4b292091"
     },
     {
       "path": "src/components/site-shell.tsx",
@@ -1287,13 +1287,13 @@
     },
     {
       "path": "src/lib/i18n/en.ts",
-      "bytes": 10797,
-      "sha256": "dbaa044e7ec7c9eca3e33e6fbf0aa1230981a97b2b097b2c5a45f1711585407c"
+      "bytes": 11266,
+      "sha256": "8d961cc6f48061f079d1f846c73adf305da2881c216726cf69b3926ef7797012"
     },
     {
       "path": "src/lib/i18n/es.ts",
-      "bytes": 12000,
-      "sha256": "069976ab9af025b477f3e3d49ebe8197a9ab42b4a5b79b9a0ee81852d8a0d7cd"
+      "bytes": 12544,
+      "sha256": "3deec3ef2aaf2989b8326c5d33d4c076e2ada358a54364f9e30eb65c119c8e0b"
     },
     {
       "path": "src/lib/i18n/evaluation-en.ts",
@@ -1647,8 +1647,8 @@
     },
     {
       "path": "tests/e2e/accessibility-language.spec.ts",
-      "bytes": 7158,
-      "sha256": "d87d029aabf258315e58e656ad03a811a9a8fd0e8967fb3a4534b89cb563db3d"
+      "bytes": 7323,
+      "sha256": "9cb1d664bdc05b7f73dba569451db86e20c90e17582455015e006135998ffe7c"
     },
     {
       "path": "tests/e2e/housing-help.spec.ts",
@@ -1657,18 +1657,18 @@
     },
     {
       "path": "tests/e2e/privacy.spec.ts",
-      "bytes": 2375,
-      "sha256": "e3a62db0a17cef02b69bc6c849eafcf5ee107360ed69bfd4f09788d11e9c0809"
+      "bytes": 2416,
+      "sha256": "03475238804c4ba822b6edd547d40e96a04d72f3d97e9364f95e4369fdb2d892"
     },
     {
       "path": "tests/e2e/resident.spec.ts",
-      "bytes": 28280,
-      "sha256": "5bd22e5d718dd7d651d72241db143ac3d834ed451b5eb82b93dfe04de7bbcfe8"
+      "bytes": 28752,
+      "sha256": "33b4bc8729e7fd611812d86512527f81e6aa1c4828817b5283f1470eebd41ea4"
     },
     {
       "path": "tests/e2e/security.spec.ts",
-      "bytes": 7627,
-      "sha256": "4a4e61f9166228e2e2f20f1c494cce2318861e7efba2702856ffb1b64d64e34f"
+      "bytes": 7668,
+      "sha256": "0e3f375778e6f3951991e1d70df63fd948a1fff23da5889626b17fa1646790b5"
     },
     {
       "path": "tests/e2e/source-freshness.spec.ts",
@@ -1897,18 +1897,18 @@
     },
     {
       "path": "tests/source-e2e/demo.spec.ts",
-      "bytes": 4500,
-      "sha256": "ef7a7b81187c7a5545b8326530f958fa6b73074c11ddcb04ae51fbf8b2d85d1f"
+      "bytes": 4569,
+      "sha256": "199dd14b5dc58440de0ba4967faa10e29e92812eb83aa3eecbde747d75e28037"
     },
     {
       "path": "tests/source-e2e/language.spec.ts",
-      "bytes": 7466,
-      "sha256": "1c44325fd36651050778bc19995babc318ff0c07ba1fba0272f03584f6f3d083"
+      "bytes": 7508,
+      "sha256": "ca2cf2d90fa849e8e415aa76c57a1653bdcc7f069cb0e7bcfea1c9d3bef8a832"
     },
     {
       "path": "tests/source-e2e/ui-accessibility.spec.ts",
-      "bytes": 12092,
-      "sha256": "cc7b8e170e2b1d394241366495024aa13469fcb30f6ea261e9b7d71703a49f78"
+      "bytes": 12140,
+      "sha256": "8c743de0047cb7ae41c8c264291768996d78ad89f465311f7d91014a3873bf12"
     },
     {
       "path": "tests/source-fixtures.test.mjs",
