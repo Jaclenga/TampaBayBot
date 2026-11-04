@@ -31,7 +31,7 @@ test('essential directory works with every API route disabled', async ({ page })
   await expect(page.locator('.immediate-help')).toContainText('911');
   const initialApiRequests = apiRequests;
 
-  const problem = page.getByLabel('What do you need help with?');
+  const problem = page.getByRole('combobox', { name: 'What do you need help with?', exact: true });
   const location = page.getByLabel('Where are you?');
   for (const category of ['eviction', 'homelessness', 'legal', 'emergency']) {
     await problem.selectOption(category);
@@ -67,7 +67,7 @@ test('mobile visitors reach emergency help without filtering', async ({ page }) 
   await page.getByRole('link', { name: /Find Housing Help Without AI/ }).first().click();
   await expect(page.getByRole('heading', { name: 'Need help right now?' })).toBeVisible();
   await expect(page.locator('.immediate-help')).toContainText('988');
-  await expect(page.getByLabel('What do you need help with?')).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'What do you need help with?', exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   const accessibility = await new AxeBuilder({ page }).include('#housing-help').analyze();
   expect(accessibility.violations).toEqual([]);
@@ -126,7 +126,7 @@ test('a deliberately source-only service keeps the plain search and directory fr
     available: false, reason: 'ai_configuration',
   } } }));
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Tampa Bay housing information' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Find housing help and answers about your property' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Search' })).toBeEnabled();
   await expect(page.locator('.ai-usage')).toHaveCount(0);
   await expect(page.locator('.chat-panel .ai-fallback-note')).toHaveCount(0);
@@ -234,13 +234,13 @@ test('optional crisis guide creates a cited eviction plan entirely from static d
 test('site and guide language switches keep an in-progress housing workflow and question draft', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 720 });
   await page.goto('/');
-  await page.getByLabel('Question or address').fill('I need help with rent');
+  await page.getByRole('textbox', { name: 'What do you need help with?', exact: true }).fill('I need help with rent');
   await page.getByLabel('What housing problem are you facing?').selectOption('eviction');
   await page.getByLabel('How soon do you need help?').selectOption('days');
   await page.getByLabel('What city or county are you in?').selectOption('tampa');
   await page.getByLabel('Are you somewhere safe right now?').selectOption('no');
   await page.getByLabel('Have you received a notice or court document?').selectOption('court_summons');
-  await page.getByLabel('What do you need help with?').selectOption('legal');
+  await page.getByRole('combobox', { name: 'What do you need help with?', exact: true }).selectOption('legal');
   await page.getByLabel('I need help urgently').check();
   await page.locator('#site-language').selectOption('es');
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
@@ -251,7 +251,7 @@ test('site and guide language switches keep an in-progress housing workflow and 
     ['#crisis-safe', 'no'], ['#crisis-notice', 'court_summons'], ['#housing-problem', 'legal'],
   ]) await expect(page.locator(selector)).toHaveValue(value);
   await expect(page.getByLabel('Necesito ayuda urgente')).toBeChecked();
-  await expect(page.getByLabel('Question or address')).toHaveValue('I need help with rent');
+  await expect(page.getByRole('textbox', { name: 'What do you need help with?', exact: true })).toHaveValue('I need help with rent');
   await expect(page.locator('.crisis-priority')).toContainText('citación');
   await expect(page.locator('.crisis-guide > [role="status"]')).toContainText('Se actualizó el plan de vivienda');
   await expect(page.locator('.crisis-plan')).toContainText('Haga esto primero');
@@ -263,7 +263,7 @@ test('site and guide language switches keep an in-progress housing workflow and 
   await expect(page.locator('#site-language')).toHaveValue('en');
   await expect(page.locator('#crisis-situation')).toHaveValue('eviction');
   await expect(page.locator('#crisis-notice')).toHaveValue('court_summons');
-  await expect(page.getByLabel('Question or address')).toHaveValue('I need help with rent');
+  await expect(page.getByRole('textbox', { name: 'What do you need help with?', exact: true })).toHaveValue('I need help with rent');
   await expectHousingFitsViewport(page);
   expect((await new AxeBuilder({ page }).include('#housing-help').analyze()).violations).toEqual([]);
 });
@@ -307,7 +307,7 @@ test('chat displays a structured crisis plan returned with its cited answer', as
     crisisPlan,
   } }));
   await page.goto('/');
-  await page.getByLabel('Question or address').fill('I received an eviction summons');
+  await page.getByRole('textbox', { name: 'What do you need help with?', exact: true }).fill('I received an eviction summons');
   await page.getByRole('button', { name: 'Search' }).click();
   await expect(page.locator('.chat-crisis-plan')).toContainText('Read the summons');
   await expect(page.locator('.chat-crisis-plan')).toContainText('Bay Area Legal Services');
@@ -327,7 +327,7 @@ test('chat citation cards show sourced metadata and only permitted previews on m
     generation: { status: 'fallback', provider: 'none', reason: 'invalid_evidence' },
   } }));
   await page.goto('/');
-  await page.getByLabel('Question or address').fill('Are applications open?');
+  await page.getByRole('textbox', { name: 'What do you need help with?', exact: true }).fill('Are applications open?');
   await page.getByRole('button', { name: 'Search' }).click();
   await expect(page.locator('.inline-citation')).toHaveCount(2);
   await expect(page.locator('.unverified-reference')).toHaveText('[unverified reference]');

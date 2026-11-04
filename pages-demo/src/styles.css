@@ -268,3 +268,11 @@ html { scroll-padding-top: 16px; }
 @media (forced-colors: active) {
   :focus-visible, .site-header :focus-visible { outline: 3px solid Highlight; box-shadow: none; }
 }
+
+.question-examples { margin: 18px 0; }
+.question-examples p { margin: 0 0 8px; font-size: 14px; }
+.question-examples ul { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.question-examples button { padding: 10px 12px; border: 1px solid #b8cbd5; border-radius: 6px; background: #f4f8fa; color: #064d78; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.question-examples button:hover { background: #e5eff4; }
+.question-examples button:focus-visible { outline: 3px solid #005d98; outline-offset: 3px; }
+.question-examples button:disabled { opacity: .6; cursor: default; }

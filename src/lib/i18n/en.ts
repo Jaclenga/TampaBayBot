@@ -11,16 +11,18 @@ export const en = {
     evaluation: "Evaluation",
   },
   hero: {
-    title: "Tampa Bay housing information",
+    title: "Find housing help and answers about your property",
     description:
-      "Find housing help, property details, permits, and public records.",
+      "TampaBayBot helps Tampa Bay renters and homeowners find housing assistance, understand zoning and permits, and look up nearby development, with links to the public sources and offices that can help.",
   },
   form: {
-    label: "Question or address",
+    label: "What do you need help with?",
+    examplesLabel: "Try a question: choose one to edit before searching:",
+    examples: ["Where can I find help paying rent in Tampa?", "Where do I check if I need a building permit in Clearwater?", "How do I look up the zoning for my property?", "What development is planned near me?"],
     area: "Your area",
     region: "Tampa Bay region",
     areaHint: "Choose a city or county for local details. Use Tampa Bay region if you’re unsure or need regional resources.",
-    placeholder: "How can I get help with housing?",
+    placeholder: "Ask a question, or enter a Tampa Bay street address",
     submit: "Search",
     busy: "Searching...",
     privacy:

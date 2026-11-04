@@ -29,6 +29,7 @@ test('directory preview provides housing help without contacting the API', async
   });
 
   await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Find housing help in Tampa Bay', exact: true })).toBeVisible();
   await expect(page).toHaveTitle('TampaBayBot — Housing assistance directory preview');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Browse Tampa Bay housing assistance contacts and official source links without AI or an account.');
   await expect(page.getByText('Housing assistance directory preview.', { exact: false })).toBeVisible();
@@ -44,7 +45,7 @@ test('directory preview provides housing help without contacting the API', async
   await expect(page.getByRole('button', { name: 'Search' })).toHaveCount(0);
   await expect(page.locator('#property')).toHaveCount(0);
 
-  const problem = page.getByLabel('What do you need help with?');
+  const problem = page.getByRole('combobox', { name: 'What do you need help with?', exact: true });
   const location = page.getByLabel('Where are you?');
   for (const category of ['eviction', 'homelessness', 'legal', 'emergency']) {
     await problem.selectOption(category);
@@ -88,7 +89,7 @@ test('mobile visitors can reach emergency contacts before choosing any options',
   await expect(page.getByRole('heading', { name: 'Need help right now?' })).toBeVisible();
   await expect(page.locator('.immediate-help')).toContainText('911');
   await expect(page.locator('#crisis-situation')).toHaveValue('');
-  await expect(page.getByLabel('What do you need help with?')).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'What do you need help with?', exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect(apiRequests).toEqual([]);
 });
@@ -105,7 +106,7 @@ test('directory preview language switch preserves guide choices and labels Engli
   await page.locator('#site-language').selectOption('es');
   await expect(page.locator('#site-language')).toBeFocused();
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-  await expect(page.getByRole('heading', { name: 'Información de vivienda en Tampa Bay' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Encuentre ayuda para la vivienda en Tampa Bay' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '¿Necesita ayuda ahora?' })).toBeVisible();
   await expect(page.locator('.crisis-plan')).toContainText(/esta noche/i);
   await expect(page.locator('.crisis-plan')).toContainText('están en inglés');

@@ -24,7 +24,7 @@ test("the classic preview links to privacy details beside forms and in the foote
   await expect(page.locator(".question-form .privacy-hint")).toContainText(/question goes to the app backend/i);
   await expect(page.locator(".site-footer a[href='/privacy/']")).toBeVisible();
   await page.getByLabel("Your area").selectOption("tampa");
-  await page.getByLabel("Question or address").fill("315 E Kennedy Blvd, Tampa");
+  await page.getByRole("textbox", { name: "What do you need help with?", exact: true }).fill("315 E Kennedy Blvd, Tampa");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.locator(".property-panel form a[href='/privacy/']")).toBeVisible();
   await page.locator(".question-form a[href='/privacy/']").click();

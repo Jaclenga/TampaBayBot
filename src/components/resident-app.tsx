@@ -201,6 +201,16 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
               </select>
               <p className="small muted" id="jurisdiction-hint">{en.form.areaHint}</p>
             </div>
+            {!answer && <div className="question-examples" role="group" aria-label={en.form.examplesLabel}>
+              <p>{en.form.examplesLabel}</p>
+              <ul>{en.form.examples.map((example) => <li key={example}>
+                <button type="button" disabled={!ready || busy} onClick={() => {
+                  setQuestion(example);
+                  setErrorCode(null);
+                  input.current?.focus();
+                }}>{example}</button>
+              </li>)}</ul>
+            </div>}
             <label htmlFor="question">{en.form.label}</label>
             <div className={`question-input ${error ? "invalid" : ""}`}>
               <textarea

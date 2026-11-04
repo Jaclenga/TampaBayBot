@@ -39,7 +39,7 @@ test("classic keyboard entry and language switch preserve an in-progress questio
   await expect(page.locator("#main")).toBeFocused();
 
   await page.getByLabel("Your area").selectOption("tampa");
-  const question = page.getByLabel("Question or address");
+  const question = page.getByRole("textbox", { name: "What do you need help with?", exact: true });
   await question.fill("Where can I find housing help?");
   const switcher = page.locator("#interface-language");
   await switcher.focus();
@@ -47,20 +47,20 @@ test("classic keyboard entry and language switch preserve an in-progress questio
   await expect(switcher).toBeFocused();
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
   await expect(page.getByLabel("Su zona", { exact: true })).toHaveValue("tampa");
-  await expect(page.getByLabel("Pregunta o dirección", { exact: true })).toHaveValue("Where can I find housing help?");
+  await expect(page.getByRole("textbox", { name: "¿Con qué necesita ayuda?", exact: true })).toHaveValue("Where can I find housing help?");
   await expect(page.getByRole("navigation", { name: "Navegación principal" })).toContainText("Fuentes públicas");
   await expect(page.getByRole("button", { name: "Buscar", exact: true })).toBeEnabled();
   await checkAxe(page, testInfo, "classic-spanish-home");
 
   await switcher.selectOption("en");
   await expect(page.getByLabel("Your area")).toHaveValue("tampa");
-  await expect(page.getByLabel("Question or address")).toHaveValue("Where can I find housing help?");
-  await page.getByLabel("Question or address").focus();
+  await expect(page.getByRole("textbox", { name: "What do you need help with?", exact: true })).toHaveValue("Where can I find housing help?");
+  await page.getByRole("textbox", { name: "What do you need help with?", exact: true }).focus();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Search", exact: true })).toBeFocused();
   await expectVisibleFocusRing(page);
   await switcher.selectOption("es");
-  const spanishQuestion = page.getByLabel("Pregunta o dirección", { exact: true });
+  const spanishQuestion = page.getByRole("textbox", { name: "¿Con qué necesita ayuda?", exact: true });
   await spanishQuestion.fill("");
   await page.getByRole("button", { name: "Buscar", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("Escriba una pregunta");

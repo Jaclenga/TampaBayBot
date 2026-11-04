@@ -32,7 +32,7 @@ async function expectReflow(page: Page, label: string) {
 
 async function answer(page: Page) {
   await page.getByLabel('Your area', { exact: true }).selectOption('tampa');
-  await page.getByLabel('Question or address', { exact: true }).fill('Where can I find rental assistance?');
+  await page.getByRole('textbox', { name: 'What do you need help with?', exact: true }).fill('Where can I find rental assistance?');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
   await page.locator('.citation-link').first().click();
@@ -54,7 +54,7 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.keyboard.press('ArrowDown');
   await expect(area).toHaveValue('tampa');
   await page.keyboard.press('Tab');
-  const input = page.getByLabel('Question or address', { exact: true });
+  const input = page.getByRole('textbox', { name: 'What do you need help with?', exact: true });
   await expect(input).toBeFocused();
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');

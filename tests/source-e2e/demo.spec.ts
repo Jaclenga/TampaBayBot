@@ -21,7 +21,7 @@ test('fresh source demo supports a keyboard question with cited fictional eviden
   await page.goto('/');
   await expect(page.getByRole('note')).toContainText('Fictional demonstration');
   await page.getByLabel('Your area', { exact: true }).selectOption('tampa');
-  await page.getByLabel('Question or address', { exact: true }).fill('Where can I find rental assistance?');
+  await page.getByRole('textbox', { name: 'What do you need help with?', exact: true }).fill('Where can I find rental assistance?');
   await page.getByRole('button', { name: 'Search', exact: true }).focus();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeVisible();
@@ -47,7 +47,7 @@ test('source demo works on mobile and marks unevaluated results honestly', async
 });
 test('jurisdiction clarification preserves the original housing topic and reset clears it', async ({ page }) => {
   await page.goto('/');
-  const input = page.getByLabel('Question or address', { exact: true });
+  const input = page.getByRole('textbox', { name: 'What do you need help with?', exact: true });
   await input.fill('I need help paying rent');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await expect(page.locator('.status-label')).toHaveText('Choose a city or county');
@@ -64,7 +64,7 @@ test('Spanish questions return localized navigation with unchanged source quotat
   await page.goto('/');
   await page.locator('#interface-language').selectOption('es');
   await page.getByLabel('Su zona', { exact: true }).selectOption('tampa');
-  await page.getByLabel('Pregunta o dirección', { exact: true }).fill('Necesito ayuda para pagar el alquiler');
+  await page.getByRole('textbox', { name: '¿Con qué necesita ayuda?', exact: true }).fill('Necesito ayuda para pagar el alquiler');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Respuesta', exact: true })).toBeVisible();
   await expect(page.locator('.evidence-list blockquote').first()).toHaveText('Demo applications are closed. Do not submit personal information or apply for this fictional benefit.');

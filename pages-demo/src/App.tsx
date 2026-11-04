@@ -232,7 +232,7 @@ function DirectoryPreview({ language, onLanguageChange }: LanguageProps) {
     <div className="site-wrap">
       <header className="site-header"><a className="brand" href="#top" aria-label={t.home}>TampaBayBot</a><nav aria-label={t.navigation}><a href="#housing-help">{t.housing}</a><a href="#housing-resources">{t.resources}</a><a href="/privacy/">{t.privacy}</a><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">{t.about}</a></nav><SiteLanguageSelect language={language} onLanguageChange={onLanguageChange} /></header>
       <div className="status-banner" role="status"><strong>{t.previewTitle}</strong> {t.previewStatus}</div>
-      <main id="main" tabIndex={-1}><section className="hero" id="top"><div className="hero-copy"><h1>{t.title}</h1><p>{t.previewIntro}</p><div className="hero-actions"><a className="hero-button" href="#housing-help">{t.help}</a><a className="hero-secondary" href="#housing-resources">{t.browse}</a></div></div></section>
+      <main id="main" tabIndex={-1}><section className="hero" id="top"><div className="hero-copy"><h1>{t.directoryTitle}</h1><p>{t.previewIntro}</p><div className="hero-actions"><a className="hero-button" href="#housing-help">{t.help}</a><a className="hero-secondary" href="#housing-resources">{t.browse}</a></div></div></section>
         <HousingHelp language={language} onLanguageChange={onLanguageChange} />
         <section className="disclaimer"><h2>{t.previewDisclaimerTitle}</h2><p>{t.previewDisclaimer}</p><a href="https://github.com/Jaclenga/TampaBayBot" target="_blank" rel="noopener noreferrer">{t.about}</a></section>
       </main><footer className="site-footer"><span>{t.project}</span><nav aria-label={t.footerNavigation}><a href="/privacy/">{t.privacy}</a></nav><span>{t.unofficial}</span></footer>
@@ -384,7 +384,15 @@ function FullApp({ language, onLanguageChange }: LanguageProps) {
                 <label htmlFor="area">Your area</label>
                 <select id="area" value={area} onChange={(event) => { clearConversation(); setArea(event.target.value); }}>{areas.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select>
                 <p className="small muted area-hint">Choose a city or county for local details. Use Tampa Bay region if you are unsure.</p>
-                <label htmlFor="question">Question or address</label>
+                {turns.length === 0 && <div className="question-examples" role="group" aria-label="Example questions">
+                  <p>Try a question: choose one to edit before searching:</p>
+                  <ul>{["Where can I find help paying rent in Tampa?", "Where do I check if I need a building permit in Clearwater?", "How do I look up the zoning for my property?", "What development is planned near me?"].map((example) => <li key={example}><button type="button" disabled={busy || quotaReached} onClick={() => {
+                    setQuestion(example);
+                    setError("");
+                    document.getElementById("question")?.focus();
+                  }}>{example}</button></li>)}</ul>
+                </div>}
+                <label htmlFor="question">What do you need help with?</label>
                 <div className="question-input">
                   <textarea id="question" maxLength={1000} rows={2} value={question} onChange={(event) => { setQuestion(event.target.value); setError(""); }} placeholder="Where can I find rental assistance in Tampa?" aria-describedby="question-hint" />
                   <button type="submit" disabled={busy || quotaReached}>{busy ? "Searching…" : "Search"}</button>
