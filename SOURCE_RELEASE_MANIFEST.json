@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "16b5d53694c708ea3e1fedb99f70fdcfb5362ba6471159d4160012110d873a82",
+  "content_sha256": "b877024cca0f1a24e61d2f197841d98bfc7482420fea19a672feac71bc7e76ac",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -492,13 +492,13 @@
     },
     {
       "path": "package-lock.json",
-      "bytes": 330581,
-      "sha256": "642a2eebed04b0991a727b7042c5afc4d7ad6ef4d896d7276dd7d07a72767cb7"
+      "bytes": 331425,
+      "sha256": "2e37e64b2cf5f01950167f6caaf3f9534b1acb98a234b98fab22d5f647bfd11a"
     },
     {
       "path": "package.json",
-      "bytes": 4535,
-      "sha256": "610fe6d937a9bf5f9c17a3bfd8f2e604555af1aa766286f80f052fead400ec67"
+      "bytes": 4661,
+      "sha256": "65321bad94c92ef440143045eef69a107ecea0ef5ede3b8c421dd1b8b3f5d05c"
     },
     {
       "path": "pages-demo/index.html",
@@ -867,8 +867,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 6961,
-      "sha256": "0e9030a02f33a22aac571f7d445448d7dccd1f30844b058c640ec7df45d16b34"
+      "bytes": 7674,
+      "sha256": "4cccc4824d4af7e773fa858e1bc9229cec059594203adf9603f8384763bfa9fc"
     },
     {
       "path": "src/app/about/page.tsx",
