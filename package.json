@@ -68,8 +68,8 @@
     "lucide-react": "^1.45.0",
     "next": "16.4.5",
     "pdf-parse": "^2.4.5",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react": "19.2.9",
+    "react-dom": "19.2.9"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
@@ -83,7 +83,7 @@
     "eslint": "9.39.4",
     "eslint-config-next": "16.4.5",
     "image-size": "file:vendor/image-dimensions",
-    "react-server-dom-webpack": "19.2.8",
+    "react-server-dom-webpack": "19.2.9",
     "typescript": "5.9.3",
     "vinext": "0.0.50",
     "vite": "8.3.3",
