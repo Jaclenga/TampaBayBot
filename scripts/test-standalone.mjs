@@ -189,8 +189,24 @@ try {
     const answer = await response.json();
     assert.equal(answer.generation.status, 'disabled');
     assert.equal(answer.crisisPlan?.urgency, 'urgent');
-    assert.ok(answer.crisisPlan.resources.some(resource => resource.id === 'legal-bay-area'));
-    assert.ok(answer.crisisPlan.resources.some(resource => resource.id === 'court-hillsborough-eviction'));
+    assert.equal(answer.crisisPlan.input.situation, 'eviction');
+    assert.equal(answer.crisisPlan.input.location, 'tampa');
+    assert.equal(answer.crisisPlan.input.noticeStage, 'court_summons');
+    assert.match(answer.crisisPlan.immediatePriority, /summons/i);
+    assert.match(answer.crisisPlan.deadline, /court paper/i);
+    // This smoke test uses the real Worker clock. Named contacts expire; the
+    // fixed-date core tests check their selection before and after review is due.
+    assert.ok(Array.isArray(answer.crisisPlan.resources));
+    for (const resource of answer.crisisPlan.resources) {
+      assert.ok(['source_checked', 'needs_recheck'].includes(resource.verificationStatus));
+      if (resource.verificationStatus === 'needs_recheck') {
+        assert.ok(answer.crisisPlan.notes.some(note => /need rechecking/i.test(note)));
+      } else if (resource.nextReviewAt) {
+        assert.ok(Date.now() < Date.parse(`${resource.nextReviewAt}T00:00:00Z`) + 86_400_000,
+          `Overdue resource presented as current: ${resource.id}`);
+      }
+      assert.ok(answer.crisisPlan.sources.some(source => source.url === resource.sourceUrl));
+    }
     assert.ok(answer.crisisPlan.sources.every(source => source.url.startsWith('https://')));
   });
   await check('sensitive_input_blocked', async () => {

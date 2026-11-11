@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "94e95a832b3dc13dbe96cdd2998b452a6b802bd8f4acf911d8029d74bba9c5fe",
+  "content_sha256": "161482adc276f1eeef0d6bc68f569b9ca6b61db527fec9dca623962af267e6aa",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -852,8 +852,8 @@
     },
     {
       "path": "scripts/test-standalone.mjs",
-      "bytes": 13757,
-      "sha256": "debd778befc039f7f45e075a4ea1aac765ddab74197699e70f833564e4ba2354"
+      "bytes": 14712,
+      "sha256": "42e90f9efdec1b07bdb76a357caa5defb6ee191ce55e8274473420d85b4689b3"
     },
     {
       "path": "scripts/update-source-manifest.mjs",
