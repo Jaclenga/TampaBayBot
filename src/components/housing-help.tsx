@@ -118,7 +118,7 @@ function planText(plan: NonNullable<ReturnType<typeof buildCrisisPlan>>, now: nu
     ...plan.notes, ...plan.sources.map((source) => `${source.title}: ${source.url} (${labels.checked}: ${source.verifiedAt})`)].join("\n");
 }
 
-export default function HousingHelpPage() {
+export default function HousingHelpPage({ referenceTime }: { referenceTime: number }) {
   const { locale, copy } = useLocale();
   const es = locale === "es";
   usePageTitle(`${es ? "Ayuda de vivienda" : "Housing help"} | TampaBayBot`);
@@ -129,7 +129,6 @@ export default function HousingHelpPage() {
   const [safe, setSafe] = useState<CrisisInput["safe"]>("unsure");
   const [noticeStage, setNoticeStage] = useState<CrisisNoticeStage>("unknown");
   const [feedback, setFeedback] = useState("");
-  const [referenceTime] = useState(() => Date.now());
   const input = useMemo(() => situation ? { situation, location, timeframe, safe, noticeStage } : null,
     [situation, location, timeframe, safe, noticeStage]);
   const plan = useMemo(() => buildCrisisPlan(input, resources, { locale, now: referenceTime }), [input, locale, referenceTime]);

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "b877024cca0f1a24e61d2f197841d98bfc7482420fea19a672feac71bc7e76ac",
+  "content_sha256": "94e95a832b3dc13dbe96cdd2998b452a6b802bd8f4acf911d8029d74bba9c5fe",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -493,12 +493,12 @@
     {
       "path": "package-lock.json",
       "bytes": 331425,
-      "sha256": "2e37e64b2cf5f01950167f6caaf3f9534b1acb98a234b98fab22d5f647bfd11a"
+      "sha256": "c2e0675d94bbca02bb7734e4fcc46c793b9f88b3b30e08b828f16c519a611a2c"
     },
     {
       "path": "package.json",
       "bytes": 4661,
-      "sha256": "65321bad94c92ef440143045eef69a107ecea0ef5ede3b8c421dd1b8b3f5d05c"
+      "sha256": "cc23afa70b946201fe061a10d1bfc9bc3a3cd90098aebaa8973425ba3ced9d57"
     },
     {
       "path": "pages-demo/index.html",
@@ -867,8 +867,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 7674,
-      "sha256": "4cccc4824d4af7e773fa858e1bc9229cec059594203adf9603f8384763bfa9fc"
+      "bytes": 8276,
+      "sha256": "21b37a357abfa4935a76baffe77f05ba88bcc7fdef5eb86bbfab6312a1920eef"
     },
     {
       "path": "src/app/about/page.tsx",
@@ -932,8 +932,8 @@
     },
     {
       "path": "src/app/housing-help/page.tsx",
-      "bytes": 244,
-      "sha256": "4f6d412ab4720da24c20efe4570275206bc164eb1b709906254f90ec952cd243"
+      "bytes": 518,
+      "sha256": "b74cfd3515c96af9fa8a7f59000650aeef40003de6b12c0713f1a47c0e227f2f"
     },
     {
       "path": "src/app/layout.tsx",
@@ -972,8 +972,8 @@
     },
     {
       "path": "src/components/housing-help.tsx",
-      "bytes": 17961,
-      "sha256": "760ffb162062a0fd4312adb37ca611286c11991d7446a24ec9dd74b4e993a7dd"
+      "bytes": 17951,
+      "sha256": "e50dcdb4da450debdbe7527e420f15d862e66e816f479ab507e89900ee721919"
     },
     {
       "path": "src/components/property-lookup.tsx",
@@ -1647,8 +1647,8 @@
     },
     {
       "path": "tests/e2e/accessibility-language.spec.ts",
-      "bytes": 7323,
-      "sha256": "9cb1d664bdc05b7f73dba569451db86e20c90e17582455015e006135998ffe7c"
+      "bytes": 7619,
+      "sha256": "b4c2e10f0532a74a4682c647e560a5f318eb54ef9c8173eacc4148fa3734d97a"
     },
     {
       "path": "tests/e2e/housing-help.spec.ts",

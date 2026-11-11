@@ -69,6 +69,9 @@ test("classic keyboard entry and language switch preserve an in-progress questio
 });
 
 test("Spanish eviction guide keeps selections and focus through language changes on mobile", async ({ page }, testInfo) => {
+  const pageErrors: string[] = [];
+  page.on("pageerror", (error) => pageErrors.push(error.message));
+  // Deliberately differ from the server clock to catch date-dependent hydration.
   await page.clock.install({ time: new Date("2026-10-20T12:00:00Z") });
   const apiCalls: string[] = [];
   await page.route("**/api/**", async (route) => {
@@ -124,6 +127,8 @@ test("Spanish eviction guide keeps selections and focus through language changes
   await switcher.selectOption("en");
   await expect(page.getByLabel("Housing problem")).toHaveValue("eviction");
   await expect(page.getByLabel("What document did you receive?")).toHaveValue("court_summons");
+  await expect(page.getByTestId("vinext-dev-error-backdrop")).toHaveCount(0);
+  expect(pageErrors).toEqual([]);
 });
 
 test("classic reference navigation and housing guide pass WCAG 2.2 tagged axe checks", async ({ page }, testInfo) => {
