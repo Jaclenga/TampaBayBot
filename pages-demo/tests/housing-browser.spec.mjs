@@ -188,6 +188,8 @@ test('known source conflicts are visible in directory and crisis plans', async (
 });
 
 test('optional crisis guide creates a cited eviction plan entirely from static data', async ({ page }) => {
+  // Exercise this reviewed fixture before its resource review dates expire.
+  await page.clock.install({ time: new Date('2026-10-20T12:00:00Z') });
   let apiRequests = 0;
   page.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/')) apiRequests++; });
   await page.goto('/');
@@ -298,7 +300,9 @@ test('unsafe sleep tonight routes to shelter intake, while quick exit is availab
 });
 
 test('chat displays a structured crisis plan returned with its cited answer', async ({ page }) => {
-  const crisisPlan = buildCrisisPlan({ situation: 'eviction', location: 'tampa', noticeStage: 'court_summons' }, staticResources, { locale: 'en' });
+  const now = new Date('2026-10-20T12:00:00Z');
+  await page.clock.install({ time: now });
+  const crisisPlan = buildCrisisPlan({ situation: 'eviction', location: 'tampa', noticeStage: 'court_summons' }, staticResources, { locale: 'en', now });
   await page.route('**/api/health', route => route.fulfill({ json: { corpus: { chunks: 1, status: 'ready' } } }));
   await page.route('**/api/usage', route => route.fulfill({ json: { ai: { remaining: 15, limit: 15, used: 0, resetAt: null, available: true, reason: null } } }));
   await page.route('**/api/ask', route => route.fulfill({ json: {

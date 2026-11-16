@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "facb4c42cb1cc6e9ef28c5ffae37e533f0e5d2935db8224ec4921567e64970c1",
+  "content_sha256": "03028891589308abc668312db3cb5d31ce61b9b8fc7a06a4e68b440cb8c23490",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -622,8 +622,8 @@
     },
     {
       "path": "pages-demo/tests/housing-browser.spec.mjs",
-      "bytes": 24512,
-      "sha256": "662de251514d9717786395251bdda9fc2b8dffb0fea92659e64e52b99b9d636f"
+      "bytes": 24757,
+      "sha256": "573df08d5e541b7515e6fd7d8e9b35b010f29aa16bbcd383e9d8293c861b8455"
     },
     {
       "path": "pages-demo/tests/housing-help.test.mjs",
