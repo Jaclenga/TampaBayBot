@@ -47,7 +47,7 @@ test("classic keyboard entry and language switch preserve an in-progress questio
   await expect(switcher).toBeFocused();
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
   await expect(page.getByLabel("Su zona", { exact: true })).toHaveValue("tampa");
-  await expect(page.getByRole("textbox", { name: "¿Con qué necesita ayuda?", exact: true })).toHaveValue("Where can I find housing help?");
+  await expect(page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true })).toHaveValue("Where can I find housing help?");
   await expect(page.getByRole("navigation", { name: "Navegación principal" })).toContainText("Fuentes públicas");
   await expect(page.getByRole("button", { name: "Buscar", exact: true })).toBeEnabled();
   await checkAxe(page, testInfo, "classic-spanish-home");
@@ -60,7 +60,7 @@ test("classic keyboard entry and language switch preserve an in-progress questio
   await expect(page.getByRole("button", { name: "Search", exact: true })).toBeFocused();
   await expectVisibleFocusRing(page);
   await switcher.selectOption("es");
-  const spanishQuestion = page.getByRole("textbox", { name: "¿Con qué necesita ayuda?", exact: true });
+  const spanishQuestion = page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true });
   await spanishQuestion.fill("");
   await page.getByRole("button", { name: "Buscar", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("Escriba una pregunta");

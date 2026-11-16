@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "839adad19fa0b8880085a567c41836a17b82e2a30d2687a208394a19cd691396",
+  "content_sha256": "facb4c42cb1cc6e9ef28c5ffae37e533f0e5d2935db8224ec4921567e64970c1",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -1647,8 +1647,8 @@
     },
     {
       "path": "tests/e2e/accessibility-language.spec.ts",
-      "bytes": 7664,
-      "sha256": "ec5cb4019f9bde61e888f5d0f734b7d66def13a7249c1f3e19237864fdab8851"
+      "bytes": 7696,
+      "sha256": "752daf77f90819eb5f178ed5d23f07ba186307d79e44ef73ca6e9f1df8eefc56"
     },
     {
       "path": "tests/e2e/housing-help.spec.ts",
@@ -1662,8 +1662,8 @@
     },
     {
       "path": "tests/e2e/resident.spec.ts",
-      "bytes": 28903,
-      "sha256": "1b61c6219d124854d00fcc5ed92a464d71e00f0321f9c49ae3cfe7561cdf2e39"
+      "bytes": 28944,
+      "sha256": "31bd70dd68e7de08fd6bb147efabfa6ee5c98eacab4efca2f558c4a4ae9f7437"
     },
     {
       "path": "tests/e2e/security.spec.ts",
@@ -1897,13 +1897,13 @@
     },
     {
       "path": "tests/source-e2e/demo.spec.ts",
-      "bytes": 4599,
-      "sha256": "c353c77770fdb563fcc2f86ee3363cadb7bce33056cb7178fd68d5ab3a9dced6"
+      "bytes": 4615,
+      "sha256": "b406b6cb1a7860d6b570ba68e76023101b82b88291a3aa9fdcb14f6f5fdaf06d"
     },
     {
       "path": "tests/source-e2e/language.spec.ts",
-      "bytes": 7508,
-      "sha256": "ca2cf2d90fa849e8e415aa76c57a1653bdcc7f069cb0e7bcfea1c9d3bef8a832"
+      "bytes": 7540,
+      "sha256": "479a1558691eb29c2cb8a2c7d9e8992411f7fa008042a45c7862812c64928f6d"
     },
     {
       "path": "tests/source-e2e/ui-accessibility.spec.ts",

@@ -19,7 +19,7 @@ test("classic answer switches Spanish to English and back from canonical text", 
   await page.goto("/");
   await page.locator("#interface-language").selectOption("es");
   await page.getByLabel("Su zona", { exact: true }).selectOption("tampa");
-  await page.getByRole("textbox", { name: "¿Con qué necesita ayuda?", exact: true }).fill("Necesito ayuda con la vivienda");
+  await page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true }).fill("Necesito ayuda con la vivienda");
   await page.getByRole("button", { name: "Buscar", exact: true }).click();
   await expect(page.locator(".answer-lead")).toContainText("Empiece por Program notice");
   await expect(page.locator(".meaning")).toContainText("Confirme la información local");
@@ -45,7 +45,7 @@ test("classic privacy errors use safe localized codes and change with the interf
   } }));
   await page.goto("/");
   await page.locator("#interface-language").selectOption("es");
-  const input = page.getByRole("textbox", { name: "¿Con qué necesita ayuda?", exact: true });
+  const input = page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true });
   await input.fill("Mi SSN es 000-00-0000. ¿Dónde puedo encontrar ayuda?");
   await page.getByRole("button", { name: "Buscar", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("Quite los números de Seguro Social");
@@ -127,7 +127,7 @@ test("home, source library, and about page meet automated WCAG A/AA checks", asy
     await expect(page.locator("h1")).toBeVisible();
     if (path === "/") {
       await expect(page.locator("#question-privacy")).toContainText(
-        "Model assistance is off",
+        "Leave out names, account numbers",
       );
       await expect(
         page.getByRole("button", { name: "Search", exact: true }),

@@ -64,7 +64,7 @@ test('Spanish questions return localized navigation with unchanged source quotat
   await page.goto('/');
   await page.locator('#interface-language').selectOption('es');
   await page.getByLabel('Su zona', { exact: true }).selectOption('tampa');
-  await page.getByRole('textbox', { name: '¿Con qué necesita ayuda?', exact: true }).fill('Necesito ayuda para pagar el alquiler');
+  await page.getByRole('textbox', { name: 'Haga una pregunta o escriba una dirección', exact: true }).fill('Necesito ayuda para pagar el alquiler');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Respuesta', exact: true })).toBeVisible();
   await expect(page.locator('.evidence-list blockquote').first()).toHaveText('Demo applications are closed. Do not submit personal information or apply for this fictional benefit.');
