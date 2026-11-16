@@ -137,11 +137,12 @@ export default function ResidentApp() {
   const controller = useRef<AbortController | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => {
-    // Respect readers who scroll back while a reply is loading.
-    if (!rawAnswer || !followLatest.current) return;
+    // Announce the first answer even if the initial layout caused a scroll event.
+    // Later answers respect readers who scroll back while a reply is loading.
+    if (!rawAnswer || (rawAnswers.length > 1 && !followLatest.current)) return;
     answerTitle.current?.focus({ preventScroll: true });
     answerTitle.current?.scrollIntoView({ block: "start" });
-  }, [rawAnswer]);
+  }, [rawAnswer, rawAnswers.length]);
   useEffect(() => {
     if (busy && followLatest.current && history.current) {
       history.current.scrollTop = history.current.scrollHeight;

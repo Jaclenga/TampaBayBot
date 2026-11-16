@@ -7,6 +7,32 @@ const examples = [
   ['Explore local development', 'How can I find development projects near an address in Tampa?'],
 ];
 
+test('the first answer receives focus after the pending history reflows', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 480 });
+  let respond: (() => void) | undefined;
+  await page.route('**/api/ask', async route => {
+    await new Promise<void>(resolve => { respond = resolve; });
+    await route.fulfill({ json: {
+      status: 'answered', query: route.request().postDataJSON().question,
+      answer: 'Check the official source for current information.',
+      evidence: [], warnings: [], nextSteps: [], needsAddress: false,
+    } });
+  });
+  await page.goto('/');
+  await page.locator('#question').fill('I need help finding housing resources in Tampa. '.repeat(18));
+  await page.locator('#question').press('Enter');
+  await expect(page.locator('.chat-pending')).toBeVisible();
+  await expect.poll(() => Boolean(respond)).toBe(true);
+  const history = page.getByRole('region', { name: 'Conversation', exact: true });
+  await history.evaluate(element => {
+    element.scrollTop = 0;
+    element.dispatchEvent(new Event('scroll'));
+  });
+  expect(await history.evaluate(element => element.scrollHeight - element.clientHeight - element.scrollTop)).toBeGreaterThan(80);
+  respond!();
+  await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
+});
+
 for (const width of [1280, 375]) {
   test(`static example rows submit their exact questions and reset at ${width}px`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 812 });
