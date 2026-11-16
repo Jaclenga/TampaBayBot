@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Search, Undo2 } from "lucide-react";
+import type { CSSProperties } from "react";
 import type { ResidentAnswer } from "@/lib/core/answer.mjs";
 import { useLocale, usePageTitle } from "@/lib/i18n/locale";
 import { localizeAnswer } from "@/lib/i18n/answer.mjs";
@@ -37,7 +38,7 @@ function serverErrorCode(value: unknown): ServerErrorCode | "error" {
       return "error";
   }
 }
-function CitedText({ answer }: { answer: ResidentAnswer }) {
+function CitedText({ answer, prefix = "" }: { answer: ResidentAnswer; prefix?: string }) {
   const { copy: en } = useLocale();
   return (
     <>
@@ -48,10 +49,10 @@ function CitedText({ answer }: { answer: ResidentAnswer }) {
           <a
             key={index}
             className="citation-link"
-            href={`#evidence-${id}`}
+            href={`#${prefix}evidence-${id}`}
             aria-label={`${en.labels.citation} ${id}`}
             onClick={(event) => {
-              const detail = document.getElementById(`evidence-${id}`);
+              const detail = document.getElementById(`${prefix}evidence-${id}`);
               if (detail instanceof HTMLDetailsElement) {
                 event.preventDefault();
                 detail.open = true;
@@ -83,17 +84,49 @@ export default function ResidentApp() {
   );
   const [question, setQuestion] = useState("");
   const [jurisdictionId, setJurisdictionId] = useState<JurisdictionId>("tampa-bay");
-  const [rawAnswer, setAnswer] = useState<ResidentAnswer | null>(null);
+  const [rawAnswers, setAnswers] = useState<ResidentAnswer[]>([]);
+  const rawAnswer = rawAnswers.at(-1) ?? null;
+  const [busy, setBusy] = useState(false);
+  const [pendingQuestion, setPendingQuestion] = useState("");
+  const hasChat = rawAnswers.length > 0 || busy;
+  const main = useRef<HTMLElement>(null);
+  const history = useRef<HTMLDivElement>(null);
+  const followLatest = useRef(true);
+  const [viewport, setViewport] = useState({ top: 0, height: 0 });
+  const composer = useRef<HTMLDivElement>(null);
   const [referenceTime] = useState(() => Date.now());
-  const answer = useMemo(() => {
-    if (!rawAnswer) return null;
+  const answers = useMemo(() => rawAnswers.map((rawAnswer) => {
     const localized = localizeAnswer(rawAnswer, locale);
     if (!rawAnswer.crisisPlan?.input) return localized;
     return { ...localized, crisisPlan: buildCrisisPlan(rawAnswer.crisisPlan.input,
       housingCatalog.resources as unknown as CrisisResource[], { locale, now: referenceTime }) ?? undefined };
-  }, [rawAnswer, locale, referenceTime]);
+  }), [rawAnswers, locale, referenceTime]);
+  const answer = answers.at(-1) ?? null;
+  useEffect(() => {
+    if (!hasChat || !main.current) return;
+    const updateViewport = () => {
+      const top = Math.max(0, ...Array.from(document.querySelectorAll<HTMLElement>(".site-header, .demo-banner"), element => element.offsetTop + element.offsetHeight));
+      // The visual viewport shrinks when an on-screen keyboard opens.
+      const height = window.visualViewport?.height ?? window.innerHeight;
+      setViewport(previous => previous.top === top && previous.height === height ? previous : { top, height });
+    };
+    const observer = new ResizeObserver(updateViewport);
+    document.querySelectorAll(".site-header, .demo-banner").forEach(element => observer.observe(element));
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    window.visualViewport?.addEventListener("resize", updateViewport);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateViewport);
+      window.visualViewport?.removeEventListener("resize", updateViewport);
+    };
+  }, [hasChat]);
+  useEffect(() => {
+    if (hasChat && input.current === document.activeElement) {
+      input.current?.scrollIntoView({ block: "nearest" });
+    }
+  }, [hasChat, viewport.height]);
   const [conversation, setConversation] = useState<ConversationContext | null>(null);
-  const [busy, setBusy] = useState(false);
   const [errorCode, setErrorCode] = useState<FormErrorCode | null>(null);
   const error = errorCode === "empty" ? en.form.empty :
     errorCode === "max" ? en.form.max :
@@ -104,9 +137,18 @@ export default function ResidentApp() {
   const controller = useRef<AbortController | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => {
-    if (rawAnswer) answerTitle.current?.focus();
+    // Respect readers who scroll back while a reply is loading.
+    if (!rawAnswer || !followLatest.current) return;
+    answerTitle.current?.focus({ preventScroll: true });
+    answerTitle.current?.scrollIntoView({ block: "start" });
   }, [rawAnswer]);
+  useEffect(() => {
+    if (busy && followLatest.current && history.current) {
+      history.current.scrollTop = history.current.scrollHeight;
+    }
+  }, [busy]);
   async function ask(text = question) {
+    if (busy) return;
     if (!text.trim()) {
       setErrorCode("empty");
       input.current?.focus();
@@ -121,9 +163,9 @@ export default function ResidentApp() {
     const request = new AbortController();
     controller.current = request;
     setQuestion(text);
+    setPendingQuestion(text);
     setBusy(true);
     setErrorCode(null);
-    setAnswer(null);
     try {
       const response = await fetch("/api/ask", {
         method: "POST",
@@ -139,7 +181,8 @@ export default function ResidentApp() {
         return;
       }
       if (!request.signal.aborted) {
-        setAnswer(result);
+        setAnswers(previous => [...previous, { ...result, query: text }]);
+        setQuestion(current => current === text ? "" : current);
         setConversation(result.conversation ?? null);
         if (!result.needsJurisdiction && result.jurisdictionId) setJurisdictionId(result.jurisdictionId);
       }
@@ -152,24 +195,16 @@ export default function ResidentApp() {
   function reset() {
     controller.current?.abort();
     setBusy(false);
-    setAnswer(null);
+    setAnswers([]);
     setConversation(null);
+    followLatest.current = true;
     setQuestion("");
     setErrorCode(null);
-    input.current?.focus();
+    requestAnimationFrame(() => input.current?.focus());
   }
-  return (
-    <main id="main" lang={locale} tabIndex={-1}>
-      <section
-        className={`hero ${answer ? "hero-compact" : ""}`}
-        aria-labelledby="hero-title"
-      >
-        <div className="hero-inner">
-          <h1 id="hero-title">{en.hero.title}</h1>
-          <p className="hero-description">{en.hero.description}</p>
-          {locale === 'es' && <p className="small muted">{en.language.scope}</p>}
+  const questionForm = (
           <form
-            className="question-form"
+            className={`question-form ${hasChat ? "reply-form" : ""}`}
             onSubmit={(event) => {
               event.preventDefault();
               void ask();
@@ -177,7 +212,7 @@ export default function ResidentApp() {
             aria-busy={busy}
           >
             <div className="area-picker">
-              <label htmlFor="jurisdiction">{en.form.area}</label>
+              <label htmlFor="jurisdiction" className={hasChat ? "sr-only" : undefined}>{en.form.area}</label>
               <select
                 id="jurisdiction"
                 value={jurisdictionId}
@@ -187,7 +222,8 @@ export default function ResidentApp() {
                   controller.current?.abort();
                   setBusy(false);
                   if (!answer?.needsJurisdiction) setConversation(null);
-                  setAnswer(null);
+                  setAnswers([]);
+                  followLatest.current = true;
                   setErrorCode(null);
                   setJurisdictionId(event.target.value as JurisdictionId);
                 }}
@@ -196,22 +232,32 @@ export default function ResidentApp() {
                   <option key={area.id} value={area.id}>{area.id === "tampa-bay" ? en.form.region : jurisdictionLabel(area.label, locale)}</option>
                 ))}
               </select>
+              {hasChat && <button className="text-button reply-reset" type="button" onClick={reset}>
+                <Undo2 size={15} aria-hidden="true" />
+                {en.answer.clear}
+              </button>}
               <p className="small muted" id="jurisdiction-hint">{en.form.areaHint}</p>
             </div>
-            <label htmlFor="question">{en.form.label}</label>
+            <label htmlFor="question">{hasChat ? en.form.replyLabel : en.form.label}</label>
             <div className={`question-input ${error ? "invalid" : ""}`}>
               <textarea
                 id="question"
                 disabled={!ready}
                 ref={input}
-                rows={2}
+                rows={hasChat ? 1 : 2}
                 value={question}
                 onChange={(e) => {
                   setQuestion(e.target.value);
                   setErrorCode(null);
                 }}
                 maxLength={1000}
-                placeholder={en.form.placeholder}
+                placeholder={hasChat ? en.form.replyPlaceholder : en.form.placeholder}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
+                    event.preventDefault();
+                    if (!busy && ready) void ask();
+                  }
+                }}
                 aria-invalid={!!error}
                 aria-describedby={
                   error ? "question-error question-privacy" : "question-privacy"
@@ -222,18 +268,17 @@ export default function ResidentApp() {
                 type="submit"
                 disabled={!ready || busy}
               >
-                {busy ? en.form.busy : en.form.submit}
+                {busy ? en.form.busy : hasChat ? en.form.send : en.form.submit}
                 <Search size={18} aria-hidden="true" />
               </button>
             </div>
-            {!answer && <div className="question-examples" role="group" aria-label={en.form.examplesLabel}>
+            {!hasChat && <div className="question-examples" role="group" aria-label={en.form.examplesLabel}>
               <p>{en.form.examplesLabel}</p>
-              <ul>{en.form.examples.map((example) => <li key={example}>
-                <button type="button" disabled={!ready || busy} onClick={() => {
-                  setQuestion(example);
-                  setErrorCode(null);
-                  input.current?.focus();
-                }}>{example}</button>
+              <ul>{en.form.examples.map((example) => <li key={example.question}>
+                <button type="button" disabled={!ready || busy} onClick={() => void ask(example.question)}>
+                  <span className="example-title">{example.title}</span>
+                  <span className="example-question">{example.question}</span>
+                </button>
               </li>)}</ul>
             </div>}
             {error && (
@@ -242,11 +287,24 @@ export default function ResidentApp() {
               </p>
             )}
             <p className="privacy-hint" id="question-privacy">
-              {en.form.privacy} <a href="/privacy/">{en.footer.privacy}</a>
+              {hasChat ? en.form.replyPrivacy : en.form.privacy} <a href="/privacy/">{en.footer.privacy}</a>
             </p>
-            {conversation && <p className="small muted">{en.answer.followup}</p>}
+            {hasChat && <p className="reply-hint small muted">{en.form.replyHint}</p>}
           </form>
-          {!answer && <div className="home-source-note small muted">
+  );
+  return (
+    <main id="main" ref={main} lang={locale} tabIndex={-1} className={hasChat ? "chat-active" : undefined}
+      style={hasChat && viewport.height ? { "--chat-top": `${viewport.top}px`, "--chat-viewport-height": `${viewport.height}px` } as CSSProperties : undefined}>
+      <section
+        className={`hero ${answer ? "hero-compact" : ""}`}
+        aria-labelledby={hasChat ? undefined : "hero-title"}
+      >
+        <div className="hero-inner">
+          <h1 id="hero-title">{hasChat ? en.form.conversationTitle : en.hero.title}</h1>
+          <p className="hero-description">{en.hero.description}</p>
+          {locale === 'es' && <p className="small muted">{en.language.scope}</p>}
+          {!hasChat && questionForm}
+          {!hasChat && <div className="home-source-note small muted">
             <p>{en.hero.sources}</p>
             <Link href="/about#approach" className="text-link">{en.hero.aboutLink}</Link>
             <p>{en.hero.notice}</p>
@@ -256,29 +314,35 @@ export default function ResidentApp() {
           </p>
         </div>
       </section>
-      {answer && (
+      {hasChat && <div className="chat-history" ref={history} role="region" aria-label={en.form.conversationTitle} tabIndex={0}
+        onScroll={() => {
+          const element = history.current;
+          if (element) followLatest.current = element.scrollHeight - element.clientHeight - element.scrollTop < 80;
+        }}>
+      {answers.map((answer, index) => {
+        const latest = index === answers.length - 1;
+        const prefix = latest ? "" : `turn-${index}-`;
+        return (
         <section
+          key={index}
           className={`answer-layout content-width ${answer.nextSteps.length ? "" : "answer-only"}`}
-          aria-labelledby="answer-title"
+          aria-label={`${en.answer.title} ${index + 1}`}
         >
           <div className="answer-main">
+            <div className="chat-question"><span className="small muted">{en.form.you}</span><p>{rawAnswers[index].query}</p></div>
             <div className="section-topline">
               <span
-                id="answer-status"
+                id={`${prefix}answer-status`}
                 className={`status-label ${answer.status === "answered" ? "positive" : ""}`}
               >
                 {en.status[answer.status] || answer.status.replaceAll("_", " ")}
               </span>
-              <button className="text-button" onClick={reset}>
-                <Undo2 size={15} aria-hidden="true" />
-                {en.answer.clear}
-              </button>
             </div>
-            <h2 id="answer-title" tabIndex={-1} ref={answerTitle} aria-describedby="answer-status">
+            <h2 id={`${prefix}answer-title`} tabIndex={-1} ref={latest ? answerTitle : undefined} aria-describedby={`${prefix}answer-status`}>
               {en.answer.title}
             </h2>
             <p className="answer-lead">
-              <CitedText answer={answer} />
+              <CitedText answer={answer} prefix={prefix} />
             </p>
             {answer.crisisPlan && <CrisisPlan plan={answer.crisisPlan} now={referenceTime} />}
             {answer.conversationUsed && <p className="small muted">{en.answer.continuing}</p>}
@@ -330,7 +394,7 @@ export default function ResidentApp() {
                   {answer.evidence.map((item, index) => (
                     <details
                       className="evidence-card"
-                      id={`evidence-${item.id}`}
+                      id={`${prefix}evidence-${item.id}`}
                       key={item.id}
                       open={index === 0}
                     >
@@ -405,7 +469,7 @@ export default function ResidentApp() {
                 </div>
               </section>
             )}
-            {answer.needsAddress && (
+            {latest && answer.needsAddress && (
               <PropertyLookup
                 initialAddress={
                   /^\s*\d+\s+\S/.test(answer.query) ? answer.query : ""
@@ -414,8 +478,8 @@ export default function ResidentApp() {
             )}
           </div>
           {answer.nextSteps.length > 0 && (
-            <aside className="next-steps" aria-labelledby="next-title">
-              <h2 id="next-title">{en.answer.next}</h2>
+            <aside className="next-steps" aria-labelledby={`${prefix}next-title`}>
+              <h2 id={`${prefix}next-title`}>{en.answer.next}</h2>
               <ol>
                 {answer.nextSteps.map((step) => (
                   <li key={step.url}>
@@ -431,7 +495,13 @@ export default function ResidentApp() {
             </aside>
           )}
         </section>
-      )}
+      );})}
+      {busy && <div className="chat-pending content-width">
+        <div className="chat-question"><span className="small muted">{en.form.you}</span><p>{pendingQuestion}</p></div>
+        <p>{en.form.busy}</p>
+      </div>}
+      </div>}
+      {hasChat && <div className="chat-composer" ref={composer}>{questionForm}</div>}
     </main>
   );
 }

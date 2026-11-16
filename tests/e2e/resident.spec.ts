@@ -98,7 +98,7 @@ test("answer separates source statements, interpretation, and uncertainty with a
 
 test("regional questions require an area and city changes keep evidence in the selected jurisdiction", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Find housing and property information in Tampa Bay" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "What would you like to find out?" })).toBeVisible();
   const area = page.getByLabel("Your area");
   await expect(area).toHaveValue("tampa-bay");
   await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).fill("Where can I find housing assistance?");
@@ -299,7 +299,7 @@ test("model selection and fallback remain labeled with accessible source citatio
     });
     expect(results.violations).toEqual([]);
     if (current === "used")
-      await page.getByRole("button", { name: "New question" }).click();
+      await page.getByRole("button", { name: "New conversation" }).click();
   }
 });
 

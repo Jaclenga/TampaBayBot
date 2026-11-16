@@ -47,15 +47,15 @@ test('source demo works on mobile and marks unevaluated results honestly', async
 });
 test('jurisdiction clarification preserves the original housing topic and reset clears it', async ({ page }) => {
   await page.goto('/');
-  const input = page.getByRole('textbox', { name: 'Ask a question or enter a property address', exact: true });
+  const input = page.locator('#question');
   await input.fill('I need help paying rent');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await expect(page.locator('.status-label')).toHaveText('Choose a city or county');
   await input.fill('Tampa');
-  await page.getByRole('button', { name: 'Search', exact: true }).click();
+  await page.getByRole('button', { name: 'Send', exact: true }).click();
   await expect(page.locator('.citation-link').first()).toBeVisible();
-  await expect(page.locator('.evidence-list')).toContainText('Fictional rental assistance');
-  await page.getByRole('button', { name: 'New question', exact: true }).click();
+  await expect(page.locator('.evidence-list').last()).toContainText('Fictional rental assistance');
+  await page.getByRole('button', { name: 'New conversation', exact: true }).click();
   await expect(input).toHaveValue('');
   await expect(page.locator('.answer-layout')).toHaveCount(0);
 });

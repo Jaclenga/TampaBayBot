@@ -59,20 +59,20 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeFocused();
   await page.keyboard.press('Tab');
-  const examples = page.getByRole('group', { name: /Not sure where to start/ }).getByRole('button');
+  const examples = page.getByRole('group', { name: 'Example questions' }).getByRole('button');
   await expect(examples).toHaveCount(4);
   for (let index = 0; index < await examples.count(); index++) {
     await expect(examples.nth(index)).toBeFocused();
     await page.keyboard.press('Tab');
   }
   await page.keyboard.press('Shift+Tab');
-  const example = await examples.last().innerText();
+  await examples.first().focus();
   await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
+  await expect(page.locator('.question-examples')).toHaveCount(0);
+  await page.getByRole('button', { name: 'New conversation', exact: true }).click();
   await expect(input).toBeFocused();
-  await expect(input).toHaveValue(example);
-  await expect(page.locator('.answer-layout')).toHaveCount(0);
-  await page.keyboard.press('ControlOrMeta+A');
-  await page.keyboard.press('Backspace');
+  await expect(input).toHaveValue('');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('alert')).toBeVisible();
@@ -96,7 +96,7 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   expect(tree).toContain('Fictional rental assistance');
   await testInfo.attach('keyboard-accessibility-tree', { body: tree, contentType: 'text/plain' });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
-  await tabTo(page, page.getByRole('button', { name: 'New question', exact: true }));
+  await tabTo(page, page.getByRole('button', { name: 'New conversation', exact: true }));
   await page.keyboard.press('Enter');
   await expect(input).toBeFocused();
   await expect(input).toHaveValue('');
