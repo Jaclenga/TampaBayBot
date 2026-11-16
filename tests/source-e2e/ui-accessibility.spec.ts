@@ -32,7 +32,7 @@ async function expectReflow(page: Page, label: string) {
 
 async function answer(page: Page) {
   await page.getByLabel('Your area', { exact: true }).selectOption('tampa');
-  await page.getByRole('textbox', { name: 'What do you need help with?', exact: true }).fill('Where can I find rental assistance?');
+  await page.getByRole('textbox', { name: 'Ask a question or enter a property address', exact: true }).fill('Where can I find rental assistance?');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
   await page.locator('.citation-link').first().click();
@@ -54,14 +54,17 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.keyboard.press('ArrowDown');
   await expect(area).toHaveValue('tampa');
   await page.keyboard.press('Tab');
-  const examples = page.getByRole('group', { name: /Try a question/ }).getByRole('button');
+  const input = page.getByRole('textbox', { name: 'Ask a question or enter a property address', exact: true });
+  await expect(input).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeFocused();
+  await page.keyboard.press('Tab');
+  const examples = page.getByRole('group', { name: /Not sure where to start/ }).getByRole('button');
   await expect(examples).toHaveCount(4);
   for (let index = 0; index < await examples.count(); index++) {
     await expect(examples.nth(index)).toBeFocused();
     await page.keyboard.press('Tab');
   }
-  const input = page.getByRole('textbox', { name: 'What do you need help with?', exact: true });
-  await expect(input).toBeFocused();
   await page.keyboard.press('Shift+Tab');
   const example = await examples.last().innerText();
   await page.keyboard.press('Enter');

@@ -11,13 +11,16 @@ export const en = {
     evaluation: "Evaluation",
   },
   hero: {
-    title: "Find housing help and answers about your property",
+    title: "Find housing and property information in Tampa Bay",
     description:
-      "TampaBayBot helps Tampa Bay renters and homeowners find housing assistance, understand zoning and permits, and look up nearby development, with links to the public sources and offices that can help.",
+      "Looking for housing assistance, building permits, or information about a property? TampaBayBot helps Tampa Bay residents find answers from local government websites and public records.",
+    sources: "Answers are based on public sources and include links to the original information. Check those links for the latest details.",
+    aboutLink: "About the project and how answers work",
+    notice: "Independent project, not affiliated with local government. Information may be incomplete or outdated. Check original sources before making important decisions.",
   },
   form: {
-    label: "What do you need help with?",
-    examplesLabel: "Try a question: choose one to edit before searching:",
+    label: "Ask a question or enter a property address",
+    examplesLabel: "Not sure where to start? Try asking:",
     examples: ["Where can I find help paying rent in Tampa?", "Where do I check if I need a building permit in Clearwater?", "How do I look up the zoning for my property?", "What development is planned near me?"],
     area: "Your area",
     region: "Tampa Bay region",
@@ -26,7 +29,7 @@ export const en = {
     submit: "Search",
     busy: "Searching...",
     privacy:
-      "Your question goes to the app backend through the hosting service. Leave out names, account numbers, and private details; questions are not automatically redacted.",
+      "Leave out names, account numbers, and other private details. See how your information is handled in our privacy notice.",
     empty: "Enter a housing question or a Tampa Bay street address.",
     error: "We couldn’t complete that search. Please try again.",
     max: "Keep your question under 1,000 characters.",

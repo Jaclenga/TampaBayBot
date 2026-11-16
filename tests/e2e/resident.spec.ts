@@ -73,7 +73,7 @@ test("answer separates source statements, interpretation, and uncertainty with a
   } }));
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
-  await page.getByRole("textbox", { name: "What do you need help with?", exact: true }).fill("Are applications open?");
+  await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).fill("Are applications open?");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.locator(".citation-link")).toHaveCount(2);
   await expect(page.locator(".unverified-reference")).toHaveText("[unverified reference]");
@@ -98,10 +98,10 @@ test("answer separates source statements, interpretation, and uncertainty with a
 
 test("regional questions require an area and city changes keep evidence in the selected jurisdiction", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Find housing help and answers about your property" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Find housing and property information in Tampa Bay" })).toBeVisible();
   const area = page.getByLabel("Your area");
   await expect(area).toHaveValue("tampa-bay");
-  await page.getByRole("textbox", { name: "What do you need help with?", exact: true }).fill("Where can I find housing assistance?");
+  await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).fill("Where can I find housing assistance?");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.locator(".status-label")).toHaveText("Choose a city or county");
 
@@ -272,7 +272,7 @@ test("model selection and fallback remain labeled with accessible source citatio
   await page.getByLabel("Your area").selectOption("tampa");
   for (const current of ["used", "fallback"]) {
     status = current;
-    const question = page.getByRole("textbox", { name: "What do you need help with?", exact: true });
+    const question = page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true });
     await expect(question).toBeEnabled();
     await question.fill("Where can I find help paying for housing?");
     await page.getByRole("button", { name: "Search", exact: true }).click();
@@ -313,7 +313,7 @@ test("keyboard search produces inspectable citations and actionable next steps",
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await page.getByLabel("Your area").selectOption("tampa");
-  const question = page.getByRole("textbox", { name: "What do you need help with?", exact: true });
+  const question = page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true });
   await expect(question).toBeEnabled();
   await question.focus();
   await page.keyboard.type("Where can I find help paying for housing?");
@@ -363,10 +363,10 @@ test("empty questions show an accessible error and unsupported programs remain u
     "Enter a housing question",
   );
   await expect(
-    page.getByRole("textbox", { name: "What do you need help with?", exact: true }),
+    page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }),
   ).toHaveAttribute("aria-invalid", "true");
   await page
-    .getByRole("textbox", { name: "What do you need help with?", exact: true })
+    .getByRole("textbox", { name: "Ask a question or enter a property address", exact: true })
     .fill('Where do I apply for the "Magic Free Mansion" grant?');
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.locator(".answer-lead")).toContainText("could not verify");
@@ -396,7 +396,7 @@ test("small screens, enlarged text and reduced motion retain all primary control
   await page.addStyleTag({ content: "html { zoom: 2; }" });
   await expect(page.getByRole("button", { name: "Search", exact: true })).toBeVisible();
   await expect(
-    page.getByRole("textbox", { name: "What do you need help with?", exact: true }),
+    page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }),
   ).toBeVisible();
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
@@ -418,7 +418,7 @@ test("an address entered as the question opens a prefilled property lookup witho
   });
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
-  const question = page.getByRole("textbox", { name: "What do you need help with?", exact: true });
+  const question = page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true });
   await expect(question).toBeEnabled();
   await question.fill("315 E Kennedy Blvd, Tampa");
   await page.getByRole("button", { name: "Search", exact: true }).click();
@@ -510,7 +510,7 @@ test("property workflow requires address confirmation and handles GIS failures w
   );
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
-  await page.getByRole("textbox", { name: "What do you need help with?", exact: true }).fill("What zoning applies to this address?");
+  await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).fill("What zoning applies to this address?");
   await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.getByLabel("Tampa Bay street address")).toBeVisible();
   await page
@@ -565,7 +565,7 @@ test("private identifiers show an accessible error and residents can correct the
 }, testInfo) => {
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
-  const input = page.getByRole("textbox", { name: "What do you need help with?", exact: true });
+  const input = page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true });
   await expect(input).toBeEnabled();
   await input.fill("My SSN is 000-00-0000. Where can I find housing help?");
   const blocked = page.waitForResponse(

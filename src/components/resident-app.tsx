@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import Link from "next/link";
 import { ArrowRight, ChevronRight, Search, Undo2 } from "lucide-react";
 import type { ResidentAnswer } from "@/lib/core/answer.mjs";
-import { en as english } from "@/lib/i18n/en";
 import { useLocale, usePageTitle } from "@/lib/i18n/locale";
 import { localizeAnswer } from "@/lib/i18n/answer.mjs";
 import type { ConversationContext } from "@/lib/core/conversation.mjs";
@@ -74,11 +73,9 @@ function CitedText({ answer }: { answer: ResidentAnswer }) {
   );
 }
 
-export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
+export default function ResidentApp() {
   const { locale, copy: en } = useLocale();
   usePageTitle(`${en.hero.title} | ${en.brand}`);
-  const privacyNotice = modelNotice === english.modelPrivacy.disabled ? en.modelPrivacy.disabled
-    : modelNotice === english.modelPrivacy.enabled ? en.modelPrivacy.enabled : modelNotice;
   const ready = useSyncExternalStore(
     subscribeToReady,
     clientReady,
@@ -201,16 +198,6 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
               </select>
               <p className="small muted" id="jurisdiction-hint">{en.form.areaHint}</p>
             </div>
-            {!answer && <div className="question-examples" role="group" aria-label={en.form.examplesLabel}>
-              <p>{en.form.examplesLabel}</p>
-              <ul>{en.form.examples.map((example) => <li key={example}>
-                <button type="button" disabled={!ready || busy} onClick={() => {
-                  setQuestion(example);
-                  setErrorCode(null);
-                  input.current?.focus();
-                }}>{example}</button>
-              </li>)}</ul>
-            </div>}
             <label htmlFor="question">{en.form.label}</label>
             <div className={`question-input ${error ? "invalid" : ""}`}>
               <textarea
@@ -239,16 +226,31 @@ export default function ResidentApp({ modelNotice }: { modelNotice: string }) {
                 <Search size={18} aria-hidden="true" />
               </button>
             </div>
+            {!answer && <div className="question-examples" role="group" aria-label={en.form.examplesLabel}>
+              <p>{en.form.examplesLabel}</p>
+              <ul>{en.form.examples.map((example) => <li key={example}>
+                <button type="button" disabled={!ready || busy} onClick={() => {
+                  setQuestion(example);
+                  setErrorCode(null);
+                  input.current?.focus();
+                }}>{example}</button>
+              </li>)}</ul>
+            </div>}
             {error && (
               <p className="error-text" id="question-error" role="alert">
                 {error}
               </p>
             )}
             <p className="privacy-hint" id="question-privacy">
-              {en.form.privacy} {privacyNotice} <a href="/privacy/">{en.footer.privacy}</a>
+              {en.form.privacy} <a href="/privacy/">{en.footer.privacy}</a>
             </p>
             {conversation && <p className="small muted">{en.answer.followup}</p>}
           </form>
+          {!answer && <div className="home-source-note small muted">
+            <p>{en.hero.sources}</p>
+            <Link href="/about#approach" className="text-link">{en.hero.aboutLink}</Link>
+            <p>{en.hero.notice}</p>
+          </div>}
           <p className="sr-only" role="status">
             {busy ? en.form.busy : ""}
           </p>

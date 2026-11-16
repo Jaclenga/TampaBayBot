@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "161482adc276f1eeef0d6bc68f569b9ca6b61db527fec9dca623962af267e6aa",
+  "content_sha256": "839adad19fa0b8880085a567c41836a17b82e2a30d2687a208394a19cd691396",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -942,8 +942,8 @@
     },
     {
       "path": "src/app/page.tsx",
-      "bytes": 622,
-      "sha256": "9c93c70e19f46e9569bf31926d91cc9c9b050962fe21eaf6706b687e9111c3a2"
+      "bytes": 538,
+      "sha256": "ef6f714d6ee4be8cf8e40219f7e356fdf2678b4321eede031da37d8033dd749a"
     },
     {
       "path": "src/app/privacy/page.tsx",
@@ -982,8 +982,8 @@
     },
     {
       "path": "src/components/resident-app.tsx",
-      "bytes": 18560,
-      "sha256": "1db62c343a2c89f07b58b1d7de41afc0b477e37154af294a4babe96b4b292091"
+      "bytes": 18518,
+      "sha256": "4c1fee7dc9c0ed18181c61516f64301b9d45de5acae414a61bbdf413d77f675e"
     },
     {
       "path": "src/components/site-shell.tsx",
@@ -992,8 +992,8 @@
     },
     {
       "path": "src/components/sources-content.tsx",
-      "bytes": 12177,
-      "sha256": "07e37131baeaa08c60c919c72da532723e30c138c5c07a9eeea8dd5df4e6fcac"
+      "bytes": 11853,
+      "sha256": "eb91e2a912960e8cef0014a1cc6d406a070e53c8a217277eae82b1f925b8a9ac"
     },
     {
       "path": "src/lib/citations/evidence.mjs",
@@ -1287,13 +1287,13 @@
     },
     {
       "path": "src/lib/i18n/en.ts",
-      "bytes": 11266,
-      "sha256": "8d961cc6f48061f079d1f846c73adf305da2881c216726cf69b3926ef7797012"
+      "bytes": 11581,
+      "sha256": "1a0b15dd279757f0b2c84f2afff74c6d500e2a40f2d2dbdc9d3eb52cd003b907"
     },
     {
       "path": "src/lib/i18n/es.ts",
-      "bytes": 12544,
-      "sha256": "3deec3ef2aaf2989b8326c5d33d4c076e2ada358a54364f9e30eb65c119c8e0b"
+      "bytes": 12919,
+      "sha256": "fcb07e5a55272bdf77b9988824d6a1838b33d78167633101e38eabeb04dd9392"
     },
     {
       "path": "src/lib/i18n/evaluation-en.ts",
@@ -1647,8 +1647,8 @@
     },
     {
       "path": "tests/e2e/accessibility-language.spec.ts",
-      "bytes": 7619,
-      "sha256": "b4c2e10f0532a74a4682c647e560a5f318eb54ef9c8173eacc4148fa3734d97a"
+      "bytes": 7664,
+      "sha256": "ec5cb4019f9bde61e888f5d0f734b7d66def13a7249c1f3e19237864fdab8851"
     },
     {
       "path": "tests/e2e/housing-help.spec.ts",
@@ -1657,18 +1657,18 @@
     },
     {
       "path": "tests/e2e/privacy.spec.ts",
-      "bytes": 2416,
-      "sha256": "03475238804c4ba822b6edd547d40e96a04d72f3d97e9364f95e4369fdb2d892"
+      "bytes": 2431,
+      "sha256": "bd93703103a32bae0576ec699aec1cef8fa05d7b9b95b7bba029f8ca10f7181f"
     },
     {
       "path": "tests/e2e/resident.spec.ts",
-      "bytes": 28752,
-      "sha256": "33b4bc8729e7fd611812d86512527f81e6aa1c4828817b5283f1470eebd41ea4"
+      "bytes": 28903,
+      "sha256": "1b61c6219d124854d00fcc5ed92a464d71e00f0321f9c49ae3cfe7561cdf2e39"
     },
     {
       "path": "tests/e2e/security.spec.ts",
-      "bytes": 7668,
-      "sha256": "0e3f375778e6f3951991e1d70df63fd948a1fff23da5889626b17fa1646790b5"
+      "bytes": 7683,
+      "sha256": "3610bad42630400cdb623f41d91daad57575b0ea6449612b5dd7bbafa1f30c0d"
     },
     {
       "path": "tests/e2e/source-freshness.spec.ts",
@@ -1897,8 +1897,8 @@
     },
     {
       "path": "tests/source-e2e/demo.spec.ts",
-      "bytes": 4569,
-      "sha256": "199dd14b5dc58440de0ba4967faa10e29e92812eb83aa3eecbde747d75e28037"
+      "bytes": 4599,
+      "sha256": "c353c77770fdb563fcc2f86ee3363cadb7bce33056cb7178fd68d5ab3a9dced6"
     },
     {
       "path": "tests/source-e2e/language.spec.ts",
@@ -1907,8 +1907,8 @@
     },
     {
       "path": "tests/source-e2e/ui-accessibility.spec.ts",
-      "bytes": 12800,
-      "sha256": "785bee643ef507de696ccca7baeb9b05a8a0887397d976b44bee6d58dc9efec0"
+      "bytes": 13000,
+      "sha256": "3f950c2b13178f922b0b27fc210fcf34c13607117f676e84cf62b1a48cb12761"
     },
     {
       "path": "tests/source-fixtures.test.mjs",

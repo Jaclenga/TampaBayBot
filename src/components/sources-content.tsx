@@ -182,16 +182,6 @@ export default function SourcesContent({ sources }: { sources: Source[] }) {
           </div>
         </nav>
       )}
-      <section className="method-callout">
-        <div>
-          <h2>{en.sourcePage.method}</h2>
-          <p>{en.sourcePage.methodText}</p>
-          <p>{en.sourcePage.method2}</p>
-          <Link href="/about" className="text-link">
-            {en.labels.projectAbout}
-          </Link>
-        </div>
-      </section>
     </main>
   );
 }

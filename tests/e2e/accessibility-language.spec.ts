@@ -39,7 +39,7 @@ test("classic keyboard entry and language switch preserve an in-progress questio
   await expect(page.locator("#main")).toBeFocused();
 
   await page.getByLabel("Your area").selectOption("tampa");
-  const question = page.getByRole("textbox", { name: "What do you need help with?", exact: true });
+  const question = page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true });
   await question.fill("Where can I find housing help?");
   const switcher = page.locator("#interface-language");
   await switcher.focus();
@@ -54,8 +54,8 @@ test("classic keyboard entry and language switch preserve an in-progress questio
 
   await switcher.selectOption("en");
   await expect(page.getByLabel("Your area")).toHaveValue("tampa");
-  await expect(page.getByRole("textbox", { name: "What do you need help with?", exact: true })).toHaveValue("Where can I find housing help?");
-  await page.getByRole("textbox", { name: "What do you need help with?", exact: true }).focus();
+  await expect(page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true })).toHaveValue("Where can I find housing help?");
+  await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).focus();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Search", exact: true })).toBeFocused();
   await expectVisibleFocusRing(page);
