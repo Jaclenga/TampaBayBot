@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generation": "89812fe81291c82f577a65a2e66e93cfa63bd5c1b64f0f944ef4feb12bc1468d",
+  "generation": "785e35ba3b89d436b5142bd03d27fb5db3b743065cffbb036c15a98728c9e948",
   "sources": [
     {
       "source_id": "tampa-rmap",
@@ -99,7 +99,8 @@
       "review_notes": null,
       "retrieval_date": null,
       "source_updated_date": null,
-      "last_error": "Not fetched in this source-only distribution."
+      "last_error": "Not fetched in this source-only distribution.",
+      "paragraph_container_selector": "article .field--name-field-pg-card-text > div"
     },
     {
       "source_id": "hillsborough-help",

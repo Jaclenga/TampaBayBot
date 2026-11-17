@@ -1,0 +1,56 @@
+name: Bounded production performance sampling
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '47 6 * * *'
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: production-performance-sampling
+  cancel-in-progress: false
+jobs:
+  sample:
+    if: ${{ vars.TAMPABAYBOT_BENCHMARK_ENABLED == 'true' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Find the last metadata-only sampling state
+        id: previous
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner,repo}=context.repo;
+            const runs=await github.rest.actions.listWorkflowRuns({owner,repo,workflow_id:'performance-sampling.yml',branch:'main',status:'completed',per_page:10});
+            for(const run of runs.data.workflow_runs){
+              const artifacts=await github.rest.actions.listWorkflowRunArtifacts({owner,repo,run_id:run.id});
+              if(artifacts.data.artifacts.some(item=>item.name==='performance-samples'&&!item.expired)){
+                core.setOutput('run_id',String(run.id));break;
+              }
+            }
+      - uses: actions/download-artifact@v4
+        if: ${{ steps.previous.outputs.run_id != '' }}
+        with:
+          name: performance-samples
+          path: work/performance-collection
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.previous.outputs.run_id }}
+      - name: Collect paced public-fixture measurements
+        env:
+          TAMPABAYBOT_BENCHMARK_RELEASE: ${{ vars.TAMPABAYBOT_BENCHMARK_RELEASE }}
+          TAMPABAYBOT_BENCHMARK_START_DATE: ${{ vars.TAMPABAYBOT_BENCHMARK_START_DATE }}
+          BENCHMARK_URL: ${{ vars.TAMPABAYBOT_BENCHMARK_URL || 'https://tampabaybot-housing-preview.pages.dev/' }}
+        run: node scripts/benchmark-deployed.mjs --allow-network --allow-model --base "$BENCHMARK_URL" --samples 100 --target 100 --output work/performance-collection/state.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-samples
+          path: work/performance-collection/state.json
+          if-no-files-found: warn
+          retention-days: 90
+      # Fixed synthetic questions and one public civic location only. State
+      # contains measurements, never request bodies, conversations or excerpts.

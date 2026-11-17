@@ -3,13 +3,39 @@ import assert from 'node:assert/strict';
 import { Worker } from 'node:worker_threads';
 import { EventEmitter, getEventListeners } from 'node:events';
 import { performance } from 'node:perf_hooks';
-import { processSource } from './process-source.mjs';
+import { processSource, createPdfProcessWorker } from './process-source.mjs';
 import { normalize, chunkUnits, sha256 } from './normalize.mjs';
 import { DEFAULT_NORMALIZATION_LIMITS } from './normalization-limits.mjs';
 
 const source = { source_id: 'synthetic', source_type: 'html', title: 'Synthetic source', canonical_url: 'https://example.gov/source' };
 const bytes = Buffer.from('<main><h2 id="apply">Application instructions</h2><p>Applications are closed until further notice.</p></main>');
 const date = '2026-09-16T12:00:00Z';
+
+function syntheticPdf() {
+  const text='BT /F1 12 Tf 72 720 Td (A fictional PDF notice for isolated parser testing.) Tj ET';
+  const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',`<< /Length ${text.length} >>\nstream\n${text}\nendstream`];
+  let pdf='%PDF-1.4\n';const offsets=[0];
+  for(const [index,object]of objects.entries()){offsets.push(Buffer.byteLength(pdf));pdf+=`${index+1} 0 obj\n${object}\nendobj\n`;}
+  const xref=Buffer.byteLength(pdf);pdf+='xref\n0 6\n0000000000 65535 f \n';
+  for(const offset of offsets.slice(1))pdf+=`${String(offset).padStart(10,'0')} 00000 n \n`;
+  return Buffer.from(pdf+`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+}
+test('PDF process isolation returns complete literal evidence without parser output',async()=>{
+  const pdf=syntheticPdf(),definition={...source,source_type:'pdf'};
+  const result=await processSource(pdf,definition,date,sha256(pdf),{workerFactory:createPdfProcessWorker});
+  assert.ok(result.chunks.some(chunk=>chunk.text.includes('A fictional PDF notice for isolated parser testing.')));
+  assert.ok(result.chunks.every(chunk=>chunk.page===1&&chunk.raw_content_hash===sha256(pdf)));
+});
+test('PDF process failures and deadlines stay contained and sanitized',async()=>{
+  const invalid=Buffer.from('This is not a PDF document.');
+  await assert.rejects(processSource(invalid,{...source,source_type:'pdf'},date,sha256(invalid),{workerFactory:createPdfProcessWorker}),
+    error=>error.code==='source_processing_failed'&&!error.message.includes('not a PDF'));
+  const pdf=syntheticPdf();
+  await assert.rejects(processSource(pdf,{...source,source_type:'pdf'},date,sha256(pdf),{workerFactory:createPdfProcessWorker,timeoutMs:1}),
+    error=>error.code==='source_processing_timeout');
+});
 
 test('isolated processing preserves literal units, hashes, annotations and chunk locators', async () => {
   const normalized = await normalize(bytes, source);

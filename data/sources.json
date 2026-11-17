@@ -96,7 +96,8 @@
     "review_notes": null,
     "retrieval_date": null,
     "source_updated_date": null,
-    "last_error": "Not fetched in this source-only distribution."
+    "last_error": "Not fetched in this source-only distribution.",
+    "paragraph_container_selector": "article .field--name-field-pg-card-text > div"
   },
   {
     "source_id": "hillsborough-help",

@@ -35,7 +35,7 @@ Read `report.md` for the attention list and `report.json` for resource IDs, URL 
 
 Each `report.resources[]` entry has a `factual_verification` object. Its `eligibility`, `hours`, and `contact_details` values remain `not_checked_by_monitor` even after a successful link check. Substantive review of those facts remains a human task.
 
-The [scheduled source-refresh workflow](../.github/workflows/source-refresh.yml) stages retrieval sources, then runs the live checker each Monday and retains both metadata-only reports for 14 days. It does not edit the registries, approve a source update, publish a Pages build, or deploy. The live checker is read-only: its observed check time, status, redirect, and content-change signals appear in ignored reports until a maintainer copies supported metadata into a reviewed repository edit. An empty `lastLinkCheckedAt` in the repository does not mean the scheduled checker never ran; consult the dated workflow artifact.
+The [scheduled source-refresh workflow](../.github/workflows/source-refresh.yml) stages housing retrieval sources daily (the complete registry on Mondays), then runs the live checker and retains both metadata-only reports for 14 days. It does not edit the registries, approve a source update, publish a Pages build, or deploy. The live checker is read-only: its observed check time, status, redirect, and content-change signals appear in ignored reports until a maintainer copies supported metadata into a reviewed repository edit. An empty `lastLinkCheckedAt` in the repository does not mean the scheduled checker never ran; consult the dated workflow artifact.
 
 ### Weekly issue triage
 

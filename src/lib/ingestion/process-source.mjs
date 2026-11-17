@@ -1,4 +1,6 @@
 import { Worker } from 'node:worker_threads';
+import { fork } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { DEFAULT_NORMALIZATION_LIMITS } from './normalization-limits.mjs';
 
@@ -8,7 +10,27 @@ export class SourceProcessingError extends Error {
 
 export const SOURCE_PROCESSING_TIMEOUT_MS = 15000;
 const workerUrl = new URL('./source-worker.mjs', import.meta.url);
-const createWorker = (url, options) => new Worker(url, options);
+export function createPdfProcessWorker(_url, options) {
+  const child=fork(fileURLToPath(new URL('./source-process.mjs',import.meta.url)),[],{
+    execArgv:['--max-old-space-size=192','--max-semi-space-size=8','--stack-size=4096'],
+    env:process.platform==='win32'&&process.env.SystemRoot?{SystemRoot:process.env.SystemRoot}:{},
+    stdio:['ignore','ignore','ignore','ipc'],serialization:'advanced',windowsHide:true,
+  });
+  child.send(options.workerData,error=>{if(error)child.emit('error',error);});
+  return {
+    once:(event,listener)=>child.once(event,listener),
+    async terminate(){
+      if(child.exitCode!==null||child.signalCode!==null)return child.exitCode;
+      return new Promise((resolve,reject)=>{
+        child.once('exit',resolve);
+        child.once('error',reject);
+        if(!child.kill('SIGKILL'))reject(new Error('Source process termination failed.'));
+      });
+    },
+  };
+}
+const createWorker = (url, options) => process.platform==='win32'&&options.workerData.source.source_type==='pdf'
+  ? createPdfProcessWorker(url,options) : new Worker(url,options);
 
 /** Node-only acquisition boundary. A stalled parser must not block its parent
  * event loop or keep running after its deadline. Output budgets are enforced

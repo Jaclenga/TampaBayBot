@@ -63,3 +63,11 @@ test('chunk boundaries preserve literal normalized substrings and independently 
     assert.equal(chunk.url, 'https://example.gov/report.pdf#page=3');
   }
 });
+
+test('configured repair-program card divs preserve a closure and existing-application exception', async () => {
+  const source = { source_type: 'html', title: 'Fictional repair program', canonical_url: 'https://example.gov/repair', selector: 'article', paragraph_container_selector: 'article .field--name-field-pg-card-text > div' };
+  const html = '<article><div class="field--name-field-pg-card-text"><div>New applications for this fictional program are paused.</div><div>&nbsp;</div><div>Earlier applications remain under review, subject to funding.</div><div>Contact the program office for current information.</div></div></article>';
+  const result = await normalize(Buffer.from(html), source);
+  assert.deepEqual(result.units.map(unit => unit.text), ['New applications for this fictional program are paused.', 'Earlier applications remain under review, subject to funding.', 'Contact the program office for current information.']);
+  await assert.rejects(normalize(Buffer.from(html), { ...source, paragraph_container_selector: undefined }), /no evidence blocks/);
+});

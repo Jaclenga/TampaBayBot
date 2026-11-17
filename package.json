@@ -54,6 +54,7 @@
     "test:source:browser": "playwright test --config playwright.source.config.ts",
     "benchmark:performance": "node scripts/benchmark-performance.mjs",
     "benchmark:browser": "playwright test --config playwright.performance.config.ts",
+    "benchmark:deployed": "node --use-system-ca scripts/benchmark-deployed.mjs",
     "demo": "node scripts/demo.mjs",
     "release:manifest": "node scripts/update-source-manifest.mjs",
     "check:corpus": "npm run typecheck && npm run lint && npm run test:corpus && npm run evaluate && npm run eval:suite && npm run build",

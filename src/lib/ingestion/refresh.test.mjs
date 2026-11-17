@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { digest, json, makeCorpus, readCorpus } from './generation.mjs';
 import { applyRefresh, inspectCandidate, stageRefresh, verifyPreservedSources } from './refresh.mjs';
@@ -10,6 +10,28 @@ import { deriveFacts } from '../domain/facts.mjs';
 const updatedHtml = '<main><h1>Fixture program</h1><p>Updated synthetic guidance requires agency review.</p></main>';
 const fetchUpdated = async () => new Response(updatedHtml);
 const buildPassed = async () => ({ status: 'passed', artifact: 'synthetic-test-artifact' });
+
+test('category refresh fetches only that category and preserves other reviewed evidence', async t => {
+  const { root, corpus, bytes } = await refreshFixture(t);
+  const housing = { ...corpus.sources[0], categories: ['housing'] };
+  const other = { ...corpus.sources[0], source_id: 'other', categories: ['zoning'], canonical_url: 'https://example.gov/zoning', raw_path: `data/raw/other/${housing.content_hash}.html` };
+  await mkdir(join(root, 'data/raw/other'), { recursive: true });
+  await writeFile(join(root, other.raw_path), bytes);
+  // An unchanged nonselected source retains its dated evidence; no source is
+  // silently relabeled or refreshed just because it is in the registry.
+  const chunks = [...corpus.chunks, ...corpus.chunks.map(chunk => ({ ...chunk, id: 'other-'+chunk.id, source_id: 'other' }))];
+  const baseline = makeCorpus([housing, other], chunks);
+  await writeFile(join(root, 'data/corpus.json'), json(baseline));
+  await writeFile(join(root, 'data/sources.json'), json(baseline.sources));
+  let calls = 0;
+  const staged = await stageRefresh(root, { category: 'housing', fetchImpl: async url => { calls++; assert.equal(String(url), housing.fetch_url); return fetchUpdated(); } });
+  assert.equal(calls, 1);
+  const candidate = await inspectCandidate(root, staged.directory);
+  assert.equal(candidate.corpus.sources.find(source => source.source_id === 'other').retrieval_date, other.retrieval_date);
+  assert.deepEqual(candidate.corpus.chunks.filter(chunk => chunk.source_id === 'other'), chunks.filter(chunk => chunk.source_id === 'other'));
+  await assert.rejects(stageRefresh(root, { category: 'invented' }), /Unsupported source category/);
+  await assert.rejects(stageRefresh(root, { category: 'housing', sourceId: housing.source_id }), /not both/);
+});
 
 test('redirected acquisition fails before contacting its target and preserves active evidence', async t => {
   const { root, corpus } = await refreshFixture(t);

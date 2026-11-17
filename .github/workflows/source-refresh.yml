@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '23 10 * * 1'
+    - cron: '23 10 * * 0,2-6'
 permissions:
   contents: read
 concurrency:
@@ -21,7 +22,14 @@ jobs:
       - run: npm ci
       - name: Stage source updates without applying them
         id: source_stage
-        run: npm run source:stage -- --output work/source-refresh/scheduled
+        env:
+          SOURCE_SCOPE: ${{ github.event.schedule == '23 10 * * 0,2-6' && 'housing' || 'all' }}
+        run: |
+          if [ "$SOURCE_SCOPE" = "housing" ]; then
+            npm run source:stage -- --category housing --output work/source-refresh/scheduled
+          else
+            npm run source:stage -- --output work/source-refresh/scheduled
+          fi
       - name: Check official resource links and review dates
         id: freshness
         if: ${{ always() && (steps.source_stage.outcome == 'success' || steps.source_stage.outcome == 'failure') }}

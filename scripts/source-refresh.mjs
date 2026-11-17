@@ -9,12 +9,13 @@ const root = resolve(import.meta.dirname, '..');
 const [command, ...args] = process.argv.slice(2);
 const { values } = parseArgs({ args, options: {
   output: { type: 'string' }, source: { type: 'string' }, offline: { type: 'boolean' }, candidate: { type: 'string' },
+  category: { type: 'string' },
   approve: { type: 'string' }, reviewer: { type: 'string' }, 'worker-name': { type: 'string' },
   'local-diff': { type: 'boolean' }, deploy: { type: 'boolean' }, generation: { type: 'string' }, 'expect-current': { type: 'string' },
 }, strict: true });
 
 if (command === 'stage') {
-  const result = await stageRefresh(root, { output: values.output, sourceId: values.source, offline: values.offline });
+  const result = await stageRefresh(root, { output: values.output, sourceId: values.source, category: values.category, offline: values.offline });
   console.log(json({ candidate: result.directory, candidate_sha256: result.candidate_sha256, ...result.report }));
   if (result.report.failures) process.exitCode = 1;
 } else if (command === 'review') {

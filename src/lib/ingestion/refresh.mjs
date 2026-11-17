@@ -46,8 +46,12 @@ export function sourceChange(before, after, oldChunks, newChunks, details = {}) 
 }
 
 /** Acquisition writes only an ignored candidate tree. Approval/application is a separate operation. */
-export async function stageRefresh(root, { output, sourceId, offline = false, fetchImpl,
+export async function stageRefresh(root, { output, sourceId, category, offline = false, fetchImpl,
   downloadOptions = {}, normalizeImpl = normalize, now = () => new Date().toISOString() } = {}) {
+  if (category !== undefined) {
+    assert.ok(['housing', 'zoning', 'permitting', 'development', 'navigation'].includes(category), 'Unsupported source category');
+    assert.ok(!sourceId, 'Choose one source or one category, not both');
+  }
   output ??= `work/source-refresh/${new Date().toISOString().replaceAll(/[:.]/g, '-')}-${randomUUID().slice(0, 8)}`;
   const directory = await workspacePath(root, output);
   assert.ok(directory.startsWith(`${resolve(root, 'work/source-refresh')}${sep}`), 'Candidates must stay below work/source-refresh/');
@@ -73,7 +77,7 @@ export async function stageRefresh(root, { output, sourceId, offline = false, fe
   for (const source of nextSources) {
     const previous = current.get(source.source_id); const oldChunks = nextChunks.get(source.source_id); const attemptedAt = now();
     const configurationChanged = changedConfiguration(previous, source).length > 0;
-    if (sourceId && source.source_id !== sourceId || source.ingestion_method === 'live-query-only') {
+    if (sourceId && source.source_id !== sourceId || category && !source.categories?.includes(category) || source.ingestion_method === 'live-query-only') {
       if (configurationChanged && oldChunks.length) withholdPreviousEvidence(source, nextChunks);
       if (configurationChanged) report.sources.push(sourceChange(previous, source, oldChunks, nextChunks.get(source.source_id), { result: 'configuration_only', withheld_previous_chunks: oldChunks.length }));
       continue;
