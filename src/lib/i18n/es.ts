@@ -3,6 +3,7 @@ import { en } from './en.ts';
 export const es: typeof en = {
   ...en,
   chat: {
+    jumpLatest: "Ir al mensaje m?s reciente",
     replyReady: 'Su respuesta está lista.',
   },
   language: { label: 'Language / Idioma', scope: 'Las preguntas, las herramientas de propiedades y las páginas de referencia están disponibles en inglés y español. Las citas y los registros oficiales se conservan en su idioma original.' },

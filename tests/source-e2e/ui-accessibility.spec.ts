@@ -43,7 +43,8 @@ async function answer(page: Page) {
 test('keyboard-only question, error correction, citation and reset preserve focus and accessible names', async ({ page }, testInfo) => {
   await page.goto('/');
   await expect(page.locator('.site-header nav a')).toHaveText(['Ask a question', 'Public sources', 'Privacy', 'About']);
-  await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeDisabled();
+  await expect(page.locator('#jurisdiction')).toBeEnabled();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
   await page.keyboard.press('Enter');
@@ -57,6 +58,7 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.keyboard.press('Tab');
   const input = page.getByRole('textbox', { name: 'Ask a question or enter a property address', exact: true });
   await expect(input).toBeFocused();
+  await page.keyboard.type('Where can I find rental assistance?');
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeFocused();
   await page.keyboard.press('Tab');
@@ -75,7 +77,6 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.getByRole('button', { name: 'New conversation', exact: true }).click();
   await expect(input).toBeFocused();
   await expect(input).toHaveValue('');
-  await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('alert')).toBeVisible();
   await expect(input).toBeFocused();
@@ -111,7 +112,7 @@ test('320 and 375 pixel layouts retain readable controls and focus under forced 
   for (const width of [320, 375]) {
     await page.setViewportSize({ width, height: 812 });
     await page.goto('/');
-    await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeEnabled();
+    await expect(page.locator('#question')).toBeEnabled();
     expect(await page.evaluate(() => matchMedia('(forced-colors: active)').matches)).toBe(true);
     await expectReflow(page, `Home at ${width}px with forced colors`);
     await attachBrowserViewport(page, testInfo, `forced-colors-${width}-home`);
@@ -199,7 +200,7 @@ for (const mode of ['browser-zoom', 'text-size'] as const) {
       const page = context.pages()[0] ?? await context.newPage();
       const origin = new URL(baseURL!).origin;
       await page.goto(origin);
-      await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeEnabled();
+      await expect(page.locator('#question')).toBeEnabled();
       const baseline = await page.evaluate(() => ({ width: innerWidth, dpr: devicePixelRatio, font: parseFloat(getComputedStyle(document.body).fontSize) }));
       const baselineInterfaceFonts = await interfaceFontSizes(page);
       const observations = [];

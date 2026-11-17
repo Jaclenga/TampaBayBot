@@ -2,7 +2,7 @@
 import { memo, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUp, ChevronRight, Undo2 } from "lucide-react";
-import type { CSSProperties, RefObject } from "react";
+import type { RefObject } from "react";
 import type { ResidentAnswer } from "@/lib/core/answer.mjs";
 import { useLocale, usePageTitle } from "@/lib/i18n/locale";
 import { localizeAnswer } from "@/lib/i18n/answer.mjs";
@@ -288,7 +288,8 @@ export default function ResidentApp() {
   const main = useRef<HTMLElement>(null);
   const history = useRef<HTMLDivElement>(null);
   const followLatest = useRef(true);
-  const [viewport, setViewport] = useState({ top: 0, height: 0 });
+  const [showLatest, setShowLatest] = useState(false);
+  const thread = useRef<HTMLDivElement>(null);
   const composer = useRef<HTMLDivElement>(null);
   const [referenceTime] = useState(() => Date.now());
   const answers = useMemo(() => rawAnswers.map((rawAnswer) => {
@@ -299,29 +300,30 @@ export default function ResidentApp() {
   }), [rawAnswers, locale, referenceTime]);
   const answer = answers.at(-1) ?? null;
   useEffect(() => {
-    if (!hasChat || !main.current) return;
+    if (!hasChat) return;
     const updateViewport = () => {
-      const top = Math.max(0, ...Array.from(document.querySelectorAll<HTMLElement>(".site-header, .demo-banner"), element => element.offsetTop + element.offsetHeight));
-      // The visual viewport shrinks when an on-screen keyboard opens.
-      const height = window.visualViewport?.height ?? window.innerHeight;
-      setViewport(previous => previous.top === top && previous.height === height ? previous : { top, height });
+      document.body.style.setProperty("--app-height", `${window.visualViewport?.height ?? window.innerHeight}px`);
     };
-    const observer = new ResizeObserver(updateViewport);
-    document.querySelectorAll(".site-header, .demo-banner").forEach(element => observer.observe(element));
     updateViewport();
-    window.addEventListener("resize", updateViewport);
     window.visualViewport?.addEventListener("resize", updateViewport);
+    window.addEventListener("resize", updateViewport);
     return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateViewport);
+      document.body.style.removeProperty("--app-height");
       window.visualViewport?.removeEventListener("resize", updateViewport);
+      window.removeEventListener("resize", updateViewport);
     };
   }, [hasChat]);
   useEffect(() => {
-    if (hasChat && input.current === document.activeElement) {
-      input.current?.scrollIntoView({ block: "nearest" });
-    }
-  }, [hasChat, viewport.height]);
+    if (!hasChat || !thread.current || !history.current) return;
+    // Follow new content only while the reader is already at the end.
+    const observer = new ResizeObserver(() => {
+      const region = history.current;
+      if (region && followLatest.current) region.scrollTop = region.scrollHeight;
+    });
+    observer.observe(thread.current);
+    observer.observe(history.current);
+    return () => observer.disconnect();
+  }, [hasChat]);
   const [conversation, setConversation] = useState<ConversationContext | null>(null);
   const [errorCode, setErrorCode] = useState<FormErrorCode | null>(null);
   const error = errorCode === "empty" ? en.form.empty :
@@ -335,8 +337,8 @@ export default function ResidentApp() {
   useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => {
     if (!rawAnswer) return;
-    if (rawAnswers.length === 1 || followLatest.current) {
-      latestMessage.current?.scrollIntoView({ block: "start" });
+    if (followLatest.current && history.current) {
+      history.current.scrollTop = history.current.scrollHeight;
     }
     // Keep focus on the composer, without interrupting someone reading sources.
     if (returnToComposer.current && (document.activeElement === document.body || composer.current?.contains(document.activeElement))) {
@@ -407,6 +409,7 @@ export default function ResidentApp() {
     setAnswers([]);
     setConversation(null);
     followLatest.current = true;
+    setShowLatest(false);
     setQuestion("");
     setErrorCode(null);
     requestAnimationFrame(() => input.current?.focus());
@@ -423,7 +426,6 @@ export default function ResidentApp() {
                   controller.current?.abort();
                   setBusy(false);
                   if (!answer?.needsJurisdiction) setConversation(null);
-                  followLatest.current = true;
                   setErrorCode(null);
                   setJurisdictionId(event.target.value as JurisdictionId);
                 }}
@@ -478,7 +480,7 @@ export default function ResidentApp() {
                 className="primary-button chat-send"
                 type="submit"
                 aria-label={busy ? en.form.busy : en.form.send}
-                disabled={!ready || busy}
+                disabled={!ready || busy || !question.trim()}
               >
                 <ArrowUp size={20} aria-hidden="true" />
               </button>
@@ -504,8 +506,7 @@ export default function ResidentApp() {
           </form>
   );
   return (
-    <main id="main" ref={main} lang={locale} tabIndex={-1} className={hasChat ? "resident-app chat-active" : "resident-app"}
-      style={hasChat && viewport.height ? { "--chat-top": `${viewport.top}px`, "--chat-viewport-height": `${viewport.height}px` } as CSSProperties : undefined}>
+    <main id="main" ref={main} lang={locale} tabIndex={-1} className={hasChat ? "resident-app chat-active" : "resident-app"}>
       {!hasChat && <section
         className="hero"
         aria-labelledby={hasChat ? undefined : "hero-title"}
@@ -526,19 +527,19 @@ export default function ResidentApp() {
       </section>}
       {hasChat && <div className="chat-toolbar">
         <h1>{en.form.conversationTitle}</h1>
-        <details className="region-settings" open={Boolean(answer?.needsJurisdiction)}>
-          <summary>{en.form.area}: {jurisdictionId === "tampa-bay" ? en.form.region : jurisdictionLabel(JURISDICTIONS.find(area => area.id === jurisdictionId)?.label ?? jurisdictionId, locale)}</summary>
-          {areaPicker}
-        </details>
+        {areaPicker}
         <button className="text-button" type="button" onClick={reset}><Undo2 size={15} aria-hidden="true" />{en.answer.clear}</button>
       </div>}
       <p className="sr-only" role="status">{busy ? en.form.busy : rawAnswer ? en.chat.replyReady : ""}</p>
       {hasChat && <div className="chat-history" ref={history} role="region" aria-label={en.form.conversationTitle} tabIndex={0}
         onScroll={() => {
           const element = history.current;
-          if (element) followLatest.current = element.scrollHeight - element.clientHeight - element.scrollTop < 80;
+          if (element) {
+            followLatest.current = element.scrollHeight - element.clientHeight - element.scrollTop < 80;
+            setShowLatest(!followLatest.current);
+          }
         }}>
-      <div className="chat-thread">
+      <div className="chat-thread" ref={thread}>
       <ConversationMessages answers={answers} rawAnswers={rawAnswers} latestMessage={latestMessage} referenceTime={referenceTime} />
       {busy && <div className="chat-pending">
         <div className="chat-question"><span className="sr-only">{en.form.you}</span><p>{pendingQuestion}</p></div>
@@ -546,7 +547,13 @@ export default function ResidentApp() {
       </div>}
       </div>
       </div>}
-      {hasChat && <div className="chat-composer" ref={composer}>{questionForm}</div>}
+      {hasChat && <div className="chat-composer" ref={composer}>
+        {showLatest && <button className="jump-latest text-button" type="button" onClick={() => {
+          followLatest.current = true;
+          setShowLatest(false);
+          if (history.current) history.current.scrollTop = history.current.scrollHeight;
+        }}>{en.chat.jumpLatest}</button>}
+        {questionForm}</div>}
     </main>
   );
 }

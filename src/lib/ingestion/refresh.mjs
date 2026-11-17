@@ -120,7 +120,7 @@ export async function stageRefresh(root, { output, sourceId, category, offline =
       Object.assign(source, { ...http, retrieval_date: retrievedAt, source_updated_date: normalized.source_updated_date ?? null,
         content_hash: rawHash, normalized_content_hash: normalizedHash, raw_path: rawPath, normalized_path: normalizedPath,
         status: 'available', last_attempt: attemptedAt, last_error: null });
-      if (previous?.normalized_content_hash && previous.normalized_content_hash !== normalizedHash) source.content_changed_at = attemptedAt;
+      if (previous?.normalized_content_hash !== normalizedHash) source.content_changed_at = attemptedAt;
       nextChunks.set(source.source_id, chunks); detail = { result: 'acquired', bytes: bytes.length, attempts };
     } catch (error) {
       const code = errorCode(error);

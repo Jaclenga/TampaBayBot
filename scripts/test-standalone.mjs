@@ -7,6 +7,8 @@ import { cp, mkdir, mkdtemp, readFile, readdir, realpath, writeFile } from 'node
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { readCorpus } from '../src/lib/ingestion/generation.mjs';
+import { answerQuestion } from '../src/lib/core/answer.mjs';
 
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const usage = 'npm run test:standalone -- --directory work/standalone/<artifact-directory>';
@@ -174,11 +176,19 @@ try {
     assert.equal(response.status, 200); assert.equal((await response.json()).length, health.sources);
   });
   await check('actual_question_api_without_model', async () => {
-    const response = await fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: 'Where can I find help paying for housing?', jurisdictionId: 'tampa' }), signal: AbortSignal.timeout(10000) });
+    const question = 'Where can I find help paying for housing?';
+    const corpus = await readCorpus(project);
+    assert.equal(health.generation, corpus.generation, 'Smoke-test the artifact against its original corpus generation.');
+    const expected = answerQuestion(question, { ...corpus, jurisdictionId: 'tampa' });
+    const response = await fetch(`${base}/api/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, jurisdictionId: 'tampa' }), signal: AbortSignal.timeout(10000) });
     assert.equal(response.status, 200); const answer = await response.json();
     assert.equal(answer.generation.status, 'disabled'); assert.equal(answer.generation.mode, 'extractive');
-    if (health.chunks === 0) assert.ok(['insufficient_evidence', 'unavailable_source'].includes(answer.status), 'An empty corpus must return a conservative unavailable-evidence state.');
-    else assert.equal(answer.status, 'answered');
+    // A partial corpus can contain valid contact/permit evidence without any
+    // housing evidence. Require parity with the source engine, not an invented
+    // housing answer merely because the artifact has at least one chunk.
+    assert.equal(answer.status, expected.status);
+    const citations = result => result.evidence.map(({ source_id, chunk_id, quote, url }) => ({ source_id, chunk_id, quote, url }));
+    assert.deepEqual(citations(answer), citations(expected));
     report.answer_status = answer.status;
   });
   await check('crisis_question_without_model', async () => {
