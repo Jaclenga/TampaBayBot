@@ -37,7 +37,7 @@ test('Spanish property workflow translates cautions and controls while preservin
   await page.locator('#interface-language').selectOption('es');
   await page.getByLabel('Su zona', { exact: true }).selectOption('tampa');
   await page.getByRole('textbox', { name: 'Haga una pregunta o escriba una dirección', exact: true }).fill('¿Qué permiso necesito para mi propiedad?');
-  await page.getByRole('button', { name: 'Buscar', exact: true }).click();
+  await page.getByRole('button', { name: 'Enviar', exact: true }).click();
   await page.getByLabel('Dirección de una propiedad en Tampa Bay', { exact: true }).fill(candidate.address);
   await page.getByRole('button', { name: 'Buscar dirección', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Confirme la dirección correcta' })).toBeFocused();
@@ -67,7 +67,7 @@ test('inline source quotations retain their language when Spanish navigation sur
   await page.locator('#interface-language').selectOption('es');
   await page.getByLabel('Su zona', { exact: true }).selectOption('tampa');
   await page.getByRole('textbox', { name: 'Haga una pregunta o escriba una dirección', exact: true }).fill('¿Cuál es el monto máximo de ayuda para el alquiler?');
-  await page.getByRole('button', { name: 'Buscar', exact: true }).click();
+  await page.getByRole('button', { name: 'Enviar', exact: true }).click();
   await expect(page.locator('.answer-lead [lang="en"]').filter({ hasText: '$1,234' })).toHaveText('Maximum demo assistance: $1,234.');
   await expect(page.locator('.answer-lead')).toContainText('Empiece por');
   await expect(page.locator('.evidence-list blockquote').first()).toHaveAttribute('lang', 'en');

@@ -20,7 +20,7 @@ test("classic answer switches Spanish to English and back from canonical text", 
   await page.locator("#interface-language").selectOption("es");
   await page.getByLabel("Su zona", { exact: true }).selectOption("tampa");
   await page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true }).fill("Necesito ayuda con la vivienda");
-  await page.getByRole("button", { name: "Buscar", exact: true }).click();
+  await page.getByRole("button", { name: "Enviar", exact: true }).click();
   await expect(page.locator(".answer-lead")).toContainText("Empiece por Program notice");
   await expect(page.locator(".meaning")).toContainText("Confirme la información local");
   await expect(page.locator(".answer-uncertainty")).toContainText("Consulte la página oficial actual");
@@ -47,7 +47,7 @@ test("classic privacy errors use safe localized codes and change with the interf
   await page.locator("#interface-language").selectOption("es");
   const input = page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true });
   await input.fill("Mi SSN es 000-00-0000. ¿Dónde puedo encontrar ayuda?");
-  await page.getByRole("button", { name: "Buscar", exact: true }).click();
+  await page.getByRole("button", { name: "Enviar", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("Quite los números de Seguro Social");
   await expect(page.getByRole("alert")).not.toContainText("Untrusted server message");
   await expect(page.getByRole("alert")).not.toContainText("000-00-0000");
@@ -74,7 +74,7 @@ test("answer separates source statements, interpretation, and uncertainty with a
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
   await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).fill("Are applications open?");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.locator(".citation-link")).toHaveCount(2);
   await expect(page.locator(".unverified-reference")).toHaveText("[unverified reference]");
   await expect(page.locator(".answer-lead")).not.toContainText("[E9]");
@@ -102,14 +102,14 @@ test("regional questions require an area and city changes keep evidence in the s
   const area = page.getByLabel("Your area");
   await expect(area).toHaveValue("tampa-bay");
   await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).fill("Where can I find housing assistance?");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.locator(".status-label")).toHaveText("Choose a city or county");
 
   for (const [id, agency] of [["st-petersburg", "St. Petersburg"], ["clearwater", "Clearwater"]]) {
     await area.selectOption(id);
     await expect(page.locator(".answer-layout")).toHaveCount(0);
     const response = page.waitForResponse(result => result.url().endsWith("/api/ask") && result.request().method() === "POST");
-    await page.getByRole("button", { name: "Search", exact: true }).click();
+    await page.getByRole("button", { name: "Send", exact: true }).click();
     const answer = await (await response).json();
     expect(answer.jurisdictionId).toBe(id);
     expect(answer.evidence.length).toBeGreaterThan(0);
@@ -130,7 +130,7 @@ test("home, source library, and about page meet automated WCAG A/AA checks", asy
         "Leave out names, account numbers",
       );
       await expect(
-        page.getByRole("button", { name: "Search", exact: true }),
+        page.getByRole("button", { name: "Send", exact: true }),
       ).toBeEnabled();
       await page.screenshot({
         path: testInfo.outputPath("desktop-home.png"),
@@ -275,9 +275,9 @@ test("model selection and fallback remain labeled with accessible source citatio
     const question = page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true });
     await expect(question).toBeEnabled();
     await question.fill("Where can I find help paying for housing?");
-    await page.getByRole("button", { name: "Search", exact: true }).click();
+    await page.getByRole("button", { name: "Send", exact: true }).click();
     await expect(
-      page.getByRole("heading", { name: "Answer", exact: true }),
+      page.locator("#question"),
     ).toBeFocused();
     await expect(
       page.getByText(
@@ -318,10 +318,10 @@ test("keyboard search produces inspectable citations and actionable next steps",
   await question.focus();
   await page.keyboard.type("Where can I find help paying for housing?");
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("button", { name: "Search", exact: true })).toBeFocused();
+  await expect(page.getByRole("button", { name: "Send", exact: true })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("heading", { name: "Answer", exact: true }),
+    page.locator("#question"),
   ).toBeFocused();
   await expect(
     page.getByRole("heading", { name: "Sources" }),
@@ -358,7 +358,7 @@ test("empty questions show an accessible error and unsupported programs remain u
 }) => {
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText(
     "Enter a housing question",
   );
@@ -368,7 +368,7 @@ test("empty questions show an accessible error and unsupported programs remain u
   await page
     .getByRole("textbox", { name: "Ask a question or enter a property address", exact: true })
     .fill('Where do I apply for the "Magic Free Mansion" grant?');
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.locator(".answer-lead")).toContainText("could not verify");
   await expect(
     page.getByText("More information needed", { exact: true }),
@@ -382,7 +382,7 @@ test("small screens, enlarged text and reduced motion retain all primary control
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
-  await expect(page.getByRole("button", { name: "Search", exact: true })).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Send", exact: true })).toBeEnabled();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -394,7 +394,7 @@ test("small screens, enlarged text and reduced motion retain all primary control
   });
   await page.setViewportSize({ width: 640, height: 900 });
   await page.addStyleTag({ content: "html { zoom: 2; }" });
-  await expect(page.getByRole("button", { name: "Search", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Send", exact: true })).toBeVisible();
   await expect(
     page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }),
   ).toBeVisible();
@@ -421,7 +421,7 @@ test("an address entered as the question opens a prefilled property lookup witho
   const question = page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true });
   await expect(question).toBeEnabled();
   await question.fill("315 E Kennedy Blvd, Tampa");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByLabel("Tampa Bay street address")).toHaveValue(
     "315 E Kennedy Blvd, Tampa",
   );
@@ -511,7 +511,7 @@ test("property workflow requires address confirmation and handles GIS failures w
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
   await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).fill("What zoning applies to this address?");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByLabel("Tampa Bay street address")).toBeVisible();
   await page
     .getByLabel("Tampa Bay street address")
@@ -572,7 +572,7 @@ test("private identifiers show an accessible error and residents can correct the
     (response) =>
       response.url().endsWith("/api/ask") && response.status() === 422,
   );
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   const payload = await (await blocked).json();
   expect(payload.code).toBe("sensitive_input");
   expect(JSON.stringify(payload)).not.toContain("000-00-0000");
@@ -589,9 +589,9 @@ test("private identifiers show an accessible error and residents can correct the
   });
   expect(results.violations).toEqual([]);
   await input.fill("Where can I find help paying for housing?");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Answer", exact: true }),
+    page.locator("#question"),
   ).toBeFocused();
   await expect(page.getByRole("alert")).toHaveCount(0);
 });

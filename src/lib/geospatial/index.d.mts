@@ -1,3 +1,4 @@
+import type { Timings } from '../performance/timing.mjs';
 export interface Point { latitude: number; longitude: number }
 export interface AddressCandidate extends Point { id: string; address: string; score: number; matchType: string; sourceId: string; sourceUrl: string; retrievedAt: string }
 export type JurisdictionId = 'tampa' | 'st-petersburg' | 'clearwater' | 'pasco';
@@ -12,6 +13,6 @@ export interface PropertyContext { status: 'found' | 'partial' | 'ambiguous_parc
 export function validPoint(point: unknown): point is Point;
 export function withinServiceRegion(point: unknown): boolean;
 export function haversineMeters(a: Point, b: Point): number;
-export function lookupAddress(address: string): Promise<AddressLookup>;
-export function getPropertyContext(candidate: Point & { address: string }): Promise<PropertyContext>;
-export function createGeospatialClient(options?: { fetcher?: typeof fetch; settings?: object }): { lookupAddress: typeof lookupAddress; getJurisdiction(point: Point): Promise<JurisdictionResult>; getPropertyContext: typeof getPropertyContext };
+export function lookupAddress(address: string, options?: {timings?: Timings}): Promise<AddressLookup>;
+export function getPropertyContext(candidate: Point & { address: string }, options?: {timings?: Timings}): Promise<PropertyContext>;
+export function createGeospatialClient(options?: { fetcher?: typeof fetch; settings?: object }): { lookupAddress: typeof lookupAddress; getJurisdiction(point: Point, options?: {timings?: Timings}): Promise<JurisdictionResult>; getPropertyContext: typeof getPropertyContext };

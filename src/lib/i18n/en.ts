@@ -1,5 +1,9 @@
 export const en = {
   brand: "TampaBayBot",
+  chat: {
+    greeting: "Hi! What would you like to find out about Tampa Bay?",
+    replyReady: "Your reply is ready.",
+  },
   language: {
     label: "Language / Idioma",
     scope: "Questions, property tools, and reference pages are available in English and Spanish. Source quotations and official record text remain in their original language.",
@@ -63,7 +67,7 @@ export const en = {
   },
   answer: {
     title: "Answer",
-    area: "Source coverage",
+    area: "Area",
     modelUsed:
       "A language model selected these source excerpts. Their wording was checked against the saved evidence.",
     modelFallback:
@@ -136,7 +140,7 @@ export const en = {
     needs_location: "A location will help",
     needs_jurisdiction: "Choose a city or county",
     official_judgment: "Confirm with the responsible agency",
-    out_of_scope: "Outside this service",
+    out_of_scope: "I can help with housing, property records, and development in Tampa Bay.",
     unavailable_source: "Source unavailable",
     missing_geographic_coverage: "Outside available coverage",
   } as Record<string, string>,

@@ -15,6 +15,7 @@ export function answerWithGuardrails(
     signal?: AbortSignal;
     extraGuards?: readonly Guardrail[];
     guardTimeoutMs?: number;
+    timings?: import('../performance/timing.mjs').Timings;
   },
 ): Promise<
   ResidentAnswer & {

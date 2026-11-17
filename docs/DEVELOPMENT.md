@@ -184,6 +184,60 @@ if (!response.ok) throw new Error(answer.error);
 
 With an empty source release, a successful HTTP request still returns an uncertainty status rather than a cited benefit. Display the returned answer status, warnings and evidence; HTTP 200 alone does not mean the requested fact was verified. See [answer architecture](ARCHITECTURE.md) for required citations, effective-year selection and qualification preservation.
 
+## Performance measurement and local audit (2026-11-16)
+
+All four input API routes return `Server-Timing` headers with fixed stage names and numeric durations. No performance logger, analytics upload, question cache, address cache, or conversation store was added. These measurements are request-local and responses retain `Cache-Control: no-store`. Worker admission failures before an API handler are outside these measurements.
+
+`total` measures handler work through response serialization, not network transfer or the Worker admission boundary. `conversation`, `intent`, `scope`, `retrieval`, `candidates`, `ranking`, `answer`, `citations`, `model`, and `usage` measure their named stages. Nested stages overlap. `model` includes eligibility, validation and fallback, and does not imply that inference ran. `external` sums bounded outbound source reads, including body transfer and outbound admission; parallel reads overlap, cache hits do not add network time, and shared snapshot loads are attributed to their initiating request. Do not sum these values to estimate end-to-end latency.
+
+Run the fixed synthetic workload with `npm run benchmark:performance`. To measure a locally reviewed corpus, use `npm run benchmark:performance -- --corpus <path-to-corpus.json> --samples 100 --output work/performance/before.json`. After changing code, repeat with a different output path and `--compare work/performance/before.json`. Comparison rejects a changed corpus or any non-greeting answer/evidence/context digest change. The script writes only timings, public evidence identifiers, output digests and category/status counts. It uses a fixed November 16 verification date, disables models, and makes no external requests. It reports the first call separately from warm p50/p95 samples; that first call is not an isolate cold start.
+
+Run `npm run benchmark:browser` for Chromium CDP measurements of draft updates with 30 displayed turns. The fictional development fixture mocks answers. Its default report is `work/performance/frontend.json`; set `PERF_OUTPUT` to retain separate runs. Script and layout durations come from Chromium. Wall duration includes Playwright work and two animation frames, so it is not an INP or TTFT measurement. This is a local development benchmark, not a production Lighthouse or field Core Web Vitals result.
+
+### Measured priorities and changes
+
+1. In the 30-turn Chromium fixture, draft updates rendered the whole message tree: median script work was 68.51 ms. A memoized conversation renderer keeps the transcript stable while typing, including already-open citation cards.
+2. The Node CPU profile placed full-corpus normalization in `unknownSpecificClaim` first. Most questions never need that text. Normalization now runs lazily only when a named program, quoted name or numbered-rule check needs it; uncertainty rules and exact output are preserved.
+3. Repeated safety-text scans over unchanged passages were the next major backend hotspot. WeakMap caches store only derived public passage checks. Every relevant source/chunk field is compared before reuse; changed text, titles, sections, agencies, source identity, or replacement chunks invalidate reuse. Freshness, rankings, answers, questions and conversation context are not cached.
+
+Exact standalone greetings, thanks and farewells use a deterministic guarded path without scanning the corpus or invoking a model. Mixed requests such as a greeting followed by a housing question retain normal retrieval. Structured address/property/development APIs remain separate and retain municipal boundary, parcel and citation requirements. Existing jurisdiction filtering, lexical indexing, supplemental evidence deduplication and independent GIS request batching remain in use. Dependent parcel/boundary requests remain ordered.
+
+### Before and after
+
+Node v24.13.1; 33 sources and 999 reviewed passages; same corpus digest, fixed verification date and 100 warm samples per category. Values are milliseconds. The snapshots are dated and many factual answers correctly retain `potentially_outdated` status. Models were disabled; these results do not measure production response or government-service latency.
+
+| Workload | Before p50 / p95 | After p50 / p95 |
+| --- | ---: | ---: |
+| greeting | 0.44 / 0.86 | 0.06 / 0.18 |
+| housing | 12.45 / 15.51 | 4.43 / 6.35 |
+| property navigation (not a GIS lookup) | 10.39 / 11.75 | 2.47 / 3.75 |
+| zoning | 7.74 / 8.66 | 1.31 / 2.07 |
+| permits | 7.93 / 8.77 | 1.28 / 1.63 |
+| development | 7.58 / 8.50 | 1.07 / 1.56 |
+| followup | 12.51 / 13.63 | 5.40 / 6.63 |
+| unsupported | 0.40 / 0.47 | 0.43 / 0.79 |
+| ambiguous | 8.77 / 9.69 | 2.10 / 3.64 |
+
+| Chromium draft update, 30 turns | Before p50 / p95 | After p50 / p95 |
+| --- | ---: | ---: |
+| JavaScript work (ms) | 68.51 / 99.90 | 2.90 / 3.45 |
+| Layout work (ms) | 1.29 / 2.13 | 1.37 / 1.99 |
+| Automation plus two frames (ms) | 98.56 / 147.21 | 48.34 / 49.87 |
+
+All eight non-greeting categories retained identical answer, evidence, status and follow-up context digests. All measured citations passed structural/source validation, and both backend runs completed with zero errors. This establishes equivalence on this workload, not independent semantic correctness or exhaustive retrieval recall. Existing source, quotation, qualification, conflict, mutation and jurisdiction regressions remain the broader safety checks.
+
+Unsupported questions did not improve: their median increased slightly from 0.40 to 0.43 ms and p95 from 0.47 to 0.79 ms. Browser layout median also increased slightly (1.29 to 1.37 ms). No performance gain is claimed for these paths. Measurements vary by host load; the separate CPU-profile run had profiling overhead and is not used in the latency table.
+
+### Limits and next measurements
+
+TTFT is not available: the existing application returns completed validated JSON. Workers AI supports provider streaming, but this application validates whole JSON output, exact quotations, required citations and after-model/response guards before publication. Raw token streaming would bypass those invariants. No simulated streaming or provider switch was added. Existing loading, cancellation, error and draft-preservation behavior remains available. See [Workers AI binding streaming options](https://developers.cloudflare.com/workers-ai/configuration/bindings/).
+
+The model already receives bounded evidence and compact topic/source/jurisdiction follow-up context rather than full transcripts. Six-turn context expiry and existing persistence/logging policies are unchanged. Government caches retain their existing bounds and expiration; no new cache of addresses or user-specific requests was introduced. Public safety-cache invalidation uses exact field comparisons and object lifetime instead of a TTL; housing source dates and review warnings are recalculated as before.
+
+Production p50/p95, isolate cold starts, model generation and upstream GIS latency were not measured in this local audit. Collect the fixed stage durations from representative requests after deployment, without attaching input text or URLs to aggregate metrics. Use explicit public test locations to benchmark GIS lookups separately from chat navigation. A corpus refresh and review are needed before evaluating fresh answered/model-enabled housing paths; speeding up old evidence does not make it current.
+
+Hybrid semantic retrieval or reranking was not added: no measured recall gain justifies an extra service/model call in this change. Next compare a candidate against the existing recall/qualification suite before testing its latency. Do not lower evidence limits, remove conflicting evidence, or cache housing answers to meet a latency target.
+
 ## Deployment and verification records
 
 [Deployment](DEPLOYMENT.md) covers Worker artifacts, production smoke, Cloudflare hosting, secrets and rollback. Dated results and remaining work belong in [release readiness](RELEASE_READINESS.md) and the [changelog](../CHANGELOG.md).

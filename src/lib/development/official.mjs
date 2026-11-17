@@ -9,7 +9,7 @@ function date(value) {
 export function createOfficialDevelopmentReader({ fetcher, settings, now }) {
   const options = settings.official_query ?? {};
   const readJson = createJsonReader({ fetcher, timeoutMs: settings.timeout_ms, maxBytes: options.max_response_bytes ?? 1000000, ttlMs: options.cache_ttl_ms ?? 300000, maxEntries: options.max_cache_entries ?? 64 });
-  async function query(source, point, radiusMeters) {
+  async function query(source, point, radiusMeters, timings) {
     const records = [];
     const seen = new Set();
     let retrievedAt = null;
@@ -21,7 +21,7 @@ export function createOfficialDevelopmentReader({ fetcher, settings, now }) {
         // A numeric object-ID cursor avoids duplicate/omitted records in legacy
         // spatial resultOffset paging. The ID originates only in validated source data.
         const params = new URLSearchParams({ where: `OBJECTID > ${lastId}`, geometry: `${point.longitude},${point.latitude}`, geometryType: 'esriGeometryPoint', inSR: '4326', distance: String(radiusMeters), units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields: source.fields.join(','), returnGeometry: 'false', orderByFields: 'OBJECTID ASC', resultOffset: '0', resultRecordCount: String(pageSize), f: 'json' });
-        const response = await readJson(`${source.url}/query?${params}`);
+        const response = await readJson(`${source.url}/query?${params}`, {}, timings);
         retrievedAt = response.retrievedAt;
         const data = response.data;
         if (!Array.isArray(data.features) || data.features.length > pageSize || data.features.some(feature => !feature.attributes || !/^\d+$/.test(String(feature.attributes.OBJECTID)) || source.fields.some(field => !(field in feature.attributes)))) throw new Error('The official layer schema changed.');
@@ -49,10 +49,10 @@ export function createOfficialDevelopmentReader({ fetcher, settings, now }) {
     }
   }
 
-  return async function getOfficialDevelopment(location, point, radiusMeters) {
+  return async function getOfficialDevelopment(location, point, radiusMeters, timings) {
     const sources = (settings.official_sources ?? []).filter(source => source.jurisdiction_id === location.jurisdictionId);
     if (!sources.length) return null;
-    const services = await Promise.all(sources.map(source => query(source, point, radiusMeters)));
+    const services = await Promise.all(sources.map(source => query(source, point, radiusMeters, timings)));
     const records = services.flatMap(service => service.records);
     const unavailable = services.some(service => service.status === 'unavailable');
     const incomplete = services.some(service => service.status === 'incomplete');

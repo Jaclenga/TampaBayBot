@@ -89,11 +89,11 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
   const readJson = createJsonReader({ fetcher, timeoutMs: settings.timeout_ms, maxBytes: settings.max_response_bytes, ttlMs: settings.cache_ttl_ms, maxEntries: settings.max_cache_entries });
   const supportedJurisdictions = settings.jurisdictions.map(({ id, name }) => ({ id, name }));
 
-  async function geocode(address, geocoder) {
+  async function geocode(address, geocoder, timings) {
     const source = { sourceId: geocoder.source_id, sourceUrl: geocoder.url, agency: geocoder.agency, coverage: geocoder.coverage };
     const params = new URLSearchParams({ [geocoder.single_line_field]: address.trim(), outSR: '4326', outFields: 'Match_addr,Addr_type', maxLocations: String(geocoder.max_candidates), f: 'json' });
     try {
-      const { data, retrievedAt } = await readJson(`${geocoder.url}/findAddressCandidates?${params}`);
+      const { data, retrievedAt } = await readJson(`${geocoder.url}/findAddressCandidates?${params}`, {}, timings);
       if (!Array.isArray(data.candidates) || (data.spatialReference?.latestWkid ?? data.spatialReference?.wkid) !== 4326) throw new Error('Unexpected geocoder schema or coordinate system.');
       const candidates = data.candidates.slice(0, geocoder.max_candidates).flatMap(candidate => {
         const point = { latitude: candidate.location?.y, longitude: candidate.location?.x };
@@ -109,11 +109,11 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
     }
   }
 
-  async function lookupAddress(address) {
+  async function lookupAddress(address, { timings } = {}) {
     if (typeof address !== 'string' || address.trim().length < 5 || address.length > 200 || /[<>\u0000-\u001f]/.test(address) || !/\d/.test(address) || !/[a-z]/i.test(address)) {
       return { status: 'invalid_input', candidates: [], services: [], warnings: [], message: 'Enter a street number and street name, with a city or ZIP code if you know it.', retrievedAt: null };
     }
-    const responses = await Promise.all(settings.geocoders.map(geocoder => geocode(address, geocoder)));
+    const responses = await Promise.all(settings.geocoders.map(geocoder => geocode(address, geocoder, timings)));
     const seen = new Set();
     const candidates = responses.flatMap(result => result.candidates).sort((a, b) => b.score - a.score).filter(candidate => {
       if (seen.has(candidate.id)) return false;
@@ -129,14 +129,14 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
     };
   }
 
-  async function queryLayer(kind, point, layer, polygon = null) {
+  async function queryLayer(kind, point, layer, polygon = null, timings) {
     const limit = polygon ? settings.max_layer_records ?? 24 : 6;
     const params = new URLSearchParams({ geometry: polygon ? JSON.stringify(polygon) : `${point.longitude},${point.latitude}`, geometryType: polygon ? 'esriGeometryPolygon' : 'esriGeometryPoint', inSR: '4326', outSR: '4326', spatialRel: 'esriSpatialRelIntersects', outFields: layer.fields.join(','), returnGeometry: kind === 'parcel' ? 'true' : 'false', resultRecordCount: String(limit), f: 'json' });
     const source = layerSource(layer);
     try {
       const { data, retrievedAt } = polygon
-        ? await readJson(`${layer.url}/query`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() })
-        : await readJson(`${layer.url}/query?${params}`);
+        ? await readJson(`${layer.url}/query`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() }, timings)
+        : await readJson(`${layer.url}/query?${params}`, {}, timings);
       if (!Array.isArray(data.features) || data.features.some(f => !f.attributes || !/^\d+$/.test(String(f.attributes.OBJECTID)))) throw new Error('Unexpected layer schema.');
       const records = data.features.slice(0, limit).map(feature => recordFor(kind, feature.attributes, layer, retrievedAt));
       if (records.some(record => !record.label)) throw new Error('Required layer designation is missing.');
@@ -148,12 +148,12 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
     }
   }
 
-  async function getJurisdiction(point) {
+  async function getJurisdiction(point, { timings } = {}) {
     const base = { jurisdictionId: null, jurisdiction: 'Unverified', boundaryChecks: [], supportedJurisdictions };
     if (!validPoint(point)) return { ...base, status: 'invalid_input' };
     if (!withinServiceRegion(point)) return { ...base, status: 'missing_coverage', jurisdiction: 'Outside supported area' };
     const boundaryChecks = await Promise.all(settings.jurisdictions.map(async jurisdiction => {
-      const result = await queryLayer('boundary', point, jurisdiction.layers.boundary);
+      const result = await queryLayer('boundary', point, jurisdiction.layers.boundary, null, timings);
       if (result.records.some(record => record.label.toLowerCase() !== jurisdiction.boundary_label.toLowerCase())) {
         return { ...result, jurisdictionId: jurisdiction.id, status: 'unavailable', records: [], message: 'The boundary service returned an unexpected municipality. Jurisdiction needs verification.' };
       }
@@ -170,14 +170,14 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
     return { ...base, status: noCoverage ? 'missing_coverage' : 'unverified', jurisdiction: noCoverage ? 'Outside configured municipal coverage' : 'Unverified', boundaryChecks };
   }
 
-  async function getPropertyContext(candidate) {
+  async function getPropertyContext(candidate, { timings } = {}) {
     const warnings = [
       'Mapped zoning and future land use do not establish permission to build or an official determination.',
     ];
     if (!validPoint(candidate) || typeof candidate.address !== 'string' || !cleanText(candidate.address)) {
       return { status: 'invalid_input', message: 'Select a matched address before looking up property information.', address: '', jurisdiction: 'Unverified', jurisdictionId: null, warnings, evidence: [], coverage: { status: 'unverified', supportedJurisdictions } };
     }
-    const located = await getJurisdiction(candidate);
+    const located = await getJurisdiction(candidate, { timings });
     const { jurisdictionId, jurisdiction, boundaryChecks } = located;
     const coverage = { status: located.status, supportedJurisdictions };
     const base = { address: cleanText(candidate.address), latitude: candidate.latitude, longitude: candidate.longitude, warnings, jurisdictionId, jurisdiction, boundaryChecks, coverage };
@@ -189,17 +189,17 @@ export function createGeospatialClient({ fetcher = fetch, settings = config } = 
     }
     const selected = settings.jurisdictions.find(item => item.id === jurisdictionId);
     const { boundary } = located;
-    const parcel = await queryLayer('parcel', candidate, selected.layers.parcel);
+    const parcel = await queryLayer('parcel', candidate, selected.layers.parcel, null, timings);
     const polygon = parcel.geometry;
     // Geometry remains internal: public results expose the scope and exact source record.
     delete parcel.geometry;
     const analysis = { scope: polygon ? 'whole_parcel' : 'address_point', status: polygon ? 'checked' : 'not_checked', parcelId: parcel.status === 'found' ? parcel.records[0].parcelId : null };
     warnings.push(polygon ? 'Zoning and future land use are checked against the full returned parcel polygon. Boundary touches can return neighboring designations; agency review is needed to confirm split zoning.' : 'Whole-parcel geometry could not be verified. Zoning and future land use describe the selected address point only; split zoning elsewhere on the parcel has not been checked.');
     let municipalities;
-    if (selected.layers.municipalities) municipalities = await queryLayer('boundary', candidate, selected.layers.municipalities, polygon);
+    if (selected.layers.municipalities) municipalities = await queryLayer('boundary', candidate, selected.layers.municipalities, polygon, timings);
     const municipalBlock = municipalities && municipalities.status !== 'not_found';
     const blocked = kind => ({ ...layerSource(selected.layers[kind]), records: [], status: municipalities?.status === 'found' || municipalities?.status === 'ambiguous' ? 'missing_coverage' : 'unavailable', retrievedAt: null, message: 'County land-use layers are limited to unincorporated Pasco. A municipal intersection or an unavailable boundary check prevents assigning county designations. Contact the municipality shown in the boundary records.' });
-    const [zoning, futureLandUse] = municipalBlock ? ['zoning', 'futureLandUse'].map(blocked) : await Promise.all(['zoning', 'futureLandUse'].map(kind => queryLayer(kind, candidate, selected.layers[kind], polygon)));
+    const [zoning, futureLandUse] = municipalBlock ? ['zoning', 'futureLandUse'].map(blocked) : await Promise.all(['zoning', 'futureLandUse'].map(kind => queryLayer(kind, candidate, selected.layers[kind], polygon, timings)));
     if (municipalBlock) warnings.push('Pasco parcels remain available countywide. County zoning and future land use are withheld where a municipal boundary intersects the selected parcel or address, or cannot be checked.');
     if ([zoning, futureLandUse].some(layer => ['unavailable', 'incomplete'].includes(layer.status)) || municipalBlock) analysis.status = polygon ? 'incomplete' : 'not_checked';
     const results = [boundary, parcel, zoning, futureLandUse];

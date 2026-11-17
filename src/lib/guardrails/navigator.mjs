@@ -3,6 +3,8 @@ import { createQueryPlan } from "../core/query-plan.mjs";
 import { scopeAnswerCorpus } from "../core/answer/coverage.mjs";
 import { nextSteps } from "../core/answer/next-steps.mjs";
 import { validateCitationIntegrity } from "../citations/evidence.mjs";
+import { measure, measureAsync } from '../performance/timing.mjs';
+import { smallTalkReply } from '../core/small-talk.mjs';
 import {
   synthesizeAnswer,
   parseLlmConfig,
@@ -55,6 +57,7 @@ export async function answerWithGuardrails(
     signal,
     extraGuards = [],
     guardTimeoutMs = 1000,
+    timings,
   } = {},
 ) {
   if (
@@ -74,16 +77,17 @@ export async function answerWithGuardrails(
     (await guards.run("question", { question }, { signal })).action ===
     "skip_model";
   const verificationDate = now === undefined ? new Date() : new Date(now);
-  const generatedBaseline = answerQuestion(question, {
+  const generatedBaseline = measure(timings, 'answer', () => answerQuestion(question, {
     sources,
     chunks,
     jurisdictionId,
     now: verificationDate,
-  });
-  const scoped = scopeAnswerCorpus(sources, chunks,
+    timings,
+  }));
+  const scoped = smallTalkReply(question) ? { sources: [], chunks: [] } : scopeAnswerCorpus(sources, chunks,
     createQueryPlan(generatedBaseline.query, { jurisdictionId, sources }));
   const citationContext = { ...scoped, now: verificationDate };
-  const baselineIsVerified = validateCitationIntegrity(generatedBaseline, citationContext).valid;
+  const baselineIsVerified = measure(timings, 'citations', () => validateCitationIntegrity(generatedBaseline, citationContext)).valid;
   const baseline = baselineIsVerified
     ? generatedBaseline
     : unverifiedCitationResponse(generatedBaseline, scoped);
@@ -119,7 +123,7 @@ export async function answerWithGuardrails(
     await check("before_model");
   let answer = skipModel
     ? skipped()
-    : await synthesizeAnswer(baseline, { config, fetchImpl, provider, signal });
+    : await measureAsync(timings, 'model', () => synthesizeAnswer(baseline, { config, fetchImpl, provider, signal }));
   if (answer.generation.status === "used") {
     await check("after_model", answer);
     if (skipModel) answer = skipped();
@@ -131,7 +135,7 @@ export async function answerWithGuardrails(
     // A response veto of model output must also check the replacement baseline.
     await check("response", answer);
   }
-  if (!validateCitationIntegrity(answer, citationContext).valid) {
+  if (!measure(timings, 'citations', () => validateCitationIntegrity(answer, citationContext)).valid) {
     answer = baselineIsVerified ? { ...baseline } : unverifiedCitationResponse(answer, scoped);
     answer.generation = {
       mode: "extractive",

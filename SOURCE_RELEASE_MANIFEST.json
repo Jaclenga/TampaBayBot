@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "9389f3c0bcb313894a6cc084a800fda5c7cb070a35992daf198cc171498629ab",
+  "content_sha256": "717d9ae851ba5afef969c99a8c7ffe62a12abdf63d00e4dccff179838185c015",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -182,8 +182,8 @@
     },
     {
       "path": "docs/DEVELOPMENT.md",
-      "bytes": 18370,
-      "sha256": "2cc7ff9666e05b7f0349bed58fdfafbde40ffc1c6377751a3d538973528437ad"
+      "bytes": 26098,
+      "sha256": "aac5fe2ef1e6f9abb6a6966fc78382f744728743835370a715f634fa95dead91"
     },
     {
       "path": "docs/DISTRIBUTION.md",
@@ -497,8 +497,8 @@
     },
     {
       "path": "package.json",
-      "bytes": 4661,
-      "sha256": "cc23afa70b946201fe061a10d1bfc9bc3a3cd90098aebaa8973425ba3ced9d57"
+      "bytes": 4818,
+      "sha256": "6b7bb8106d14c60f70ca10dbd815842ef35e4557ceeb6c788e2364242ae14119"
     },
     {
       "path": "pages-demo/index.html",
@@ -552,8 +552,8 @@
     },
     {
       "path": "pages-demo/src/HOUSING_RESOURCES.md",
-      "bytes": 15330,
-      "sha256": "e70948aedc3e5ec3d58918f3f78e8940210d6a49034c1cd9aacae2afb3080f4d"
+      "bytes": 15605,
+      "sha256": "2b62e8b0b0a922eec78e2096640db4074426f104460b3c76ed74f3124bdca799"
     },
     {
       "path": "pages-demo/src/housing-help.ts",
@@ -562,8 +562,8 @@
     },
     {
       "path": "pages-demo/src/housing-resources.json",
-      "bytes": 60918,
-      "sha256": "b32853fbf9b0cd0cb3c5d13acf9643e8dd6c81deae863eca33b40944d4377d72"
+      "bytes": 67753,
+      "sha256": "9174665eacc2ad461a2111c5442a95a188baa93221412b23cdac2b7b6909096c"
     },
     {
       "path": "pages-demo/src/HousingHelp.tsx",
@@ -622,8 +622,8 @@
     },
     {
       "path": "pages-demo/tests/housing-browser.spec.mjs",
-      "bytes": 24757,
-      "sha256": "573df08d5e541b7515e6fd7d8e9b35b010f29aa16bbcd383e9d8293c861b8455"
+      "bytes": 24770,
+      "sha256": "a56c08d4dcf48b1b5581ae3bf034192aef2b149ecc340c012db0524d4d48e3f1"
     },
     {
       "path": "pages-demo/tests/housing-help.test.mjs",
@@ -632,8 +632,8 @@
     },
     {
       "path": "pages-demo/tests/housing-resources.test.mjs",
-      "bytes": 6670,
-      "sha256": "b72444d244edc35750729b9fda4dab15c6e32f3d06b792c10090854a0b9df5d3"
+      "bytes": 6854,
+      "sha256": "e3cfa659470e3df647b04977c978ca6b7c268db8c1cd84e4dcded274dece8b13"
     },
     {
       "path": "pages-demo/tests/privacy-browser.spec.mjs",
@@ -676,6 +676,11 @@
       "sha256": "d11207632b264e5d13e69c83db947e3263f548003f95d752095739fac4395fad"
     },
     {
+      "path": "playwright.performance.config.ts",
+      "bytes": 484,
+      "sha256": "156c04b110e418958a8484098a64035bbd638182d7dfb878026c0c38f3082d05"
+    },
+    {
       "path": "playwright.source.config.ts",
       "bytes": 579,
       "sha256": "399e0e8bfc9fea733abd813e55ab79f33d6c74fa8f54854711c1bb7e258c202e"
@@ -699,6 +704,11 @@
       "path": "scripts/audit-dependencies.mjs",
       "bytes": 9486,
       "sha256": "dab0560281cea9d8af781f0fe5576987e797ccbc0ca8fbac653c34b1cb8932bf"
+    },
+    {
+      "path": "scripts/benchmark-performance.mjs",
+      "bytes": 4788,
+      "sha256": "833a99d1d604cd8fe622b670c6b4b407fa1939ba2ac585f09a27b84df211dfac"
     },
     {
       "path": "scripts/build-source-refresh.mjs",
@@ -877,13 +887,13 @@
     },
     {
       "path": "src/app/api/ask/route.ts",
-      "bytes": 2758,
-      "sha256": "02c0116743616cd0ab44da03b0b711268cc5944da281abde6e7e73cf9d24b33c"
+      "bytes": 3003,
+      "sha256": "3f98288f5af175e79c19083be38e512540cb57b0f1bbb6b1c4c7ff7be3c99fa7"
     },
     {
       "path": "src/app/api/development/route.ts",
-      "bytes": 610,
-      "sha256": "f666c57a541846fa4862e89f3fecef2ff9efba4d37c709448e07104ab74f17a5"
+      "bytes": 772,
+      "sha256": "35a6b60463a92eb6d8487f62b1db4350d358e796c56cc1f4f23567e347e2b131"
     },
     {
       "path": "src/app/api/evaluation/route.ts",
@@ -897,13 +907,13 @@
     },
     {
       "path": "src/app/api/location/route.ts",
-      "bytes": 392,
-      "sha256": "19912e085af7c490da064d8fb9c60d5b54d4d90a8451d0f1dfee9efdb237d0d9"
+      "bytes": 545,
+      "sha256": "8dfed29854f4555e435ff707c0106b116afd6af718c61cd7d10a56f30278ca80"
     },
     {
       "path": "src/app/api/property/route.ts",
-      "bytes": 397,
-      "sha256": "a0d20fae672b4de1c6694f8aa14aca2df2e3490d4633c0a3001d49ec64d99c22"
+      "bytes": 550,
+      "sha256": "e532334e2a704c566063e5f8fb1cc327475934a00de6c1739c65d787a972d9a0"
     },
     {
       "path": "src/app/api/ready/route.ts",
@@ -927,8 +937,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "bytes": 31798,
-      "sha256": "ac8a743d78e7ac7506c82d932a3908be8e70212087e6644abbed6844c38743c7"
+      "bytes": 33970,
+      "sha256": "02d8c31692bb76e0eb67271475cd2d77bf72adcdd3f6856f59e60e7d6953505c"
     },
     {
       "path": "src/app/housing-help/page.tsx",
@@ -982,8 +992,8 @@
     },
     {
       "path": "src/components/resident-app.tsx",
-      "bytes": 23045,
-      "sha256": "ff2457c8cc52656cac03e89d872e12f145b75872d6f7f3a5d38d1bc90c06cba6"
+      "bytes": 25360,
+      "sha256": "a31940bd4a8fae035d4889622ccbf2a718bcbe9a9db4e0e4ffaf3f2abb19d01a"
     },
     {
       "path": "src/components/site-shell.tsx",
@@ -1002,18 +1012,18 @@
     },
     {
       "path": "src/lib/core/answer.d.mts",
-      "bytes": 2316,
-      "sha256": "5e50f3cb22f253a5290feb3c70f5823ffbe187a0c85ec6825f048df1076fd615"
+      "bytes": 2371,
+      "sha256": "028a03d1ff23088fcab68a49399fa958f873d27f65f1d2fc37534bcf40661acb"
     },
     {
       "path": "src/lib/core/answer.mjs",
-      "bytes": 7247,
-      "sha256": "b795243a65e8c1a6134ed9b29424e48392e1f3e1a418efb4c8dae73e1cd4e5e8"
+      "bytes": 7940,
+      "sha256": "1cf433a8863833b25317b3c659b9bb4d7dd539f1da53bd1d6ffc69207fc3c1ab"
     },
     {
       "path": "src/lib/core/answer/claims.mjs",
-      "bytes": 1630,
-      "sha256": "652a06770b475f15aceca365921c2521563e4961e0a86818c468a376fe81373a"
+      "bytes": 1851,
+      "sha256": "58e9c8a8bb7b879d2d2d18861cdc943f22194b4071c8da6f72296e15c79b4577"
     },
     {
       "path": "src/lib/core/answer/coverage.mjs",
@@ -1047,8 +1057,8 @@
     },
     {
       "path": "src/lib/core/conversation.mjs",
-      "bytes": 6245,
-      "sha256": "05845993f66185dfa8c5679f5c911c7d6b10fee4f54ec0bfb5bdbedd1505afec"
+      "bytes": 6388,
+      "sha256": "1cfaec4b4afe6385f91ce8238bf84a2943639f5d40986e4c3068a14f158051ff"
     },
     {
       "path": "src/lib/core/query-plan.d.mts",
@@ -1067,8 +1077,8 @@
     },
     {
       "path": "src/lib/core/resident.mjs",
-      "bytes": 1890,
-      "sha256": "8f40cae60ba0adad0981c061aa3b680951b6b755a8b1865cbc4bc56afb1b8c67"
+      "bytes": 2189,
+      "sha256": "3b5a8a1f5edf6fe65825892cf427221b3d7f80e1e5abbce1c4a132ee665f9e46"
     },
     {
       "path": "src/lib/core/router.d.mts",
@@ -1121,6 +1131,16 @@
       "sha256": "3b169b02e6b2bd5ba7046da58144af39a3d8429a6dae836162f8aadcdf62c5c6"
     },
     {
+      "path": "src/lib/core/small-talk.d.mts",
+      "bytes": 87,
+      "sha256": "1cd8974586ea0368ef07f04de925dfe89990787c7ce6d03aa0d06d320157a643"
+    },
+    {
+      "path": "src/lib/core/small-talk.mjs",
+      "bytes": 1012,
+      "sha256": "4fd8012bf1d21da8d54b6d0523699931924a683c4856325d279b8091d0bcf56f"
+    },
+    {
       "path": "src/lib/corpus.ts",
       "bytes": 348,
       "sha256": "0e8711bcc4ff05a10f62cf2a643eeb9b9a2b782baa19ba6fd738bcffd870f74f"
@@ -1142,13 +1162,13 @@
     },
     {
       "path": "src/lib/development/index.d.mts",
-      "bytes": 2210,
-      "sha256": "235c66e77d0f1830938683a1e60372c517e9fc6c350cc854006b6d8e637d521a"
+      "bytes": 2299,
+      "sha256": "ad2a881ec85fab128c51f500ced20f461b18bf626885699ef7fbc71f08d9c69f"
     },
     {
       "path": "src/lib/development/index.mjs",
-      "bytes": 11999,
-      "sha256": "669807b39487b72b9be29d72f50352f2e7d1ad62345bf33c363ec8bb6015225b"
+      "bytes": 12062,
+      "sha256": "01adceac6255745cc5ca7526fab40bd55267a26a828039272a353fb5a988db23"
     },
     {
       "path": "src/lib/development/ingest.mjs",
@@ -1157,8 +1177,8 @@
     },
     {
       "path": "src/lib/development/official.mjs",
-      "bytes": 7614,
-      "sha256": "92d26ec5d4be280d4e5d94836a32564c1fa2c6c2e9c8c8756fee4977230bc8ff"
+      "bytes": 7654,
+      "sha256": "5a59dcb5b29fd8e58425e60ce40cb6b9e8a2bd72fbed1834418e16131790349e"
     },
     {
       "path": "src/lib/domain/answer-policy.mjs",
@@ -1187,18 +1207,18 @@
     },
     {
       "path": "src/lib/geospatial/index.d.mts",
-      "bytes": 3187,
-      "sha256": "1acb95c2f6fedb24783c6453b9e1d1118be2e7348832b6d02d2900a0aade058a"
+      "bytes": 3338,
+      "sha256": "2f97f58b3f335987aa5e584d780d6b19f168117779072a77be1ac026582c1376"
     },
     {
       "path": "src/lib/geospatial/index.mjs",
-      "bytes": 19029,
-      "sha256": "ad3d1cadc3cfac85babd826ce93b5d6b3e6759468b294d951a52d57cd9efcf3d"
+      "bytes": 19206,
+      "sha256": "6d3bbd3beca8e3db6b2485b95c10ac9f7ce3ade6f71cd76e53b97014691e3ed6"
     },
     {
       "path": "src/lib/geospatial/remote.mjs",
-      "bytes": 3644,
-      "sha256": "c3e20b53f958b74b1e21724d5d2bf6815351c4411f632cc105fb7e74ed49101f"
+      "bytes": 3728,
+      "sha256": "17a2d565e53a54b18ebabf3ddb33d30506b8d2c88997848d34aa46a9cfa76722"
     },
     {
       "path": "src/lib/guardrails/index.d.mts",
@@ -1212,13 +1232,13 @@
     },
     {
       "path": "src/lib/guardrails/navigator.d.mts",
-      "bytes": 719,
-      "sha256": "9a201d2dbcb3931120443f62e162580a4cceb3339fe5422f3d9b09eea2eb1e8c"
+      "bytes": 778,
+      "sha256": "f2ecbb69debf05c6ada1f656430c8b6320fd3a44dbc3caa063f1cfc63ae3629d"
     },
     {
       "path": "src/lib/guardrails/navigator.mjs",
-      "bytes": 5431,
-      "sha256": "de2d45f5036624e25427fdb1f5ecffe0fc5bb16a0c382051c4affa90438dbe7e"
+      "bytes": 5784,
+      "sha256": "85be3dbe05ff44dc5738c5882c354c17c2d1f8f973d87aae2376362828fcc9c3"
     },
     {
       "path": "src/lib/guardrails/privacy.mjs",
@@ -1252,8 +1272,8 @@
     },
     {
       "path": "src/lib/housing/crisis.mjs",
-      "bytes": 46987,
-      "sha256": "96e814eb84d46369adf4875d051e9483126a0a318ab143dbb3489935f9e947d9"
+      "bytes": 47565,
+      "sha256": "f34801fe54f563e922f3ff980c784b995065d18bb5d65f4a1588cea9bdea2752"
     },
     {
       "path": "src/lib/housing/navigation.mjs",
@@ -1287,13 +1307,13 @@
     },
     {
       "path": "src/lib/i18n/en.ts",
-      "bytes": 12003,
-      "sha256": "6fe78257629d34edfd2afa2bdf824afabbe9aa0b0a282cc5f66f235164bf40d3"
+      "bytes": 12169,
+      "sha256": "4065f1dea133e3af55f3f136bc993d0b984e4b8046e38d565e33f295bc8566f7"
     },
     {
       "path": "src/lib/i18n/es.ts",
-      "bytes": 13347,
-      "sha256": "6b438e7a38036ec9a4ecd7ae3116971e02c076b288173526842b7a384c71c9b5"
+      "bytes": 13504,
+      "sha256": "25d89251f598dc9fc784c36d0abe8c1c37cb79ed237b5a284530681b03272d20"
     },
     {
       "path": "src/lib/i18n/evaluation-en.ts",
@@ -1476,6 +1496,16 @@
       "sha256": "812fe6cf8a265e61679246814c2476fff50740869a1d6f876cd27b0a3061487a"
     },
     {
+      "path": "src/lib/performance/timing.d.mts",
+      "bytes": 499,
+      "sha256": "13e7827d70b61960fb244923bd3d017e5323d8d8d10cf9b24944925044a5898f"
+    },
+    {
+      "path": "src/lib/performance/timing.mjs",
+      "bytes": 1385,
+      "sha256": "0b312042023df5a8897bbdb610a72d0097f6a09cebbbebe582d1247932b117ee"
+    },
+    {
       "path": "src/lib/response-security.ts",
       "bytes": 4818,
       "sha256": "58ddff9a1e435e6cca4d869d2c7ccdcfcb961a7f99b68582fa38bb0372626b53"
@@ -1497,13 +1527,13 @@
     },
     {
       "path": "src/lib/retrieval/eligibility.d.mts",
-      "bytes": 832,
-      "sha256": "b75366373d6fde66e15ee9f5058ac710dd034f75c53d76f10f5e0e0656c73e54"
+      "bytes": 893,
+      "sha256": "8b46758a8e5b6e584e19ce2a1bbe0b71a279b4452d7b7ae730ebd369df9adb51"
     },
     {
       "path": "src/lib/retrieval/eligibility.mjs",
-      "bytes": 4579,
-      "sha256": "6d97ba1a52d04d6fd526058328e07aa8d5576462c7c28cf2610e676846c4fb97"
+      "bytes": 5576,
+      "sha256": "0df28a3b692fa05b1a566c72eca9ce6ee57d96ca2f33f123f7b2bf627a47377f"
     },
     {
       "path": "src/lib/retrieval/ranking.mjs",
@@ -1527,8 +1557,8 @@
     },
     {
       "path": "src/lib/retrieval/search.mjs",
-      "bytes": 2513,
-      "sha256": "53a49fe980cbe5ddfa1f82fd031e1e42245052dcf364d247f9a91814a23acaeb"
+      "bytes": 2648,
+      "sha256": "063fe846a296cb4aa0dcb0a5e58b8787b70ec7a9ab061ea1d6b5a2da338435af"
     },
     {
       "path": "src/lib/retrieval/tokens.mjs",
@@ -1647,8 +1677,8 @@
     },
     {
       "path": "tests/e2e/accessibility-language.spec.ts",
-      "bytes": 7696,
-      "sha256": "752daf77f90819eb5f178ed5d23f07ba186307d79e44ef73ca6e9f1df8eefc56"
+      "bytes": 7694,
+      "sha256": "2b360cdb442eba38ffa5bf3ffb9a62dfd4d044fb07165055412945c8194b0e30"
     },
     {
       "path": "tests/e2e/housing-help.spec.ts",
@@ -1657,18 +1687,18 @@
     },
     {
       "path": "tests/e2e/privacy.spec.ts",
-      "bytes": 2431,
-      "sha256": "bd93703103a32bae0576ec699aec1cef8fa05d7b9b95b7bba029f8ca10f7181f"
+      "bytes": 2429,
+      "sha256": "d933dfbbb298a20535af55c88b4068579556afebad5175a3b0f4d24cd1da80d9"
     },
     {
       "path": "tests/e2e/resident.spec.ts",
-      "bytes": 28930,
-      "sha256": "038de67ee9c2628c486f62355214b200010c7f33c473f44ef60f2c4e5f45cd07"
+      "bytes": 28803,
+      "sha256": "45d7c422d58fef9450f07d5bbb294cc084a37df890368e8f7223cc84f5c1442f"
     },
     {
       "path": "tests/e2e/security.spec.ts",
-      "bytes": 7683,
-      "sha256": "3610bad42630400cdb623f41d91daad57575b0ea6449612b5dd7bbafa1f30c0d"
+      "bytes": 7681,
+      "sha256": "2522c2a712777e720bca109280bce9e435902f71b891f80fbd5ccf0cc016fd6f"
     },
     {
       "path": "tests/e2e/source-freshness.spec.ts",
@@ -1772,8 +1802,8 @@
     },
     {
       "path": "tests/housing-crisis-core.test.mjs",
-      "bytes": 17004,
-      "sha256": "6bdfa9fd85b8841cf20904d8fdec15eee2d1a72bc3441581940e463e7806fcea"
+      "bytes": 16994,
+      "sha256": "bcb29b1ff1666ed54b8e0fbde797fd39f952db89decd02f9cb7d91958e57fac7"
     },
     {
       "path": "tests/housing-crisis-evaluation.test.mjs",
@@ -1834,6 +1864,16 @@
       "path": "tests/operations.test.mjs",
       "bytes": 31750,
       "sha256": "184cfdc945be09d82d5857b51b6208110cc90decd953f942b3540292667357bd"
+    },
+    {
+      "path": "tests/performance-regressions.test.mjs",
+      "bytes": 6905,
+      "sha256": "119bc1eb3f6261af90862141b96d0082189fe80d59b8678b4037b825e033ce71"
+    },
+    {
+      "path": "tests/performance/chat.spec.ts",
+      "bytes": 2769,
+      "sha256": "fdbbb5b19d2e1d456a9ac5c407d842600951192b82b6d664799a856675d7f468"
     },
     {
       "path": "tests/program-context-regressions.test.mjs",
@@ -1902,23 +1942,33 @@
     },
     {
       "path": "tests/source-e2e/demo.spec.ts",
-      "bytes": 4555,
-      "sha256": "7eeb2e441f3c0c9ee5323cb0840b047f36b9de16ceedd0ee62073b3e4e82d50f"
+      "bytes": 4544,
+      "sha256": "7b2bc80e48569307cee027b54007c0ab8a65e37837480c93121a5fddeef11b35"
     },
     {
       "path": "tests/source-e2e/examples.spec.ts",
-      "bytes": 6396,
-      "sha256": "843c56240bfe4e4f5c7e596d09dc9935f2607d59f782cc6b93f842e3bd6411c2"
+      "bytes": 6444,
+      "sha256": "c5a2f8a2667c8f9929c4184bd9a282f158151b92f7c5605a3688943919e31de4"
     },
     {
       "path": "tests/source-e2e/language.spec.ts",
       "bytes": 7540,
-      "sha256": "479a1558691eb29c2cb8a2c7d9e8992411f7fa008042a45c7862812c64928f6d"
+      "sha256": "a15d30f973304f24a62de129ad4ed4a4491c8be69f0bfcb0f8502d0c2c6375ed"
+    },
+    {
+      "path": "tests/source-e2e/performance.spec.ts",
+      "bytes": 1565,
+      "sha256": "168ecad40965e71bf34b75759f7a31b51356ed43cb579acc9c367aa248a840bc"
+    },
+    {
+      "path": "tests/source-e2e/polished-chat.spec.ts",
+      "bytes": 6391,
+      "sha256": "751177169e9c25a384a6f2244690131d77806ef388ec80a02ae9813c077155b6"
     },
     {
       "path": "tests/source-e2e/ui-accessibility.spec.ts",
-      "bytes": 13063,
-      "sha256": "5258922d1c19b0ddd9b89a9223305607df48c0dedcaef2055fbf943048260da9"
+      "bytes": 13213,
+      "sha256": "b8bb92cfb5ddb8f15cee4dfd2c8d5e1f6f2fdef363055ff06408c509f961e7a6"
     },
     {
       "path": "tests/source-fixtures.test.mjs",

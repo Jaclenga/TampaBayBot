@@ -22,9 +22,9 @@ test('fresh source demo supports a keyboard question with cited fictional eviden
   await expect(page.getByRole('note')).toContainText('Fictional demonstration');
   await page.getByLabel('Your area', { exact: true }).selectOption('tampa');
   await page.getByRole('textbox', { name: 'Ask a question or enter a property address', exact: true }).fill('Where can I find rental assistance?');
-  await page.getByRole('button', { name: 'Search', exact: true }).focus();
+  await page.getByRole('button', { name: 'Send', exact: true }).focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeVisible();
+  await expect(page.locator('.answer-layout .assistant-message').last()).toBeVisible();
   await expect(page.locator('.citation-link').first()).toBeVisible();
   await page.locator('.citation-link').first().click();
   await expect(page.locator('details[open]').first()).toContainText(/fictional/i);
@@ -49,7 +49,7 @@ test('jurisdiction clarification preserves the original housing topic and reset 
   await page.goto('/');
   const input = page.locator('#question');
   await input.fill('I need help paying rent');
-  await page.getByRole('button', { name: 'Search', exact: true }).click();
+  await page.getByRole('button', { name: 'Send', exact: true }).click();
   await expect(page.locator('.status-label')).toHaveText('Choose a city or county');
   await input.fill('Tampa');
   await page.getByRole('button', { name: 'Send', exact: true }).click();
@@ -65,8 +65,8 @@ test('Spanish questions return localized navigation with unchanged source quotat
   await page.locator('#interface-language').selectOption('es');
   await page.getByLabel('Su zona', { exact: true }).selectOption('tampa');
   await page.getByRole('textbox', { name: 'Haga una pregunta o escriba una dirección', exact: true }).fill('Necesito ayuda para pagar el alquiler');
-  await page.getByRole('button', { name: 'Buscar', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Respuesta', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Enviar', exact: true }).click();
+  await expect(page.locator('.answer-layout .assistant-message').last()).toBeVisible();
   await expect(page.locator('.evidence-list blockquote').first()).toHaveText('Demo applications are closed. Do not submit personal information or apply for this fictional benefit.');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);

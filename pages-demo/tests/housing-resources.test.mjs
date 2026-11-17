@@ -50,10 +50,12 @@ test('static resource records have explicit source-check and availability metada
   }
 });
 
-test('RMAP conflict stays flagged for substantive human review', () => {
+test('RMAP application pause and historical conflict remain explicit', () => {
   const rmap = resources.find(resource => resource.id === 'housing-tampa-rmap');
   assert.ok(rmap.knownIssues.some(issue => /existing leases|eviction prevention/i.test(issue)));
-  assert.equal(rmap.availabilityStatus, 'unknown');
+  assert.equal(rmap.availabilityStatus, 'temporarily_closed');
+  assert.match(rmap.availability, /January 2027/);
+  assert.match(rmap.description, /November 1, 2026/);
   assert.equal(rmap.reviewedContentHash, null);
 });
 
@@ -69,7 +71,7 @@ test('every crisis topic has a local route in each county without claiming capac
   assert.ok(resources.some(resource => resource.crisisCategories.includes('disaster') && resource.geography.includes('national')));
   for (const resource of resources) {
     if (/shelter|rent|energy|financial|housing|fema/i.test(resource.program)) {
-      assert.equal(resource.availabilityStatus, 'unknown', resource.id);
+      assert.equal(resource.availabilityStatus, resource.id === 'housing-tampa-rmap' ? 'temporarily_closed' : 'unknown', resource.id);
     }
   }
 });

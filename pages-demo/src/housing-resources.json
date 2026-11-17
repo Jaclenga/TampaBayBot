@@ -199,12 +199,12 @@
       "restrictions": [],
       "serviceHours": "Call, text, and chat are listed as 24/7.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:04.832Z",
+      "linkStatus": "ok",
       "knownIssues": [
         "The SAMHSA page could not be opened directly during the 2026-10-09 source review; official indexed content was used."
       ],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Official SAMHSA FAQ confirms the national call/text service and published hours; no service-capacity guarantee is inferred.",
       "reviewedContentHash": null
     },
     {
@@ -240,10 +240,10 @@
       "restrictions": [],
       "serviceHours": "Provider lists the hotline as 24 hours.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:04.581Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider help page supports the listed hotline and round-the-clock availability; bed availability is not established.",
       "reviewedContentHash": null
     },
     {
@@ -269,7 +269,7 @@
       "eligibility": "FEMA determines eligibility by disaster declaration, location, damage, and program rules.",
       "availability": "General application channel verified; assistance for a specific disaster is not verified.",
       "verifiedAt": "2026-10-09",
-      "sourceUrl": "https://www.fema.gov/node/4-ways-apply-disaster-assistance",
+      "sourceUrl": "https://www.usa.gov/disaster-assistance",
       "crisisCategories": [
         "disaster"
       ],
@@ -280,12 +280,12 @@
         "Aid depends on a qualifying declaration and current application rules; no open window is confirmed here."
       ],
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:04.974Z",
+      "linkStatus": "ok",
       "knownIssues": [
-        "The FEMA page could not be opened directly during the 2026-10-09 source review; official indexed content was used. No current disaster application window was established."
+        "The previous FEMA source URL was reported missing; the replacement federal guide was inspected on 2026-11-16. No current local disaster application window or funding is confirmed."
       ],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Replaced the obsolete FEMA node URL with the official USAGov application guide, which supports the listed helpline and declaration-dependent eligibility.",
       "reviewedContentHash": null
     },
     {
@@ -321,10 +321,10 @@
         "Assistance depends on available funding and eligibility review."
       ],
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.050Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County program page supports the contact, household screening and funding limitation; individual approval remains unverified.",
       "reviewedContentHash": null
     },
     {
@@ -360,10 +360,10 @@
         "Funding and individual approval are not verified."
       ],
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.136Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider page explicitly includes Pasco, its published contact, income screening and required energy-bill documentation; no open funding is asserted.",
       "reviewedContentHash": null
     },
     {
@@ -388,7 +388,7 @@
       "eligibility": "Pinellas County households meeting current LIHEAP eligibility and documentation rules.",
       "availability": "Program and application phone verified; funds and approval are not verified.",
       "verifiedAt": "2026-10-09",
-      "sourceUrl": "https://www.pcul.org/contact-pcul",
+      "sourceUrl": "https://www.pcul.org/housing",
       "crisisCategories": [
         "utilities"
       ],
@@ -399,10 +399,12 @@
         "Funding and individual approval are not verified."
       ],
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
-      "knownIssues": [],
-      "reviewNotes": null,
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.196Z",
+      "linkStatus": "ok",
+      "knownIssues": [
+        "The provider announces a move to ULFLS.org. The new site could not be confirmed during the 2026-11-16 assisted review; use the published program phone to confirm current intake."
+      ],
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Legacy provider site confirms the program/contact but announces a move to ULFLS.org; the new destination remains unconfirmed.",
       "reviewedContentHash": null
     },
     {
@@ -443,10 +445,10 @@
       "restrictions": [],
       "serviceHours": "Provider lists the hotline as 24 hours.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.383Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider hotline page supports the listed call/text contact and published hours; shelter capacity remains unknown.",
       "reviewedContentHash": null
     },
     {
@@ -482,10 +484,10 @@
       "restrictions": [],
       "serviceHours": "Provider lists the hotline as 24 hours.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.463Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider home page supports the listed hotline, hours and free-service statement; placement is not guaranteed.",
       "reviewedContentHash": null
     },
     {
@@ -527,10 +529,10 @@
       "restrictions": [],
       "serviceHours": "211 line is listed as 24/7.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.642Z",
+      "linkStatus": "access_restricted",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider Gateway page confirms Hillsborough referral coverage, the listed contact and published hours.",
       "reviewedContentHash": null
     },
     {
@@ -567,10 +569,10 @@
       "availability": "Directory and map links checked; individual meal sites and supplies are not verified.",
       "sourceUrl": "https://www.thhi.org/homelessresources",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.739Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. THHI resource page supports the meal/resource map and office contact; no meal or shelter availability is promised.",
       "reviewedContentHash": null
     },
     {
@@ -605,10 +607,10 @@
       "refreshDays": 30,
       "restrictions": [],
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:06.136Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. THHI guide supports the public resource/access-point navigation and office contact.",
       "reviewedContentHash": null
     },
     {
@@ -638,7 +640,7 @@
         },
         {
           "label": "Pasco intake",
-          "value": "(727) 756-1956",
+          "value": "(727) 937-3268",
           "kind": "phone"
         }
       ],
@@ -659,10 +661,10 @@
       ],
       "intakeUrl": "https://metrominintake.powerappsportals.com/",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.786Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider currently publishes a different Pasco intake number; updated it to the published county intake contact. Shelter eligibility remains screened.",
       "reviewedContentHash": null
     },
     {
@@ -709,10 +711,10 @@
       "restrictions": [],
       "serviceHours": "211 line is listed as 24/7.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:06.136Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. First Contact and HLA pages support the phone/text routes and geographic screening; HLA states it has no rent or utility-arrears funding.",
       "reviewedContentHash": null
     },
     {
@@ -755,10 +757,10 @@
       "refreshDays": 30,
       "restrictions": [],
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:06.166Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider page supports the adult shelter inquiry contacts; no currently vacant bed is established.",
       "reviewedContentHash": null
     },
     {
@@ -796,10 +798,10 @@
       "refreshDays": 30,
       "restrictions": [],
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:06.309Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. City official indexed page supports the outreach contact and City of Tampa scope; direct page access was inconsistent.",
       "reviewedContentHash": null
     },
     {
@@ -838,10 +840,10 @@
       "availability": "The state links to the locator; individual listings and vacancies are not verified by this directory.",
       "sourceUrl": "https://www.floridahousing.org/programs/renters",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:06.509Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. State agency and linked locator support the statewide search service and listed search-assistance contact; listings do not establish vacancies.",
       "reviewedContentHash": null
     },
     {
@@ -880,12 +882,12 @@
           "kind": "phone"
         }
       ],
-      "sourceUrl": "https://www.metromin.org/get-help/",
+      "sourceUrl": "https://www.metromin.org/financial-assistance-for-hillsborough-county/",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:06.749Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County-specific provider page supports required in-person orientation and ZIP-specific reservation rules; source link now points directly to that page.",
       "reviewedContentHash": null
     },
     {
@@ -926,10 +928,10 @@
       "availability": "Public navigation page and call center checked; existing-lease rental funding is not verified.",
       "sourceUrl": "https://hcfl.gov/departments/social-services",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:07.805Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County navigation and Social Services pages support the call center and resource-center route; no particular grant is promised.",
       "reviewedContentHash": null
     },
     {
@@ -973,10 +975,10 @@
         "Financial help and housing placement depend on eligibility, referrals, and funding; none is guaranteed."
       ],
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:07.161Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider home/services pages support the family and individual contacts and coordinated-entry route; funding remains conditional.",
       "reviewedContentHash": null
     },
     {
@@ -1020,12 +1022,12 @@
           "kind": "phone"
         }
       ],
-      "sourceUrl": "https://www.metromin.org/get-help/",
+      "sourceUrl": "https://www.metromin.org/financial-assistance-for-pasco-county/",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:07.667Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County-specific provider page supports required in-person orientation; existing county contacts are also on the provider help page.",
       "reviewedContentHash": null
     },
     {
@@ -1066,10 +1068,10 @@
       ],
       "serviceHours": "Financial-assistance phone screening: Monday-Friday, 7:30 a.m.-6 p.m.; 211 access is listed as 24/7.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:07.805Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County page confirms the no-minor-children restriction, phone screening contact and published processing hours.",
       "reviewedContentHash": null
     },
     {
@@ -1111,10 +1113,10 @@
       "availability": "Program page and referral route checked; slots, funding, and enrollment are not verified.",
       "sourceUrl": "https://pinellas.gov/programs/family-housing-assistance-program",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:07.989Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County page confirms homelessness and Coordinated Entry referral requirements and the administration contact.",
       "reviewedContentHash": null
     },
     {
@@ -1153,12 +1155,12 @@
           "kind": "phone"
         }
       ],
-      "sourceUrl": "https://www.metromin.org/get-help/",
+      "sourceUrl": "https://www.metromin.org/financial-assistance-in-pinellas-county/",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:08.585Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County-specific provider page confirms the required Friday-noon English virtual orientation; no appointment or approval is promised.",
       "reviewedContentHash": null
     },
     {
@@ -1197,10 +1199,10 @@
       "sourceUrl": "https://www.tampaha.org/",
       "serviceHours": "Help Center office hours listed as Monday-Friday, 8 a.m.-5 p.m.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:08.774Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Authority home page confirms the Help Center contact, office hours and listed service communities; no open waitlist is asserted.",
       "reviewedContentHash": null
     },
     {
@@ -1210,7 +1212,7 @@
       ],
       "organization": "City of Tampa",
       "program": "Rental and Move-In Assistance Program",
-      "description": "Ask the City of Tampa about new move-in assistance. The current city program page excludes existing leases, but its linked portal has conflicting text; confirm the current rules directly with the city.",
+      "description": "The City of Tampa has paused new RMAP applications beginning November 1, 2026 while it processes existing applications. Check the city page or Housing Information Line for updates.",
       "geography": [
         "hillsborough"
       ],
@@ -1225,8 +1227,8 @@
           "kind": "phone"
         }
       ],
-      "eligibility": "The published rules require an approved unit inside Tampa city limits and other income and program conditions.",
-      "availability": "Application windows, funding, and individual eligibility must be confirmed on the city page.",
+      "eligibility": "New applications are paused. City staff determine eligibility and application rules when intake resumes.",
+      "availability": "The city anticipates reopening in January 2027; that date is not guaranteed. No new application opening is confirmed.",
       "verifiedAt": "2026-10-09",
       "sourceUrl": "https://www.tampa.gov/housing-and-community-development/rental-move-in-assistance",
       "crisisCategories": [
@@ -1234,20 +1236,21 @@
         "affordable_housing"
       ],
       "verificationStatus": "source_checked",
-      "availabilityStatus": "unknown",
+      "availabilityStatus": "temporarily_closed",
       "refreshDays": 30,
       "restrictions": [
-        "The city program page says Phase X is for new move-in costs only and existing leases are ineligible. Its linked portal still mentions current-lease and eviction-prevention assistance; contact the city to resolve this conflict before relying on either description.",
-        "An approved unit inside Tampa city limits and other program conditions are required."
+        "New applications are paused beginning November 1, 2026; existing applications are still being processed.",
+        "Any anticipated reopening date must be reconfirmed on the official city page.",
+        "Earlier conflicting help for existing leases and eviction prevention was not revalidated during this application pause."
       ],
       "serviceHours": "Housing Information Line: Monday-Friday, 9 a.m.-3 p.m.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:08.774Z",
+      "linkStatus": "ok",
       "knownIssues": [
-        "The City of Tampa program page and its linked portal describe conflicting help for existing leases and eviction prevention. City staff confirmation is still needed."
+        "New applications are paused. Earlier conflicting help for existing leases and eviction prevention remains unconfirmed; do not use this listing as an open assistance or eviction-prevention referral."
       ],
-      "reviewNotes": "Keep this listing out of eviction and rent-arrears routing until the city resolves the conflicting descriptions.",
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. City page announces a pause on new applications beginning November 1, 2026. Marked temporarily closed to new applications; January 2027 is anticipated, not guaranteed.",
       "reviewedContentHash": null
     },
     {
@@ -1288,10 +1291,10 @@
       "restrictions": [],
       "serviceHours": "Legal Aid Line: Monday-Friday, 9 a.m.-4:30 p.m.; online application link on provider page is available anytime for non-emergency matters.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:09.031Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider help and locations pages support the existing Legal Aid Line, published hours, service area and non-emergency online application route.",
       "reviewedContentHash": null
     },
     {
@@ -1411,10 +1414,10 @@
       "availability": "Official reporting page and phone checked; response and inspection timing are not verified.",
       "sourceUrl": "https://hcfl.gov/residents/property-owners-and-renters/code-violations/report-a-code-violation",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:09.690Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County complaint page supports the contact, housing-standards categories and named-complainant/public-record warning.",
       "reviewedContentHash": null
     },
     {
@@ -1452,10 +1455,10 @@
       "availability": "County 311 contact page checked; code enforcement jurisdiction and inspection timing require confirmation.",
       "sourceUrl": "https://pascocountyfl.qscend.com/311/contact",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:09.768Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County contact page confirms the customer-service route and listed phone; no case-specific jurisdiction decision is inferred.",
       "reviewedContentHash": null
     },
     {
@@ -1493,10 +1496,10 @@
       "availability": "County renter guidance and routing phone checked; inspection timing is not verified.",
       "sourceUrl": "https://rent.pinellas.gov/help-with-housing/",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:09.940Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. County renter-help page supports the code contact and unincorporated-only jurisdiction warning.",
       "reviewedContentHash": null
     },
     {
@@ -1538,10 +1541,10 @@
       "sourceUrl": "https://www.tampa.gov/neighborhood-enhancement/contact-us",
       "serviceHours": "Office hours listed as Monday-Friday, 8 a.m.-4:30 p.m.",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:09.999Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. City contact page supports the listed office phone and hours; code enforcement remains separate from legal advice and emergency dispatch.",
       "reviewedContentHash": null
     },
     {
@@ -1590,10 +1593,10 @@
       ],
       "sourceUrl": "https://www.metromin.org/get-help/",
       "nextReviewAt": "2026-11-08",
-      "lastLinkCheckedAt": null,
-      "linkStatus": "not_checked",
+      "lastLinkCheckedAt": "2026-11-16T23:48:05.773Z",
+      "linkStatus": "ok",
       "knownIssues": [],
-      "reviewNotes": null,
+      "reviewNotes": "2026-11-16 agent-assisted official-source comparison; human approval pending. Provider help page confirms all three county mobile-outreach contacts and service area; no bed or appointment is guaranteed.",
       "reviewedContentHash": null
     }
   ]

@@ -1,6 +1,6 @@
 import { createQueryPlan } from './query-plan.mjs';
 import { retrieve, ANSWER_RETRIEVAL_LIMIT } from '../retrieval/search.mjs';
-import { isInstructionText, isAuthoritative } from '../retrieval/eligibility.mjs';
+import { chunkHasInstructions, isAuthoritative } from '../retrieval/eligibility.mjs';
 import { makeEvidence, findApplicationConflicts } from '../citations/evidence.mjs';
 import { verificationQuestions } from '../housing/navigation.mjs';
 import { unknownSpecificClaim } from './answer/claims.mjs';
@@ -10,16 +10,26 @@ import { selectEvidence } from './answer/evidence-selection.mjs';
 import { selectIncomeEvidence } from './answer/qualifications.mjs';
 import { finishResponse, jurisdictionResponse, officialJudgmentResponse, unsupportedResponse } from './answer/response.mjs';
 import { inferCrisisInput } from '../housing/crisis.mjs';
+import { measure } from '../performance/timing.mjs';
+import { smallTalkReply } from './small-talk.mjs';
+import { resolveJurisdiction } from '../coverage.mjs';
 
 /** Deterministic, extractive retrieval and resident navigation. No model/API key. */
-export function answerQuestion(question, { sources = [], chunks = [], now = new Date(), jurisdictionId = 'tampa-bay' } = {}) {
+export function answerQuestion(question, { sources = [], chunks = [], now = new Date(), jurisdictionId = 'tampa-bay', timings } = {}) {
   const query = typeof question === 'string' ? question.trim().slice(0, 2000) : '';
+  const conversational = smallTalkReply(query);
+  if (conversational) {
+    const area = resolveJurisdiction('', jurisdictionId);
+    return { query, category: 'navigation', status: 'out_of_scope', answer: conversational,
+      meaning: null, evidence: [], nextSteps: [], warnings: [], needsAddress: false,
+      jurisdictionId: area.jurisdictionId, jurisdictionLabel: area.jurisdictionLabel, needsJurisdiction: false };
+  }
   const date = new Date(now);
-  const plan = createQueryPlan(query, { jurisdictionId, sources });
+  const plan = measure(timings, 'intent', () => createQueryPlan(query, { jurisdictionId, sources }));
   const route = plan.route;
   // Apply scope before every retrieval, anchor, conflict, extra passage, and link.
   // A selected city is resource context; property boundaries still need GIS verification.
-  ({ sources, chunks } = scopeAnswerCorpus(sources, chunks, plan));
+  ({ sources, chunks } = measure(timings, 'scope', () => scopeAnswerCorpus(sources, chunks, plan)));
   const answer = {
     category: route.category, status: 'insufficient_evidence', query,
     answer: 'I could not determine this reliably from the available public information.',
@@ -51,7 +61,7 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
     answer.meaning = 'The housing crisis guide can show local contacts after you are safe.';
     return answer;
   }
-  const retrieval = retrieve(query, { sources, chunks, queryPlan: plan, now: date, limit: ANSWER_RETRIEVAL_LIMIT });
+  const retrieval = measure(timings, 'retrieval', () => retrieve(query, { sources, chunks, queryPlan: plan, now: date, limit: ANSWER_RETRIEVAL_LIMIT, timings }));
   if (retrieval.quarantined.length) answer.warnings.push('Some source text was excluded because it contained instructions aimed at an assistant or executable markup.');
   const unsupported = unknownSpecificClaim(query, sources, chunks);
   // A secondary passage can explain why we are uncertain, but residents still
@@ -65,13 +75,13 @@ export function answerQuestion(question, { sources = [], chunks = [], now = new 
     if (unsupported) return unsupportedResponse(answer, unsupported);
     if (route.officialJudgment) return officialJudgmentResponse(answer);
     if (route.needsJurisdiction && route.subjectCategory !== 'navigation') return jurisdictionResponse(answer, route);
-    if (relevantSources.length && !chunks.some(chunk => relevantSources.some(source => source.source_id === chunk.source_id) && !isInstructionText(chunk.text ?? ''))) {
+    if (relevantSources.length && !chunks.some(chunk => relevantSources.some(source => source.source_id === chunk.source_id) && !chunkHasInstructions(chunk))) {
       answer.status = 'unavailable_source';
       answer.answer = 'I do not have usable source text for this question. Open the official resource to verify the information directly.';
     }
     return answer;
   }
-  const safeChunks = chunks.filter(chunk => !isInstructionText(chunk.text ?? ''));
+  const safeChunks = chunks.filter(chunk => !chunkHasInstructions(chunk));
   const conflict = findApplicationConflicts(selected, sources, safeChunks, date);
   if (conflict && !conflict.unquotable) selected = conflict.hits;
   const citations = selected.map((hit, index) => ({ hit, evidence: makeEvidence(hit, query, index, date) })).filter(item => item.evidence);

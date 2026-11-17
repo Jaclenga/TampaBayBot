@@ -3,6 +3,7 @@ import { eligibleEvidence } from './eligibility.mjs';
 import { generateCandidates } from './candidates.mjs';
 import { rankCandidates } from './ranking.mjs';
 import { detectEntities } from '../core/routing/entities.mjs';
+import { measure } from '../performance/timing.mjs';
 
 // Compatibility exports for existing answer, citation and evaluation consumers.
 export { tokens } from './tokens.mjs';
@@ -13,14 +14,14 @@ export { isInstructionText, isAuthoritative, sourceIsStale } from './eligibility
 export const ANSWER_RETRIEVAL_LIMIT = 15;
 
 /** Scope -> eligibility -> candidates -> ranking. No network or model calls. */
-export function retrieve(question, { sources, chunks, route, queryPlan, now = new Date(), limit = 6 }) {
+export function retrieve(question, { sources, chunks, route, queryPlan, now = new Date(), limit = 6, timings }) {
   const resolvedRoute = queryPlan?.route ?? route;
   if (!resolvedRoute) throw new TypeError('Retrieval requires a QueryPlan or route.');
   const scoped = scopeCorpus(sources, chunks, resolvedRoute);
   const eligible = eligibleEvidence(scoped.documents, resolvedRoute);
   const entities = queryPlan?.entities ?? detectEntities(question, { sources: scoped.sources });
-  const generated = generateCandidates(question, eligible.documents, resolvedRoute, entities);
-  const ranked = rankCandidates(question, generated.candidates, { now, requestedFacts: queryPlan?.requestedFacts });
+  const generated = measure(timings, 'candidates', () => generateCandidates(question, eligible.documents, resolvedRoute, entities));
+  const ranked = measure(timings, 'ranking', () => rankCandidates(question, generated.candidates, { now, requestedFacts: queryPlan?.requestedFacts }));
   const hits = ranked.slice(0, limit);
   return {
     hits,

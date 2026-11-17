@@ -4,6 +4,7 @@ import type { RetrievalRejection } from './search.mjs';
 
 export function usableChunk(chunk: Chunk): boolean;
 export function isInstructionText(text: unknown): boolean;
+export function chunkHasInstructions(chunk: Chunk): boolean;
 export function isAuthoritative(source: Partial<Source>): boolean;
 export function sourceIsStale(source: Partial<Source>, chunk?: Partial<Chunk>, now?: Date): boolean;
 export function evidenceSafetyReason(source?: Partial<Source> | null, chunk?: Partial<Chunk> | null): 'source_mismatch' | 'empty_text' | 'untrusted_instructions' | null;

@@ -52,6 +52,8 @@
     "test:corpus": "node --test --test-isolation=none tests/*.test.mjs src/lib/ingestion/*.test.mjs",
     "test:source": "node scripts/test-source.mjs",
     "test:source:browser": "playwright test --config playwright.source.config.ts",
+    "benchmark:performance": "node scripts/benchmark-performance.mjs",
+    "benchmark:browser": "playwright test --config playwright.performance.config.ts",
     "demo": "node scripts/demo.mjs",
     "release:manifest": "node scripts/update-source-manifest.mjs",
     "check:corpus": "npm run typecheck && npm run lint && npm run test:corpus && npm run evaluate && npm run eval:suite && npm run build",

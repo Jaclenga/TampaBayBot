@@ -2,6 +2,10 @@ import { en } from './en.ts';
 
 export const es: typeof en = {
   ...en,
+  chat: {
+    greeting: '¡Hola! ¿Qué le gustaría saber sobre Tampa Bay?',
+    replyReady: 'Su respuesta está lista.',
+  },
   language: { label: 'Language / Idioma', scope: 'Las preguntas, las herramientas de propiedades y las páginas de referencia están disponibles en inglés y español. Las citas y los registros oficiales se conservan en su idioma original.' },
   nav: { ask: 'Hacer una pregunta', sources: 'Fuentes públicas', about: 'Acerca del proyecto', evaluation: 'Evaluación' },
   hero: {
@@ -47,7 +51,7 @@ export const es: typeof en = {
     enabled: 'La ayuda del modelo está activada. Para respuestas que cumplen los criterios, su pregunta y los fragmentos seleccionados de fuentes públicas pueden enviarse al servicio de modelo configurado para este sitio, que puede procesarlos o conservarlos.',
   },
   answer: {
-    title: 'Respuesta', area: 'Cobertura de las fuentes',
+    title: 'Respuesta', area: 'Zona',
     modelUsed: 'Un modelo de lenguaje seleccionó estos fragmentos. Se comprobó que su texto coincide con las fuentes guardadas.',
     modelFallback: 'La ayuda del modelo no produjo un resultado verificable. Esta respuesta utiliza la búsqueda habitual de fuentes.',
     citationFallback: 'No se pudieron verificar las referencias de las fuentes. Confirme los detalles con la agencia responsable mediante un recurso oficial.',
@@ -72,7 +76,7 @@ export const es: typeof en = {
     answered: 'Fuentes encontradas', insufficient_evidence: 'Se necesita más información',
     conflicting_evidence: 'Las fuentes no coinciden', potentially_outdated: 'Confirme la información actual',
     needs_location: 'Se necesita una ubicación', needs_jurisdiction: 'Elija una ciudad o condado',
-    official_judgment: 'Confirme con la agencia responsable', out_of_scope: 'Fuera del alcance del servicio',
+    official_judgment: 'Confirme con la agencia responsable', out_of_scope: 'Puedo ayudarle con vivienda, registros de propiedades y proyectos en Tampa Bay.',
     unavailable_source: 'Fuente no disponible', missing_geographic_coverage: 'Fuera de la cobertura disponible',
   },
   property: {

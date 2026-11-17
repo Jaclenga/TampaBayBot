@@ -39,4 +39,4 @@ export interface ResidentAnswer {
   requirementsToVerify?: string[];
   crisisPlan?: CrisisPlan;
 }
-export function answerQuestion(question: string, options?: {sources?: Source[]; chunks?: Chunk[]; now?: Date | string | number; jurisdictionId?: JurisdictionId}): ResidentAnswer;
+export function answerQuestion(question: string, options?: {sources?: Source[]; chunks?: Chunk[]; now?: Date | string | number; jurisdictionId?: JurisdictionId; timings?: import('../performance/timing.mjs').Timings}): ResidentAnswer;

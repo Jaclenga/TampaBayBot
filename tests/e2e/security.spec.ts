@@ -122,6 +122,6 @@ test("production CSP permits hydration and blocks untrusted inline scripts", asy
   expect(await page.locator("html").getAttribute("data-untrusted-script-ran")).toBeNull();
   await page.goto("/");
   await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).fill("Where can I find help paying for housing?");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByRole("heading", { name: /^Sources/ })).toBeVisible();
 });

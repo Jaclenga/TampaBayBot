@@ -1,5 +1,17 @@
 import { sourceMatchesTopic } from './scope.mjs';
 
+// Derived public-corpus data only. Object lifetime bounds retention; field
+// comparison invalidates the entry even when a contributor edits it in place.
+const chunkInstructionCache = new WeakMap();
+const safetyCache = new WeakMap();
+export function chunkHasInstructions(chunk) {
+  const prior = chunkInstructionCache.get(chunk);
+  if (prior && prior.text === chunk.text) return prior.unsafe;
+  const unsafe = isInstructionText(chunk.text);
+  chunkInstructionCache.set(chunk, { text: chunk.text, unsafe });
+  return unsafe;
+}
+
 function numberedAction(text) {
   const instruction = text.match(/^step\s*\d+[.)]\s*(.+)$/i)?.[1];
   if (!instruction || instruction.endsWith('?')) return false;
@@ -52,8 +64,13 @@ export function isAuthoritative(source) {
 export function evidenceSafetyReason(source, chunk) {
   if (!source || !chunk || typeof source.source_id !== 'string' || source.source_id !== chunk.source_id) return 'source_mismatch';
   if (typeof chunk.text !== 'string' || !chunk.text.trim()) return 'empty_text';
-  if ([chunk.text, source.title, source.agency, chunk.title, chunk.section].some(isInstructionText)) return 'untrusted_instructions';
-  return null;
+  const prior = safetyCache.get(chunk);
+  if (prior && prior.source === source && prior.text === chunk.text && prior.title === chunk.title &&
+      prior.section === chunk.section && prior.sourceTitle === source.title && prior.agency === source.agency) return prior.reason;
+  const reason = chunkHasInstructions(chunk) || [source.title, source.agency, chunk.title, chunk.section].some(isInstructionText)
+    ? 'untrusted_instructions' : null;
+  safetyCache.set(chunk, { source, text: chunk.text, title: chunk.title, section: chunk.section, sourceTitle: source.title, agency: source.agency, reason });
+  return reason;
 }
 
 /** Exclusion policy is independent of matching and ranking scores. */

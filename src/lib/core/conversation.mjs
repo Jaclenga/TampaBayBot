@@ -2,6 +2,7 @@ import { intentText } from './router.mjs';
 import { createQueryPlan } from './query-plan.mjs';
 import { isJurisdictionId, JURISDICTIONS, sourceCoversJurisdiction } from '../coverage.mjs';
 import { housingSituation } from '../housing/navigation.mjs';
+import { smallTalkReply } from './small-talk.mjs';
 
 const TOPICS = ['housing', 'zoning', 'permitting', 'development', 'navigation'];
 const NEEDS = Object.freeze({
@@ -38,6 +39,7 @@ export function readConversation(value, sources = []) {
 
 export function resolveConversation(question, { conversation, jurisdictionId = 'tampa-bay', sources = [] } = {}) {
   const context = readConversation(conversation, sources);
+  if (smallTalkReply(question)) return { question, jurisdictionId, used: false, turns: 0 };
   const plan = createQueryPlan(question, { jurisdictionId, sources });
   const current = plan.route;
   if (!context) return { question, jurisdictionId, used: false, turns: 0 };

@@ -33,8 +33,9 @@ async function expectReflow(page: Page, label: string) {
 async function answer(page: Page) {
   await page.getByLabel('Your area', { exact: true }).selectOption('tampa');
   await page.getByRole('textbox', { name: 'Ask a question or enter a property address', exact: true }).fill('Where can I find rental assistance?');
-  await page.getByRole('button', { name: 'Search', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
+  await page.getByRole('button', { name: 'Send', exact: true }).click();
+  await expect(page.locator('.answer-layout .assistant-message').last()).toBeVisible();
+  await expect(page.locator('#question')).toBeFocused();
   await page.locator('.citation-link').first().click();
   await expect(page.locator('details[open] summary').first()).toBeFocused();
 }
@@ -42,7 +43,7 @@ async function answer(page: Page) {
 test('keyboard-only question, error correction, citation and reset preserve focus and accessible names', async ({ page }, testInfo) => {
   await page.goto('/');
   await expect(page.locator('.site-header nav a')).toHaveText(['Ask a question', 'Public sources', 'Privacy', 'About']);
-  await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeEnabled();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
   await page.keyboard.press('Enter');
@@ -57,7 +58,7 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   const input = page.getByRole('textbox', { name: 'Ask a question or enter a property address', exact: true });
   await expect(input).toBeFocused();
   await page.keyboard.press('Tab');
-  await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeFocused();
   await page.keyboard.press('Tab');
   const examples = page.getByRole('group', { name: 'Example questions' }).getByRole('button');
   await expect(examples).toHaveCount(4);
@@ -68,7 +69,8 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.keyboard.press('Shift+Tab');
   await examples.first().focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
+  await expect(page.locator('.answer-layout .assistant-message').last()).toBeVisible();
+  await expect(page.locator('#question')).toBeFocused();
   await expect(page.locator('.question-examples')).toHaveCount(0);
   await page.getByRole('button', { name: 'New conversation', exact: true }).click();
   await expect(input).toBeFocused();
@@ -81,7 +83,8 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.keyboard.type('Where can I find rental assistance?');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
+  await expect(page.locator('.answer-layout .assistant-message').last()).toBeVisible();
+  await expect(page.locator('#question')).toBeFocused();
   await tabTo(page, page.locator('.citation-link').first());
   await page.keyboard.press('Enter');
   const summary = page.locator('.evidence-card summary').first();
@@ -92,7 +95,7 @@ test('keyboard-only question, error correction, citation and reset preserve focu
   await page.keyboard.press('Enter');
   await expect(page.locator('.evidence-card').first()).toHaveAttribute('open', '');
   const tree = await page.locator('main').ariaSnapshot();
-  expect(tree).toContain('heading "Answer"');
+  expect(tree).toContain('TampaBayBot');
   expect(tree).toContain('Fictional rental assistance');
   await testInfo.attach('keyboard-accessibility-tree', { body: tree, contentType: 'text/plain' });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
@@ -108,7 +111,7 @@ test('320 and 375 pixel layouts retain readable controls and focus under forced 
   for (const width of [320, 375]) {
     await page.setViewportSize({ width, height: 812 });
     await page.goto('/');
-    await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeEnabled();
+    await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeEnabled();
     expect(await page.evaluate(() => matchMedia('(forced-colors: active)').matches)).toBe(true);
     await expectReflow(page, `Home at ${width}px with forced colors`);
     await attachBrowserViewport(page, testInfo, `forced-colors-${width}-home`);
@@ -196,7 +199,7 @@ for (const mode of ['browser-zoom', 'text-size'] as const) {
       const page = context.pages()[0] ?? await context.newPage();
       const origin = new URL(baseURL!).origin;
       await page.goto(origin);
-      await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeEnabled();
+      await expect(page.getByRole('button', { name: 'Send', exact: true })).toBeEnabled();
       const baseline = await page.evaluate(() => ({ width: innerWidth, dpr: devicePixelRatio, font: parseFloat(getComputedStyle(document.body).fontSize) }));
       const baselineInterfaceFonts = await interfaceFontSizes(page);
       const observations = [];

@@ -41,6 +41,7 @@ const COPY = {
       immediateDanger: 'If someone is in immediate physical danger, call 911. This site cannot dispatch help.',
       unsafeSleep: 'If you have nowhere safe to stay tonight, contact 211 or local shelter intake now.',
       rmapConflict: 'At the last source check, the City of Tampa RMAP page and its linked portal described different help for existing leases. Do not assume past-due rent or eviction prevention is covered; ask city staff to confirm current rules.',
+      rmapPaused: 'The City of Tampa has paused new RMAP applications beginning November 1, 2026. Check the official city page for reopening updates; do not rely on this program as an open rent or eviction-prevention referral.',
     },
     eviction: {
       title: 'Eviction notice or court case',
@@ -163,6 +164,7 @@ const COPY = {
       immediateDanger: 'Si alguien corre peligro físico inmediato, llame al 911. Este sitio no puede enviar ayuda.',
       unsafeSleep: 'Si no tiene un lugar seguro donde quedarse esta noche, contacte ahora al 211 o a admisión de refugios locales.',
       rmapConflict: 'En la última revisión, la página de RMAP de la Ciudad de Tampa y su portal enlazado describían ayuda diferente para contratos de alquiler existentes. No suponga que cubre alquiler atrasado o prevención del desalojo; confirme las reglas actuales con la ciudad.',
+      rmapPaused: 'La Ciudad de Tampa ha suspendido las nuevas solicitudes de RMAP desde el 1 de noviembre de 2026. Consulte la página oficial para conocer las novedades; no considere este programa como una opción abierta para pagar el alquiler o prevenir un desalojo.',
     },
     eviction: {
       title: 'Aviso de desalojo o caso judicial',
@@ -528,7 +530,7 @@ export function buildCrisisPlan(input, resources, { now = new Date(), locale = '
   if (situationCopy.documents.length) notes.push(copy.common.documentsOptional);
   const rmap = value.mentionsRmap && ['eviction', 'rent'].includes(value.situation)
     ? directory.find(resource => resource.id === 'housing-tampa-rmap' && /^https:\/\//.test(resource.sourceUrl ?? '')) : null;
-  if (rmap) notes.push(copy.common.rmapConflict);
+  if (rmap) notes.push(rmap.availabilityStatus === 'temporarily_closed' ? copy.common.rmapPaused : copy.common.rmapConflict);
   const courtStage = ['court_summons', 'pending_case'].includes(value.noticeStage);
   const noticeStage = ['written_notice', 'pay_or_vacate'].includes(value.noticeStage);
   const deadline = value.noticeStage === 'judgment_or_possession' ? copy.common.orderDeadline

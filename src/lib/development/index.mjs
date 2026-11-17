@@ -94,11 +94,11 @@ export function createDevelopmentClient({ fetcher = fetch, settings = config, no
   const getOfficialDevelopment = createOfficialDevelopmentReader({ fetcher, settings, now });
   let cache;
   let inFlight;
-  async function loadSnapshot() {
+  async function loadSnapshot(timings) {
     if (cache && cache.expiresAt > Date.now()) return cache.snapshot;
     if (inFlight) return inFlight;
     inFlight = (async () => {
-      const response = await fetchBoundedText(settings.csv_url, { fetcher, timeoutMs: settings.timeout_ms, maxBytes: settings.max_response_bytes });
+      const response = await fetchBoundedText(settings.csv_url, { fetcher, timeoutMs: settings.timeout_ms, maxBytes: settings.max_response_bytes, timings });
       if (settings.sha256) {
         const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(response.text));
         const hash = [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
@@ -111,7 +111,7 @@ export function createDevelopmentClient({ fetcher = fetch, settings = config, no
     try { return await inFlight; } finally { inFlight = null; }
   }
 
-  async function getNearbyDevelopment(point, radiusMeters = settings.default_radius_meters) {
+  async function getNearbyDevelopment(point, radiusMeters = settings.default_radius_meters, { timings } = {}) {
     const base = {
       sourceId: settings.source_id, sourceUrl: settings.repository_url, sourceSnapshotDate: settings.source_snapshot_date,
       authoritativeStatus: settings.authoritative_status, commit: settings.commit,
@@ -127,11 +127,11 @@ export function createDevelopmentClient({ fetcher = fetch, settings = config, no
     }
     if (!withinServiceRegion(point)) return emptyResult('missing_coverage', 'This point is outside the supported Tampa Bay search area.');
     try {
-      const location = await locateJurisdiction(point);
+      const location = await locateJurisdiction(point, { timings });
       base.jurisdictionId = location.jurisdictionId;
       base.boundaryChecks = location.boundaryChecks;
       if (location.status === 'verified' && location.jurisdictionId !== settings.jurisdiction_id) {
-        const official = await getOfficialDevelopment(location, point, radiusMeters);
+        const official = await getOfficialDevelopment(location, point, radiusMeters, timings);
         if (official) return official;
         const fallback = settings.official_fallbacks?.[location.jurisdictionId];
         return {
@@ -149,7 +149,7 @@ export function createDevelopmentClient({ fetcher = fetch, settings = config, no
         return emptyResult('missing_coverage', 'This independent development snapshot covers the City of Tampa only. St. Petersburg, Clearwater and other Tampa Bay locations are not included.');
       }
       if (location.status !== 'verified') return emptyResult('unavailable', 'City of Tampa jurisdiction could not be confirmed. The development snapshot was not searched.');
-      const snapshot = await loadSnapshot();
+      const snapshot = await loadSnapshot(timings);
       const current = now();
       const snapshotAgeDays = Math.max(0, Math.floor((current.valueOf() - new Date(settings.source_snapshot_date).valueOf()) / 86400000));
       const stale = snapshotAgeDays > settings.snapshot_stale_after_days;

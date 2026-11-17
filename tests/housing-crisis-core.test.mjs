@@ -227,12 +227,12 @@ test('negated and historical details do not create current eviction or physical-
   assert.equal(affordable.timeframe, 'unknown');
 });
 
-test('an RMAP arrears question flags source conflict without recommending move-in assistance', () => {
+test('an RMAP arrears question explains the application pause without recommending it', () => {
   const input = inferCrisisInput('Can RMAP pay my back rent on my existing lease?', { jurisdictionId: 'tampa' });
   assert.equal(input.situation, 'rent');
   const plan = buildCrisisPlan(input, resources, { now });
   assert.ok(!plan.resources.some(item => item.id === 'housing-tampa-rmap'));
-  assert.ok(plan.notes.some(note => /RMAP page and its linked portal/.test(note)));
+  assert.ok(plan.notes.some(note => /paused new RMAP applications/.test(note)));
   assert.ok(plan.sources.some(source => source.url === resources.find(item => item.id === 'housing-tampa-rmap').sourceUrl));
 });
 

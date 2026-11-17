@@ -175,14 +175,15 @@ test('emergency contacts and Spanish copied details expose overdue reviews', asy
   expect(copied).not.toContain('Source status:');
 });
 
-test('known source conflicts are visible in directory and crisis plans', async ({ page }) => {
+test('paused RMAP applications remain visible as a warning and excluded from plans', async ({ page }) => {
   await page.clock.install({ time: new Date('2026-10-20T12:00:00Z') });
   await page.goto('/');
   const rmap = page.locator('.housing-card').filter({ hasText: 'Rental and Move-In Assistance Program' });
   await expect(rmap.locator('.resource-review-warnings')).toContainText('conflicting help for existing leases');
   await page.getByLabel('What housing problem are you facing?').selectOption('affordable_housing');
   await page.getByLabel('What city or county are you in?').selectOption('tampa');
-  await expect(page.locator('.crisis-plan-resources .resource-review-warnings')).toContainText('conflicting help for existing leases');
+  await expect(page.locator('.crisis-plan-resources')).not.toContainText('Rental and Move-In Assistance Program');
+  await expect(rmap).toContainText('November 1, 2026');
   await page.locator('#housing-language').selectOption('es');
   await expect(rmap.locator('.resource-review-warnings')).toContainText('Advertencia conocida de la fuente (en inglés)');
 });
@@ -222,13 +223,13 @@ test('optional crisis guide creates a cited eviction plan entirely from static d
   expect(accessibility.violations).toEqual([]);
   await page.locator('#housing-language').selectOption('en');
   await page.getByLabel('What housing problem are you facing?').selectOption('affordable_housing');
-  await expect(page.locator('.crisis-plan')).toContainText('The city program page says Phase X is for new move-in costs only');
-  await expect(page.locator('.crisis-plan')).toContainText('Only these cities: City of Tampa');
+  await expect(page.locator('.crisis-plan-resources')).not.toContainText('Rental and Move-In Assistance Program');
+  await expect(page.locator('.crisis-plan')).toContainText('Official sources');
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.getByRole('button', { name: 'Copy plan' }).click();
   const copiedPlan = await page.evaluate(() => navigator.clipboard.readText());
-  expect(copiedPlan).toContain('existing leases are ineligible');
-  expect(copiedPlan).toContain('Only these cities: City of Tampa');
+  expect(copiedPlan).not.toContain('Rental and Move-In Assistance Program');
+  expect(copiedPlan).toContain('Official sources');
   expect(copiedPlan).toContain('Resource information last reviewed: 2026-10-09');
   expect(apiRequests).toBe(initialRequests);
 });

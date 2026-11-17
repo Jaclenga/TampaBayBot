@@ -49,7 +49,7 @@ test("classic keyboard entry and language switch preserve an in-progress questio
   await expect(page.getByLabel("Su zona", { exact: true })).toHaveValue("tampa");
   await expect(page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true })).toHaveValue("Where can I find housing help?");
   await expect(page.getByRole("navigation", { name: "Navegación principal" })).toContainText("Fuentes públicas");
-  await expect(page.getByRole("button", { name: "Buscar", exact: true })).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Enviar", exact: true })).toBeEnabled();
   await checkAxe(page, testInfo, "classic-spanish-home");
 
   await switcher.selectOption("en");
@@ -57,12 +57,12 @@ test("classic keyboard entry and language switch preserve an in-progress questio
   await expect(page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true })).toHaveValue("Where can I find housing help?");
   await page.getByRole("textbox", { name: "Ask a question or enter a property address", exact: true }).focus();
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("button", { name: "Search", exact: true })).toBeFocused();
+  await expect(page.getByRole("button", { name: "Send", exact: true })).toBeFocused();
   await expectVisibleFocusRing(page);
   await switcher.selectOption("es");
   const spanishQuestion = page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true });
   await spanishQuestion.fill("");
-  await page.getByRole("button", { name: "Buscar", exact: true }).click();
+  await page.getByRole("button", { name: "Enviar", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("Escriba una pregunta");
   await expect(spanishQuestion).toHaveAttribute("aria-invalid", "true");
   await expect(spanishQuestion).toBeFocused();

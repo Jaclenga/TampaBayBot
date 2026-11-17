@@ -1,6 +1,7 @@
 /** Bounded Web-API-only readers shared by GIS and development adapters. */
 import { reserveOutbound, operationalSignal } from '../operations/control.mjs';
-export async function fetchBoundedText(url, { fetcher = fetch, timeoutMs = 12000, maxBytes = 1000000, request = {} } = {}) {
+export async function fetchBoundedText(url, { fetcher = fetch, timeoutMs = 12000, maxBytes = 1000000, request = {}, timings } = {}) {
+  const stop = timings?.start('external');
   const controller = new AbortController();
   // Timer callbacks can run late; reject overdue data at every read boundary too.
   const expiresAt = performance.now() + timeoutMs;
@@ -52,6 +53,7 @@ export async function fetchBoundedText(url, { fetcher = fetch, timeoutMs = 12000
   try {
     return await Promise.race([read, deadline]);
   } finally {
+    stop?.();
     clearTimeout(timeout);
     controller.abort();
   }
@@ -59,12 +61,12 @@ export async function fetchBoundedText(url, { fetcher = fetch, timeoutMs = 12000
 
 export function createJsonReader({ fetcher = fetch, timeoutMs = 12000, maxBytes = 1000000, ttlMs = 300000, maxEntries = 64 } = {}) {
   const cache = new Map();
-  return async function readJson(url, request = {}) {
+  return async function readJson(url, request = {}, timings) {
     const key = `${request.method ?? 'GET'}:${url}:${request.body ?? ''}`;
     const cached = cache.get(key);
     if (cached && cached.expiresAt > Date.now()) return cached.result;
     cache.delete(key);
-    const response = await fetchBoundedText(url, { fetcher, timeoutMs, maxBytes, request });
+    const response = await fetchBoundedText(url, { fetcher, timeoutMs, maxBytes, request, timings });
     const data = JSON.parse(response.text);
     if (!data || typeof data !== 'object' || data.error) throw new Error('GIS service returned an error or invalid response.');
     const result = { data, retrievedAt: response.retrievedAt };

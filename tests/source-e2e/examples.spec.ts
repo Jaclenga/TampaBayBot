@@ -7,7 +7,7 @@ const examples = [
   ['Explore local development', 'How can I find development projects near an address in Tampa?'],
 ];
 
-test('the first answer receives focus after the pending history reflows', async ({ page }) => {
+test('the composer keeps focus after the pending history reflows', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 480 });
   let respond: (() => void) | undefined;
   await page.route('**/api/ask', async route => {
@@ -30,7 +30,8 @@ test('the first answer receives focus after the pending history reflows', async 
   });
   expect(await history.evaluate(element => element.scrollHeight - element.clientHeight - element.scrollTop)).toBeGreaterThan(80);
   respond!();
-  await expect(page.getByRole('heading', { name: 'Answer', exact: true })).toBeFocused();
+  await expect(page.locator('.answer-layout .assistant-message').last()).toBeVisible();
+  await expect(page.locator('#question')).toBeFocused();
 });
 
 for (const width of [1280, 375]) {
