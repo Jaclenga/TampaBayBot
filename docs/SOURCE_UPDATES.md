@@ -49,11 +49,15 @@ unchanged; inspect the provider when the deployment outcome is uncertain.
 
 `.github/workflows/source-auto-refresh.yml` runs daily at 10:43 UTC on a
 GitHub-hosted Ubuntu runner. No always-on computer or self-hosted runner is needed.
+Manual default-branch dispatches can perform the first validated publication while
+the daily enable flag is still false. Enable the schedule after that run passes.
 It only runs trusted default-branch code. Downloaded source text, generation
 archives and the latest verified artifact travel between fresh runners in an
-AES-256-GCM encrypted `source-state.enc` file. The encryption authenticates the
-repository and Worker identity as well as the content. Only this encrypted file
-is uploaded, never plaintext corpus files, raw snapshots, logs or credentials.
+AES-256-GCM encrypted `source-state.enc` file stored in a separate private GitHub
+repository. A deploy key grants the runner access only to that state repository. The encryption authenticates the
+repository and Worker identity as well as the content. Only encrypted state and a small checkpoint metadata file are committed to the
+private vault. Nothing is uploaded to public release assets or Actions artifacts.
+Plaintext corpus files, raw snapshots, logs and credentials are excluded.
 
 Publication is split into three stages: `source:auto --apply --prepare-deploy`,
 persist an encrypted pre-deployment checkpoint, then `source:auto
@@ -72,6 +76,8 @@ Configure these repository Actions variables:
   and routing. Do not deploy the bare standalone config over a production Worker
   that uses AI, D1 or shared security controls. Use executable paths valid on the
   GitHub-hosted runner, rather than paths from the development computer.
+- `TAMPABAYBOT_SOURCE_STATE_REPOSITORY`: the separate private `OWNER/REPO` holding
+  encrypted `source-state.enc` and checkpoint metadata. It must have a `main` branch.
 
 The included `scripts/deploy-preserving-worker.mjs` adapter supports existing
 Workers with AI, D1, plain-text variables and secrets. It reads live configuration,
@@ -84,7 +90,9 @@ stop publication. For this adapter the argument array is
 `--dry-run` on this adapter performs validation without a live deployment.
 
 Configure Actions secrets `TAMPABAYBOT_SOURCE_STATE_KEY` (32 cryptographically
-random bytes encoded as 64 hexadecimal characters), `CLOUDFLARE_ACCOUNT_ID` and
+random bytes encoded as 64 hexadecimal characters),
+`TAMPABAYBOT_SOURCE_STATE_SSH_KEY` (a write-enabled deploy key for the private
+state repository only), `CLOUDFLARE_ACCOUNT_ID` and
 `CLOUDFLARE_API_TOKEN`. Keep the provider token limited to the intended account
 and deployment operations. Never put credentials in the deployment argument array
 or repository files. Keep a private backup of the state key; rotating it requires
@@ -96,19 +104,24 @@ selected Worker, not from a source-only checkout. Verify its generation and raw
 provenance, then run `node scripts/automatic-source-state.mjs save --output
 work/source-state/source-state.enc` with `SOURCE_STATE_KEY`, `GITHUB_REPOSITORY`
 and `SOURCE_WORKER` in the environment. Keep the plaintext and the key private.
-Upload only the encrypted `source-state.enc` as an asset on a GitHub release in
-this repository. Dispatch the workflow with that release tag in `seed_release`.
-A verified restore is required before any refresh or publication. Missing,
-expired, tampered or undecryptable state fails closed; an empty baseline is never
-substituted for the current production corpus.
+Commit only encrypted `source-state.enc` and a small `state.json` metadata file to
+the separate private state repository. The repository deploy key must allow writes;
+store the private key in the public application's protected Actions secrets and
+register only its public key with the private repository. Host keys are retrieved
+through GitHub's HTTPS metadata endpoint and StrictHostKeyChecking remains enabled.
+A public vault is explicitly rejected before checkout and before every write.
 
-Normal runs restore the latest checkpoint/final artifact from this workflow on
-the default branch, including checkpoints from a failed run. Final state wins
-over a checkpoint from the same run. Each backup has 90-day artifact retention;
-retain a private encrypted backup and key for recovery after prolonged inactivity
-or deletion. If the newest backup expires, the workflow requires explicit recovery
-rather than silently reverting to an older generation. Archives have bounded file
-counts and sizes; hitting the bound stops publication until retention is reviewed.
+Normal runs clone the private vault, authenticate and restore the ciphertext, then
+push a new checkpoint before deploying. A final encrypted commit records success
+or a pending retry. If a runner stops mid-deployment, the pre-deployment checkpoint
+is already durable in the private repository. Missing, tampered or undecryptable
+state fails closed; an empty baseline is never substituted for production.
+
+Keep a private backup of the state key and encrypted state for disaster recovery.
+The vault retains commit history; monitor its storage and define a backup/retention
+policy as it grows. Archives have bounded file counts and sizes; hitting the bound
+stops publication until retention is reviewed. Avoid force-pushing the vault or
+editing checkpoints while an automatic run is active.
 The original metadata-only monitoring workflow remains separate and unchanged.
 
 For the deployment token, use Editor access scoped to the existing target Worker.

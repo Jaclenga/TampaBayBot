@@ -1,26 +1,22 @@
 name: Automatic source publication
 on:
   workflow_dispatch:
-    inputs:
-      seed_release:
-        description: 'Optional release tag containing an encrypted reviewed source-state.enc baseline'
-        required: false
-        type: string
   schedule:
     - cron: '43 10 * * *'
 permissions:
   contents: read
-  actions: read
 concurrency:
   group: source-auto-publication
   cancel-in-progress: false
 jobs:
   refresh:
-    if: ${{ vars.TAMPABAYBOT_AUTO_REFRESH_ENABLED == 'true' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+    if: ${{ (vars.TAMPABAYBOT_AUTO_REFRESH_ENABLED == 'true' || github.event_name == 'workflow_dispatch') && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
       SOURCE_WORKER: ${{ vars.TAMPABAYBOT_AUTO_REFRESH_WORKER }}
+      SOURCE_STATE_REPOSITORY: ${{ vars.TAMPABAYBOT_SOURCE_STATE_REPOSITORY }}
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,32 +28,17 @@ jobs:
       - name: Require publishing credentials before any acquisition
         env:
           SOURCE_STATE_KEY: ${{ secrets.TAMPABAYBOT_SOURCE_STATE_KEY }}
+          SOURCE_STATE_SSH_KEY: ${{ secrets.TAMPABAYBOT_SOURCE_STATE_SSH_KEY }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           DEPLOY_COMMAND: ${{ vars.TAMPABAYBOT_SOURCE_DEPLOY_ARGV }}
-        run: node -e 'for (const name of ["SOURCE_STATE_KEY","CLOUDFLARE_API_TOKEN","CLOUDFLARE_ACCOUNT_ID","SOURCE_WORKER","DEPLOY_COMMAND"]) if (!process.env[name]) throw new Error("Missing publishing configuration " + name)'
+        run: node -e 'for (const name of ["SOURCE_STATE_KEY","SOURCE_STATE_SSH_KEY","SOURCE_STATE_REPOSITORY","CLOUDFLARE_API_TOKEN","CLOUDFLARE_ACCOUNT_ID","SOURCE_WORKER","DEPLOY_COMMAND"]) if (!process.env[name]) throw new Error("Missing publishing configuration " + name)'
       - run: npm ci --ignore-scripts
       - run: node --test .github/scripts/automatic-refresh-workflow.test.mjs
-      - name: Locate the latest encrypted checkpoint
-        id: previous
-        if: ${{ inputs.seed_release == '' }}
+      - name: Check out the private encrypted baseline
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-          SOURCE_BRANCH: ${{ github.event.repository.default_branch }}
-        run: node scripts/automatic-source-state.mjs find
-      - uses: actions/download-artifact@v4
-        if: ${{ inputs.seed_release == '' }}
-        with:
-          name: ${{ steps.previous.outputs.artifact_name }}
-          run-id: ${{ steps.previous.outputs.run_id }}
-          github-token: ${{ github.token }}
-          path: work/source-state/input
-      - name: Download an explicit encrypted seed baseline
-        if: ${{ inputs.seed_release != '' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SEED_RELEASE: ${{ inputs.seed_release }}
-        run: gh release download "$SEED_RELEASE" --repo "$GITHUB_REPOSITORY" --pattern source-state.enc --dir work/source-state/input
+          SOURCE_STATE_SSH_KEY: ${{ secrets.TAMPABAYBOT_SOURCE_STATE_SSH_KEY }}
+        run: node scripts/private-source-vault.mjs checkout
       - name: Authenticate and restore source state
         id: restore
         env:
@@ -71,12 +52,7 @@ jobs:
         run: node scripts/automatic-source-state.mjs save --output work/source-state/checkpoint/source-state.enc
       - name: Persist the checkpoint before deploying
         id: checkpoint
-        uses: actions/upload-artifact@v4
-        with:
-          name: tampabaybot-source-state-checkpoint
-          path: work/source-state/checkpoint/source-state.enc
-          if-no-files-found: error
-          retention-days: 90
+        run: node scripts/private-source-vault.mjs push --phase checkpoint
       - name: Publish the checkpointed artifact
         if: ${{ steps.checkpoint.outcome == 'success' }}
         env:
@@ -92,12 +68,7 @@ jobs:
         run: node scripts/automatic-source-state.mjs save --output work/source-state/final/source-state.enc
       - name: Persist the final encrypted state
         if: ${{ always() && steps.final.outcome == 'success' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: tampabaybot-source-state-final
-          path: work/source-state/final/source-state.enc
-          if-no-files-found: error
-          retention-days: 90
+        run: node scripts/private-source-vault.mjs push --phase final
       - name: Summarize decisions
         if: always()
         run: node scripts/automatic-refresh-summary.mjs >> "$GITHUB_STEP_SUMMARY"

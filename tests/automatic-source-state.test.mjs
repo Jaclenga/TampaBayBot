@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { randomBytes } from 'node:crypto';
-import { encryptState, decryptState, saveSourceState, restoreSourceState, findSourceState } from '../scripts/automatic-source-state.mjs';
+import { encryptState, decryptState, saveSourceState, restoreSourceState } from '../scripts/automatic-source-state.mjs';
 import { refreshFixture } from '../src/lib/ingestion/refresh-fixtures.mjs';
 import { digest, json, makeCorpus, readCorpus } from '../src/lib/ingestion/generation.mjs';
 import { stageRefresh, applyRefresh } from '../src/lib/ingestion/refresh.mjs';
@@ -113,19 +113,3 @@ test('a checkpoint carries its applied candidate and verified upload artifact in
   assert.equal(await readFile(join(target.root, artifact, 'server/index.js'), 'utf8'), 'fixture worker');
 });
 
-test('artifact discovery prefers final state but recovers a failed run checkpoint and rejects expiry', async () => {
-  const item = (name, run, extra = {}) => ({ name, expired: false, workflow_run: { id: run, head_branch: 'main', head_repository_id: 7 }, ...extra });
-  const finals = [item('tampabaybot-source-state-final', 10)];
-  const checkpoints = [item('tampabaybot-source-state-checkpoint', 11)];
-  const fetchImpl = async url => Response.json(url.includes('/actions/runs/')
-    ? { path: '.github/workflows/source-auto-refresh.yml', event: 'schedule', conclusion: 'failure' }
-    : { artifacts: url.includes('name=tampabaybot-source-state-final') ? finals : checkpoints });
-  const args = { repository: context.repository, repositoryId: '7', branch: 'main', token: 'fixture', fetchImpl };
-  assert.deepEqual(await findSourceState(args), { run_id: '11', artifact_name: 'tampabaybot-source-state-checkpoint' });
-  finals.push(item('tampabaybot-source-state-final', 11));
-  assert.deepEqual(await findSourceState(args), { run_id: '11', artifact_name: 'tampabaybot-source-state-final' });
-  finals[1].expired = true;
-  await assert.rejects(findSourceState(args), /expired/);
-  finals.length = 0; checkpoints.length = 0;
-  await assert.rejects(findSourceState(args), /No encrypted/);
-});

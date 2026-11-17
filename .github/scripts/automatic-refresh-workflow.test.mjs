@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-test('hosted automation only uploads encrypted checkpoints and saves them before deployment', async () => {
+test('hosted automation uses a private vault and saves a checkpoint before deployment', async () => {
   const workflow = await readFile(new URL('../workflows/source-auto-refresh.yml', import.meta.url), 'utf8');
   assert.match(workflow, /runs-on: ubuntu-latest/);
   assert.doesNotMatch(workflow, /self-hosted|clean: false|pull_request/);
@@ -11,7 +11,10 @@ test('hosted automation only uploads encrypted checkpoints and saves them before
   assert.match(workflow, /steps.checkpoint.outcome == 'success'/);
   assert.match(workflow, /steps.restore.outcome == 'success'/);
   assert.match(workflow, /TAMPABAYBOT_SOURCE_STATE_KEY/);
-  const uploads = [...workflow.matchAll(/path: (work\/source-state\/[^\n]+)/g)].map(match => match[1].trim());
-  assert.deepEqual(uploads, ['work/source-state/input', 'work/source-state/checkpoint/source-state.enc', 'work/source-state/final/source-state.enc']);
+  assert.doesNotMatch(workflow, /upload-artifact|download-artifact|release download|seed_release/);
+  assert.match(workflow, /private-source-vault.mjs checkout/);
+  assert.match(workflow, /private-source-vault.mjs push --phase checkpoint/);
+  assert.match(workflow, /private-source-vault.mjs push --phase final/);
+  assert.match(workflow, /TAMPABAYBOT_SOURCE_STATE_SSH_KEY/);
   assert.ok(workflow.indexOf('Persist the checkpoint before deploying') < workflow.indexOf('Publish the checkpointed artifact'));
 });

@@ -62,7 +62,8 @@ test("classic keyboard entry and language switch preserve an in-progress questio
   await switcher.selectOption("es");
   const spanishQuestion = page.getByRole("textbox", { name: "Haga una pregunta o escriba una dirección", exact: true });
   await spanishQuestion.fill("");
-  await page.getByRole("button", { name: "Enviar", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Enviar", exact: true })).toBeDisabled();
+  await spanishQuestion.press("Enter");
   await expect(page.getByRole("alert")).toContainText("Escriba una pregunta");
   await expect(spanishQuestion).toHaveAttribute("aria-invalid", "true");
   await expect(spanishQuestion).toBeFocused();

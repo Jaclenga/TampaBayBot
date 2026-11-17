@@ -107,8 +107,6 @@ test("regional questions require an area and city changes keep evidence in the s
 
   let turns = 1;
   for (const [id, agency] of [["st-petersburg", "St. Petersburg"], ["clearwater", "Clearwater"]]) {
-    const settings = page.locator('.region-settings');
-    if (!await settings.evaluate(node => (node as HTMLDetailsElement).open)) await settings.locator('summary').click();
     await area.selectOption(id);
     await expect(page.locator(".answer-layout")).toHaveCount(turns);
     await page.locator('#question').fill('Where can I find housing assistance?');
@@ -387,7 +385,7 @@ test("small screens, enlarged text and reduced motion retain all primary control
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.getByLabel("Your area").selectOption("tampa");
-  await expect(page.getByRole("button", { name: "Send", exact: true })).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Send", exact: true })).toBeDisabled();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,

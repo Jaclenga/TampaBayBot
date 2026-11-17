@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
-import { appendFile, lstat, mkdir, readFile, readdir } from 'node:fs/promises';
+import { lstat, mkdir, readFile, readdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { pathToFileURL } from 'node:url';
@@ -11,7 +11,6 @@ import { verifyReviewedBuild } from './build-source-refresh.mjs';
 
 const MAX_BYTES = 256 * 1024 * 1024;
 const MAX_FILES = 20000;
-const artifactNames = ['tampabaybot-source-state-final', 'tampabaybot-source-state-checkpoint'];
 function keyBytes(key) {
   assert.match(key ?? '', /^[a-f0-9]{64}$/i, 'SOURCE_STATE_KEY must be a 32-byte hexadecimal secret');
   return Buffer.from(key, 'hex');
@@ -162,49 +161,16 @@ export async function restoreSourceState(root, { key, repository, worker, input 
   return { status: 'restored', generation: corpus.generation, files: files.size };
 }
 
-/** The newest trusted run wins, including failed runs with pending deployments. */
-export async function findSourceState({ repository, branch, repositoryId, token, fetchImpl = fetch } = {}) {
-  assert.match(repository ?? '', /^[\w.-]+\/[\w.-]+$/);
-  const get = async path => {
-    const response = await fetchImpl(`https://api.github.com/repos/${repository}/${path}`, {
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }, signal: AbortSignal.timeout(20000),
-    });
-    assert.ok(response.ok, 'Could not inspect hosted state; do not start from an empty baseline');
-    return response.json();
-  };
-  const artifacts = [];
-  for (const name of artifactNames) {
-    const result = await get(`actions/artifacts?name=${name}&per_page=100`);
-    assert.ok(Array.isArray(result.artifacts));
-    artifacts.push(...result.artifacts.filter(item => item.workflow_run?.head_branch === branch &&
-      String(item.workflow_run?.head_repository_id) === String(repositoryId)));
-  }
-  artifacts.sort((a, b) => Number(b.workflow_run.id) - Number(a.workflow_run.id) || artifactNames.indexOf(a.name) - artifactNames.indexOf(b.name));
-  for (const artifact of artifacts) {
-    const run = await get(`actions/runs/${artifact.workflow_run.id}`);
-    if (run.path !== '.github/workflows/source-auto-refresh.yml' || !['schedule', 'workflow_dispatch'].includes(run.event)) continue;
-    assert.ok(!artifact.expired, 'Latest source-state backup expired; restore a private backup instead of reverting to older evidence');
-    return { run_id: String(artifact.workflow_run.id), artifact_name: artifact.name };
-  }
-  throw new Error('No encrypted source-state baseline exists. Seed a reviewed snapshot before enabling hosted publication.');
-}
-
 if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
   const { values, positionals } = parseArgs({ allowPositionals: true, options: { input: { type: 'string' }, output: { type: 'string' } } });
   const root = resolve(import.meta.dirname, '..');
   const context = { key: process.env.SOURCE_STATE_KEY, repository: process.env.GITHUB_REPOSITORY,
     worker: process.env.SOURCE_WORKER, input: values.input, output: values.output };
-  if (positionals[0] === 'find') {
-    const found = await findSourceState({ repository: context.repository, branch: process.env.SOURCE_BRANCH,
-      repositoryId: process.env.GITHUB_REPOSITORY_ID, token: process.env.GITHUB_TOKEN });
-    assert.ok(process.env.GITHUB_OUTPUT);
-    await appendFile(process.env.GITHUB_OUTPUT, `run_id=${found.run_id}\nartifact_name=${found.artifact_name}\n`);
-    console.log('Located the latest encrypted source-state checkpoint.');
-  } else if (positionals[0] === 'save' || positionals[0] === 'restore') {
+  if (positionals[0] === 'save' || positionals[0] === 'restore') {
     // CLI archive paths are restricted to ignored work/ outputs.
     const chosen = positionals[0] === 'save' ? context.output : context.input;
     assert.ok(typeof chosen === 'string' && chosen.startsWith('work/'));
     await mkdir(dirname(await workspacePath(root, chosen)), { recursive: true });
     console.log(json(await (positionals[0] === 'save' ? saveSourceState : restoreSourceState)(root, context)));
-  } else throw new Error('Usage: automatic-source-state.mjs find|save --output work/...|restore --input work/...');
+  } else throw new Error('Usage: automatic-source-state.mjs save --output work/...|restore --input work/...');
 }

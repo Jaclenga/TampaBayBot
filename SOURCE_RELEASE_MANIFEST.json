@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "9d0f45c9f464eef3fbaaa1e8c45aefbba99ad2391294eba33d05db1f136a0f08",
+  "content_sha256": "163fa1a5e88405286c437cdc067db9c3909b10f67b7c859e1ed77dfa8ff11425",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -42,8 +42,8 @@
     },
     {
       "path": ".github/scripts/automatic-refresh-workflow.test.mjs",
-      "bytes": 1230,
-      "sha256": "194c5df95ff0c7ea1f779e042e38aaf3a002b1b449118ebb2078acd4ad7e30ec"
+      "bytes": 1338,
+      "sha256": "6e5361d7d387590ac7ac2d8462e474304bb57eda9395890a2ca0fa5824269d78"
     },
     {
       "path": ".github/scripts/source-monitor-issues.mjs",
@@ -77,8 +77,8 @@
     },
     {
       "path": ".github/workflows/source-auto-refresh.yml",
-      "bytes": 4738,
-      "sha256": "f727a0bc874b048a472586c177be7f160c3a001749a18569050cad1d5ae986cc"
+      "bytes": 3785,
+      "sha256": "5bc8c37294d4948e3ae8762beb5e93b5bb521474c9167bec41dc559e9e4630d6"
     },
     {
       "path": ".github/workflows/source-refresh.yml",
@@ -302,8 +302,8 @@
     },
     {
       "path": "docs/SOURCE_UPDATES.md",
-      "bytes": 23170,
-      "sha256": "84f7dd8d900a9b1729b735d9740a2828ff381911c3d45a048a1ced209819404c"
+      "bytes": 24201,
+      "sha256": "c2a5d8f7c5c1403dd7a725e342ff6698eaad102a4922b314180c9b2ebfbbc2a7"
     },
     {
       "path": "docs/THREAT_MODEL.md",
@@ -737,8 +737,8 @@
     },
     {
       "path": "scripts/automatic-source-state.mjs",
-      "bytes": 13442,
-      "sha256": "3ce093d8d544ba8da1503445bf0589b9afff959bbaaac3b2c4267fb8acd5c468"
+      "bytes": 11098,
+      "sha256": "19d2f41ace35b6cd2d66418045bb62e2c6b1e80f999b34f6347c1a86252691b8"
     },
     {
       "path": "scripts/benchmark-deployed.mjs",
@@ -839,6 +839,11 @@
       "path": "scripts/prepare-cloudflare-demo.mjs",
       "bytes": 5376,
       "sha256": "4a76aedf034fb469090f9e100c4572ed352c9f47da67513ca70be3e4f58fcdda"
+    },
+    {
+      "path": "scripts/private-source-vault.mjs",
+      "bytes": 6089,
+      "sha256": "f35ae7dc073f622cca60ae819f63473ecf5d4215120ecdfcc13046e06baba270"
     },
     {
       "path": "scripts/reproduce-runtime-transport.mjs",
@@ -1687,8 +1692,8 @@
     },
     {
       "path": "tests/automatic-source-state.test.mjs",
-      "bytes": 9211,
-      "sha256": "45ff5919217f14b8fd0f6acfc85adcc7afdd36fc7534fc6091ae6351adce06ec"
+      "bytes": 7903,
+      "sha256": "49efa4ccc5d29a0cd1ecfc9519b5ec44da0ae715dbe68e1e985003aa7d4a92ca"
     },
     {
       "path": "tests/check-evaluation-artifacts.test.mjs",
@@ -1747,8 +1752,8 @@
     },
     {
       "path": "tests/e2e/accessibility-language.spec.ts",
-      "bytes": 7694,
-      "sha256": "2b360cdb442eba38ffa5bf3ffb9a62dfd4d044fb07165055412945c8194b0e30"
+      "bytes": 7749,
+      "sha256": "75c26dde12fc834295d7562c00524183ca441fef3df17a2a6b95984ba7d5c6c8"
     },
     {
       "path": "tests/e2e/housing-help.spec.ts",
@@ -1762,8 +1767,8 @@
     },
     {
       "path": "tests/e2e/resident.spec.ts",
-      "bytes": 29185,
-      "sha256": "8743488d73d52d6f7b40038fe474dd8cc97aded8241a42cb7f041e69ab943ec0"
+      "bytes": 29011,
+      "sha256": "814d128c48ad3a22b6d326c6d4d215175a7b4c5e62f829947c7e05a189198dad"
     },
     {
       "path": "tests/e2e/security.spec.ts",
@@ -1954,6 +1959,11 @@
       "path": "tests/preserving-worker-config.test.mjs",
       "bytes": 2404,
       "sha256": "7ac86263692358bc9b10914cfb900f673e27b4bd410ac1157f5859f3ff2366a4"
+    },
+    {
+      "path": "tests/private-source-vault.test.mjs",
+      "bytes": 2544,
+      "sha256": "0f6d4d1e0ec359adec4cf9902c1d7067cfdec0a62a07144b5bdadabcd3d49d5c"
     },
     {
       "path": "tests/program-context-regressions.test.mjs",
