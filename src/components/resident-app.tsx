@@ -19,6 +19,8 @@ import { buildCrisisPlan } from "@/lib/housing/crisis.mjs";
 import type { CrisisResource } from "@/lib/housing/crisis.mjs";
 import housingCatalog from "../../pages-demo/src/housing-resources.json";
 
+type ChatAnswer = ResidentAnswer & { greetingJurisdictionId?: JurisdictionId };
+
 const subscribeToReady = () => () => {};
 const clientReady = () => true;
 const serverReady = () => false;
@@ -78,14 +80,15 @@ function CitedText({ answer, prefix = "" }: { answer: ResidentAnswer; prefix?: s
 
 const ConversationMessages = memo(function ConversationMessages({ answers, rawAnswers, latestMessage, referenceTime }: {
   answers: ResidentAnswer[];
-  rawAnswers: ResidentAnswer[];
+  rawAnswers: ChatAnswer[];
   latestMessage: RefObject<HTMLDivElement | null>;
   referenceTime: number;
 }) {
   const { locale, copy: en } = useLocale();
   return <>{answers.map((answer, index) => {
         const latest = index === answers.length - 1;
-        const greeting = smallTalkReply(rawAnswers[index].query, locale);
+        const greeting = smallTalkReply(rawAnswers[index].query, locale,
+          rawAnswers[index].greetingJurisdictionId ?? rawAnswers[index].jurisdictionId, index > 0);
         const prefix = latest ? "" : `turn-${index}-`;
         return (
         <section
@@ -277,7 +280,7 @@ export default function ResidentApp() {
     });
   }
   const [jurisdictionId, setJurisdictionId] = useState<JurisdictionId>("tampa-bay");
-  const [rawAnswers, setAnswers] = useState<ResidentAnswer[]>([]);
+  const [rawAnswers, setAnswers] = useState<ChatAnswer[]>([]);
   const rawAnswer = rawAnswers.at(-1) ?? null;
   const [busy, setBusy] = useState(false);
   const [pendingQuestion, setPendingQuestion] = useState("");
@@ -385,10 +388,12 @@ export default function ResidentApp() {
         return;
       }
       if (!request.signal.aborted) {
-        setAnswers(previous => [...previous, { ...result, query: text }]);
+        const conversational = Boolean(smallTalkReply(text));
+        setAnswers(previous => [...previous, { ...result, query: text,
+          ...(conversational ? { greetingJurisdictionId: jurisdictionId } : {}) }]);
         setQuestion(current => current === text ? "" : current);
-        setConversation(result.conversation ?? null);
-        if (!result.needsJurisdiction && result.jurisdictionId) setJurisdictionId(result.jurisdictionId);
+        if (!conversational) setConversation(result.conversation ?? null);
+        if (!conversational && !result.needsJurisdiction && result.jurisdictionId) setJurisdictionId(result.jurisdictionId);
       }
     } catch {
       if (!request.signal.aborted) setErrorCode("error");
@@ -418,7 +423,6 @@ export default function ResidentApp() {
                   controller.current?.abort();
                   setBusy(false);
                   if (!answer?.needsJurisdiction) setConversation(null);
-                  setAnswers([]);
                   followLatest.current = true;
                   setErrorCode(null);
                   setJurisdictionId(event.target.value as JurisdictionId);

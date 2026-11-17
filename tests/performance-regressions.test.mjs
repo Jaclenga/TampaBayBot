@@ -34,7 +34,7 @@ test('small talk skips corpus work and model calls but retains input, evidence a
     } }],
     provider: { complete() { throw new Error('Greeting must not call a model'); } },
   });
-  assert.equal(answer.answer, 'Hi! What would you like to find out about Tampa Bay?');
+  assert.equal(answer.answer, 'Hi! What would you like to know about Tampa Bay?');
   assert.deepEqual(answer.evidence, []);
   assert.equal(answer.coverage, undefined);
   assert.equal(answer.conversation, null);

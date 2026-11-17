@@ -3,7 +3,6 @@ import { en } from './en.ts';
 export const es: typeof en = {
   ...en,
   chat: {
-    greeting: '¡Hola! ¿Qué le gustaría saber sobre Tampa Bay?',
     replyReady: 'Su respuesta está lista.',
   },
   language: { label: 'Language / Idioma', scope: 'Las preguntas, las herramientas de propiedades y las páginas de referencia están disponibles en inglés y español. Las citas y los registros oficiales se conservan en su idioma original.' },

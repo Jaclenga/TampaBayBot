@@ -14,7 +14,8 @@ export async function answerResidentQuestion(question, { conversation, locale = 
   const response = {
     ...answer,
     query: question,
-    conversation: nextConversation(resolved.question, answer, resolved.turns, options.sources),
+    conversation: Object.hasOwn(resolved, 'smallTalkContext') ? resolved.smallTalkContext
+      : nextConversation(resolved.question, answer, resolved.turns, options.sources),
     conversationUsed: resolved.used,
     evidence: answer.evidence.map(item => {
       const source = options.sources?.find(source => source.source_id === item.source_id);
@@ -29,7 +30,7 @@ export async function answerResidentQuestion(question, { conversation, locale = 
   });
   if (crisisInput) response.crisisPlan = buildCrisisPlan(crisisInput, crisisResources, { locale, now: options.now ?? new Date() });
   const localized = localizeAnswer(response, locale);
-  const conversational = smallTalkReply(question, locale);
+  const conversational = smallTalkReply(question, locale, resolved.jurisdictionId, Boolean(resolved.smallTalkContext));
   if (conversational) localized.answer = conversational;
   return localized;
 }

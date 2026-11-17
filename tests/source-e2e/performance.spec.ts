@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test('real API timings distinguish small talk from factual retrieval without exposing input', async ({ request }) => {
   const greeting = await request.post('/api/ask', { data: { question: 'hello', jurisdictionId: 'tampa' } });
   expect(greeting.ok()).toBe(true);
-  expect((await greeting.json()).answer).toBe('Hi! What would you like to find out about Tampa Bay?');
+  expect((await greeting.json()).answer).toBe('Hi! What would you like to know about Tampa?');
   const greetingTiming = greeting.headers()['server-timing'];
   expect(greetingTiming).toContain('total;dur=');
   expect(greetingTiming).not.toContain('retrieval;');

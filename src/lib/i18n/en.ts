@@ -1,7 +1,6 @@
 export const en = {
   brand: "TampaBayBot",
   chat: {
-    greeting: "Hi! What would you like to find out about Tampa Bay?",
     replyReady: "Your reply is ready.",
   },
   language: {

@@ -17,7 +17,7 @@ import { resolveJurisdiction } from '../coverage.mjs';
 /** Deterministic, extractive retrieval and resident navigation. No model/API key. */
 export function answerQuestion(question, { sources = [], chunks = [], now = new Date(), jurisdictionId = 'tampa-bay', timings } = {}) {
   const query = typeof question === 'string' ? question.trim().slice(0, 2000) : '';
-  const conversational = smallTalkReply(query);
+  const conversational = smallTalkReply(query, 'en', jurisdictionId);
   if (conversational) {
     const area = resolveJurisdiction('', jurisdictionId);
     return { query, category: 'navigation', status: 'out_of_scope', answer: conversational,

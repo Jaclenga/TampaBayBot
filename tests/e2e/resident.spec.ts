@@ -105,17 +105,22 @@ test("regional questions require an area and city changes keep evidence in the s
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.locator(".status-label")).toHaveText("Choose a city or county");
 
+  let turns = 1;
   for (const [id, agency] of [["st-petersburg", "St. Petersburg"], ["clearwater", "Clearwater"]]) {
+    const settings = page.locator('.region-settings');
+    if (!await settings.evaluate(node => (node as HTMLDetailsElement).open)) await settings.locator('summary').click();
     await area.selectOption(id);
-    await expect(page.locator(".answer-layout")).toHaveCount(0);
+    await expect(page.locator(".answer-layout")).toHaveCount(turns);
+    await page.locator('#question').fill('Where can I find housing assistance?');
     const response = page.waitForResponse(result => result.url().endsWith("/api/ask") && result.request().method() === "POST");
     await page.getByRole("button", { name: "Send", exact: true }).click();
     const answer = await (await response).json();
+    await expect(page.locator('.answer-layout')).toHaveCount(++turns);
     expect(answer.jurisdictionId).toBe(id);
     expect(answer.evidence.length).toBeGreaterThan(0);
     expect(answer.evidence.some((item: { agency: string }) => item.agency.includes(agency))).toBe(true);
     expect(answer.evidence.some((item: { source_id: string }) => item.source_id.startsWith("tampa-") || item.source_id === "hillsborough-help")).toBe(false);
-    await expect(page.locator(".evidence-card").first()).toBeVisible();
+    await expect(page.locator('.answer-layout').last().locator('.evidence-card').first()).toBeVisible();
   }
 });
 

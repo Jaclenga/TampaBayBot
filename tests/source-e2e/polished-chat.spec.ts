@@ -30,7 +30,7 @@ for (const width of [1280, 375]) {
     await page.locator('#question').fill('hello');
     await page.locator('#question').press('Enter');
     const first = page.locator('.chat-turn').first();
-    await expect(first.locator('.answer-lead')).toHaveText('Hi! What would you like to find out about Tampa Bay?');
+    await expect(first.locator('.answer-lead')).toHaveText('Hi! What would you like to know about Tampa Bay?');
     expect(requests).toHaveLength(1);
     await expect(first.locator('.citation-link, .evidence-section, .status-label')).toHaveCount(0);
     await expect(first).not.toContainText('Source coverage');

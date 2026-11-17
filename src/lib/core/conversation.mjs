@@ -39,7 +39,8 @@ export function readConversation(value, sources = []) {
 
 export function resolveConversation(question, { conversation, jurisdictionId = 'tampa-bay', sources = [] } = {}) {
   const context = readConversation(conversation, sources);
-  if (smallTalkReply(question)) return { question, jurisdictionId, used: false, turns: 0 };
+  if (smallTalkReply(question)) return { question, jurisdictionId, used: false, turns: 0,
+    smallTalkContext: context && (jurisdictionId === 'tampa-bay' || jurisdictionId === context.jurisdictionId || context.awaitingJurisdiction) ? context : null };
   const plan = createQueryPlan(question, { jurisdictionId, sources });
   const current = plan.route;
   if (!context) return { question, jurisdictionId, used: false, turns: 0 };
