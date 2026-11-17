@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "c532ce4f89dd9fd51dee3613ad9ae69df7c682d4eb5fbd91f6fd63903036d3bf",
+  "content_sha256": "21bba6ac9d988e50b7137661a42fa775d586372861fd67a05b8667ea806338fd",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -487,8 +487,8 @@
     },
     {
       "path": "functions/[[path]].js",
-      "bytes": 562,
-      "sha256": "289e883cf06e29171cb4339fa026c15b2a5d5777e6503de91350afe1392918e6"
+      "bytes": 1071,
+      "sha256": "0e5b806d42794fb2d7b702f1d34b0200e5133a30d0781a986e80826ed8e4c883"
     },
     {
       "path": "functions/api/[[path]].js",
@@ -782,8 +782,8 @@
     },
     {
       "path": "scripts/deploy-preserving-worker.mjs",
-      "bytes": 6638,
-      "sha256": "ad72dcc4f3fc0279b45e7fee1f5772fb08ed51233d6f96c155eff1e8b8e2a19d"
+      "bytes": 7837,
+      "sha256": "bc9ccdaa82db7c88e0a9fe727d0eebdffbb59c33cb12ccceb17d3dd7a6526c61"
     },
     {
       "path": "scripts/eval-recall.mjs",
@@ -832,8 +832,8 @@
     },
     {
       "path": "scripts/prepare-classic-pages.mjs",
-      "bytes": 1962,
-      "sha256": "00fd8fc2a06db9d4d5540c6ab9ae98c87150c0d2397e2b6f3fe16698d958c23a"
+      "bytes": 1949,
+      "sha256": "41e5ac8158dce54e7546774352d93de13bdefccb610ebd1669a9ab5bfec192dc"
     },
     {
       "path": "scripts/prepare-cloudflare-demo.mjs",
@@ -1944,6 +1944,11 @@
       "path": "tests/operations.test.mjs",
       "bytes": 31750,
       "sha256": "184cfdc945be09d82d5857b51b6208110cc90decd953f942b3540292667357bd"
+    },
+    {
+      "path": "tests/pages-asset-routing.test.mjs",
+      "bytes": 1926,
+      "sha256": "41f0925d8d3c3840d815203da25517658ec949e598389b1ccfe55a9f0a875e1c"
     },
     {
       "path": "tests/performance-regressions.test.mjs",

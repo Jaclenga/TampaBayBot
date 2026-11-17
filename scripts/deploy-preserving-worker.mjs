@@ -63,6 +63,23 @@ function run(root, args, cwd) {
   });
 }
 
+export async function verifyPublicAssets(url, fetcher = fetch) {
+  const response = await fetcher(url, { cache: 'no-store', signal: AbortSignal.timeout(20000) });
+  assert.ok(response.ok, 'Public chat HTML failed after deployment');
+  const html = await response.text();
+  const paths = [...new Set([...html.matchAll(/(?:src|href)="([^"\s]*\/assets\/[^"\s]+)"/g)].map(match => match[1]))];
+  assert.ok(paths.some(path => path.endsWith('.css')) && paths.some(path => path.endsWith('.js')), 'Public chat must reference styles and scripts');
+  for (const path of paths) {
+    const asset = new URL(path, url);
+    assert.equal(asset.origin, new URL(url).origin, 'Unexpected external chat asset');
+    const result = await fetcher(asset, { signal: AbortSignal.timeout(20000) });
+    const type = result.headers.get('content-type') ?? '';
+    assert.ok(result.ok && (path.endsWith('.css') ? type.includes('text/css') : /javascript/.test(type)), `Public chat asset unavailable: ${asset.pathname}`);
+    await result.arrayBuffer();
+  }
+  return { assets: paths.length };
+}
+
 export async function deployPreservingWorker(root, { artifact, worker, dryRun = false } = {}) {
   assert.match(worker ?? '', /^[a-z][a-z0-9-]{2,62}$/);
   const account = process.env.CLOUDFLARE_ACCOUNT_ID;
@@ -92,7 +109,10 @@ export async function deployPreservingWorker(root, { artifact, worker, dryRun = 
   await writeAtomic(configPath, json(config));
   await run(root, ['deploy', '--dry-run', '--config', configPath, '--outdir', resolve(execution, 'upload')], execution);
   assert.equal(digest(json(stable(await observe()))), digest(json(stable(before))), 'Live settings changed during validation; retry without overwriting them');
-  if (!dryRun) await run(root, ['deploy', '--config', configPath], execution);
+  if (!dryRun) {
+    await run(root, ['deploy', '--config', configPath], execution);
+    if (worker === 'tampabaybot-limited-api') await verifyPublicAssets('https://tampabaybot-housing-preview.pages.dev/');
+  }
   return { status: dryRun ? 'dry_run_passed' : 'command_succeeded', worker,
     note: 'Existing bindings, variables, secret names and endpoint exposure were preserved. No secret values were retrieved.' };
 }
