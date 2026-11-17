@@ -1,6 +1,137 @@
 # Reviewing and applying source updates
 
-Source updates follow four separate steps: acquire into an ignored candidate, inspect the changes, approve that exact candidate, then build and apply it. Downloads never replace the active evidence automatically. `npm run ingest` now performs the acquisition step; existing `--source=<id>`, `--offline` and `--check` options remain available.
+Manual source updates follow four separate steps: acquire into an ignored candidate, inspect the changes, approve that exact candidate, then build and apply it. Acquisition alone never replaces active evidence. The optional policy-based automatic path below performs its own qualification and validation before application. `npm run ingest` performs acquisition; existing `--source=<id>`, `--offline` and `--check` options remain available.
+
+## Automatic routine refreshes
+
+`npm run source:auto` downloads sources and writes an automatic eligibility report
+without applying or deploying anything. `npm run source:auto -- --apply --worker-name
+YOUR_WORKER` validates, builds and applies the eligible subset. Add `--deploy` to
+publish that verified build through the existing `TAMPABAYBOT_SOURCE_DEPLOY_ARGV`
+executable/argument array. An explicit Worker name is mandatory for application;
+there is no inferred production target. `--category housing` limits acquisition.
+
+The policy lives in `data/automatic-refresh-policy.json`. Unchanged official
+sources on its exact HTTPS origin allowlist qualify only when normalized text,
+derived facts, citations and locators agree with the active baseline. A new fetch
+advances acquisition timestamps, never the substantive review date. A raw HTML
+change outside extracted content can qualify; changed facts or extraction
+annotations cannot silently pass as unchanged.
+
+Changed or first-time content requires an explicit source ID and exact canonical
+URL rule. The initial policy permits bounded updates to Tampa's development
+contact directory only, with size/change limits and a safety-sensitive-language
+check. It does **not** authorize unattended changes to housing eligibility,
+funding, eviction deadlines, legal requirements or permit fees. These checks are
+conservative screening, not a guarantee that arbitrary prose is low risk. Expand
+the content allowlist only for specifically understood sources. Sources with
+known conflicts, changed acquisition configuration, unexpected response URLs,
+unapproved origins, failed acquisition, or assistant-directed instructions need
+review. Registry edits block automatic publication to preserve operator changes.
+
+Eligible sources can publish while rejected sources retain their previous dated
+evidence and uncertainty. Rejected payload bytes do not enter the automatic
+candidate. Failed fetches never advance retrieval dates. A source-only checkout
+has no evidence baseline; most initial acquisitions will therefore require the
+existing review/apply workflow. The separate curated housing resource directory
+is not overwritten or marked verified by a document refresh.
+
+Application reproduces citations from snapshots, runs the source tests, offline
+reliability evaluation and typecheck, and builds/smoke-tests the standalone
+artifact. Failures before application leave the active generation untouched.
+Existing immutable snapshots, generation archives and rollback commands remain
+available. A failed deployment leaves a pending receipt: the next automatic run
+retries the same verified artifact **before** downloading a newer candidate.
+It does not claim that a failed or timed-out deployment left the hosted site
+unchanged; inspect the provider when the deployment outcome is uncertain.
+
+### One-time scheduling setup
+
+`.github/workflows/source-auto-refresh.yml` runs daily at 10:43 UTC on a
+GitHub-hosted Ubuntu runner. No always-on computer or self-hosted runner is needed.
+It only runs trusted default-branch code. Downloaded source text, generation
+archives and the latest verified artifact travel between fresh runners in an
+AES-256-GCM encrypted `source-state.enc` file. The encryption authenticates the
+repository and Worker identity as well as the content. Only this encrypted file
+is uploaded, never plaintext corpus files, raw snapshots, logs or credentials.
+
+Publication is split into three stages: `source:auto --apply --prepare-deploy`,
+persist an encrypted pre-deployment checkpoint, then `source:auto
+--resume-deployment`. The upload step must succeed before deployment begins.
+Final state is encrypted again after success or failure. If a runner disappears
+mid-deployment, the next run retries the identical checkpointed artifact. It
+never acquires a newer candidate over a pending deployment.
+
+Configure these repository Actions variables:
+
+- `TAMPABAYBOT_AUTO_REFRESH_ENABLED`: `true` once setup and a reviewed seed are ready.
+- `TAMPABAYBOT_AUTO_REFRESH_WORKER`: the explicit target Worker name.
+- `TAMPABAYBOT_SOURCE_DEPLOY_ARGV`: a trusted JSON executable/argument array using
+  `{config}`, `{artifact}` or `{generation}` as needed. The deployment adapter
+  must preserve the selected Worker's operational bindings, variables, secrets
+  and routing. Do not deploy the bare standalone config over a production Worker
+  that uses AI, D1 or shared security controls. Use executable paths valid on the
+  GitHub-hosted runner, rather than paths from the development computer.
+
+The included `scripts/deploy-preserving-worker.mjs` adapter supports existing
+Workers with AI, D1, plain-text variables and secrets. It reads live configuration,
+requires exact existing D1 IDs, retains endpoint exposure and dashboard-managed
+routes, keeps secrets without retrieving their values, and runs a deploy dry run.
+Unsupported binding types, runtime changes or concurrent configuration changes
+stop publication. For this adapter the argument array is
+`["node","{project}/scripts/deploy-preserving-worker.mjs","--artifact","{artifact}","--worker","YOUR_WORKER"]`.
+`{project}` is resolved on the runner, so no machine-specific path is stored.
+`--dry-run` on this adapter performs validation without a live deployment.
+
+Configure Actions secrets `TAMPABAYBOT_SOURCE_STATE_KEY` (32 cryptographically
+random bytes encoded as 64 hexadecimal characters), `CLOUDFLARE_ACCOUNT_ID` and
+`CLOUDFLARE_API_TOKEN`. Keep the provider token limited to the intended account
+and deployment operations. Never put credentials in the deployment argument array
+or repository files. Keep a private backup of the state key; rotating it requires
+re-encrypting the baseline. The workflow refuses to run if any required setting
+is missing. Local Wrangler OAuth credentials are not copied into CI.
+
+For initial setup, seed from the already reviewed corpus currently serving the
+selected Worker, not from a source-only checkout. Verify its generation and raw
+provenance, then run `node scripts/automatic-source-state.mjs save --output
+work/source-state/source-state.enc` with `SOURCE_STATE_KEY`, `GITHUB_REPOSITORY`
+and `SOURCE_WORKER` in the environment. Keep the plaintext and the key private.
+Upload only the encrypted `source-state.enc` as an asset on a GitHub release in
+this repository. Dispatch the workflow with that release tag in `seed_release`.
+A verified restore is required before any refresh or publication. Missing,
+expired, tampered or undecryptable state fails closed; an empty baseline is never
+substituted for the current production corpus.
+
+Normal runs restore the latest checkpoint/final artifact from this workflow on
+the default branch, including checkpoints from a failed run. Final state wins
+over a checkpoint from the same run. Each backup has 90-day artifact retention;
+retain a private encrypted backup and key for recovery after prolonged inactivity
+or deletion. If the newest backup expires, the workflow requires explicit recovery
+rather than silently reverting to an older generation. Archives have bounded file
+counts and sizes; hitting the bound stops publication until retention is reviewed.
+The original metadata-only monitoring workflow remains separate and unchanged.
+
+For the deployment token, use Editor access scoped to the existing target Worker.
+No new routes or resources are created by this adapter. See Cloudflare's
+[Workers permissions](https://developers.cloudflare.com/workers/authorization/workers/#wrangler)
+for current token scope requirements.
+
+The Actions summary and each candidate's `automatic-report.json` identify sources
+that need review using metadata only. The existing hosted weekly/daily review
+workflow continues its link/content monitoring and issue triage independently.
+`retrieval_date` means last successful acquisition; `content_changed_at` means
+first acquisition or last observed normalized-content change;
+`source_updated_date` remains the publisher's date, if present;
+`last_content_reviewed_at` remains a separate substantive verification date.
+An old publisher document can be freshly fetched and still contain outdated
+information. Automatic acquisition must not remove that uncertainty.
+
+A local exclusive guard (`data/.source-automatic.lock`) prevents simultaneous
+automatic runs. Normal exits remove it. If a process is forcibly terminated,
+inspect the recorded PID/start time and confirm it is no longer running before
+removing this guard. Never remove the separate publication or recovery locks as
+a shortcut. An incomplete build with no application receipt is restaged next
+time; an applied candidate is resumed from its original receipt.
 
 ## Acquire a candidate
 
