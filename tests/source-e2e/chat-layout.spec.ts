@@ -37,8 +37,10 @@ for (const width of [1440, 1280, 768, 390, 320]) {
     // Approximate a mobile keyboard reducing the available viewport.
     await page.setViewportSize({ width, height: 500 });
     await expect(page.locator('#question')).toBeVisible();
-    const resized = (await page.locator('.chat-composer').boundingBox())!;
-    expect(resized.y + resized.height).toBeLessThanOrEqual(501);
+    await expect.poll(async () => {
+      const resized = (await page.locator('.chat-composer').boundingBox())!;
+      return resized.y + resized.height;
+    }).toBeLessThanOrEqual(501);
   });
 }
 

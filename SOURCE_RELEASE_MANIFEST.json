@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "distribution": "source-only-alpha",
-  "content_sha256": "163fa1a5e88405286c437cdc067db9c3909b10f67b7c859e1ed77dfa8ff11425",
+  "content_sha256": "c532ce4f89dd9fd51dee3613ad9ae69df7c682d4eb5fbd91f6fd63903036d3bf",
   "external_snapshots_included": false,
   "git_history_included": false,
   "owner_hosting_config_included": false,
@@ -2027,8 +2027,8 @@
     },
     {
       "path": "tests/source-e2e/chat-layout.spec.ts",
-      "bytes": 4150,
-      "sha256": "a9e0051408373f001849c2f88ba36dab5a8a4c6dac97237f009c4656ae50648c"
+      "bytes": 4197,
+      "sha256": "ea2db4f218a8a7e9b5ae2578e3cfa5918101d115804c0cb1862c898caf586703"
     },
     {
       "path": "tests/source-e2e/chat.spec.ts",
