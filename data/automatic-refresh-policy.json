@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "allowed_origins": [
+    "https://www.tampa.gov",
+    "https://hcfl.gov",
+    "https://www.floridahousing.org",
+    "https://planhillsborough.org",
+    "https://www.stpete.org",
+    "https://www.myclearwater.com",
+    "https://pinellas.gov",
+    "https://www.pascocountyfl.gov"
+  ],
+  "content_updates": {
+    "tampa-development-contact": {
+      "url": "https://www.tampa.gov/development-coordination/contact-us",
+      "allow_initial": true,
+      "max_chunks": 100,
+      "max_change_ratio": 0.5
+    }
+  }
+}

@@ -15,10 +15,15 @@ function run(executable, args, { cwd, env = process.env } = {}) {
   });
 }
 
-export async function buildReviewedCandidate(root, candidate, { workerName = 'tampabaybot-reviewed-source' } = {}) {
+export async function buildReviewedCandidate(root, candidate, { workerName = 'tampabaybot-reviewed-source', automatic = false } = {}) {
   assert.match(workerName, /^[a-z][a-z0-9-]{2,62}$/);
   assert.ok(process.env.npm_execpath, 'Run application through npm run source:apply to select the installed npm CLI');
-  const fixture = await workspacePath(candidate.candidateRoot, `build-${randomUUID().slice(0, 8)}`);
+  // Nested candidate/build/test/deploy paths can exceed Windows process cwd
+  // limits. Keep transient validation shallow, then preserve only its verified
+  // upload artifact below the immutable candidate for deployment and retries.
+  const buildId = randomUUID().slice(0, 8);
+  const fixture = await workspacePath(root, `work/source-build/${buildId}`);
+  await mkdir(dirname(fixture), { recursive: true });
   await mkdir(fixture);
   for (const name of ['src', 'scripts', 'tests', 'evaluation', 'vendor', 'public']) {
     await cp(join(root, name), join(fixture, name), { recursive: true, filter: source => !relative(root, source).split(sep).some(part => part.startsWith('.')) });
@@ -55,16 +60,21 @@ export async function buildReviewedCandidate(root, candidate, { workerName = 'ta
   assert.equal(provenance.status, 'passed', 'Candidate evidence must reproduce exactly from its preserved raw snapshots');
   await run(process.execPath, [process.env.npm_execpath, 'ci', '--ignore-scripts', '--prefer-offline', '--no-audit', '--no-fund'], options);
   await run(process.execPath, [process.env.npm_execpath, 'run', 'test:source'], options);
+  if (automatic) await run(process.execPath, [process.env.npm_execpath, 'run', 'eval:reliability'], options);
   await run(process.execPath, [join(fixture, 'node_modules/typescript/bin/tsc'), '--noEmit'], options);
   const output = 'work/standalone/reviewed-source';
   await run(process.execPath, [join(fixture, 'scripts/build-standalone.mjs'), '--name', workerName, '--outdir', output], options);
   await run(process.execPath, [join(fixture, 'scripts/test-standalone.mjs'), '--directory', output], options);
-  const artifact = relative(root, resolve(fixture, output)).split(sep).join('/');
   const verification = JSON.parse(await readFile(resolve(fixture, output, 'verification.json'), 'utf8'));
   assert.equal(verification.status, 'passed', 'Standalone verification did not pass');
-  return { status: 'passed', generation: candidate.corpus.generation, artifact,
+  const preserved = await workspacePath(candidate.candidateRoot, `artifact-${buildId}`);
+  await cp(resolve(fixture, output), preserved, { recursive: true, errorOnExist: true, force: false });
+  const artifact = relative(root, preserved).split(sep).join('/');
+  const build = { status: 'passed', generation: candidate.corpus.generation, artifact,
     artifact_sha256: verification.artifact_sha256, config: `${artifact}/server/wrangler.json`,
     source_provenance: 'passed', source_tests: 'passed', typecheck: 'passed', standalone_smoke: verification.status };
+  await verifyReviewedBuild(root, { generation: candidate.corpus.generation, build });
+  return build;
 }
 
 /** Recheck every upload byte; an edited config or asset invalidates the smoke-tested build. */
@@ -116,7 +126,7 @@ export async function deployReviewedBuild(root, receipt) {
   const { config, artifact } = await verifyReviewedBuild(root, { ...receipt, build: {
     ...receipt.build, artifact: copyPath, config: `${copyPath}/server/wrangler.json`,
   } });
-  const expanded = args.map(value => value.replaceAll('{config}', config).replaceAll('{artifact}', artifact).replaceAll('{generation}', receipt.generation));
+  const expanded = args.map(value => value.replaceAll('{config}', config).replaceAll('{artifact}', artifact).replaceAll('{generation}', receipt.generation).replaceAll('{project}', resolve(root)));
   try {
     await run(expanded[0], expanded.slice(1), { cwd: executionRoot, env: { ...process.env,
       WRANGLER_LOG_PATH: join(executionRoot, 'logs'), MINIFLARE_REGISTRY_PATH: join(executionRoot, 'registry'), WRANGLER_SEND_METRICS: 'false',

@@ -1,6 +1,7 @@
 export const en = {
   brand: "TampaBayBot",
   chat: {
+    jumpLatest: "Jump to latest",
     replyReady: "Your reply is ready.",
   },
   language: {

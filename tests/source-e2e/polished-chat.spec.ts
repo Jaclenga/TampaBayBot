@@ -45,7 +45,7 @@ for (const width of [1280, 375]) {
     expect(thread.width).toBeLessThanOrEqual(820);
     expect(user.x).toBeGreaterThan(assistant.x);
     expect(Math.abs(user.x + user.width - (thread.x + thread.width))).toBeLessThan(2);
-    expect(composer.y - (assistant.y + assistant.height)).toBeLessThan(48);
+    expect(assistant.y + assistant.height).toBeLessThanOrEqual(composer.y);
     await page.screenshot({ path: testInfo.outputPath('greeting-chat.png') });
 
     const reply = page.locator('#question');

@@ -59,6 +59,7 @@
     "release:manifest": "node scripts/update-source-manifest.mjs",
     "check:corpus": "npm run typecheck && npm run lint && npm run test:corpus && npm run evaluate && npm run eval:suite && npm run build",
     "source:stage": "node --use-system-ca scripts/source-refresh.mjs stage",
+    "source:auto": "node --use-system-ca scripts/automatic-source-refresh.mjs",
     "source:review": "node scripts/source-refresh.mjs review",
     "source:apply": "node scripts/source-refresh.mjs apply",
     "source:deploy": "node scripts/source-refresh.mjs deploy",

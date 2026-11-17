@@ -39,6 +39,13 @@ The [scheduled source-refresh workflow](../.github/workflows/source-refresh.yml)
 
 ### Weekly issue triage
 
+The optional [automatic publication workflow](SOURCE_UPDATES.md#automatic-routine-refreshes)
+can refresh eligible retrieval snapshots after policy checks, source regressions,
+reliability evaluation and a verified build. It is separate from this monitor:
+neither workflow advances housing-directory verification dates. Changed
+safety-sensitive guidance, known conflicts and unapproved sources remain in the
+review queue. A successful automated acquisition is not substantive verification.
+
 The version 2 `report.json` contains an `actionable` list with stable fingerprints for findings that warrant review. The weekly workflow creates one open issue per fingerprint with the `source-monitor` label. A later run updates its generated block only when the finding details change, preserving maintainer notes outside that block. It does not close issues automatically; close them after reviewing the original source and correcting or documenting the record. Issue synchronization runs only when freshness report generation succeeds; the source-refresh job still retains any available artifacts if generation fails.
 
 Actionable signals include a confirmed 404/410, an invalid or unsafe URL, a permanent 301/308 redirect, a temporary redirect with a missing destination or HTTPS downgrade, a potential content change, and a factual review overdue beyond the configured grace period. Permanent redirects need publisher review because source acquisition rejects redirects and the configured URL may need a reviewed update. Rate limits, timeouts, 5xx responses, and other transient acquisition failures remain in the report for follow-up but do not create issues from a single run. A fingerprint is a deduplication key, not proof that the source's program details changed. Issue bodies contain stable resource IDs and brief status summaries; consult the metadata-only workflow artifact for the full observation. Automated issues never update `verifiedAt`, program availability, eligibility, deadlines, or the deployed corpus.
